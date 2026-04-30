@@ -954,8 +954,8 @@
 
                         <div class="overflow-x-auto">
                             <table>
-                                <thead>
-                                    <tr class="border-b" style="border-color: var(--primary-soft);">
+                                <thead class="border border-gray-400">
+                                    <tr class="" style="border-color: #1B738C;">
                                         <th style="color:var(--primary);">Employee</th>
                                         <th style="color:var(--primary);">ID</th>
                                         <th style="color:var(--primary);">Department</th>
@@ -1416,86 +1416,6 @@
                                 </div>
                                 <div id="uploadedDocList" class="doc-list"></div>
 
-                                <!-- Custom Fields Builder -->
-                                <!-- <div class="sec-title" style="margin-top:28px;">
-                                    <i class="fas fa-sliders"></i> Custom Fields
-                                    <span
-                                        style="font-size:11px;font-weight:400;color:var(--text-light);text-transform:none;letter-spacing:0;margin-left:6px;">Add
-                                        extra fields specific to this employee</span>
-                                </div> -->
-
-                                <!-- <div id="customFieldsList"
-                                    style="display:flex;flex-direction:column;gap:10px;margin-bottom:16px;"></div> -->
-
-                                <!-- <div class="add-cf-btn" id="addCFBtn" onclick="showCFBuilder()">
-                                    <div class="add-cf-icon"><i class="fas fa-plus"></i></div>
-                                    <div>
-                                        <div style="font-weight:700;font-size:13px;color:var(--primary);">Add Custom
-                                            Field</div>
-                                        <div style="font-size:12px;color:var(--text-light);">Text, Number, Dropdown,
-                                            Date, Textarea, Checkbox</div>
-                                    </div>
-                                </div> -->
-
-                                <!-- CF Builder Panel -->
-                                <!-- <div id="cfBuilderPanel" class="cf-builder-panel" style="display:none;">
-                                    <div
-                                        style="font-size:13px;font-weight:700;margin-bottom:14px;color:var(--primary);">
-                                        Configure New Field</div>
-                                    <div class="grid-3 mb-4">
-                                        <div class="form-group"><label>Field Label <span
-                                                    class="req">*</span></label><input id="cfLabel"
-                                                placeholder="e.g. Employee Category"></div>
-                                        <div class="form-group">
-                                            <label>Field Type</label>
-                                            <select id="cfType" onchange="toggleCFOptions()">
-                                                <option value="text">Text Input</option>
-                                                <option value="number">Number Input</option>
-                                                <option value="dropdown">Dropdown (Select)</option>
-                                                <option value="date">Date Picker</option>
-                                                <option value="textarea">Textarea</option>
-                                                <option value="checkbox">Yes / No Toggle</option>
-                                            </select>
-                                        </div>
-                                        <div class="form-group">
-                                            <label>Section</label>
-                                            <select id="cfSection">
-                                                <option value="personal">Personal Info</option>
-                                                <option value="job">Job Details</option>
-                                                <option value="contact">Contact</option>
-                                                <option value="education">Education</option>
-                                                <option value="other">Other</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div id="cfDropdownOptions" style="display:none;margin-bottom:14px;">
-                                        <div class="form-group">
-                                            <label>Dropdown Options <span
-                                                    style="font-size:10px;font-weight:400;color:var(--text-light);">(comma
-                                                    separated)</span></label>
-                                            <input id="cfOptions" placeholder="Option 1, Option 2, Option 3">
-                                            <div class="fhint">Each comma-separated value becomes a dropdown option
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="grid-2 mb-4">
-                                        <div class="form-group"><label>Placeholder / Help Text</label><input
-                                                id="cfPlaceholder" placeholder="e.g. Enter employee category"></div>
-                                        <div style="display:flex;align-items:flex-end;padding-bottom:2px;">
-                                            <label
-                                                style="display:flex;align-items:center;gap:7px;font-size:13px;cursor:pointer;margin:0;">
-                                                <input type="checkbox" id="cfRequired"
-                                                    style="width:auto;accent-color:var(--primary);"> Required field
-                                            </label>
-                                        </div>
-                                    </div>
-                                    <div style="display:flex;gap:8px;">
-                                        <button type="button" class="btn-primary btn-sm" onclick="addCustomField()"><i
-                                                class="fas fa-plus mr-1"></i>Add Field</button>
-                                        <button type="button" class="btn-outline btn-sm"
-                                            onclick="closeCFBuilder()">Cancel</button>
-                                    </div>
-                                </div> -->
                             </div>
 
                             <!-- Navigation Buttons -->
@@ -1659,7 +1579,7 @@ async function fetchAndRenderEmployees() {
                     ? 'background:rgba(43,122,62,0.15);color:#155724;'
                     : 'background:rgba(220,53,69,0.15);color:#721c24;';
  
-                html += `<tr class="border-b data-row" style="border-color:var(--primary-soft);">
+                html += `<tr class="border-b data-row" style="border-color:#1B738C;">
             <td class="py-3">
                 <div class="flex items-center gap-2">
                     <div class="avatar">${initial}</div>
@@ -1678,37 +1598,36 @@ async function fetchAndRenderEmployees() {
                 <span class="badge-custom" style="${statusStyle}">${emp.status || 'Active'}</span>
             </td>
             <td class="py-3">
-    <div style="display:flex; gap:6px; align-items:center; white-space:nowrap;">
-        <button onclick="viewEmployee(${emp.employeePrimeId})" title="View"
-            style="background:var(--primary-bg-light);border:none;padding:5px 9px;border-radius:6px;cursor:pointer;font-size:12px;color:var(--primary);">
-            <i class="fas fa-eye"></i>
-        </button>
+            <div style="display:flex; gap:6px; align-items:center; white-space:nowrap;">
+                <button onclick="viewEmployee(${emp.employeePrimeId})" title="View"
+                    style="background:var(--primary-bg-light); border:1px solid #1B738C; padding:5px 9px; border-radius: 6px; cursor:pointer; font-size:12px; color:var(--primary);">
+                    <i class="fas fa-eye"></i>
+                </button>
  
-        <button onclick="editEmployee(${emp.employeePrimeId})" title="Edit"
-            style="background:var(--primary-bg-light);border:none;padding:5px 9px;border-radius:6px;cursor:pointer;font-size:12px;color:var(--primary);">
-            <i class="fas fa-edit"></i>
-        </button>
- 
-        <button onclick="openDeleteModal(${emp.employeePrimeId}, '${name.replace(/'/g, "\\'")}')" title="Delete"
-            style="background:rgba(220,53,69,0.1);border:none;padding:5px 9px;border-radius:6px;cursor:pointer;font-size:12px;color:#dc3545;">
-            <i class="fas fa-trash"></i>
-        </button>
-    </div>
-</td>
-        </tr>`;
-            });
- 
-            tbody.innerHTML = html;
- 
-            let paginationHtml = '';
-            for (let i = 0; i < totalPages; i++) {
-                paginationHtml += `<button onclick="goToPage(${i})" class="${i === currentPage ? 'btn-primary' : 'btn-outline'} btn-sm">${i + 1}</button>`;
-            }
-            document.getElementById('pagination').innerHTML = paginationHtml;
-            document.getElementById('employeeCount').innerHTML = `Showing ${totalElements} employees`;
- 
-            await populateDropdowns();
+                <button onclick="editEmployee(${emp.employeePrimeId})" title="Edit"
+                    style="background:var(--primary-bg-light); border:1px solid #1B738C; padding:5px 9px;border-radius:6px;cursor:pointer;font-size:12px;color:var(--primary);">
+                    <i class="fas fa-edit"></i>
+                </button>
+        
+                <button onclick="openDeleteModal(${emp.employeePrimeId}, '${name.replace(/'/g, "\\'")}')" title="Delete"
+                    style="background:rgba(220,53,69,0.1); border:1px solid #1B738C; padding:5px 9px;border-radius:6px;cursor:pointer;font-size:12px;color:#dc3545;">
+                    <i class="fas fa-trash"></i>
+                </button>
+             </div>
+
+        </td> </tr>`;});
+
+        tbody.innerHTML = html;
+
+        let paginationHtml = '';
+        for (let i = 0; i < totalPages; i++) {
+            paginationHtml += `<button onclick="goToPage(${i})" class="${i === currentPage ? 'btn-primary' : 'btn-outline'} btn-sm">${i + 1}</button>`;
         }
+        document.getElementById('pagination').innerHTML = paginationHtml;
+        document.getElementById('employeeCount').innerHTML = `Showing ${totalElements} employees`;
+
+        await populateDropdowns();
+    }
 
 // ==================== SEARCH ====================
 let searchDebounce = null;
@@ -1866,50 +1785,50 @@ function showViewOverlay(emp, loading) {
             </div>
             <div style="padding:24px;overflow-y:auto;max-height:calc(100vh - 180px);">
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-                    <div style="background:var(--primary-bg-light);border-radius:12px;padding:16px;border:1px solid var(--primary-soft);">
+                    <div style="background:var(--primary-bg-light);border-radius:12px;padding:16px;border:1px solid #1B738C;">
                         <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px;"><i class="fas fa-id-card mr-2"></i>Personal Information</div>
                         ${viewRow('Full Name', val(name))}${viewRow('Date of Birth', fmt(emp.dateOfBirth))}${viewRow('Gender', val(emp.gender))}${viewRow('Marital Status', val(emp.maritalStatus))}${viewRow('Blood Group', val(emp.bloodGroup))}${viewRow('Nationality', val(emp.nationality))}${viewRow('PAN Number', val(emp.panNumber))}${viewRow('Aadhaar', val(emp.aadhaarNumber))}${viewRow('Religion', val(emp.religion))}${viewRow("Father's / Spouse Name", val(emp.fatherSpouseName))}${viewRow('LinkedIn', emp.linkedinProfile ? `<a href="${emp.linkedinProfile}" target="_blank" style="color:var(--primary);">${emp.linkedinProfile}</a>` : '—')}${emp.isPhysicallyChallenged ? viewRow('PwD', `<span style="color:#e67e22;font-weight:600;">Yes — ${val(emp.disabilityType)} (${val(emp.disabilityPercentage)}%)</span>`) : ''}
                     </div>
-                    <div style="background:var(--primary-bg-light);border-radius:12px;padding:16px;border:1px solid var(--primary-soft);">
+                    <div style="background:var(--primary-bg-light);border-radius:12px;padding:16px;border:1px solid #1B738C;">
                         <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px;"><i class="fas fa-briefcase mr-2"></i>Job Details</div>
                         ${viewRow('Employee ID', val(emp.employeeId))}${viewRow('Department', val(emp.department))}${viewRow('Sub-Department', val(emp.subDepartment))}${viewRow('Designation', val(emp.designation))}${viewRow('Grade', val(emp.employeeGrade))}${viewRow('Employment Type', val(emp.employmentType))}${viewRow('Joining Date', fmt(emp.joiningDate))}${viewRow('Probation End', fmt(emp.probationEndDate))}${viewRow('Reporting Manager', val(emp.reportingManager))}${viewRow('HR Business Partner', val(emp.hrBusinessPartner))}${viewRow('Work Location', val(emp.workLocation))}${viewRow('Shift', val(emp.shift))}${viewRow('Cost Centre', val(emp.costCentre))}${viewRow('Basic Salary', emp.basicSalary ? `₹${Number(emp.basicSalary).toLocaleString('en-IN')}` : '—')}
                     </div>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px;">
-                    <div style="background:var(--primary-bg-light);border-radius:12px;padding:16px;border:1px solid var(--primary-soft);">
+                    <div style="background:var(--primary-bg-light);border-radius:12px;padding:16px;border:1px solid #1B738C;">
                         <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px;"><i class="fas fa-address-book mr-2"></i>Contact & Address</div>
                         ${viewRow('Personal Email', val(emp.personalEmail))}${viewRow('Work Email', val(emp.workEmail))}${viewRow('Mobile', val(emp.mobileNumber))}${viewRow('Alternate Phone', val(emp.alternateNumber))}
-                        <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--primary-soft);"><div style="font-size:11px;font-weight:700;color:var(--text-light);margin-bottom:6px;">Current Address</div>${viewRow('Street', val(emp.currentStreet))}${viewRow('City / State', `${val(emp.currentCity)}, ${val(emp.currentState)} — ${val(emp.currentPincode)}`)}</div>
-                        <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--primary-soft);"><div style="font-size:11px;font-weight:700;color:var(--text-light);margin-bottom:6px;">Permanent Address</div>${viewRow('Street', val(emp.permanentStreet))}${viewRow('City / State', `${val(emp.permanentCity)}, ${val(emp.permanentState)} — ${val(emp.permanentPincode)}`)}</div>
-                        <div style="margin-top:10px;padding-top:8px;border-top:1px solid var(--primary-soft);"><div style="font-size:11px;font-weight:700;color:var(--text-light);margin-bottom:6px;">Emergency Contact</div>${viewRow('Name', val(emp.emergencyName))}${viewRow('Relationship', val(emp.emergencyRelationship))}${viewRow('Phone', val(emp.emergencyPhone))}</div>
+                        <div style="margin-top:10px;padding-top:8px;border-top:1px solid #1B738C;"><div style="font-size:11px;font-weight:700;color:var(--text-light);margin-bottom:6px;">Current Address</div>${viewRow('Street', val(emp.currentStreet))}${viewRow('City / State', `${val(emp.currentCity)}, ${val(emp.currentState)} — ${val(emp.currentPincode)}`)}</div>
+                        <div style="margin-top:10px;padding-top:8px;border-top:1px solid #1B738C;"><div style="font-size:11px;font-weight:700;color:var(--text-light);margin-bottom:6px;">Permanent Address</div>${viewRow('Street', val(emp.permanentStreet))}${viewRow('City / State', `${val(emp.permanentCity)}, ${val(emp.permanentState)} — ${val(emp.permanentPincode)}`)}</div>
+                        <div style="margin-top:10px;padding-top:8px;border-top:1px solid #1B738C;"><div style="font-size:11px;font-weight:700;color:var(--text-light);margin-bottom:6px;">Emergency Contact</div>${viewRow('Name', val(emp.emergencyName))}${viewRow('Relationship', val(emp.emergencyRelationship))}${viewRow('Phone', val(emp.emergencyPhone))}</div>
                     </div>
                     <div>
-                        <div style="background:var(--primary-bg-light);border-radius:12px;padding:16px;border:1px solid var(--primary-soft);margin-bottom:16px;">
+                        <div style="background:var(--primary-bg-light);border-radius:12px;padding:16px;border:1px solid #1B738C;margin-bottom:16px;">
                             <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px;"><i class="fas fa-building mr-2"></i>Bank Details</div>
                             ${viewRow('Bank Name', val(emp.bankName))}${viewRow('Account Number', val(emp.accountNumber))}${viewRow('IFSC Code', val(emp.ifscCode))}
                         </div>
-                        <div style="background:var(--primary-bg-light);border-radius:12px;padding:16px;border:1px solid var(--primary-soft);">
+                        <div style="background:var(--primary-bg-light);border-radius:12px;padding:16px;border:1px solid #1B738C;">
                             <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px;"><i class="fas fa-folder mr-2"></i>Documents</div>
                             ${docHtml}
                         </div>
                     </div>
                 </div>
                 <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px;">
-                    <div style="background:var(--primary-bg-light);border-radius:12px;padding:16px;border:1px solid var(--primary-soft);">
+                    <div style="background:var(--primary-bg-light);border-radius:12px;padding:16px;border:1px solid #1B738C;">
                         <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px;"><i class="fas fa-graduation-cap mr-2"></i>Education</div>
                         ${eduRows ? `<table style="width:100%;"><thead><tr><th style="padding:4px 10px;font-size:11px;color:var(--text-light);text-align:left;">Degree</th><th style="padding:4px 10px;font-size:11px;color:var(--text-light);text-align:left;">Institution</th><th style="padding:4px 10px;font-size:11px;color:var(--text-light);text-align:left;">Year</th></tr></thead><tbody>${eduRows}</tbody></table>` : '<p style="font-size:12px;color:var(--text-light);">No education records</p>'}
                     </div>
-                    <div style="background:var(--primary-bg-light);border-radius:12px;padding:16px;border:1px solid var(--primary-soft);">
+                    <div style="background:var(--primary-bg-light);border-radius:12px;padding:16px;border:1px solid #1B738C;">
                         <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px;"><i class="fas fa-users mr-2"></i>Family</div>
                         ${famRows ? `<table style="width:100%;"><thead><tr><th style="padding:4px 10px;font-size:11px;color:var(--text-light);text-align:left;">Name</th><th style="padding:4px 10px;font-size:11px;color:var(--text-light);text-align:left;">Relation</th><th style="padding:4px 10px;font-size:11px;color:var(--text-light);text-align:left;">Occupation</th></tr></thead><tbody>${famRows}</tbody></table>` : '<p style="font-size:12px;color:var(--text-light);">No family records</p>'}
                     </div>
-                    <div style="background:var(--primary-bg-light);border-radius:12px;padding:16px;border:1px solid var(--primary-soft);">
+                    <div style="background:var(--primary-bg-light);border-radius:12px;padding:16px;border:1px solid #1B738C;">
                         <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px;"><i class="fas fa-briefcase mr-2"></i>Work Experience</div>
                         ${expRows ? `<table style="width:100%;"><thead><tr><th style="padding:4px 10px;font-size:11px;color:var(--text-light);text-align:left;">Company</th><th style="padding:4px 10px;font-size:11px;color:var(--text-light);text-align:left;">Designation</th><th style="padding:4px 10px;font-size:11px;color:var(--text-light);text-align:left;">Years</th></tr></thead><tbody>${expRows}</tbody></table>` : '<p style="font-size:12px;color:var(--text-light);">No experience records</p>'}
                     </div>
                 </div>
             </div>
-            <div style="padding:16px 24px;border-top:1px solid var(--primary-soft);display:flex;justify-content:flex-end;gap:10px;background:var(--primary-bg-light);">
+            <div style="padding:16px 24px;border-top:1px solid #1B738C;display:flex;justify-content:flex-end;gap:10px;background:var(--primary-bg-light);">
                 <button onclick="closeViewOverlay();editEmployee(${emp.employeePrimeId})" class="btn-primary btn-sm"><i class="fas fa-edit mr-1"></i> Edit Employee</button>
                 <button onclick="closeViewOverlay()" class="btn-outline btn-sm">Close</button>
             </div>
@@ -1917,7 +1836,6 @@ function showViewOverlay(emp, loading) {
 
     overlay.addEventListener('click', function(e) { if (e.target === overlay) closeViewOverlay(); });
 }
-
 
 
 
@@ -1952,7 +1870,7 @@ function showEditOverlay(emp, loading, employeePrimeId) {
     const initial = name.charAt(0).toUpperCase();
 
     overlay.innerHTML = `
-        <div style="background:white;border-radius:16px;width:100%;max-width:860px;margin:auto;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.2);border:1px solid var(--primary-soft);">
+        <div style="background:white;border-radius:16px;width:100%;max-width:860px;margin:auto;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.2);border:1px solid #1B738C;">
             <div style="background:var(--primary);padding:20px 24px;display:flex;justify-content:space-between;align-items:center;">
                 <div style="display:flex;align-items:center;gap:14px;">
                     <div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;color:white;font-size:20px;font-weight:700;">${initial}</div>
@@ -1963,7 +1881,7 @@ function showEditOverlay(emp, loading, employeePrimeId) {
                 </div>
                 <button onclick="closeEditOverlay()" style="background:rgba(255,255,255,0.2);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;">&times;</button>
             </div>
-            <div style="display:flex;border-bottom:2px solid var(--primary-soft);background:var(--primary-bg-light);padding:0 24px;overflow-x:auto;">
+            <div style="display:flex;border-bottom:2px solid #1B738C;background:var(--primary-bg-light);padding:0 24px;overflow-x:auto;">
                 ${['Personal','Job Details','Contact & Address','Education & Family','Documents'].map((tab, i) =>
                     `<button onclick="switchEditTab(${i})" id="editTab${i}" style="padding:12px 16px;border:none;background:none;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;color:${i===0?'var(--primary)':'var(--text-light)'};border-bottom-color:${i===0?'var(--primary)':'transparent'};">${tab}</button>`
                 ).join('')}
@@ -1972,9 +1890,9 @@ function showEditOverlay(emp, loading, employeePrimeId) {
                 <div style="padding:24px;overflow-y:auto;max-height:calc(100vh - 250px);">
                     <!-- TAB 0: Personal -->
                     <div id="editSt0">
-                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--primary-soft);"><i class="fas fa-id-card mr-2"></i>Personal Information</div>
+                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-id-card mr-2"></i>Personal Information</div>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
-                            ${editField('First Name *','efFN',emp.firstName,'text',true)}${editField('Middle Name','efMN',emp.middleName)}${editField('Last Name *','efLN',emp.lastName,'text',true)}
+                            ${editField('First Name','efFN',emp.firstName,'text',true)}${editField('Middle Name','efMN',emp.middleName)}${editField('Last Name ','efLN',emp.lastName,'text',true)}
                         </div>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
                             ${editField('Date of Birth','efDOB',emp.dateOfBirth,'date')}${editSelectField('Gender','efGender',['Male','Female','Other'],emp.gender)}${editSelectField('Marital Status','efMarital',['Single','Married','Divorced','Widowed'],emp.maritalStatus)}
@@ -1991,40 +1909,40 @@ function showEditOverlay(emp, loading, employeePrimeId) {
                     </div>
                     <!-- TAB 1: Job Details -->
                     <div id="editSt1" style="display:none;">
-                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--primary-soft);"><i class="fas fa-briefcase mr-2"></i>Job Details</div>
+                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-briefcase mr-2"></i>Job Details</div>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
-                            ${editSelectField('Department *','efDept',['Information Technology','Human Resources','Sales & Marketing','Finance & Accounts','Operations'],emp.department,true)}${editField('Sub-Department','efSubDept',emp.subDepartment)}${editField('Designation *','efDesig',emp.designation,'text',true)}
+                            ${editSelectField('Department ','efDept',['Information Technology','Human Resources','Sales & Marketing','Finance & Accounts','Operations'],emp.department,true)}${editField('Sub-Department','efSubDept',emp.subDepartment)}${editField('Designation ','efDesig',emp.designation,'text',true)}
                         </div>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
-                            ${editSelectField('Employee Grade','efGrade',['L1','L2','L3','L4','L5','M1','M2'],emp.employeeGrade)}${editSelectField('Employment Type','efEmpType',['Full-Time','Part-Time','Contract','Intern'],emp.employmentType)}${editField('Joining Date *','efJD',emp.joiningDate,'date',true)}
+                            ${editSelectField('Employee Grade','efGrade',['L1','L2','L3','L4','L5','M1','M2'],emp.employeeGrade)}${editSelectField('Employment Type','efEmpType',['Full-Time','Part-Time','Contract','Intern'],emp.employmentType)}${editField('Joining Date','efJD',emp.joiningDate,'date',true)}
                         </div>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
                             ${editField('Probation End Date','efProbEnd',emp.probationEndDate,'date')}${editField('Reporting Manager','efMgr',emp.reportingManager)}${editField('HR Business Partner','efHRBP',emp.hrBusinessPartner)}
                         </div>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
-                            ${editSelectField('Work Location','efWL',['Mumbai HQ','Delhi Branch','Remote','Hybrid'],emp.workLocation)}${editField('Basic Salary (₹) *','efBasic',emp.basicSalary,'number',true)}${editSelectField('Shift','efShift',['General (9AM-6PM)','Morning (7AM-4PM)','Evening (2PM-11PM)','Night (10PM-7AM)'],emp.shift)}
+                            ${editSelectField('Work Location','efWL',['Mumbai HQ','Delhi Branch','Remote','Hybrid'],emp.workLocation)}${editField('Basic Salary (₹)','efBasic',emp.basicSalary,'number',true)}${editSelectField('Shift','efShift',['General (9AM-6PM)','Morning (7AM-4PM)','Evening (2PM-11PM)','Night (10PM-7AM)'],emp.shift)}
                         </div>
                         <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:12px;">${editField('Cost Centre','efCC',emp.costCentre)}</div>
-                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--primary-soft);margin-top:16px;"><i class="fas fa-building mr-2"></i>Bank Details</div>
+                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;margin-top:16px;"><i class="fas fa-building mr-2"></i>Bank Details</div>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
                             ${editField('Bank Name','efBank',emp.bankName)}${editField('Account Number','efAccNo',emp.accountNumber)}${editField('IFSC Code','efIFSC',emp.ifscCode)}
                         </div>
                     </div>
                     <!-- TAB 2: Contact & Address -->
                     <div id="editSt2" style="display:none;">
-                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--primary-soft);"><i class="fas fa-address-book mr-2"></i>Contact Information</div>
+                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-address-book mr-2"></i>Contact Information</div>
                         <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:12px;">
-                            ${editField('Personal Email *','efPEmail',emp.personalEmail,'email',true)}${editField('Work Email','efWEmail',emp.workEmail,'email')}${editField('Mobile *','efMob',emp.mobileNumber,'text',true)}${editField('Alternate Phone','efAlt',emp.alternateNumber)}
+                            ${editField('Personal Email','efPEmail',emp.personalEmail,'email',true)}${editField('Work Email','efWEmail',emp.workEmail,'email')}${editField('Mobile *','efMob',emp.mobileNumber,'text',true)}${editField('Alternate Phone','efAlt',emp.alternateNumber)}
                         </div>
                         <div style="font-size:12px;font-weight:700;color:var(--text-light);margin-bottom:10px;margin-top:6px;">Current Address</div>
-                        <div style="background:var(--primary-bg-light);border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid var(--primary-soft);">
+                        <div style="background:var(--primary-bg-light);border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid #1B738C;">
                             ${editTextareaField('Street Address','efCAddr',emp.currentStreet)}
                             <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px;">
                                 ${editField('City','efCity',emp.currentCity)}${editField('State','efState',emp.currentState)}${editField('PIN Code','efPIN',emp.currentPincode)}${editField('Country','efCountry',emp.currentCountry||'India')}
                             </div>
                         </div>
                         <div style="font-size:12px;font-weight:700;color:var(--text-light);margin-bottom:10px;">Permanent Address</div>
-                        <div style="background:var(--primary-bg-light);border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid var(--primary-soft);">
+                        <div style="background:var(--primary-bg-light);border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid #1B738C;">
                             ${editTextareaField('Street Address','efPAddr',emp.permanentStreet)}
                             <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px;">
                                 ${editField('City','efPCity',emp.permanentCity)}${editField('State','efPState',emp.permanentState)}${editField('PIN Code','efPPIN',emp.permanentPincode)}${editField('Country','efPCountry',emp.permanentCountry||'India')}
@@ -2037,19 +1955,19 @@ function showEditOverlay(emp, loading, employeePrimeId) {
                     </div>
                     <!-- TAB 3: Education & Family -->
                     <div id="editSt3" style="display:none;">
-                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--primary-soft);"><i class="fas fa-graduation-cap mr-2"></i>Education Details</div>
+                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-graduation-cap mr-2"></i>Education Details</div>
                         <div id="editEduList"></div>
                         <button type="button" onclick="addEditEduRow()" class="btn-outline btn-sm" style="margin-bottom:16px;"><i class="fas fa-plus mr-1"></i> Add Education</button>
-                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--primary-soft);"><i class="fas fa-users mr-2"></i>Family Details</div>
+                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-users mr-2"></i>Family Details</div>
                         <div id="editFamList"></div>
                         <button type="button" onclick="addEditFamRow()" class="btn-outline btn-sm" style="margin-bottom:16px;"><i class="fas fa-plus mr-1"></i> Add Family Member</button>
-                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--primary-soft);"><i class="fas fa-briefcase mr-2"></i>Work Experience</div>
+                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-briefcase mr-2"></i>Work Experience</div>
                         <div id="editExpList"></div>
                         <button type="button" onclick="addEditExpRow()" class="btn-outline btn-sm"><i class="fas fa-plus mr-1"></i> Add Experience</button>
                     </div>
                     <!-- TAB 4: Documents -->
                     <div id="editSt4" style="display:none;">
-                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--primary-soft);"><i class="fas fa-folder mr-2"></i>Upload / Replace Documents</div>
+                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-folder mr-2"></i>Upload / Replace Documents</div>
                         <p style="font-size:12px;color:var(--text-light);margin-bottom:14px;">Upload a new file to replace the existing document. Leave blank to keep existing.</p>
                         <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
                             ${editFileField('Aadhaar Card','efAadhaar',!!(emp.aadhaarDocumentUrl||emp.aadhaarDocumentImage),`${API_BASE}/${emp.employeeId}/aadhaar-image`)}
@@ -2061,7 +1979,7 @@ function showEditOverlay(emp, loading, employeePrimeId) {
                         </div>
                     </div>
                 </div>
-                <div style="padding:16px 24px;border-top:1px solid var(--primary-soft);display:flex;justify-content:space-between;align-items:center;background:var(--primary-bg-light);">
+                <div style="padding:16px 24px;border-top:1px solid #1B738C;display:flex;justify-content:space-between;align-items:center;background:var(--primary-bg-light);">
                     <span style="font-size:11px;color:var(--text-light);"><i class="fas fa-info-circle mr-1"></i>Fields marked with * are required</span>
                     <div style="display:flex;gap:10px;">
                         <button type="button" onclick="closeEditOverlay()" class="btn-outline btn-sm">Cancel</button>
@@ -2083,23 +2001,23 @@ function editField(label, id, value, type = 'text', required = false) {
     // Handle null/undefined values
     const val = (value !== null && value !== undefined) ? value : '';
     return `<div>
-        <label style="font-size:11px;font-weight:600;color:#540863;display:block;margin-bottom:4px;">${label} ${required ? '<span class="req">*</span>' : ''}</label>
+        <label style="font-size:11px;font-weight:600; color: #1B738C; display:block;margin-bottom:4px;">${label} ${required ? '<span class="req">*</span>' : ''}</label>
         <input type="${type}" id="${id}" value="${String(val).replace(/"/g, '&quot;')}" ${req}
-            style="border:1px solid #c99ebb;border-radius:8px;padding:7px 10px;width:100%;font-size:12px;box-sizing:border-box;">
+            style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
     </div>`;
 }
 function editSelectField(label, id, options, selected, required=false) {
     const opts = options.map(o => `<option value="${o}" ${o===selected?'selected':''}>${o}</option>`).join('');
-    return `<div><label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">${label}</label><select id="${id}" ${required?'required':''} style="border:1px solid var(--primary-soft);border-radius:10px;padding:8px 12px;width:100%;font-size:12px;box-sizing:border-box;color:var(--text-dark);"><option value="">Select</option>${opts}</select></div>`;
+    return `<div><label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">${label}</label><select id="${id}" ${required?'required':''} style="border:1px solid #1B738C; border-radius:10px;padding:8px 12px;width:100%;font-size:12px;box-sizing:border-box;color:var(--text-dark);"><option value="">Select</option>${opts}</select></div>`;
 }
 function editTextareaField(label, id, value) {
-    return `<div><label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">${label}</label><textarea id="${id}" rows="2" style="border:1px solid var(--primary-soft);border-radius:10px;padding:8px 12px;width:100%;font-size:12px;box-sizing:border-box;resize:vertical;color:var(--text-dark);">${value||''}</textarea></div>`;
+    return `<div><label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">${label}</label><textarea id="${id}" rows="2" style="border:1px solid #1B738C; border-radius:10px;padding:8px 12px;width:100%;font-size:12px;box-sizing:border-box;resize:vertical;color:var(--text-dark);">${value||''}</textarea></div>`;
 }
 function editFileField(label, id, hasDoc, viewUrl) {
-    return `<div style="background:var(--primary-bg-light);border-radius:10px;padding:12px;border:1px solid var(--primary-soft);">
+    return `<div style="background:var(--primary-bg-light);border-radius:10px;padding:12px;border:1px solid #1B738C;">
         <label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:6px;">${label}</label>
         ${hasDoc ? `<div style="margin-bottom:6px;"><a href="${viewUrl}" target="_blank" style="font-size:11px;color:#2b7a3e;font-weight:600;"><i class="fas fa-check-circle mr-1"></i>Current file — View</a></div>` : `<div style="margin-bottom:6px;font-size:11px;color:#dc3545;"><i class="fas fa-times-circle mr-1"></i>Not uploaded</div>`}
-        <input type="file" id="${id}" accept=".pdf,.jpg,.png" style="border:1px solid var(--primary-soft);border-radius:8px;padding:5px;width:100%;font-size:11px;box-sizing:border-box;">
+        <input type="file" id="${id}" accept=".pdf,.jpg,.png" style="border:1px solid #1B738C;border-radius:8px;padding:5px;width:100%;font-size:11px;box-sizing:border-box;">
         <div style="font-size:10px;color:var(--text-light);margin-top:3px;">Leave blank to keep existing</div>
     </div>`;
 }
@@ -2117,21 +2035,21 @@ function addEditEduRow(degree='', institution='', year='') {
     const row = document.createElement('div');
     row.className = 'edit-edu-row';
     row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr 32px;gap:8px;margin-bottom:8px;align-items:end;';
-    row.innerHTML = `<input placeholder="Degree" value="${degree}" style="border:1px solid var(--primary-soft);border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Institution" value="${institution}" style="border:1px solid var(--primary-soft);border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Year" value="${year}" style="border:1px solid var(--primary-soft);border-radius:10px;padding:7px 10px;font-size:12px;"><button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
+    row.innerHTML = `<input placeholder="Degree" value="${degree}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Institution" value="${institution}" style="border:1px solid #1B738C; border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Year" value="${year}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
     document.getElementById('editEduList').appendChild(row);
 }
 function addEditFamRow(name='', relationship='', occupation='') {
     const row = document.createElement('div');
     row.className = 'edit-fam-row';
     row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr 32px;gap:8px;margin-bottom:8px;align-items:end;';
-    row.innerHTML = `<input placeholder="Name" value="${name}" style="border:1px solid var(--primary-soft);border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Relationship" value="${relationship}" style="border:1px solid var(--primary-soft);border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Occupation" value="${occupation}" style="border:1px solid var(--primary-soft);border-radius:10px;padding:7px 10px;font-size:12px;"><button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
+    row.innerHTML = `<input placeholder="Name" value="${name}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Relationship" value="${relationship}" style="border:1px solid #1B738C; border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Occupation" value="${occupation}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
     document.getElementById('editFamList').appendChild(row);
 }
 function addEditExpRow(company='', designation='', years='') {
     const row = document.createElement('div');
     row.className = 'edit-exp-row';
     row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr 32px;gap:8px;margin-bottom:8px;align-items:end;';
-    row.innerHTML = `<input placeholder="Company" value="${company}" style="border:1px solid var(--primary-soft);border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Designation" value="${designation}" style="border:1px solid var(--primary-soft);border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Years" value="${years}" style="border:1px solid var(--primary-soft);border-radius:10px;padding:7px 10px;font-size:12px;"><button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
+    row.innerHTML = `<input placeholder="Company" value="${company}" style="border:1px solid #1B738C; border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Designation" value="${designation}" style="border:1px solid #1B738C; border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Years" value="${years}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
     document.getElementById('editExpList').appendChild(row);
 }
 
@@ -2360,33 +2278,90 @@ function togglePWD(toggle) {
 }
 
 // ==================== DYNAMIC ROWS ====================
-function addEduRow() {
-    const row = document.createElement('div');
-    row.className = 'edu-row grid-3'; row.style.cssText = 'margin-bottom:10px;';
-    row.innerHTML = `<input placeholder="Degree"><input placeholder="Institution"><input placeholder="Year"><button type="button" onclick="this.parentElement.remove()" class="btn-danger btn-sm"><i class="fas fa-trash"></i></button>`;
-    document.getElementById('eduList').appendChild(row);
-}
-function addFamRow() {
-    const row = document.createElement('div');
-    row.className = 'fam-row grid-3'; row.style.cssText = 'margin-bottom:10px;';
-    row.innerHTML = `<input placeholder="Name"><input placeholder="Relationship"><input placeholder="Occupation"><button type="button" onclick="this.parentElement.remove()" class="btn-danger btn-sm"><i class="fas fa-trash"></i></button>`;
-    document.getElementById('famList').appendChild(row);
-}
-function addExpRow() {
-    const row = document.createElement('div');
-    row.className = 'exp-row grid-3'; row.style.cssText = 'margin-bottom:10px;';
-    row.innerHTML = `<input placeholder="Company"><input placeholder="Designation"><input placeholder="Years"><button type="button" onclick="this.parentElement.remove()" class="btn-danger btn-sm"><i class="fas fa-trash"></i></button>`;
-    document.getElementById('expList').appendChild(row);
-}
+    function addEduRow() {
+        const container = document.getElementById('eduList');
+
+        const row = document.createElement('div');
+        row.className = 'dynamic-row';
+
+        row.innerHTML = `
+            <input placeholder="Degree (e.g., B.Tech)" style="padding:2px 8px;">
+            <input placeholder="Institution (e.g., IIT Delhi)" style="padding:2px 8px;">
+            <input placeholder="Year (e.g., 2024)" style="padding:2px 8px;">
+            <input placeholder="Percentage / CGPA" style="padding:2px 8px;">
+            <button class="remove-btn" onclick="this.parentElement.remove()">X</button>`;
+        container.appendChild(row);
+    }
+
+
+    function addFamRow() {
+        const container = document.getElementById('famList');
+
+        const row = document.createElement('div');
+        row.className = 'dynamic-row';
+
+        row.innerHTML = `
+            <input placeholder="Name (e.g., Ramesh Sharma)" style="padding:2px 8px;">
+            <input placeholder="Relationship (e.g., Father)" style="padding:2px 8px;">
+            <input placeholder="Occupation" style="padding:2px 8px;">
+            <input placeholder="Phone Number" style="padding:2px 8px;">
+            <button class="remove-btn" onclick="this.parentElement.remove()">X</button>`;
+        container.appendChild(row);
+    }
+
+
+
+    function addExpRow() {
+        const container = document.getElementById('expList');
+
+        const row = document.createElement('div');
+        row.className = 'dynamic-row';
+
+        row.innerHTML = `
+            <input placeholder="Company (e.g., Infosys)" style="padding:2px 8px;">
+            <input placeholder="Designation (e.g., Developer)" style="padding:2px 8px;">
+            <input placeholder="Years (e.g., 2 years)" style="padding:2px 8px;">
+            <input placeholder="Location" style="padding:2px 8px;">
+            <button class="remove-btn" onclick="this.parentElement.remove()">X</button>`;
+
+        container.appendChild(row);
+    }
+
 
 // ==================== DOCUMENT PREVIEW ====================
-function addDocRow(input, docName) {
-    if (input.files.length > 0) {
-        uploadedDocs = uploadedDocs.filter(d => d.name !== docName);
-        uploadedDocs.push({ name: docName, file: input.files[0].name, fileObj: input.files[0] });
-        updateDocList();
+
+    function addDocRow(input, label) {
+        const file = input.files[0];
+        if (!file) return;
+
+        const container = document.getElementById('uploadedDocList');
+
+        const row = document.createElement('div');
+        row.className = 'doc-item';
+
+        row.innerHTML = `
+            <div style="display:flex;align-items:center;gap:10px;">
+            <i class="fas fa-file-alt" style="color:var(--primary);"></i>
+            <div>
+            <div style="font-size:13px;font-weight:600;color:var(--primary);">${label}</div>
+            <div style="font-size:11px;color:var(--text-light);">${file.name}</div>
+            </div>
+            </div>
+
+            <div style="display:flex;gap:8px;">
+            <button class="btn-outline btn-sm" onclick="window.open('${URL.createObjectURL(file)}')">
+                    View
+            </button>
+            <button class="btn-danger btn-sm" onclick="this.parentElement.parentElement.remove()">
+                    Remove
+            </button>
+            </div>`;
+
+            container.appendChild(row);
     }
-}
+
+
+
 function updateDocList() {
     const container = document.getElementById('uploadedDocList');
     if (container) container.innerHTML = uploadedDocs.map(doc => `<div class="doc-item"><span><i class="fas fa-file-pdf" style="color:var(--primary);"></i>&nbsp; ${doc.name}: <strong>${doc.file}</strong></span><button type="button" onclick="removeDoc('${doc.name}')" style="color:#dc3545;background:none;border:none;cursor:pointer;"><i class="fas fa-trash"></i></button></div>`).join('');
