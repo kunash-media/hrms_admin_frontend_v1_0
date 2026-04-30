@@ -111,27 +111,27 @@ function initSidebar() {
         // ========== CHECK SUBMODULES FIRST ==========
         
         // Employee Management Submodules
-        if (currentPage === 'employees.html') {
-            // Activate parent Employee Management link
-            const employeeLink = document.querySelector('.nav-link[data-module="employees"]');
-            if (employeeLink) employeeLink.classList.add('active');
+        // if (currentPage === 'employees.html') {
+        //     // Activate parent Employee Management link
+        //     const employeeLink = document.querySelector('.nav-link[data-module="employees"]');
+        //     if (employeeLink) employeeLink.classList.add('active');
             
-            // Activate specific submenu based on tab
-            let submenuLink = null;
-            if (tabParam === 'all' || !tabParam) submenuLink = document.querySelector('.submenu a[href*="tab=all"]');
-            else if (tabParam === 'add') submenuLink = document.querySelector('.submenu a[href*="tab=add"]');
-            else if (tabParam === 'documents') submenuLink = document.querySelector('.submenu a[href*="tab=documents"]');
-            else if (tabParam === 'history') submenuLink = document.querySelector('.submenu a[href*="tab=history"]');
+        //     // Activate specific submenu based on tab
+        //     let submenuLink = null;
+        //     if (tabParam === 'all' || !tabParam) submenuLink = document.querySelector('.submenu a[href*="tab=all"]');
+        //     else if (tabParam === 'add') submenuLink = document.querySelector('.submenu a[href*="tab=add"]');
+        //     else if (tabParam === 'documents') submenuLink = document.querySelector('.submenu a[href*="tab=documents"]');
+        //     else if (tabParam === 'history') submenuLink = document.querySelector('.submenu a[href*="tab=history"]');
             
-            if (submenuLink) submenuLink.classList.add('active');
+        //     if (submenuLink) submenuLink.classList.add('active');
             
-            // Open parent submenu
-            const parentSubmenu = document.querySelector('.has-submenu .submenu');
-            if (parentSubmenu) {
-                parentSubmenu.style.display = 'block';
-                parentSubmenu.closest('.has-submenu').classList.add('submenu-open');
-            }
-        }
+        //     // Open parent submenu
+        //     const parentSubmenu = document.querySelector('.has-submenu .submenu');
+        //     if (parentSubmenu) {
+        //         parentSubmenu.style.display = 'block';
+        //         parentSubmenu.closest('.has-submenu').classList.add('submenu-open');
+        //     }
+        // }
 
         // Payroll Submodules
         if (currentPage === 'payroll.html') {
