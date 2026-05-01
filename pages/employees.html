@@ -875,7 +875,7 @@
 
         .form-group input,
         .form-group select {
-            height: 36px;
+            /* height: 36px; */
         }
 
         .dynamic-row {
@@ -2256,10 +2256,10 @@ function updateWizardUI() {
         if (stepDiv) stepDiv.style.display = i === currentStep ? 'block' : 'none';
     }
     const prevBtn=document.getElementById('prevBtn'), nextBtn=document.getElementById('nextBtn'), saveBtn=document.getElementById('saveBtn');
-    if (prevBtn) prevBtn.style.display = currentStep===0 ? 'none' : 'inline-flex';
+    if (prevBtn) prevBtn.style.display = currentStep===0 ? 'none' : '';
     if (nextBtn && saveBtn) {
         if (currentStep === totalSteps-1) { nextBtn.style.display='none'; saveBtn.style.display='inline-flex'; }
-        else { nextBtn.style.display='inline-flex'; saveBtn.style.display='none'; }
+        else { nextBtn.style.display=''; saveBtn.style.display='none'; }
     }
 }
 function nextStep() { if (currentStep < totalSteps-1) { currentStep++; updateWizardUI(); } }

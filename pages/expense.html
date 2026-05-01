@@ -8,12 +8,10 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
     
     <style>
         * { font-family: 'Inter', sans-serif; }
 
-        /* ===== COMPANY MANAGEMENT THEME ===== */
         :root {
             --primary: #1B738C;
             --primary-light: #62C9EA;
@@ -46,10 +44,8 @@
         .stat-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px -5px #a6dff1;
-            border-color: var(--primary-light);
         }
 
-        /* ===== BUTTONS ===== */
         .btn-primary {
             background-color: var(--primary);
             transition: all 0.3s ease;
@@ -65,6 +61,11 @@
             background-color: var(--button-hover);
             transform: translateY(-1px);
             box-shadow: 0 4px 10px rgba(27,115,140,0.2);
+        }
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
         }
 
         .btn-success {
@@ -93,18 +94,6 @@
         }
         .btn-danger:hover { background-color: #c82333; }
 
-        .btn-warning {
-            background-color: #ffc107;
-            color: #333;
-            padding: 6px 14px;
-            border-radius: 8px;
-            font-size: 12px;
-            cursor: pointer;
-            border: none;
-            font-weight: 500;
-        }
-        .btn-warning:hover { background-color: #e0a800; }
-
         .btn-outline {
             border: 1px solid var(--primary-light);
             color: var(--primary);
@@ -121,7 +110,6 @@
             border-color: var(--primary);
         }
 
-        /* ===== INPUTS ===== */
         input, select, textarea {
             border: 1px solid var(--primary-soft);
             border-radius: 10px;
@@ -135,38 +123,20 @@
             min-height: 42px;
             transition: 0.2s;
         }
-
-        input::placeholder, textarea::placeholder {
-            color: #aaa;
-            font-size: 13px;
-            font-weight: 400;
-        }
-
-        select {
-            appearance: auto;
-            padding-right: 32px;
-            cursor: pointer;
-        }
-
+        input::placeholder, textarea::placeholder { color: #aaa; font-size: 13px; }
+        select { appearance: auto; padding-right: 32px; cursor: pointer; }
         input[type="date"] { padding: 10px 14px; color: #555; }
         input[type="file"] { padding: 8px 12px; min-height: 42px; cursor: pointer; font-size: 13px; color: #555; }
         input[type="number"] { padding: 10px 14px; }
-
         input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(27,115,140,0.1);
         }
+        select:disabled { background-color: #f5f5f5; color: #999; cursor: not-allowed; }
 
-        label {
-            font-size: 13px;
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 6px;
-            display: block;
-        }
+        label { font-size: 13px; font-weight: 600; color: var(--primary); margin-bottom: 6px; display: block; }
 
-        /* ===== TABS (pill style same as Company Management) ===== */
         .tab-nav {
             display: flex;
             gap: 8px;
@@ -175,7 +145,6 @@
             border-bottom: 2px solid var(--primary-soft);
             flex-wrap: wrap;
         }
-
         .tab-btn {
             padding: 8px 22px;
             border-radius: 40px;
@@ -187,31 +156,22 @@
             cursor: pointer;
             border: none;
         }
-        .tab-btn:hover {
-            background-color: var(--primary-bg-light);
-            color: var(--button-hover);
-        }
-        .tab-btn.active {
-            background-color: var(--primary);
-            color: white;
-        }
+        .tab-btn:hover { background-color: var(--primary-bg-light); }
+        .tab-btn.active { background-color: var(--primary); color: white; }
 
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* ===== STATUS BADGES ===== */
         .status-pending  { background: rgba(255,193,7,0.18);  color: #856404; }
         .status-approved { background: rgba(43,122,62,0.15);  color: #155724; }
         .status-rejected { background: rgba(220,53,69,0.15);  color: #721c24; }
         .status-paid     { background: rgba(27,115,140,0.15); color: #0c5460; }
 
-        /* ===== TABLE ===== */
         table { width: 100%; border-collapse: collapse; }
         th { font-weight: 600; font-size: 12px; color: var(--text-light); text-align: left; padding: 12px 8px; }
         td { padding: 10px 8px; }
         .data-row:hover { background-color: var(--primary-bg-light); cursor: pointer; }
 
-        /* ===== MODAL ===== */
         .modal {
             display: none;
             position: fixed;
@@ -241,13 +201,8 @@
             padding-bottom: 12px;
             border-bottom: 2px solid var(--primary-soft);
         }
-        .modal-header h3 {
-            font-weight: 700;
-            color: var(--primary);
-            font-size: 1.1rem;
-        }
+        .modal-header h3 { font-weight: 700; color: var(--primary); font-size: 1.1rem; }
 
-        /* ===== TOAST ===== */
         .toast {
             position: fixed;
             bottom: 24px;
@@ -264,7 +219,6 @@
         .toast.success { background-color: #2b7a3e; }
         .toast.error   { background-color: #dc3545; }
         .toast.info    { background-color: var(--primary); }
-
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to   { transform: translateX(0);    opacity: 1; }
@@ -283,18 +237,14 @@
             margin-bottom: 20px;
         }
 
-        .receipt-preview {
-            max-width: 80px;
-            max-height: 80px;
-            object-fit: cover;
-            border-radius: 8px;
-            cursor: pointer;
+        /* Hint text below select */
+        .field-hint {
+            font-size: 11px;
+            color: var(--text-light);
+            margin-top: 4px;
         }
 
-        .pie-chart-container { max-width: 200px; margin: 0 auto; }
-        .budget-chart-container { max-width: 100%; height: 250px; }
-
-        /* ===== PAGINATION ===== */
+        /* Pagination */
         .pagination-wrapper {
             display: flex;
             align-items: center;
@@ -325,7 +275,7 @@
         .page-btn.active { background-color: var(--primary); color: white; border-color: var(--primary); }
         .page-btn:disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
 
-        /* ===== CUSTOM TYPE OVERLAY ===== */
+        /* Custom Type Overlay */
         .custom-type-overlay {
             display: none;
             position: fixed;
@@ -346,22 +296,9 @@
             box-shadow: 0 20px 60px rgba(27,115,140,0.2);
             border: 1px solid var(--primary-soft);
         }
-        .custom-type-box h4 {
-            font-size: 16px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 6px;
-        }
-        .custom-type-box p {
-            font-size: 12px;
-            color: var(--text-light);
-            margin-bottom: 18px;
-        }
-        .custom-type-input-wrap {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
+        .custom-type-box h4 { font-size: 16px; font-weight: 700; color: var(--primary); margin-bottom: 6px; }
+        .custom-type-box p  { font-size: 12px; color: var(--text-light); margin-bottom: 18px; }
+        .custom-type-input-wrap { display: flex; gap: 10px; align-items: center; }
         .custom-type-input-wrap input {
             flex: 1;
             min-height: 42px;
@@ -369,12 +306,6 @@
             border-radius: 10px;
             padding: 10px 14px;
             font-size: 13px;
-            color: var(--text-dark);
-        }
-        .custom-type-input-wrap input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(27,115,140,0.1);
         }
         .custom-type-add-btn {
             background-color: var(--primary);
@@ -386,7 +317,6 @@
             font-weight: 600;
             cursor: pointer;
             white-space: nowrap;
-            transition: background-color 0.2s;
             min-height: 42px;
         }
         .custom-type-add-btn:hover { background-color: var(--button-hover); }
@@ -401,9 +331,8 @@
             font-size: 13px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s;
         }
-        .custom-type-cancel-btn:hover { background-color: var(--primary-bg-light); border-color: var(--primary); }
+        .custom-type-cancel-btn:hover { background-color: var(--primary-bg-light); }
         .custom-type-added-list { margin-top: 16px; }
         .custom-type-added-list p { font-size: 12px; color: var(--text-light); margin-bottom: 8px; font-weight: 500; }
         .custom-type-tag {
@@ -419,13 +348,7 @@
             margin: 3px;
             font-weight: 500;
         }
-        .custom-type-tag .remove-tag {
-            cursor: pointer;
-            color: #dc3545;
-            font-size: 11px;
-            font-weight: bold;
-            line-height: 1;
-        }
+        .custom-type-tag .remove-tag { cursor: pointer; color: #dc3545; font-size: 11px; font-weight: bold; }
         .custom-type-tag .remove-tag:hover { color: #a71d2a; }
 
         .badge-custom {
@@ -441,8 +364,6 @@
             .section-card { padding: 14px; }
             .tab-btn { padding: 6px 14px; font-size: 12px; }
             .form-row { grid-template-columns: 1fr; }
-            .pie-chart-container { max-width: 150px; }
-            .budget-chart-container { height: 200px; }
         }
     </style>
 </head>
@@ -459,17 +380,19 @@
                 <!-- Page Header -->
                 <div class="mb-4">
                     <h1 class="text-xl font-bold" style="color: var(--primary);">Expense Management</h1>
-                    <p class="text-xs mt-0.5" style="color: var(--text-light);">Manage employee expense claims, approvals, reimbursements, and budgets</p>
+                    <p class="text-xs mt-0.5" style="color: var(--text-light);">Manage employee expense claims, approvals and reimbursements</p>
                 </div>
                 
                 <!-- Tabs -->
                 <div class="tab-nav">
-                    <button class="tab-btn active" data-tab="claims"> Expense Claims</button>
-                    <button class="tab-btn" data-tab="approvals"> Pending Approvals</button>
+                    <button class="tab-btn active" data-tab="claims">Expense Claims</button>
+                    <button class="tab-btn" data-tab="approvals">Pending Approvals</button>
                 </div>
                 
                 <!-- ==================== CLAIMS TAB ==================== -->
                 <div id="tab-claims" class="tab-content active">
+
+                    <!-- Stats Cards -->
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-5">
                         <div class="stat-card">
                             <div class="flex items-center justify-between mb-2">
@@ -479,7 +402,7 @@
                             </div>
                             <p class="text-[11px] mb-0.5" style="color: var(--text-light);">TOTAL CLAIMS</p>
                             <p class="text-2xl font-bold" style="color: var(--primary);" id="totalClaims">0</p>
-                            <p class="text-[10px] mt-1" style="color: var(--text-light);">This month</p>
+                            <p class="text-[10px] mt-1" style="color: var(--text-light);">All records</p>
                         </div>
                         <div class="stat-card">
                             <div class="flex items-center justify-between mb-2">
@@ -489,7 +412,7 @@
                             </div>
                             <p class="text-[11px] mb-0.5" style="color: var(--text-light);">TOTAL AMOUNT</p>
                             <p class="text-2xl font-bold" style="color: var(--primary);" id="totalAmount">₹0</p>
-                            <p class="text-[10px] mt-1" style="color: var(--text-light);">This month</p>
+                            <p class="text-[10px] mt-1" style="color: var(--text-light);">All records</p>
                         </div>
                         <div class="stat-card">
                             <div class="flex items-center justify-between mb-2">
@@ -509,7 +432,7 @@
                             </div>
                             <p class="text-[11px] mb-0.5" style="color: var(--text-light);">APPROVED</p>
                             <p class="text-2xl font-bold" style="color: #2b7a3e;" id="approvedClaims">0</p>
-                            <p class="text-[10px] mt-1" style="color: #2b7a3e;">This month</p>
+                            <p class="text-[10px] mt-1" style="color: #2b7a3e;">Total approved</p>
                         </div>
                     </div>
                     
@@ -517,13 +440,26 @@
                     <div class="section-card">
                         <h3 class="text-md font-bold mb-4" style="color: var(--primary);">Submit New Expense Claim</h3>
                         <form id="expenseForm">
+
+                            <!-- Row 1: Department → Employee (cascade) -->
                             <div class="form-row">
                                 <div>
+                                    <label>Department <span class="text-red-500">*</span></label>
+                                    <select id="exp_department" required onchange="onDepartmentChange('main')">
+                                        <option value="">Loading departments...</option>
+                                    </select>
+                                    <p class="field-hint">Select department to filter employees</p>
+                                </div>
+                                <div>
                                     <label>Employee <span class="text-red-500">*</span></label>
-                                    <select id="exp_employee" required>
-                                        <option value="">Loading employees...</option>
+                                    <select id="exp_employee" required disabled>
+                                        <option value="">Select department first</option>
                                     </select>
                                 </div>
+                            </div>
+
+                            <!-- Row 2: Expense Type + Date -->
+                            <div class="form-row">
                                 <div>
                                     <label>Expense Type <span class="text-red-500">*</span></label>
                                     <select id="exp_type" required onchange="handleExpenseTypeChange(this, 'main')">
@@ -536,35 +472,40 @@
                                         <option value="Others">📦 Others</option>
                                     </select>
                                 </div>
-                            </div>
-                            <div class="form-row">
                                 <div>
                                     <label>Expense Date <span class="text-red-500">*</span></label>
                                     <input type="date" id="exp_date" required>
                                 </div>
+                            </div>
+
+                            <!-- Row 3: Amount + Bill Number -->
+                            <div class="form-row">
                                 <div>
                                     <label>Amount (₹) <span class="text-red-500">*</span></label>
-                                    <input type="number" id="exp_amount" placeholder="Enter amount" required>
+                                    <input type="number" id="exp_amount" placeholder="Enter amount" min="1" required>
+                                </div>
+                                <div>
+                                    <label>Bill / Invoice Number</label>
+                                    <input type="text" id="exp_bill_no" placeholder="Optional">
                                 </div>
                             </div>
+
+                            <!-- Row 4: Description + Receipt -->
                             <div class="form-row">
                                 <div>
                                     <label>Description</label>
                                     <textarea id="exp_desc" rows="2" placeholder="Brief description of expense"></textarea>
                                 </div>
-                            </div>
-                            <div class="form-row">
                                 <div>
                                     <label>Upload Receipt</label>
                                     <input type="file" id="exp_receipt" accept="image/*,.pdf">
                                 </div>
-                                <div>
-                                    <label>Bill/Invoice Number</label>
-                                    <input type="text" id="exp_bill_no" placeholder="Optional">
-                                </div>
                             </div>
+
                             <div class="flex justify-end mt-4">
-                                <button type="submit" class="btn-primary"><i class="fas fa-paper-plane mr-2"></i>Submit Claim</button>
+                                <button type="submit" class="btn-primary" id="submitBtn">
+                                    <i class="fas fa-paper-plane mr-2"></i>Submit Claim
+                                </button>
                             </div>
                         </form>
                     </div>
@@ -580,9 +521,12 @@
                                     <option value="Food">Food</option>
                                     <option value="Fuel">Fuel</option>
                                     <option value="Stationery">Stationery</option>
+                                    <option value="Medical">Medical</option>
                                 </select>
-                                <input type="text" id="claimSearch" placeholder="Search..." class="w-48 text-sm" onkeyup="filterClaims()" style="padding: 6px 10px;">
-                                <button onclick="exportClaims()" class="btn-outline text-sm"><i class="fas fa-download mr-1"></i>Export</button>
+                                <input type="text" id="claimSearch" placeholder="Search employee..." class="w-48 text-sm" onkeyup="filterClaims()" style="padding: 6px 10px;">
+                                <button onclick="exportClaims()" class="btn-outline text-sm">
+                                    <i class="fas fa-download mr-1"></i>Export
+                                </button>
                             </div>
                         </div>
                         
@@ -624,6 +568,8 @@
                                     <option value="Travel">Travel</option>
                                     <option value="Food">Food</option>
                                     <option value="Fuel">Fuel</option>
+                                    <option value="Stationery">Stationery</option>
+                                    <option value="Medical">Medical</option>
                                 </select>
                                 <input type="text" id="approvalSearch" placeholder="Search employee..." class="w-48 text-sm" style="padding: 6px 10px;" onkeyup="filterApprovals()">
                             </div>
@@ -654,25 +600,6 @@
         </div>
     </div>
     
-    <!-- ==================== BUDGET MODAL ==================== -->
-    <div id="budgetModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Set Department Budget</h3>
-                <span onclick="closeBudgetModal()" style="cursor:pointer;font-size:22px;color:var(--primary-light);">&times;</span>
-            </div>
-            <form id="budgetForm">
-                <div class="mb-3"><label>Department</label><select required><option>IT</option><option>HR</option><option>Sales</option><option>Finance</option></select></div>
-                <div class="mb-3"><label>Monthly Budget (₹)</label><input type="number" required></div>
-                <div class="mb-3"><label>Quarterly Budget (₹)</label><input type="number"></div>
-                <div class="flex justify-end gap-3 mt-4">
-                    <button type="button" onclick="closeBudgetModal()" class="btn-outline">Cancel</button>
-                    <button type="submit" class="btn-primary">Set Budget</button>
-                </div>
-            </form>
-        </div>
-    </div>
-    
     <!-- ==================== RECEIPT MODAL ==================== -->
     <div id="receiptModal" class="modal">
         <div class="modal-content text-center">
@@ -684,7 +611,9 @@
                 <i class="fas fa-receipt text-6xl mb-2" style="color: var(--primary-soft); display:block;"></i>
                 <p class="mt-2 text-sm" style="color: var(--text-light);">No receipt uploaded for this claim</p>
             </div>
-            <div class="flex justify-end mt-4"><button onclick="closeReceiptModal()" class="btn-primary">Close</button></div>
+            <div class="flex justify-end mt-4">
+                <button onclick="closeReceiptModal()" class="btn-primary">Close</button>
+            </div>
         </div>
     </div>
     
@@ -709,19 +638,30 @@
 
     <!-- ==================== EDIT MODAL ==================== -->
     <div id="editClaimModal" class="modal">
-        <div class="modal-content" style="max-width:520px;">
+        <div class="modal-content" style="max-width:560px;">
             <div class="modal-header">
                 <h3><i class="fas fa-edit mr-2"></i>Edit Expense Claim</h3>
                 <span onclick="closeEditModal()" style="cursor:pointer;font-size:22px;color:var(--primary-light);">&times;</span>
             </div>
             <form id="editClaimForm">
+
+                <!-- Department → Employee cascade in edit modal -->
                 <div class="form-row">
                     <div>
-                        <label>Employee <span class="text-red-500">*</span></label>
-                        <select id="edit_employee" required>
-                            <option value="">Loading employees...</option>
+                        <label>Department <span class="text-red-500">*</span></label>
+                        <select id="edit_department" required onchange="onDepartmentChange('edit')">
+                            <option value="">Select Department</option>
                         </select>
                     </div>
+                    <div>
+                        <label>Employee <span class="text-red-500">*</span></label>
+                        <select id="edit_employee" required disabled>
+                            <option value="">Select department first</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
                     <div>
                         <label>Expense Type <span class="text-red-500">*</span></label>
                         <select id="edit_type" required onchange="handleExpenseTypeChange(this, 'edit')">
@@ -734,18 +674,17 @@
                             <option value="Others">📦 Others</option>
                         </select>
                     </div>
-                </div>
-                <div class="form-row">
                     <div>
                         <label>Expense Date <span class="text-red-500">*</span></label>
                         <input type="date" id="edit_date" required>
                     </div>
+                </div>
+
+                <div class="form-row">
                     <div>
                         <label>Amount (₹) <span class="text-red-500">*</span></label>
-                        <input type="number" id="edit_amount" placeholder="Enter amount" required>
+                        <input type="number" id="edit_amount" placeholder="Enter amount" min="1" required>
                     </div>
-                </div>
-                <div class="form-row">
                     <div>
                         <label>Status</label>
                         <select id="edit_status">
@@ -756,6 +695,7 @@
                         </select>
                     </div>
                 </div>
+
                 <div class="flex justify-end gap-3 mt-4">
                     <button type="button" onclick="closeEditModal()" class="btn-outline">Cancel</button>
                     <button type="submit" class="btn-primary"><i class="fas fa-save mr-2"></i>Save Changes</button>
@@ -768,10 +708,13 @@
     <div id="customTypeOverlay" class="custom-type-overlay">
         <div class="custom-type-box">
             <h4><i class="fas fa-plus-circle mr-2" style="color: var(--primary);"></i>Add Custom Expense Type</h4>
-            <p>Type your custom expense category name and click Add. It will be saved to the dropdown for this session.</p>
+            <p>Type your custom expense category name and click Add.</p>
             <div class="custom-type-input-wrap">
-                <input type="text" id="customTypeInput" placeholder="e.g. Internet Bill, Courier, Maintenance…" maxlength="40" onkeydown="handleCustomTypeKeydown(event)" />
-                <button class="custom-type-add-btn" onclick="addCustomExpenseType()"><i class="fas fa-plus mr-1"></i>Add</button>
+                <input type="text" id="customTypeInput" placeholder="e.g. Internet Bill, Courier, Maintenance…"
+                       maxlength="40" onkeydown="handleCustomTypeKeydown(event)" />
+                <button class="custom-type-add-btn" onclick="addCustomExpenseType()">
+                    <i class="fas fa-plus mr-1"></i>Add
+                </button>
             </div>
             <div class="custom-type-added-list" id="customTypeAddedList" style="display:none;">
                 <p>Added this session:</p>
@@ -786,404 +729,616 @@
     <script src="/assets/js/header.js"></script>
     
     <script>
-        // API URLs
-        const EXPENSE_API_BASE_URL  = 'http://localhost:8086/api/expenses';
-        const EMPLOYEE_API_BASE_URL = 'http://localhost:8086/api/employees';
+        // =====================================================================
+        // CONFIG
+        // =====================================================================
+        var EXPENSE_API  = 'http://localhost:8086/api/expenses';
+        var EMPLOYEE_API = 'http://localhost:8086/api/employees';
 
-        // State
-        var claimsData = [], approvalsData = [], employeesList = [];
-        var expensePieChart = null, budgetChart = null;
-        var deleteTargetRow = null, deleteTargetId = null;
-        var claimsCurrentPage = 1, claimsRowsPerPage = 5;
-        var editTargetRow = null, editTargetExpenseId = null;
-        var customTypeOriginContext = null, customTypesAdded = [];
+        // =====================================================================
+        // STATE
+        // =====================================================================
+        var claimsData         = [];   // all expenses from backend
+        var approvalsData      = [];   // pending approvals
+        var allEmployees       = [];   // full payroll list (all depts, loaded once)
+        var departmentList     = [];   // unique department names derived from allEmployees
 
-        // ========== HELPERS ==========
+        var claimsCurrentPage  = 1;
+        var claimsRowsPerPage  = 5;
+
+        var deleteTargetId     = null;
+        var deleteTargetRow    = null;
+        var editTargetId       = null;
+
+        var customTypeOriginCtx = null;
+        var customTypesAdded    = [];
+
+        // =====================================================================
+        // HELPERS
+        // =====================================================================
         function showToast(msg, type) {
             var t = document.createElement('div');
-            t.className = 'toast ' + type;
+            t.className = 'toast ' + (type || 'info');
             t.innerHTML = msg;
             document.body.appendChild(t);
-            setTimeout(function() { t.remove(); }, 3000);
+            setTimeout(function() { if (t.parentNode) t.remove(); }, 3000);
+        }
+
+        function formatINR(num) {
+            return Number(num || 0).toLocaleString('en-IN');
         }
 
         function statusClass(status) {
-            var map = { 'Pending':'status-pending', 'Approved':'status-approved', 'Rejected':'status-rejected', 'Paid':'status-paid' };
+            var map = { 'Pending':'status-pending','Approved':'status-approved','Rejected':'status-rejected','Paid':'status-paid' };
             return map[status] || 'status-pending';
         }
 
-        function formatINR(num) { return Number(num).toLocaleString('en-IN'); }
-
-        // ========== EMPLOYEES ==========
-        async function fetchAllEmployees() {
-            try {
-                const res = await fetch(`${EMPLOYEE_API_BASE_URL}/get-all-employees?page=0&size=100`);
-                const result = await res.json();
-                if (result.success && result.data) { employeesList = result.data; populateEmployeeDropdowns(); }
-            } catch(e) { showToast('Failed to load employees', 'error'); }
+        function padId(id) {
+            return 'EXP-' + String(id).padStart(3, '0');
         }
 
-        function populateEmployeeDropdowns() {
-            ['exp_employee','edit_employee'].forEach(function(id) {
-                var sel = document.getElementById(id);
+        // Look up employee name from allEmployees cache by employeePrimeId
+        function getEmployeeName(employeePrimeId) {
+            var emp = allEmployees.find(function(e) { return e.employeePrimeId == employeePrimeId; });
+            return emp ? emp.fullName : ('Emp #' + employeePrimeId);
+        }
+
+        // Look up department from allEmployees cache by employeePrimeId
+        function getEmployeeDept(employeePrimeId) {
+            var emp = allEmployees.find(function(e) { return e.employeePrimeId == employeePrimeId; });
+            return emp ? (emp.department || 'General') : 'General';
+        }
+
+        // =====================================================================
+        // EMPLOYEE / DEPARTMENT LOADING
+        // Uses: GET /api/employees/payroll-list  (no dept param = all active employees)
+        // Response: { data: [ { employeePrimeId, employeeId, fullName, designation, department, basicSalary } ] }
+        // =====================================================================
+        async function fetchAllEmployeesOnce() {
+            if (allEmployees.length > 0) return;   // already loaded
+            try {
+                var res = await fetch(EMPLOYEE_API + '/payroll-list');
+                if (!res.ok) throw new Error('HTTP ' + res.status);
+                var json = await res.json();
+                allEmployees = (json.data || []);
+
+                // Build sorted unique department list
+                var deptSet = {};
+                allEmployees.forEach(function(e) {
+                    if (e.department) deptSet[e.department] = true;
+                });
+                departmentList = Object.keys(deptSet).sort();
+
+                populateDepartmentDropdowns();
+            } catch (err) {
+                showToast('Failed to load employee list', 'error');
+            }
+        }
+
+        // Populate department dropdowns in the main form and edit modal
+        function populateDepartmentDropdowns() {
+            ['exp_department', 'edit_department'].forEach(function(selId) {
+                var sel = document.getElementById(selId);
                 if (!sel) return;
-                sel.innerHTML = '<option value="">Select Employee</option>';
-                employeesList.forEach(function(emp) {
+                sel.innerHTML = '<option value="">Select Department</option>';
+                departmentList.forEach(function(dept) {
                     var opt = document.createElement('option');
-                    opt.value = emp.id;
-                    opt.textContent = (emp.fullName || emp.name || 'Employee ' + emp.id) + ' (' + (emp.employeePrimeId || 'ID:' + emp.id) + ')';
+                    opt.value = opt.textContent = dept;
                     sel.appendChild(opt);
                 });
             });
         }
 
-        function getEmployeeName(id) {
-            var e = employeesList.find(function(x) { return x.id == id; });
-            return e ? (e.fullName || e.name || 'Employee ' + e.id) : 'Unknown (ID:' + id + ')';
+        // Called when a department is chosen — filters employee dropdown
+        async function onDepartmentChange(ctx) {
+            var deptSel   = document.getElementById(ctx === 'main' ? 'exp_department'  : 'edit_department');
+            var empSel    = document.getElementById(ctx === 'main' ? 'exp_employee'    : 'edit_employee');
+            var dept      = deptSel.value;
+
+            empSel.innerHTML = '<option value="">Loading...</option>';
+            empSel.disabled  = true;
+
+            if (!dept) {
+                empSel.innerHTML = '<option value="">Select department first</option>';
+                return;
+            }
+
+            try {
+                // Call payroll-list with department filter — lightweight payload
+                var res  = await fetch(EMPLOYEE_API + '/payroll-list?department=' + encodeURIComponent(dept));
+                if (!res.ok) throw new Error();
+                var json = await res.json();
+                var list = json.data || [];
+
+                empSel.innerHTML = '<option value="">Select Employee</option>';
+                list.forEach(function(emp) {
+                    var opt = document.createElement('option');
+                    opt.value       = emp.employeePrimeId;           // sent to backend
+                    opt.textContent = emp.fullName + ' (' + emp.employeeId + ')';
+                    empSel.appendChild(opt);
+                });
+                empSel.disabled = false;
+
+                // Merge into allEmployees cache so getEmployeeName() works
+                list.forEach(function(emp) {
+                    if (!allEmployees.find(function(e){ return e.employeePrimeId == emp.employeePrimeId; })) {
+                        allEmployees.push(emp);
+                    }
+                });
+            } catch (err) {
+                empSel.innerHTML = '<option value="">Failed to load</option>';
+                showToast('Could not load employees for selected department', 'error');
+            }
         }
 
-        function getEmployeeDepartment(id) {
-            var e = employeesList.find(function(x) { return x.id == id; });
-            return e ? (e.department || e.deptName || 'General') : 'General';
-        }
+        // =====================================================================
+        // EXPENSE APIs
+        // =====================================================================
 
-        // ========== EXPENSE APIs ==========
+        // GET /api/expenses/get-all-expenses
         async function fetchAllExpenses() {
             try {
-                const res = await fetch(`${EXPENSE_API_BASE_URL}/get-all-expenses`);
+                var res  = await fetch(EXPENSE_API + '/get-all-expenses');
                 if (!res.ok) throw new Error();
-                const data = await res.json();
+                var data = await res.json();
                 claimsData = Array.isArray(data) ? data : (data.data || []);
-                renderClaimsFromData(); updateClaimStats();
-            } catch(e) { showToast('Failed to load expenses', 'error'); }
+                renderClaimsTable();
+                updateClaimStats();
+            } catch (err) {
+                showToast('Failed to load expense claims', 'error');
+            }
         }
 
+        // GET /api/expenses/get-pending-approvals/pending
         async function fetchPendingApprovals() {
             try {
-                const res = await fetch(`${EXPENSE_API_BASE_URL}/get-pending-approvals/pending`);
+                var res  = await fetch(EXPENSE_API + '/get-pending-approvals/pending');
                 if (!res.ok) throw new Error();
-                const data = await res.json();
+                var data = await res.json();
                 approvalsData = Array.isArray(data) ? data : (data.data || []);
-                renderApprovalsFromData();
-            } catch(e) { showToast('Failed to load pending approvals', 'error'); }
+                renderApprovalsTable();
+            } catch (err) {
+                showToast('Failed to load pending approvals', 'error');
+            }
         }
 
-        async function createExpenseAPI(employeeId, expenseType, expenseDate, amount, description, billNumber, receiptFile) {
-            const fd = new FormData();
-            fd.append('employeeId', employeeId);
-            fd.append('expenseType', expenseType);
-            fd.append('expenseDate', expenseDate);
-            fd.append('amount', amount);
+        // POST /api/expenses/create-expense  (multipart/form-data)
+        // @RequestParam: employeePrimeId, expenseType, expenseDate, amount, description?, billNumber?, receipts?
+        async function createExpenseAPI(employeePrimeId, expenseType, expenseDate, amount, description, billNumber, receiptFile) {
+            var fd = new FormData();
+            fd.append('employeePrimeId', employeePrimeId);
+            fd.append('expenseType',     expenseType);
+            fd.append('expenseDate',     expenseDate);
+            fd.append('amount',          amount);
             if (description) fd.append('description', description);
-            if (billNumber)  fd.append('billNumber', billNumber);
-            if (receiptFile) fd.append('receipts', receiptFile);
-            try {
-                const res = await fetch(`${EXPENSE_API_BASE_URL}/create-expense`, { method:'POST', body:fd });
-                if (!res.ok) throw new Error(await res.text());
-                showToast('Expense claim submitted!', 'success');
-                await fetchAllExpenses(); await fetchPendingApprovals();
-            } catch(e) { showToast('Failed: ' + e.message, 'error'); throw e; }
+            if (billNumber)  fd.append('billNumber',  billNumber);
+            if (receiptFile) fd.append('receipts',    receiptFile);
+
+            var res = await fetch(EXPENSE_API + '/create-expense', { method: 'POST', body: fd });
+            if (!res.ok) {
+                var msg = await res.text();
+                throw new Error(msg || 'Create failed');
+            }
+            return res.json();
         }
 
-        async function updateExpenseAPI(id, employeeId, expenseType, expenseDate, amount, desc, bill, status) {
-            const fd = new FormData();
-            if (employeeId)  fd.append('employeeId', employeeId);
+        // PUT /api/expenses/update-expense/{id}  (multipart/form-data — no status field)
+        // PATCH /api/expenses/patch-expense/{id} (multipart/form-data — includes status)
+        async function updateExpenseAPI(id, employeeId, expenseType, expenseDate, amount, description, billNumber, status) {
+            var fd = new FormData();
+            if (employeeId)  fd.append('employeeId',  employeeId);
             if (expenseType) fd.append('expenseType', expenseType);
             if (expenseDate) fd.append('expenseDate', expenseDate);
-            if (amount)      fd.append('amount', amount);
-            if (desc)        fd.append('description', desc);
-            if (bill)        fd.append('billNumber', bill);
-            try {
-                var url = status
-                    ? `${EXPENSE_API_BASE_URL}/patch-expense/${id}`
-                    : `${EXPENSE_API_BASE_URL}/update-expense/${id}`;
-                var method = status ? 'PATCH' : 'PUT';
-                if (status) fd.append('status', status);
-                const res = await fetch(url, { method, body: fd });
-                if (!res.ok) throw new Error();
-                showToast('Expense updated!', 'success');
-                await fetchAllExpenses(); await fetchPendingApprovals();
-            } catch(e) { showToast('Failed to update', 'error'); throw e; }
+            if (amount)      fd.append('amount',      amount);
+            if (description) fd.append('description', description);
+            if (billNumber)  fd.append('billNumber',  billNumber);
+
+            var usesPatch = !!status;
+            if (usesPatch)  fd.append('status', status);
+
+            var url    = usesPatch
+                ? (EXPENSE_API + '/patch-expense/' + id)
+                : (EXPENSE_API + '/update-expense/' + id);
+            var method = usesPatch ? 'PATCH' : 'PUT';
+
+            var res = await fetch(url, { method: method, body: fd });
+            if (!res.ok) throw new Error('Update failed');
+            return res.json();
         }
 
+        // DELETE /api/expenses/delete-expense/{id}
         async function deleteExpenseAPI(id) {
-            try {
-                const res = await fetch(`${EXPENSE_API_BASE_URL}/delete-expense/${id}`, { method:'DELETE' });
-                if (!res.ok) throw new Error();
-                showToast('Expense deleted!', 'success');
-                await fetchAllExpenses(); await fetchPendingApprovals();
-                return true;
-            } catch(e) { showToast('Failed to delete', 'error'); return false; }
+            var res = await fetch(EXPENSE_API + '/delete-expense/' + id, { method: 'DELETE' });
+            if (!res.ok) throw new Error('Delete failed');
         }
 
+        // PATCH /api/expenses/approve-expense/{id}/approve
         async function approveExpenseAPI(id) {
-            try {
-                const res = await fetch(`${EXPENSE_API_BASE_URL}/approve-expense/${id}/approve`, { method:'PATCH' });
-                if (!res.ok) throw new Error();
-                showToast('Expense approved!', 'success');
-                await fetchAllExpenses(); await fetchPendingApprovals();
-            } catch(e) { showToast('Failed to approve', 'error'); }
+            var res = await fetch(EXPENSE_API + '/approve-expense/' + id + '/approve', { method: 'PATCH' });
+            if (!res.ok) throw new Error('Approve failed');
         }
 
+        // PATCH /api/expenses/reject-expense/{id}/reject
         async function rejectExpenseAPI(id) {
-            try {
-                const res = await fetch(`${EXPENSE_API_BASE_URL}/reject-expense/${id}/reject`, { method:'PATCH' });
-                if (!res.ok) throw new Error();
-                showToast('Expense rejected!', 'info');
-                await fetchAllExpenses(); await fetchPendingApprovals();
-            } catch(e) { showToast('Failed to reject', 'error'); }
+            var res = await fetch(EXPENSE_API + '/reject-expense/' + id + '/reject', { method: 'PATCH' });
+            if (!res.ok) throw new Error('Reject failed');
         }
 
-        // ========== RENDER ==========
-        function buildClaimRowHTML(item) {
-            return '<td class="py-3 text-sm font-semibold" style="color:var(--primary);">EXP-' + String(item.id).padStart(3,'0') + '</td>' +
+        // GET /api/expenses/get-receipt/{id}/receipts/{index}
+        async function fetchReceiptAPI(expenseId, index) {
+            var res = await fetch(EXPENSE_API + '/get-receipt/' + expenseId + '/receipts/' + index);
+            if (!res.ok) throw new Error('No receipt');
+            var blob        = await res.blob();
+            var contentType = res.headers.get('content-type') || 'image/jpeg';
+            return { url: URL.createObjectURL(blob), type: contentType };
+        }
+
+        // =====================================================================
+        // RENDER — CLAIMS TABLE
+        // =====================================================================
+        function buildClaimRow(item) {
+            return '<td class="py-3 text-sm font-semibold" style="color:var(--primary);">' + padId(item.id) + '</td>' +
                    '<td class="py-3 text-sm" style="color:var(--primary);">' + getEmployeeName(item.employeeId) + '</td>' +
-                   '<td class="py-3"><span class="badge-custom">' + (item.expenseType||'-') + '</span></td>' +
-                   '<td class="py-3 text-sm" style="color:var(--text-light);">' + (item.expenseDate||'-') + '</td>' +
+                   '<td class="py-3"><span class="badge-custom">' + (item.expenseType || '-') + '</span></td>' +
+                   '<td class="py-3 text-sm" style="color:var(--text-light);">' + (item.expenseDate || '-') + '</td>' +
                    '<td class="py-3 text-sm font-semibold" style="color:var(--primary);">₹' + formatINR(item.amount) + '</td>' +
-                   '<td class="py-3"><span class="' + statusClass(item.status) + ' text-xs px-2 py-1 rounded-full font-medium">' + (item.status||'Pending') + '</span></td>' +
-                   '<td class="py-3"><i class="fas fa-paperclip cursor-pointer" style="color:var(--primary-light);" data-expense-id="' + item.id + '" onclick="viewReceipt(this,' + item.id + ')"></i></td>' +
                    '<td class="py-3">' +
-                       '<button onclick="editClaim(this,' + item.id + ')" style="background:none;border:none;cursor:pointer;color:var(--primary);margin-right:8px;"><i class="fas fa-edit"></i></button>' +
-                       '<button onclick="openDeleteModal(' + item.id + ',this)" style="background:none;border:none;cursor:pointer;color:#dc3545;"><i class="fas fa-trash"></i></button>' +
+                       '<span class="' + statusClass(item.status) + ' text-xs px-2 py-1 rounded-full font-medium">' +
+                           (item.status || 'Pending') +
+                       '</span>' +
+                   '</td>' +
+                   '<td class="py-3">' +
+                       '<i class="fas fa-paperclip cursor-pointer" style="color:var(--primary-light);" ' +
+                          'onclick="viewReceipt(' + item.id + ')" title="View Receipt"></i>' +
+                   '</td>' +
+                   '<td class="py-3">' +
+                       '<button onclick="openEditModal(' + item.id + ')" style="background:none;border:none;cursor:pointer;color:var(--primary);margin-right:8px;" title="Edit">' +
+                           '<i class="fas fa-edit"></i>' +
+                       '</button>' +
+                       '<button onclick="openDeleteModal(' + item.id + ', this)" style="background:none;border:none;cursor:pointer;color:#dc3545;" title="Delete">' +
+                           '<i class="fas fa-trash"></i>' +
+                       '</button>' +
                    '</td>';
         }
 
-        function buildApprovalRowHTML(item) {
-            return '<td class="py-3 text-sm font-semibold" style="color:var(--primary);">EXP-' + String(item.id).padStart(3,'0') + '</td>' +
-                   '<td class="py-3 text-sm" style="color:var(--primary);">' + getEmployeeName(item.employeeId) + '</td>' +
-                   '<td class="py-3 text-sm" style="color:var(--text-light);">' + getEmployeeDepartment(item.employeeId) + '</td>' +
-                   '<td class="py-3"><span class="badge-custom">' + (item.expenseType||'-') + '</span></td>' +
-                   '<td class="py-3 text-sm font-semibold" style="color:var(--primary);">₹' + formatINR(item.amount) + '</td>' +
-                   '<td class="py-3 text-sm" style="color:var(--text-light);">' + (item.expenseDate||'-') + '</td>' +
-                   '<td class="py-3">' +
-                       '<button onclick="approveExpenseBtn(this,' + item.id + ')" class="btn-success mr-1"><i class="fas fa-check mr-1"></i>Approve</button>' +
-                       '<button onclick="rejectExpenseBtn(this,' + item.id + ')" class="btn-danger"><i class="fas fa-times mr-1"></i>Reject</button>' +
-                   '</td>';
-        }
-
-        function renderClaimsFromData() {
+        function renderClaimsTable() {
             var tbody = document.getElementById('claimsList');
             tbody.innerHTML = '';
-            if (!claimsData || !claimsData.length) {
+            if (!claimsData.length) {
                 tbody.innerHTML = '<tr><td colspan="8" class="text-center py-5" style="color:var(--text-light);">No expense claims found</td></tr>';
+                renderPagination([], []);
                 return;
             }
             claimsData.forEach(function(item) {
-                if (!item) return;
                 var tr = document.createElement('tr');
                 tr.className = 'border-b data-row';
                 tr.style.borderColor = '#e5e7eb';
-                tr.innerHTML = buildClaimRowHTML(item);
+                tr.innerHTML = buildClaimRow(item);
                 tbody.appendChild(tr);
             });
             filterClaims();
         }
 
-        function renderApprovalsFromData() {
+        // =====================================================================
+        // RENDER — APPROVALS TABLE
+        // =====================================================================
+        function buildApprovalRow(item) {
+            return '<td class="py-3 text-sm font-semibold" style="color:var(--primary);">' + padId(item.id) + '</td>' +
+                   '<td class="py-3 text-sm" style="color:var(--primary);">' + getEmployeeName(item.employeeId) + '</td>' +
+                   '<td class="py-3 text-sm" style="color:var(--text-light);">' + getEmployeeDept(item.employeeId) + '</td>' +
+                   '<td class="py-3"><span class="badge-custom">' + (item.expenseType || '-') + '</span></td>' +
+                   '<td class="py-3 text-sm font-semibold" style="color:var(--primary);">₹' + formatINR(item.amount) + '</td>' +
+                   '<td class="py-3 text-sm" style="color:var(--text-light);">' + (item.expenseDate || '-') + '</td>' +
+                   '<td class="py-3">' +
+                       '<button onclick="handleApprove(this,' + item.id + ')" class="btn-success mr-1">' +
+                           '<i class="fas fa-check mr-1"></i>Approve' +
+                       '</button>' +
+                       '<button onclick="handleReject(this,' + item.id + ')" class="btn-danger">' +
+                           '<i class="fas fa-times mr-1"></i>Reject' +
+                       '</button>' +
+                   '</td>';
+        }
+
+        function renderApprovalsTable() {
             var tbody = document.getElementById('approvalsList');
             tbody.innerHTML = '';
-            if (!approvalsData || !approvalsData.length) {
-                tbody.innerHTML = '<tr><td colspan="7" class="text-center py-5" style="color:var(--text-light);">No pending approvals found</td></tr>';
+            if (!approvalsData.length) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center py-5" style="color:var(--text-light);">No pending approvals</td></tr>';
                 return;
             }
             approvalsData.forEach(function(item) {
-                if (!item) return;
                 var tr = document.createElement('tr');
                 tr.className = 'border-b data-row';
                 tr.style.borderColor = '#e5e7eb';
-                tr.innerHTML = buildApprovalRowHTML(item);
+                tr.innerHTML = buildApprovalRow(item);
                 tbody.appendChild(tr);
             });
         }
 
-        // ========== STATS ==========
+        // =====================================================================
+        // STATS
+        // =====================================================================
         function updateClaimStats() {
             var total = 0, pending = 0, approved = 0;
             claimsData.forEach(function(item) {
-                if (item && item.amount) total += item.amount;
-                if (item && item.status === 'Pending')  pending++;
-                if (item && item.status === 'Approved') approved++;
+                total += (item.amount || 0);
+                if (item.status === 'Pending')  pending++;
+                if (item.status === 'Approved') approved++;
             });
-            document.getElementById('totalClaims').innerText  = claimsData.length;
-            document.getElementById('pendingClaims').innerText = pending;
+            document.getElementById('totalClaims').innerText   = claimsData.length;
+            document.getElementById('totalAmount').innerText   = '₹' + formatINR(total);
+            document.getElementById('pendingClaims').innerText  = pending;
             document.getElementById('approvedClaims').innerText = approved;
-            document.getElementById('totalAmount').innerText  = '₹' + total.toLocaleString('en-IN');
         }
 
-        // ========== TABS ==========
-        function initTabs() {
-            document.querySelectorAll('.tab-btn').forEach(function(tab) {
-                tab.addEventListener('click', function() {
-                    var tabId = this.getAttribute('data-tab');
-                    document.querySelectorAll('.tab-btn').forEach(function(t) { t.classList.remove('active'); });
-                    this.classList.add('active');
-                    document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
-                    document.getElementById('tab-' + tabId).classList.add('active');
-                    localStorage.setItem('expenseActiveTab', tabId);
-                    if (tabId === 'approvals') fetchPendingApprovals();
-                });
+        // =====================================================================
+        // FILTER
+        // =====================================================================
+        function filterClaims() {
+            var search   = (document.getElementById('claimSearch').value || '').toLowerCase();
+            var typeVal  = document.getElementById('claimTypeFilter').value;
+            var allRows  = Array.from(document.querySelectorAll('#claimsList tr'));
+            var filtered = allRows.filter(function(row) {
+                if (row.cells.length < 6) return false;
+                var name    = (row.cells[1] ? row.cells[1].innerText.toLowerCase() : '');
+                var rowType = (row.cells[2] ? row.cells[2].innerText : '');
+                var matchSearch = !search   || name.includes(search);
+                var matchType   = (typeVal === 'all') || rowType.includes(typeVal);
+                return matchSearch && matchType;
             });
-            var saved = localStorage.getItem('expenseActiveTab');
-            if (saved) { var btn = document.querySelector('.tab-btn[data-tab="' + saved + '"]'); if (btn) btn.click(); }
+            claimsCurrentPage = 1;
+            renderPagination(allRows, filtered);
         }
 
-        // ========== PAGINATION ==========
-        function renderClaimsPage(allRows, filtered) {
+        function filterApprovals() {
+            var search  = (document.getElementById('approvalSearch').value || '').toLowerCase();
+            var typeVal = document.getElementById('approvalTypeFilter').value;
+            document.querySelectorAll('#approvalsList tr').forEach(function(row) {
+                if (row.cells.length < 7) return;
+                var name    = (row.cells[1] ? row.cells[1].innerText.toLowerCase() : '');
+                var rowType = (row.cells[3] ? row.cells[3].innerText : '');
+                row.style.display =
+                    (!search || name.includes(search)) &&
+                    (typeVal === 'all' || rowType.includes(typeVal)) ? '' : 'none';
+            });
+        }
+
+        // =====================================================================
+        // PAGINATION
+        // =====================================================================
+        function renderPagination(allRows, filtered) {
             var totalPages = Math.max(1, Math.ceil(filtered.length / claimsRowsPerPage));
             if (claimsCurrentPage > totalPages) claimsCurrentPage = totalPages;
             var start = (claimsCurrentPage - 1) * claimsRowsPerPage;
             var end   = start + claimsRowsPerPage;
+
             allRows.forEach(function(r) { r.style.display = 'none'; });
             filtered.slice(start, end).forEach(function(r) { r.style.display = ''; });
+
             var info = document.getElementById('claimsPaginationInfo');
-            info.textContent = filtered.length === 0 ? 'No records found' : 'Showing ' + (start+1) + '–' + Math.min(end, filtered.length) + ' of ' + filtered.length + ' records';
+            info.textContent = filtered.length === 0
+                ? 'No records found'
+                : 'Showing ' + (start + 1) + '–' + Math.min(end, filtered.length) + ' of ' + filtered.length;
+
             var ctrl = document.getElementById('claimsPaginationControls');
             ctrl.innerHTML = '';
             if (totalPages <= 1) return;
+
             var prev = document.createElement('button');
-            prev.className = 'page-btn'; prev.innerHTML = '&#8249;'; prev.disabled = (claimsCurrentPage === 1);
-            prev.onclick = function() { claimsCurrentPage--; renderClaimsPage(allRows, filtered); };
+            prev.className = 'page-btn';
+            prev.innerHTML = '&#8249;';
+            prev.disabled  = (claimsCurrentPage === 1);
+            prev.onclick   = function() { claimsCurrentPage--; renderPagination(allRows, filtered); };
             ctrl.appendChild(prev);
+
             for (var i = 1; i <= totalPages; i++) {
-                var pb = document.createElement('button');
-                pb.className = 'page-btn' + (i === claimsCurrentPage ? ' active' : '');
-                pb.textContent = i;
-                pb.onclick = (function(p) { return function() { claimsCurrentPage=p; renderClaimsPage(allRows, filtered); }; })(i);
-                ctrl.appendChild(pb);
+                (function(p) {
+                    var pb = document.createElement('button');
+                    pb.className  = 'page-btn' + (p === claimsCurrentPage ? ' active' : '');
+                    pb.textContent = p;
+                    pb.onclick     = function() { claimsCurrentPage = p; renderPagination(allRows, filtered); };
+                    ctrl.appendChild(pb);
+                })(i);
             }
+
             var next = document.createElement('button');
-            next.className = 'page-btn'; next.innerHTML = '&#8250;'; next.disabled = (claimsCurrentPage === totalPages);
-            next.onclick = function() { claimsCurrentPage++; renderClaimsPage(allRows, filtered); };
+            next.className = 'page-btn';
+            next.innerHTML = '&#8250;';
+            next.disabled  = (claimsCurrentPage === totalPages);
+            next.onclick   = function() { claimsCurrentPage++; renderPagination(allRows, filtered); };
             ctrl.appendChild(next);
         }
 
-        // ========== FILTER ==========
-        function filterClaims() {
-            var search = document.getElementById('claimSearch').value.toLowerCase();
-            var type   = document.getElementById('claimTypeFilter').value;
-            var allRows = Array.from(document.querySelectorAll('#claimsList tr'));
-            var filtered = allRows.filter(function(row) {
-                if (row.cells.length < 6) return false;
-                var name    = row.cells[1] ? row.cells[1].innerText.toLowerCase() : '';
-                var rowType = row.cells[2] ? row.cells[2].innerText : '';
-                if (search && !name.includes(search)) return false;
-                if (type !== 'all' && !rowType.includes(type)) return false;
-                return true;
-            });
-            claimsCurrentPage = 1;
-            renderClaimsPage(allRows, filtered);
-            updateClaimStats();
-        }
-
-        function filterApprovals() {
-            var search = document.getElementById('approvalSearch').value.toLowerCase();
-            var type   = document.getElementById('approvalTypeFilter').value;
-            document.querySelectorAll('#approvalsList tr').forEach(function(row) {
-                if (row.cells.length < 7) return;
-                var name    = row.cells[1] ? row.cells[1].innerText.toLowerCase() : '';
-                var rowType = row.cells[3] ? row.cells[3].innerText : '';
-                var show = (!search || name.includes(search)) && (type === 'all' || rowType.includes(type));
-                row.style.display = show ? '' : 'none';
-            });
-        }
-
+        // =====================================================================
+        // EXPORT
+        // =====================================================================
         function exportClaims() {
-            var rows = document.querySelectorAll('#claimsList tr');
-            var headers = ['Claim ID','Employee','Type','Date','Amount','Status'];
-            var csv = [headers.join(',')];
+            var rows    = document.querySelectorAll('#claimsList tr');
+            var headers = ['Claim ID', 'Employee', 'Type', 'Date', 'Amount', 'Status'];
+            var csv     = [headers.join(',')];
             rows.forEach(function(row) {
                 if (row.cells.length < 6) return;
-                var vals = [0,1,2,3,4,5].map(function(i) { return '"' + (row.cells[i]?.innerText||'').trim().replace(/"/g,'""') + '"'; });
+                var vals = [0,1,2,3,4,5].map(function(i) {
+                    return '"' + (row.cells[i] ? row.cells[i].innerText.trim().replace(/"/g, '""') : '') + '"';
+                });
                 csv.push(vals.join(','));
             });
-            var a = document.createElement('a');
-            a.href = URL.createObjectURL(new Blob([csv.join('\n')], {type:'text/csv;charset=utf-8;'}));
-            a.download = 'expense_claims.csv'; a.click();
-            showToast('Exported!', 'success');
+            var a    = document.createElement('a');
+            a.href   = URL.createObjectURL(new Blob([csv.join('\n')], { type: 'text/csv;charset=utf-8;' }));
+            a.download = 'expense_claims_' + new Date().toISOString().slice(0,10) + '.csv';
+            a.click();
+            showToast('Exported successfully!', 'success');
         }
 
-        // ========== EDIT ==========
-        function editClaim(btn, expenseId) {
-            editTargetRow = btn.closest('tr');
-            editTargetExpenseId = expenseId;
-            var exp = claimsData.find(function(e) { return e.id === expenseId; });
-            if (exp) {
-                document.getElementById('edit_employee').value = exp.employeeId;
-                document.getElementById('edit_type').value     = exp.expenseType || '';
-                document.getElementById('edit_date').value     = exp.expenseDate || '';
-                document.getElementById('edit_amount').value   = exp.amount;
-                document.getElementById('edit_status').value   = exp.status || 'Pending';
+        // =====================================================================
+        // FORM SUBMIT — Create Expense
+        // =====================================================================
+        document.getElementById('expenseForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+
+            var employeeId = document.getElementById('exp_employee').value;
+            var type       = document.getElementById('exp_type').value;
+            var date       = document.getElementById('exp_date').value;
+            var amount     = parseFloat(document.getElementById('exp_amount').value);
+            var desc       = document.getElementById('exp_desc').value.trim();
+            var bill       = document.getElementById('exp_bill_no').value.trim();
+            var file       = document.getElementById('exp_receipt').files[0] || null;
+
+            if (!document.getElementById('exp_department').value) {
+                showToast('Please select a department', 'error'); return;
             }
+            if (!employeeId) { showToast('Please select an employee', 'error'); return; }
+            if (!type)       { showToast('Please select expense type', 'error'); return; }
+            if (!date)       { showToast('Please select expense date', 'error'); return; }
+            if (!amount || amount <= 0) { showToast('Please enter a valid amount', 'error'); return; }
+
+            var btn = document.getElementById('submitBtn');
+            btn.disabled   = true;
+            btn.innerHTML  = '<i class="fas fa-spinner fa-spin mr-2"></i>Submitting...';
+
+            try {
+                await createExpenseAPI(employeeId, type, date, amount, desc, bill, file);
+                showToast('Expense claim submitted successfully!', 'success');
+                document.getElementById('expenseForm').reset();
+                document.getElementById('exp_employee').disabled = true;
+                document.getElementById('exp_employee').innerHTML = '<option value="">Select department first</option>';
+                await fetchAllExpenses();
+                await fetchPendingApprovals();
+            } catch (err) {
+                showToast('Failed to submit: ' + err.message, 'error');
+            } finally {
+                btn.disabled  = false;
+                btn.innerHTML = '<i class="fas fa-paper-plane mr-2"></i>Submit Claim';
+            }
+        });
+
+        // =====================================================================
+        // EDIT MODAL
+        // =====================================================================
+        async function openEditModal(expenseId) {
+            editTargetId = expenseId;
+            var exp = claimsData.find(function(e) { return e.id === expenseId; });
+            if (!exp) { showToast('Expense data not found', 'error'); return; }
+
+            // Populate department list in modal if not already done
+            populateDepartmentDropdowns();
+
+            // Find which department this employee belongs to
+            var emp  = allEmployees.find(function(e) { return e.employeePrimeId == exp.employeeId; });
+            var dept = emp ? emp.department : '';
+
+            // Set department
+            document.getElementById('edit_department').value = dept;
+
+            if (dept) {
+                // Load employees for that department, then set employee value
+                await onDepartmentChange('edit');
+                document.getElementById('edit_employee').value = exp.employeeId;
+            }
+
+            document.getElementById('edit_type').value   = exp.expenseType   || '';
+            document.getElementById('edit_date').value   = exp.expenseDate   || '';
+            document.getElementById('edit_amount').value = exp.amount        || '';
+            document.getElementById('edit_status').value = exp.status        || 'Pending';
+
             document.getElementById('editClaimModal').classList.add('active');
         }
 
         function closeEditModal() {
             document.getElementById('editClaimModal').classList.remove('active');
-            editTargetRow = null; editTargetExpenseId = null;
+            editTargetId = null;
         }
 
-        document.getElementById('editClaimForm').addEventListener('submit', function(e) {
+        document.getElementById('editClaimForm').addEventListener('submit', async function(e) {
             e.preventDefault();
-            if (!editTargetExpenseId) return;
-            updateExpenseAPI(
-                editTargetExpenseId,
-                document.getElementById('edit_employee').value,
-                document.getElementById('edit_type').value,
-                document.getElementById('edit_date').value,
-                parseFloat(document.getElementById('edit_amount').value),
-                null, null,
-                document.getElementById('edit_status').value
-            ).then(function() { closeEditModal(); });
+            if (!editTargetId) return;
+
+            var employeeId = document.getElementById('edit_employee').value;
+            var type       = document.getElementById('edit_type').value;
+            var date       = document.getElementById('edit_date').value;
+            var amount     = parseFloat(document.getElementById('edit_amount').value);
+            var status     = document.getElementById('edit_status').value;
+
+            try {
+                await updateExpenseAPI(editTargetId, employeeId, type, date, amount, null, null, status);
+                showToast('Expense updated successfully!', 'success');
+                closeEditModal();
+                await fetchAllExpenses();
+                await fetchPendingApprovals();
+            } catch (err) {
+                showToast('Failed to update expense', 'error');
+            }
         });
 
-        // ========== DELETE ==========
+        // =====================================================================
+        // DELETE MODAL
+        // =====================================================================
         function openDeleteModal(expenseId, btn) {
-            deleteTargetRow = btn.closest('tr');
             deleteTargetId  = expenseId;
-            document.getElementById('deleteItemId').innerHTML = 'Claim ID: <strong>EXP-' + String(expenseId).padStart(3,'0') + '</strong>';
+            deleteTargetRow = btn ? btn.closest('tr') : null;
+            document.getElementById('deleteItemId').innerHTML =
+                'Claim ID: <strong>' + padId(expenseId) + '</strong>';
             document.getElementById('deleteModal').classList.add('active');
         }
 
         function closeDeleteModal() {
             document.getElementById('deleteModal').classList.remove('active');
-            deleteTargetRow = null; deleteTargetId = null;
+            deleteTargetId  = null;
+            deleteTargetRow = null;
         }
 
-        function confirmDelete() {
-            if (deleteTargetId) {
-                deleteExpenseAPI(deleteTargetId).then(function(ok) {
-                    if (ok && deleteTargetRow) deleteTargetRow.remove();
-                });
+        async function confirmDelete() {
+            if (!deleteTargetId) return;
+            try {
+                await deleteExpenseAPI(deleteTargetId);
+                showToast('Expense deleted successfully!', 'success');
+                if (deleteTargetRow && deleteTargetRow.parentNode) {
+                    deleteTargetRow.remove();
+                }
+                claimsData = claimsData.filter(function(e) { return e.id !== deleteTargetId; });
+                updateClaimStats();
+                filterClaims();
+            } catch (err) {
+                showToast('Failed to delete expense', 'error');
             }
             closeDeleteModal();
+            await fetchAllExpenses(); // refresh to keep data in sync
         }
 
-        // ========== RECEIPT ==========
-        async function viewReceipt(btn, expenseId) {
+        // =====================================================================
+        // RECEIPT
+        // =====================================================================
+        async function viewReceipt(expenseId) {
             try {
-                const res = await fetch(`${EXPENSE_API_BASE_URL}/get-receipt/${expenseId}/receipts/0`);
-                if (res.ok) {
-                    const blob = await res.blob();
-                    openReceiptPreview(URL.createObjectURL(blob), res.headers.get('content-type') || 'image/jpeg');
-                } else { uploadNewReceipt(expenseId, btn); }
-            } catch(e) { uploadNewReceipt(expenseId, btn); }
+                var result = await fetchReceiptAPI(expenseId, 0);
+                openReceiptPreview(result.url, result.type);
+            } catch (err) {
+                // No receipt exists — prompt to upload one
+                promptReceiptUpload(expenseId);
+            }
         }
 
-        function uploadNewReceipt(expenseId, btn) {
-            var picker = document.createElement('input');
-            picker.type = 'file'; picker.accept = 'image/*,.pdf'; picker.style.display = 'none';
+        function promptReceiptUpload(expenseId) {
+            var picker      = document.createElement('input');
+            picker.type     = 'file';
+            picker.accept   = 'image/*,.pdf';
+            picker.style.display = 'none';
             document.body.appendChild(picker);
             picker.addEventListener('change', async function() {
                 var file = picker.files[0];
-                if (!file) { document.body.removeChild(picker); return; }
-                const fd = new FormData(); fd.append('receipts', file);
-                try {
-                    const res = await fetch(`${EXPENSE_API_BASE_URL}/patch-expense/${expenseId}`, { method:'PATCH', body:fd });
-                    openReceiptPreview(URL.createObjectURL(file), file.type);
-                    if (res.ok) showToast('Receipt uploaded!', 'success');
-                } catch(e) { openReceiptPreview(URL.createObjectURL(file), file.type); }
                 document.body.removeChild(picker);
+                if (!file) return;
+                // Upload via PATCH
+                var fd = new FormData();
+                fd.append('receipts', file);
+                try {
+                    var res = await fetch(EXPENSE_API + '/patch-expense/' + expenseId, { method: 'PATCH', body: fd });
+                    if (res.ok) showToast('Receipt uploaded!', 'success');
+                    openReceiptPreview(URL.createObjectURL(file), file.type);
+                } catch (err) {
+                    // Still show local preview even if upload failed
+                    openReceiptPreview(URL.createObjectURL(file), file.type);
+                }
             });
             picker.click();
         }
@@ -1195,128 +1350,182 @@
             } else if (fileType === 'application/pdf') {
                 area.innerHTML = '<iframe src="' + fileUrl + '" style="width:100%;height:400px;border-radius:8px;border:none;"></iframe>';
             } else {
-                area.innerHTML = '<i class="fas fa-file text-5xl" style="color:var(--primary-light);display:block;"></i><p class="mt-2 text-sm"><a href="' + fileUrl + '" download style="color:var(--primary);">Click to download</a></p>';
+                area.innerHTML = '<p class="text-sm"><a href="' + fileUrl + '" download style="color:var(--primary);">Click to download receipt</a></p>';
             }
             document.getElementById('receiptModal').classList.add('active');
         }
 
         function closeReceiptModal() {
             document.getElementById('receiptModal').classList.remove('active');
-            var area = document.getElementById('receiptPreviewArea');
-            var img = area.querySelector('img');
-            if (img && img.src.startsWith('blob:')) URL.revokeObjectURL(img.src);
+            // Revoke blob URLs to free memory
+            var area   = document.getElementById('receiptPreviewArea');
+            var img    = area.querySelector('img');
             var iframe = area.querySelector('iframe');
+            if (img    && img.src.startsWith('blob:'))    URL.revokeObjectURL(img.src);
             if (iframe && iframe.src.startsWith('blob:')) URL.revokeObjectURL(iframe.src);
-            area.innerHTML = '<i class="fas fa-receipt text-6xl mb-2" style="color:var(--primary-soft);display:block;"></i><p class="mt-2 text-sm" style="color:var(--text-light);">No receipt uploaded</p>';
+            area.innerHTML =
+                '<i class="fas fa-receipt text-6xl mb-2" style="color:var(--primary-soft);display:block;"></i>' +
+                '<p class="mt-2 text-sm" style="color:var(--text-light);">No receipt uploaded</p>';
         }
 
-        // ========== APPROVALS ==========
-        async function approveExpenseBtn(btn, id) {
-            await approveExpenseAPI(id);
-            var cell = btn.closest('tr').cells[6];
-            cell.innerHTML = '<span class="text-xs font-semibold" style="color:#2b7a3e;">Approved</span>';
+        // =====================================================================
+        // APPROVALS ACTIONS
+        // =====================================================================
+        async function handleApprove(btn, id) {
+            try {
+                await approveExpenseAPI(id);
+                showToast('Expense approved!', 'success');
+                var cell = btn.closest('tr').cells[6];
+                cell.innerHTML = '<span class="text-xs font-semibold" style="color:#2b7a3e;"><i class="fas fa-check mr-1"></i>Approved</span>';
+                await fetchAllExpenses();
+            } catch (err) {
+                showToast('Failed to approve expense', 'error');
+            }
         }
 
-        async function rejectExpenseBtn(btn, id) {
-            await rejectExpenseAPI(id);
-            var cell = btn.closest('tr').cells[6];
-            cell.innerHTML = '<span class="text-xs font-semibold" style="color:#dc3545;">Rejected</span>';
+        async function handleReject(btn, id) {
+            try {
+                await rejectExpenseAPI(id);
+                showToast('Expense rejected', 'info');
+                var cell = btn.closest('tr').cells[6];
+                cell.innerHTML = '<span class="text-xs font-semibold" style="color:#dc3545;"><i class="fas fa-times mr-1"></i>Rejected</span>';
+                await fetchAllExpenses();
+            } catch (err) {
+                showToast('Failed to reject expense', 'error');
+            }
         }
 
-        // ========== BUDGET ==========
-        function openBudgetModal()  { document.getElementById('budgetModal').classList.add('active'); }
-        function closeBudgetModal() { document.getElementById('budgetModal').classList.remove('active'); }
-        document.getElementById('budgetForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            showToast('Budget set!', 'success');
-            closeBudgetModal();
-        });
-
-        // ========== CUSTOM TYPE ==========
+        // =====================================================================
+        // CUSTOM EXPENSE TYPE
+        // =====================================================================
         function handleExpenseTypeChange(sel, ctx) {
-            if (sel.value === 'Others') { customTypeOriginContext = ctx; openCustomTypeOverlay(); }
+            if (sel.value === 'Others') {
+                customTypeOriginCtx = ctx;
+                openCustomTypeOverlay();
+            }
         }
 
         function openCustomTypeOverlay() {
-            document.getElementById('customTypeOverlay').classList.add('active');
             document.getElementById('customTypeInput').value = '';
+            document.getElementById('customTypeOverlay').classList.add('active');
             setTimeout(function() { document.getElementById('customTypeInput').focus(); }, 100);
         }
 
         function closeCustomTypeOverlay() {
             document.getElementById('customTypeOverlay').classList.remove('active');
-            var sel = document.getElementById(customTypeOriginContext === 'main' ? 'exp_type' : 'edit_type');
+            // Reset the select that triggered it back to empty if still on "Others"
+            var selId = customTypeOriginCtx === 'main' ? 'exp_type' : 'edit_type';
+            var sel   = document.getElementById(selId);
             if (sel && sel.value === 'Others') sel.value = '';
-            customTypeOriginContext = null;
+            customTypeOriginCtx = null;
         }
 
-        function handleCustomTypeKeydown(e) { if (e.key === 'Enter') { e.preventDefault(); addCustomExpenseType(); } }
+        function handleCustomTypeKeydown(e) {
+            if (e.key === 'Enter') { e.preventDefault(); addCustomExpenseType(); }
+        }
 
         function getAllExpenseTypeSelects() {
-            return ['exp_type','edit_type'].map(function(id) { return document.getElementById(id); }).filter(Boolean);
-        }
-
-        function addOptionToExpenseSelect(sel, value) {
-            var idx = -1;
-            for (var i=0; i<sel.options.length; i++) { if (sel.options[i].value==='Others') { idx=i; break; } }
-            var opt = document.createElement('option');
-            opt.value = value; opt.textContent = '✏️ ' + value; opt.setAttribute('data-custom','true');
-            if (idx !== -1) sel.insertBefore(opt, sel.options[idx]); else sel.appendChild(opt);
+            return ['exp_type', 'edit_type'].map(function(id) { return document.getElementById(id); }).filter(Boolean);
         }
 
         function addCustomExpenseType() {
             var input = document.getElementById('customTypeInput');
-            var val = input.value.trim();
-            if (!val) { input.focus(); input.style.borderColor='#dc3545'; setTimeout(function(){input.style.borderColor='var(--primary-soft)';},1500); return; }
+            var val   = input.value.trim();
+
+            if (!val) {
+                input.style.borderColor = '#dc3545';
+                setTimeout(function() { input.style.borderColor = 'var(--primary-soft)'; }, 1500);
+                input.focus();
+                return;
+            }
+
             var sels = getAllExpenseTypeSelects();
-            var exists = sels.length > 0 && Array.from(sels[0].options).some(function(o){ return o.value.toLowerCase()===val.toLowerCase(); });
-            if (exists) { input.value=''; input.placeholder='"'+val+'" already exists!'; setTimeout(function(){input.placeholder='e.g. Internet Bill…';},2000); return; }
-            sels.forEach(function(s){ addOptionToExpenseSelect(s, val); });
-            var ctx = customTypeOriginContext;
-            if (ctx) { var s = document.getElementById(ctx==='main'?'exp_type':'edit_type'); if(s) s.value=val; }
+            var exists = sels.length > 0 &&
+                Array.from(sels[0].options).some(function(o) { return o.value.toLowerCase() === val.toLowerCase(); });
+
+            if (exists) {
+                input.value = '';
+                input.placeholder = '"' + val + '" already exists!';
+                setTimeout(function() { input.placeholder = 'e.g. Internet Bill, Courier…'; }, 2000);
+                return;
+            }
+
+            // Add option before "Others" in every type select
+            sels.forEach(function(sel) {
+                var othersIdx = -1;
+                for (var i = 0; i < sel.options.length; i++) {
+                    if (sel.options[i].value === 'Others') { othersIdx = i; break; }
+                }
+                var opt = document.createElement('option');
+                opt.value = val;
+                opt.textContent = '✏️ ' + val;
+                if (othersIdx !== -1) sel.insertBefore(opt, sel.options[othersIdx]);
+                else sel.appendChild(opt);
+            });
+
+            // Auto-select the new type in whichever form triggered the overlay
+            var triggerSelId = customTypeOriginCtx === 'main' ? 'exp_type' : 'edit_type';
+            var triggerSel   = document.getElementById(triggerSelId);
+            if (triggerSel)  triggerSel.value = val;
+
+            // Track for session management
             customTypesAdded.push(val);
-            document.getElementById('customTypeAddedList').style.display='block';
+            document.getElementById('customTypeAddedList').style.display = 'block';
             renderCustomTypeTags();
+
             showToast('Type "' + val + '" added!', 'success');
             document.getElementById('customTypeOverlay').classList.remove('active');
-            customTypeOriginContext = null;
+            customTypeOriginCtx = null;
         }
 
         function renderCustomTypeTags() {
-            var c = document.getElementById('customTypeTagsContainer');
-            c.innerHTML = customTypesAdded.map(function(t) {
-                return '<span class="custom-type-tag">' + t + '<span class="remove-tag" onclick="removeCustomTypeTag(\'' + t.replace(/'/g,"\\'") + '\')">✕</span></span>';
-            }).join('');
+            document.getElementById('customTypeTagsContainer').innerHTML =
+                customTypesAdded.map(function(t) {
+                    return '<span class="custom-type-tag">' + t +
+                           '<span class="remove-tag" onclick="removeCustomType(\'' + t.replace(/'/g, "\\'") + '\')">&times;</span>' +
+                           '</span>';
+                }).join('');
         }
 
-        function removeCustomTypeTag(name) {
-            customTypesAdded = customTypesAdded.filter(function(t){return t!==name;});
+        function removeCustomType(name) {
+            customTypesAdded = customTypesAdded.filter(function(t) { return t !== name; });
             getAllExpenseTypeSelects().forEach(function(sel) {
-                for (var i=0;i<sel.options.length;i++) { if(sel.options[i].value===name){ if(sel.value===name) sel.value=''; sel.remove(i); break; } }
+                for (var i = 0; i < sel.options.length; i++) {
+                    if (sel.options[i].value === name) {
+                        if (sel.value === name) sel.value = '';
+                        sel.remove(i);
+                        break;
+                    }
+                }
             });
             renderCustomTypeTags();
-            if (!customTypesAdded.length) document.getElementById('customTypeAddedList').style.display='none';
-            showToast('Type "'+name+'" removed.','info');
+            if (!customTypesAdded.length) document.getElementById('customTypeAddedList').style.display = 'none';
+            showToast('Type "' + name + '" removed', 'info');
         }
 
-        // ========== FORM SUBMIT ==========
-        document.getElementById('expenseForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            var employeeId = document.getElementById('exp_employee').value;
-            var type       = document.getElementById('exp_type').value;
-            var date       = document.getElementById('exp_date').value;
-            var amount     = document.getElementById('exp_amount').value;
-            var desc       = document.getElementById('exp_desc').value;
-            var bill       = document.getElementById('exp_bill_no').value;
-            var file       = document.getElementById('exp_receipt').files[0];
-            if (!employeeId) { showToast('Select employee','error'); return; }
-            if (!type)       { showToast('Select expense type','error'); return; }
-            if (!date)       { showToast('Select date','error'); return; }
-            if (!amount || amount <= 0) { showToast('Enter valid amount','error'); return; }
-            createExpenseAPI(employeeId, type, date, parseFloat(amount), desc, bill, file)
-                .then(function() { document.getElementById('expenseForm').reset(); })
-                .catch(function() {});
-        });
+        // =====================================================================
+        // TABS
+        // =====================================================================
+        function initTabs() {
+            document.querySelectorAll('.tab-btn').forEach(function(btn) {
+                btn.addEventListener('click', function() {
+                    var tabId = this.getAttribute('data-tab');
+                    document.querySelectorAll('.tab-btn').forEach(function(b)    { b.classList.remove('active'); });
+                    document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+                    this.classList.add('active');
+                    document.getElementById('tab-' + tabId).classList.add('active');
+                    localStorage.setItem('expenseActiveTab', tabId);
+                    if (tabId === 'approvals') fetchPendingApprovals();
+                });
+            });
+
+            // Restore last active tab
+            var saved = localStorage.getItem('expenseActiveTab');
+            if (saved) {
+                var btn = document.querySelector('.tab-btn[data-tab="' + saved + '"]');
+                if (btn) btn.click();
+            }
+        }
 
         function setActiveMenu(module) {
             setTimeout(function() {
@@ -1327,15 +1536,23 @@
             }, 500);
         }
 
-        // ========== INIT ==========
+        // =====================================================================
+        // INIT
+        // =====================================================================
         document.addEventListener('DOMContentLoaded', async function() {
             if (typeof loadSidebar === 'function') loadSidebar();
-            if (typeof loadHeader === 'function')  loadHeader();
+            if (typeof loadHeader  === 'function') loadHeader();
             setActiveMenu('expense');
             initTabs();
-            await fetchAllEmployees();
+
+            // 1. Load all employees once (for name/dept lookups in table rows)
+            await fetchAllEmployeesOnce();
+
+            // 2. Load expense data
             await fetchAllExpenses();
-            await fetchPendingApprovals();
+
+            // Pending approvals loaded on tab switch, but prefetch in background
+            fetchPendingApprovals();
         });
     </script>
 </body>
