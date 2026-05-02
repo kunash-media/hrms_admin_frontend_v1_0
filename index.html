@@ -191,19 +191,13 @@
                                 </div>
                             </div>
 
-                            <div class="flex items-center justify-between">
-                                <label class="flex items-center gap-2 cursor-pointer"><input type="checkbox"
-                                        id="rememberMe" class="custom-checkbox"><span class="text-sm"
-                                        style="color: #1B738C;">Remember me</span></label>
-                            </div>
-
                             <button type="submit" id="loginBtn"
                                 class="w-full py-2.5 rounded-lg font-medium transition-all duration-300 login-btn-hover flex items-center justify-center gap-2"
                                 style="background: linear-gradient(135deg, #124f60 0%, #3788a2 100%); color: white;"><i
                                     class="fas fa-sign-in-alt text-sm"></i><span>Sign In</span></button>
 
                             <div class="text-center pt-3">
-                                <p class="text-[11px]" style="color: #1B738C;">© 2026 HRMS Admin Panel. All rights
+                                <p class="text-[11px]" style="color: #1B738C;">© 2026 SIEC. All rights
                                     reserved.</p>
                             </div>
                         </form>
@@ -221,7 +215,6 @@
         const mobileInput = document.getElementById('mobile');
         const passwordInput = document.getElementById('password');
         const togglePasswordBtn = document.getElementById('togglePassword');
-        const rememberMeCheckbox = document.getElementById('rememberMe');
         const loginBtn = document.getElementById('loginBtn');
 
         // Toggle Password
@@ -240,7 +233,6 @@
             if (savedRemember && savedMobile && savedPassword) {
                 if (mobileInput) mobileInput.value = savedMobile;
                 if (passwordInput) passwordInput.value = savedPassword;
-                if (rememberMeCheckbox) rememberMeCheckbox.checked = true;
             }
         }
 
@@ -331,15 +323,12 @@
             }
         }
 
-        // Example usage for bootstrap:
-        // handleBootstrapOrLogin('9696291521', '123456', 'Ritika', 'Rai', true);
 
         // Main Login Function
         async function handleLogin(event) {
             event.preventDefault();
             const mobile = mobileInput?.value?.trim();
             const password = passwordInput?.value;
-            const remember = rememberMeCheckbox?.checked || false;
 
             if (!mobile || !password) {
                 showNotification('Please enter both mobile number and password', 'error');
@@ -372,18 +361,6 @@
                 // In index.html, update the successful login response handler:
 
                 if (response.ok) {
-                    // Save credentials for "Remember Me"
-                    // ✅ FIXED
-                    if (remember) {
-                        // localStorage.setItem('remember_mobile', mobile);
-                        // localStorage.setItem('remember_password', password);
-                        // localStorage.setItem('hrms_remember', 'true');
-                    } else {
-                        // localStorage.removeItem('remember_mobile');
-                        // localStorage.removeItem('remember_password');
-                        // localStorage.setItem('hrms_remember', 'false');
-                    }
-
                     // CRITICAL: Store user data with firstName and lastName
                     const firstName = data.firstName || '';
                     const lastName = data.lastName || '';

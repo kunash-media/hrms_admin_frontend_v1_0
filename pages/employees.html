@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +8,8 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
 
     <style>
         * {
@@ -859,7 +861,7 @@
         .form-group select {
             width: 100%;
             padding: 10px 12px;
-            /* 🔥 proper spacing */
+            /* proper spacing */
             border-radius: 6px;
             border: 1px solid var(--primary-soft);
             font-size: 13px;
@@ -907,11 +909,43 @@
             cursor: pointer;
             margin-bottom: 6px;
         }
+
+        /* GLOBAL INPUT STYLING */
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--primary-soft);
+            font-size: 13px;
+            color: var(--text-dark);
+            outline: none;
+            transition: 0.2s ease;
+        }
+
+        .form-group textarea {
+            resize: none;
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: var(--text-light);
+            font-size: 12px;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(27, 115, 140, 0.1);
+        }
     </style>
 </head>
+
 <body>
 
-   <div class="flex h-screen overflow-hidden">
+    <div class="flex h-screen overflow-hidden">
         <div id="sidebar-container"></div>
 
         <div class="flex-1 flex flex-col overflow-hidden">
@@ -1205,38 +1239,7 @@
                             <!-- STEP 2: Contact & Address -->
                             <div id="st2" style="display:none;">
 
-                                <style>
-                                    /* 🔥 GLOBAL INPUT STYLING */
-                                    .form-group input,
-                                    .form-group select,
-                                    .form-group textarea {
-                                        width: 100%;
-                                        padding: 10px 12px;
-                                        border-radius: 6px;
-                                        border: 1px solid var(--primary-soft);
-                                        font-size: 13px;
-                                        color: var(--text-dark);
-                                        outline: none;
-                                        transition: 0.2s ease;
-                                    }
 
-                                    .form-group textarea {
-                                        resize: none;
-                                    }
-
-                                    .form-group input::placeholder,
-                                    .form-group textarea::placeholder {
-                                        color: var(--text-light);
-                                        font-size: 12px;
-                                    }
-
-                                    .form-group input:focus,
-                                    .form-group select:focus,
-                                    .form-group textarea:focus {
-                                        border-color: var(--primary);
-                                        box-shadow: 0 0 0 2px rgba(27, 115, 140, 0.1);
-                                    }
-                                </style>
 
                                 <!-- ================= CONTACT ================= -->
                                 <div class="sec-title"><i class="fas fa-address-book"></i> Contact Information</div>
@@ -1503,73 +1506,73 @@
     <script src="/assets/js/header.js"></script>
 
     <script>
-// ==================== CONFIG ====================
-const API_BASE = 'http://localhost:8086/api/employees';
+        // ==================== CONFIG ====================
+        const API_BASE = 'http://localhost:8086/api/employees';
 
-// ==================== GLOBAL VARIABLES ====================
-let currentPage = 0;
-const rowsPerPage = 10;
-let totalPages = 0;
-let totalElements = 0;
+        // ==================== GLOBAL VARIABLES ====================
+        let currentPage = 0;
+        const rowsPerPage = 10;
+        let totalPages = 0;
+        let totalElements = 0;
 
-let deleteTargetId = null;
-let deleteTargetName = null;
-let uploadedDocs = [];
-let customFieldsList = [];
+        let deleteTargetId = null;
+        let deleteTargetName = null;
+        let uploadedDocs = [];
+        let customFieldsList = [];
 
-// ==================== WIZARD VARIABLES ====================
-let currentStep = 0;
-const totalSteps = 5;
+        // ==================== WIZARD VARIABLES ====================
+        let currentStep = 0;
+        const totalSteps = 5;
 
-// ==================== UTILS ====================
-function showToast(message, type) {
-    const toast = document.createElement('div');
-    toast.className = `toast ${type}`;
-    toast.innerHTML = message;
-    document.body.appendChild(toast);
-    setTimeout(() => toast.remove(), 3000);
-}
+        // ==================== UTILS ====================
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
 
-function showError(msg) { const c = document.getElementById('errorContainer'); c.innerHTML = msg; c.classList.add('show'); setTimeout(() => c.classList.remove('show'), 5000); }
-function showSuccess(msg) { const c = document.getElementById('successContainer'); c.innerHTML = msg; c.classList.add('show'); setTimeout(() => c.classList.remove('show'), 5000); }
+        function showError(msg) { const c = document.getElementById('errorContainer'); c.innerHTML = msg; c.classList.add('show'); setTimeout(() => c.classList.remove('show'), 5000); }
+        function showSuccess(msg) { const c = document.getElementById('successContainer'); c.innerHTML = msg; c.classList.add('show'); setTimeout(() => c.classList.remove('show'), 5000); }
 
-// ==================== API HELPER ====================
-async function apiFetch(url, options = {}) {
-    try {
-        const res = await fetch(url, options);
-        const data = await res.json();
-        return { ok: res.ok, status: res.status, data };
-    } catch (err) {
-        console.error('API Error:', err);
-        return { ok: false, status: 0, data: { message: 'Network error. Please check your connection.' } };
-    }
-}
+        // ==================== API HELPER ====================
+        async function apiFetch(url, options = {}) {
+            try {
+                const res = await fetch(url, options);
+                const data = await res.json();
+                return { ok: res.ok, status: res.status, data };
+            } catch (err) {
+                console.error('API Error:', err);
+                return { ok: false, status: 0, data: { message: 'Network error. Please check your connection.' } };
+            }
+        }
 
-// ==================== FETCH & RENDER EMPLOYEES TABLE ====================
-async function fetchAndRenderEmployees() {
+        // ==================== FETCH & RENDER EMPLOYEES TABLE ====================
+        async function fetchAndRenderEmployees() {
             const tbody = document.getElementById('employeesList');
             if (!tbody) return;
- 
+
             tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center" style="color:var(--text-light);"><i class="fas fa-spinner fa-spin mr-2"></i>Loading employees...</td></tr>`;
- 
+
             const result = await apiFetch(`${API_BASE}/get-all-employees?page=${currentPage}&size=${rowsPerPage}`);
- 
+
             if (!result.ok) {
                 tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center" style="color:#dc3545;">Failed to load employees. ${result.data.message || ''}</td></tr>`;
                 return;
             }
- 
+
             const { data: employees, totalPages: tp, totalElements: te } = result.data;
             totalPages = tp || 0;
             totalElements = te || 0;
- 
+
             if (!employees || employees.length === 0) {
                 tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center" style="color:var(--text-light);">No employees found</td></tr>`;
                 document.getElementById('employeeCount').innerHTML = 'Showing 0 employees';
                 document.getElementById('pagination').innerHTML = '';
                 return;
             }
- 
+
             let html = '';
             employees.forEach(emp => {
                 const name = emp.fullName || `${emp.firstName || ''} ${emp.lastName || ''}`.trim();
@@ -1578,7 +1581,7 @@ async function fetchAndRenderEmployees() {
                 const statusStyle = isActive
                     ? 'background:rgba(43,122,62,0.15);color:#155724;'
                     : 'background:rgba(220,53,69,0.15);color:#721c24;';
- 
+
                 html += `<tr class="border-b data-row" style="border-color:#1B738C;">
             <td class="py-3">
                 <div class="flex items-center gap-2">
@@ -1615,49 +1618,50 @@ async function fetchAndRenderEmployees() {
                 </button>
              </div>
 
-        </td> </tr>`;});
+        </td> </tr>`;
+            });
 
-        tbody.innerHTML = html;
+            tbody.innerHTML = html;
 
-        let paginationHtml = '';
-        for (let i = 0; i < totalPages; i++) {
-            paginationHtml += `<button onclick="goToPage(${i})" class="${i === currentPage ? 'btn-primary' : 'btn-outline'} btn-sm">${i + 1}</button>`;
-        }
-        document.getElementById('pagination').innerHTML = paginationHtml;
-        document.getElementById('employeeCount').innerHTML = `Showing ${totalElements} employees`;
+            let paginationHtml = '';
+            for (let i = 0; i < totalPages; i++) {
+                paginationHtml += `<button onclick="goToPage(${i})" class="${i === currentPage ? 'btn-primary' : 'btn-outline'} btn-sm">${i + 1}</button>`;
+            }
+            document.getElementById('pagination').innerHTML = paginationHtml;
+            document.getElementById('employeeCount').innerHTML = `Showing ${totalElements} employees`;
 
-        await populateDropdowns();
-    }
-
-// ==================== SEARCH ====================
-let searchDebounce = null;
-function filterEmployees() {
-    clearTimeout(searchDebounce);
-    searchDebounce = setTimeout(async () => {
-        const searchTerm = document.getElementById('searchEmployee')?.value.toLowerCase().trim() || '';
-        if (!searchTerm) { currentPage = 0; await fetchAndRenderEmployees(); return; }
-
-        const result = await apiFetch(`${API_BASE}/all-employees`);
-        if (!result.ok) return;
-
-        const all = result.data || [];
-        const filtered = all.filter(emp => {
-            const name = `${emp.firstName || ''} ${emp.lastName || ''}`.toLowerCase();
-            return name.includes(searchTerm) || (emp.employeeId || '').toLowerCase().includes(searchTerm);
-        });
-
-        const tbody = document.getElementById('employeesList');
-        if (!filtered.length) {
-            tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center" style="color:var(--text-light);">No employees found</td></tr>`;
-            document.getElementById('employeeCount').innerHTML = 'Showing 0 employees';
-            document.getElementById('pagination').innerHTML = '';
-            return;
+            await populateDropdowns();
         }
 
-        let html = '';
-        filtered.forEach(emp => {
-            const name = `${emp.firstName || ''} ${emp.lastName || ''}`.trim();
-            html += `<tr class="border-b data-row" style="border-color:var(--primary-soft);">
+        // ==================== SEARCH ====================
+        let searchDebounce = null;
+        function filterEmployees() {
+            clearTimeout(searchDebounce);
+            searchDebounce = setTimeout(async () => {
+                const searchTerm = document.getElementById('searchEmployee')?.value.toLowerCase().trim() || '';
+                if (!searchTerm) { currentPage = 0; await fetchAndRenderEmployees(); return; }
+
+                const result = await apiFetch(`${API_BASE}/all-employees`);
+                if (!result.ok) return;
+
+                const all = result.data || [];
+                const filtered = all.filter(emp => {
+                    const name = `${emp.firstName || ''} ${emp.lastName || ''}`.toLowerCase();
+                    return name.includes(searchTerm) || (emp.employeeId || '').toLowerCase().includes(searchTerm);
+                });
+
+                const tbody = document.getElementById('employeesList');
+                if (!filtered.length) {
+                    tbody.innerHTML = `<tr><td colspan="8" class="py-8 text-center" style="color:var(--text-light);">No employees found</td></tr>`;
+                    document.getElementById('employeeCount').innerHTML = 'Showing 0 employees';
+                    document.getElementById('pagination').innerHTML = '';
+                    return;
+                }
+
+                let html = '';
+                filtered.forEach(emp => {
+                    const name = `${emp.firstName || ''} ${emp.lastName || ''}`.trim();
+                    html += `<tr class="border-b data-row" style="border-color:var(--primary-soft);">
                 <td class="py-3">
                     <div class="flex items-center gap-2">
                         <div class="avatar">${name.charAt(0)}</div>
@@ -1678,48 +1682,48 @@ function filterEmployees() {
                     <button onclick="editEmployee(${emp.employeePrimeId})" style="background:var(--primary-bg-light);border:none;padding:5px 9px;border-radius:6px;cursor:pointer;font-size:12px;color:var(--primary);"><i class="fas fa-edit"></i></button>
                 </td>
             </tr>`;
-        });
-        tbody.innerHTML = html;
-        document.getElementById('pagination').innerHTML = '';
-        document.getElementById('employeeCount').innerHTML = `Showing ${filtered.length} employees`;
-    }, 350);
-}
+                });
+                tbody.innerHTML = html;
+                document.getElementById('pagination').innerHTML = '';
+                document.getElementById('employeeCount').innerHTML = `Showing ${filtered.length} employees`;
+            }, 350);
+        }
 
-function goToPage(page) { currentPage = page; fetchAndRenderEmployees(); }
+        function goToPage(page) { currentPage = page; fetchAndRenderEmployees(); }
 
-// ==================== EXPORT ====================
-async function exportEmployees() {
-    showToast('Preparing export...', 'info');
-    const result = await apiFetch(`${API_BASE}/export-employees`);
-    if (!result.ok) { showToast('Export failed!', 'error'); return; }
+        // ==================== EXPORT ====================
+        async function exportEmployees() {
+            showToast('Preparing export...', 'info');
+            const result = await apiFetch(`${API_BASE}/export-employees`);
+            if (!result.ok) { showToast('Export failed!', 'error'); return; }
 
-    const employees = result.data.data || [];
-    if (!employees.length) { showToast('No data to export', 'info'); return; }
+            const employees = result.data.data || [];
+            if (!employees.length) { showToast('No data to export', 'info'); return; }
 
-    const headers = ['Employee ID', 'Full Name', 'Department', 'Designation', 'Email', 'Mobile', 'Status', 'Joining Date'];
-    const rows = employees.map(e => [e.employeeId, e.fullName, e.department, e.designation, e.personalEmail, e.mobileNumber, e.status, e.joiningDate]);
+            const headers = ['Employee ID', 'Full Name', 'Department', 'Designation', 'Email', 'Mobile', 'Status', 'Joining Date'];
+            const rows = employees.map(e => [e.employeeId, e.fullName, e.department, e.designation, e.personalEmail, e.mobileNumber, e.status, e.joiningDate]);
 
-    const csvContent = [headers, ...rows].map(row => row.map(cell => `"${cell || ''}"`).join(',')).join('\n');
-    const blob = new Blob([csvContent], { type: 'text/csv' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url; a.download = `employees_${new Date().toISOString().slice(0,10)}.csv`; a.click();
-    URL.revokeObjectURL(url);
-    showToast(`Exported ${employees.length} employees!`, 'success');
-}
+            const csvContent = [headers, ...rows].map(row => row.map(cell => `"${cell || ''}"`).join(',')).join('\n');
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url; a.download = `employees_${new Date().toISOString().slice(0, 10)}.csv`; a.click();
+            URL.revokeObjectURL(url);
+            showToast(`Exported ${employees.length} employees!`, 'success');
+        }
 
-// ==================== VIEW EMPLOYEE OVERLAY ====================
-async function viewEmployee(employeePrimeId) {
-    showViewOverlay(null, true);
-    const result = await apiFetch(`${API_BASE}/get-employee-by-employeePrimeId/${employeePrimeId}`);
-    if (!result.ok || !result.data?.data) { closeViewOverlay(); showToast('Could not load employee details', 'error'); return; }
-    showViewOverlay(result.data.data, false);
-}
+        // ==================== VIEW EMPLOYEE OVERLAY ====================
+        async function viewEmployee(employeePrimeId) {
+            showViewOverlay(null, true);
+            const result = await apiFetch(`${API_BASE}/get-employee-by-employeePrimeId/${employeePrimeId}`);
+            if (!result.ok || !result.data?.data) { closeViewOverlay(); showToast('Could not load employee details', 'error'); return; }
+            showViewOverlay(result.data.data, false);
+        }
 
-function showViewOverlay(emp, loading) {
+        function showViewOverlay(emp, loading) {
             let overlay = document.getElementById('viewEmployeeOverlay');
             if (!overlay) { overlay = document.createElement('div'); overlay.id = 'viewEmployeeOverlay'; document.body.appendChild(overlay); }
- 
+
             overlay.style.cssText = `
                 position:fixed;
                 top:0;
@@ -1736,38 +1740,38 @@ function showViewOverlay(emp, loading) {
                 overflow-y:auto;
                 backdrop-filter:blur(3px);
             `;
-    if (loading) {
-        overlay.innerHTML = `<div style="background:white;border-radius:16px;padding:60px;margin:auto;text-align:center;min-width:300px;"><i class="fas fa-spinner fa-spin" style="font-size:32px;color:var(--primary);"></i><p style="margin-top:12px;color:var(--text-light);font-size:14px;">Loading employee details...</p></div>`;
-        return;
-    }
+            if (loading) {
+                overlay.innerHTML = `<div style="background:white;border-radius:16px;padding:60px;margin:auto;text-align:center;min-width:300px;"><i class="fas fa-spinner fa-spin" style="font-size:32px;color:var(--primary);"></i><p style="margin-top:12px;color:var(--text-light);font-size:14px;">Loading employee details...</p></div>`;
+                return;
+            }
 
-    const fmt = d => d ? new Date(d).toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' }) : '—';
-    const val = v => v || '—';
-    const name = emp.fullName || `${emp.firstName || ''} ${emp.lastName || ''}`.trim();
-    const initial = name.charAt(0).toUpperCase();
-    const statusColor = (emp.status || '').toLowerCase() === 'active' ? '#2b7a3e' : '#dc3545';
+            const fmt = d => d ? new Date(d).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }) : '—';
+            const val = v => v || '—';
+            const name = emp.fullName || `${emp.firstName || ''} ${emp.lastName || ''}`.trim();
+            const initial = name.charAt(0).toUpperCase();
+            const statusColor = (emp.status || '').toLowerCase() === 'active' ? '#2b7a3e' : '#dc3545';
 
-    let eduRows = '', famRows = '', expRows = '';
-    try { const edu = emp.education ? JSON.parse(emp.education) : []; eduRows = edu.map(e => `<tr style="border-bottom:1px solid var(--primary-soft);"><td style="padding:6px 10px;font-size:12px;color:var(--primary);">${e.degree||'—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${e.institution||'—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${e.year||'—'}</td></tr>`).join(''); } catch(e) {}
-    try { const fam = emp.family ? JSON.parse(emp.family) : []; famRows = fam.map(f => `<tr style="border-bottom:1px solid var(--primary-soft);"><td style="padding:6px 10px;font-size:12px;color:var(--primary);">${f.name||'—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${f.relationship||'—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${f.occupation||'—'}</td></tr>`).join(''); } catch(e) {}
-    try { const exp = emp.workExperience ? JSON.parse(emp.workExperience) : []; expRows = exp.map(x => `<tr style="border-bottom:1px solid var(--primary-soft);"><td style="padding:6px 10px;font-size:12px;color:var(--primary);">${x.company||'—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${x.designation||'—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${x.years||'—'}</td></tr>`).join(''); } catch(e) {}
+            let eduRows = '', famRows = '', expRows = '';
+            try { const edu = emp.education ? JSON.parse(emp.education) : []; eduRows = edu.map(e => `<tr style="border-bottom:1px solid var(--primary-soft);"><td style="padding:6px 10px;font-size:12px;color:var(--primary);">${e.degree || '—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${e.institution || '—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${e.year || '—'}</td></tr>`).join(''); } catch (e) { }
+            try { const fam = emp.family ? JSON.parse(emp.family) : []; famRows = fam.map(f => `<tr style="border-bottom:1px solid var(--primary-soft);"><td style="padding:6px 10px;font-size:12px;color:var(--primary);">${f.name || '—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${f.relationship || '—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${f.occupation || '—'}</td></tr>`).join(''); } catch (e) { }
+            try { const exp = emp.workExperience ? JSON.parse(emp.workExperience) : []; expRows = exp.map(x => `<tr style="border-bottom:1px solid var(--primary-soft);"><td style="padding:6px 10px;font-size:12px;color:var(--primary);">${x.company || '—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${x.designation || '—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${x.years || '—'}</td></tr>`).join(''); } catch (e) { }
 
-    const empId = emp.employeeId || '';
-    const docLinks = [
-        { label: 'Aadhaar',       icon: 'fa-id-card',            endpoint: `${API_BASE}/${empId}/aadhaar-image`,    hasDoc: !!(emp.aadhaarDocumentUrl   || emp.aadhaarDocumentImage) },
-        { label: 'PAN Card',      icon: 'fa-address-card',       endpoint: `${API_BASE}/${empId}/pan-image`,        hasDoc: !!(emp.panDocumentUrl        || emp.panDocumentImage) },
-        { label: 'Degree',        icon: 'fa-graduation-cap',     endpoint: `${API_BASE}/${empId}/degree-image`,     hasDoc: !!(emp.degreeDocumentUrl     || emp.degreeDocumentImage) },
-        { label: 'Experience',    icon: 'fa-file-alt',           endpoint: `${API_BASE}/${empId}/experience-image`, hasDoc: !!(emp.experienceDocumentUrl || emp.experienceDocumentImage) },
-        { label: 'Offer Letter',  icon: 'fa-envelope-open-text', endpoint: `${API_BASE}/${empId}/offer-letter`,     hasDoc: !!(emp.offerLetterUrl        || emp.offerLetterImage) },
-        { label: 'Profile Photo', icon: 'fa-user-circle',        endpoint: `${API_BASE}/${empId}/profile-image`,   hasDoc: !!(emp.profilePhotoUrl       || emp.profilePhotoImage) },
-    ];
-    const docHtml = docLinks.map(d => `
+            const empId = emp.employeeId || '';
+            const docLinks = [
+                { label: 'Aadhaar', icon: 'fa-id-card', endpoint: `${API_BASE}/${empId}/aadhaar-image`, hasDoc: !!(emp.aadhaarDocumentUrl || emp.aadhaarDocumentImage) },
+                { label: 'PAN Card', icon: 'fa-address-card', endpoint: `${API_BASE}/${empId}/pan-image`, hasDoc: !!(emp.panDocumentUrl || emp.panDocumentImage) },
+                { label: 'Degree', icon: 'fa-graduation-cap', endpoint: `${API_BASE}/${empId}/degree-image`, hasDoc: !!(emp.degreeDocumentUrl || emp.degreeDocumentImage) },
+                { label: 'Experience', icon: 'fa-file-alt', endpoint: `${API_BASE}/${empId}/experience-image`, hasDoc: !!(emp.experienceDocumentUrl || emp.experienceDocumentImage) },
+                { label: 'Offer Letter', icon: 'fa-envelope-open-text', endpoint: `${API_BASE}/${empId}/offer-letter`, hasDoc: !!(emp.offerLetterUrl || emp.offerLetterImage) },
+                { label: 'Profile Photo', icon: 'fa-user-circle', endpoint: `${API_BASE}/${empId}/profile-image`, hasDoc: !!(emp.profilePhotoUrl || emp.profilePhotoImage) },
+            ];
+            const docHtml = docLinks.map(d => `
         <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--primary-bg-light);border-radius:8px;margin-bottom:6px;border:1px solid var(--primary-soft);">
             <span style="font-size:12px;color:var(--primary);"><i class="fas ${d.icon} mr-2"></i>${d.label}</span>
             ${d.hasDoc ? `<a href="${d.endpoint}" target="_blank" style="font-size:11px;color:#2b7a3e;font-weight:600;text-decoration:none;"><i class="fas fa-eye mr-1"></i>View</a>` : `<span style="font-size:11px;color:#dc3545;">Not Uploaded</span>`}
         </div>`).join('');
 
-    overlay.innerHTML = `
+            overlay.innerHTML = `
         <div style="background:white;border-radius:16px;width:100%;max-width:860px;margin:auto;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.2);border:1px solid var(--primary-soft);">
             <div style="background:var(--primary);padding:20px 24px;display:flex;justify-content:space-between;align-items:center;">
                 <div style="display:flex;align-items:center;gap:16px;">
@@ -1834,42 +1838,42 @@ function showViewOverlay(emp, loading) {
             </div>
         </div>`;
 
-    overlay.addEventListener('click', function(e) { if (e.target === overlay) closeViewOverlay(); });
-}
+            overlay.addEventListener('click', function (e) { if (e.target === overlay) closeViewOverlay(); });
+        }
 
 
 
-function viewRow(label, value) {
-    return `<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:4px 0;border-bottom:1px solid rgba(189,228,238,0.5);">
+        function viewRow(label, value) {
+            return `<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:4px 0;border-bottom:1px solid rgba(189,228,238,0.5);">
         <span style="font-size:11px;color:var(--text-light);min-width:120px;">${label}</span>
         <span style="font-size:12px;color:var(--text-dark);font-weight:500;text-align:right;">${value}</span>
     </div>`;
-}
-function closeViewOverlay() { const o = document.getElementById('viewEmployeeOverlay'); if (o) o.remove(); }
+        }
+        function closeViewOverlay() { const o = document.getElementById('viewEmployeeOverlay'); if (o) o.remove(); }
 
-// ==================== EDIT EMPLOYEE OVERLAY ====================
-async function editEmployee(employeePrimeId) {
-    showEditOverlay(null, true, employeePrimeId);
-    const result = await apiFetch(`${API_BASE}/get-employee-by-employeePrimeId/${employeePrimeId}`);
-    if (!result.ok || !result.data?.data) { closeEditOverlay(); showToast('Could not load employee details', 'error'); return; }
-    showEditOverlay(result.data.data, false, employeePrimeId);
-}
+        // ==================== EDIT EMPLOYEE OVERLAY ====================
+        async function editEmployee(employeePrimeId) {
+            showEditOverlay(null, true, employeePrimeId);
+            const result = await apiFetch(`${API_BASE}/get-employee-by-employeePrimeId/${employeePrimeId}`);
+            if (!result.ok || !result.data?.data) { closeEditOverlay(); showToast('Could not load employee details', 'error'); return; }
+            showEditOverlay(result.data.data, false, employeePrimeId);
+        }
 
-function showEditOverlay(emp, loading, employeePrimeId) {
-    let overlay = document.getElementById('editEmployeeOverlay');
-    if (!overlay) { overlay = document.createElement('div'); overlay.id = 'editEmployeeOverlay'; document.body.appendChild(overlay); }
+        function showEditOverlay(emp, loading, employeePrimeId) {
+            let overlay = document.getElementById('editEmployeeOverlay');
+            if (!overlay) { overlay = document.createElement('div'); overlay.id = 'editEmployeeOverlay'; document.body.appendChild(overlay); }
 
-    overlay.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.55);z-index:3000;display:flex;justify-content:center;align-items:flex-start;padding:20px;overflow-y:auto;backdrop-filter:blur(3px);`;
+            overlay.style.cssText = `position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.55);z-index:3000;display:flex;justify-content:center;align-items:flex-start;padding:20px;overflow-y:auto;backdrop-filter:blur(3px);`;
 
-    if (loading) {
-        overlay.innerHTML = `<div style="background:white;border-radius:16px;padding:60px;margin:auto;text-align:center;min-width:300px;"><i class="fas fa-spinner fa-spin" style="font-size:32px;color:var(--primary);"></i><p style="margin-top:12px;color:var(--text-light);font-size:14px;">Loading employee data...</p></div>`;
-        return;
-    }
+            if (loading) {
+                overlay.innerHTML = `<div style="background:white;border-radius:16px;padding:60px;margin:auto;text-align:center;min-width:300px;"><i class="fas fa-spinner fa-spin" style="font-size:32px;color:var(--primary);"></i><p style="margin-top:12px;color:var(--text-light);font-size:14px;">Loading employee data...</p></div>`;
+                return;
+            }
 
-    const name = emp.fullName || `${emp.firstName || ''} ${emp.lastName || ''}`.trim();
-    const initial = name.charAt(0).toUpperCase();
+            const name = emp.fullName || `${emp.firstName || ''} ${emp.lastName || ''}`.trim();
+            const initial = name.charAt(0).toUpperCase();
 
-    overlay.innerHTML = `
+            overlay.innerHTML = `
         <div style="background:white;border-radius:16px;width:100%;max-width:860px;margin:auto;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.2);border:1px solid #1B738C;">
             <div style="background:var(--primary);padding:20px 24px;display:flex;justify-content:space-between;align-items:center;">
                 <div style="display:flex;align-items:center;gap:14px;">
@@ -1882,9 +1886,9 @@ function showEditOverlay(emp, loading, employeePrimeId) {
                 <button onclick="closeEditOverlay()" style="background:rgba(255,255,255,0.2);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;">&times;</button>
             </div>
             <div style="display:flex;border-bottom:2px solid #1B738C;background:var(--primary-bg-light);padding:0 24px;overflow-x:auto;">
-                ${['Personal','Job Details','Contact & Address','Education & Family','Documents'].map((tab, i) =>
-                    `<button onclick="switchEditTab(${i})" id="editTab${i}" style="padding:12px 16px;border:none;background:none;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;color:${i===0?'var(--primary)':'var(--text-light)'};border-bottom-color:${i===0?'var(--primary)':'transparent'};">${tab}</button>`
-                ).join('')}
+                ${['Personal', 'Job Details', 'Contact & Address', 'Education & Family', 'Documents'].map((tab, i) =>
+                `<button onclick="switchEditTab(${i})" id="editTab${i}" style="padding:12px 16px;border:none;background:none;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;color:${i === 0 ? 'var(--primary)' : 'var(--text-light)'};border-bottom-color:${i === 0 ? 'var(--primary)' : 'transparent'};">${tab}</button>`
+            ).join('')}
             </div>
             <form id="editEmployeeForm" onsubmit="submitEditEmployee(event, ${employeePrimeId})">
                 <div style="padding:24px;overflow-y:auto;max-height:calc(100vh - 250px);">
@@ -1892,65 +1896,65 @@ function showEditOverlay(emp, loading, employeePrimeId) {
                     <div id="editSt0">
                         <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-id-card mr-2"></i>Personal Information</div>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
-                            ${editField('First Name','efFN',emp.firstName,'text',true)}${editField('Middle Name','efMN',emp.middleName)}${editField('Last Name ','efLN',emp.lastName,'text',true)}
+                            ${editField('First Name', 'efFN', emp.firstName, 'text', true)}${editField('Middle Name', 'efMN', emp.middleName)}${editField('Last Name ', 'efLN', emp.lastName, 'text', true)}
                         </div>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
-                            ${editField('Date of Birth','efDOB',emp.dateOfBirth,'date')}${editSelectField('Gender','efGender',['Male','Female','Other'],emp.gender)}${editSelectField('Marital Status','efMarital',['Single','Married','Divorced','Widowed'],emp.maritalStatus)}
+                            ${editField('Date of Birth', 'efDOB', emp.dateOfBirth, 'date')}${editSelectField('Gender', 'efGender', ['Male', 'Female', 'Other'], emp.gender)}${editSelectField('Marital Status', 'efMarital', ['Single', 'Married', 'Divorced', 'Widowed'], emp.maritalStatus)}
                         </div>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
-                            ${editSelectField('Blood Group','efBlood',['A+','A-','B+','B-','O+','O-','AB+','AB-'],emp.bloodGroup)}${editField('PAN Number','efPAN',emp.panNumber)}${editField('Aadhaar Number','efAAD',emp.aadhaarNumber)}
+                            ${editSelectField('Blood Group', 'efBlood', ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'], emp.bloodGroup)}${editField('PAN Number', 'efPAN', emp.panNumber)}${editField('Aadhaar Number', 'efAAD', emp.aadhaarNumber)}
                         </div>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
-                            ${editField('Nationality','efNat',emp.nationality||'Indian')}${editField('Religion','efRel',emp.religion)}${editField("Father's / Spouse Name",'efFatherName',emp.fatherSpouseName)}
+                            ${editField('Nationality', 'efNat', emp.nationality || 'Indian')}${editField('Religion', 'efRel', emp.religion)}${editField("Father's / Spouse Name", 'efFatherName', emp.fatherSpouseName)}
                         </div>
                         <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px;">
-                            ${editField('LinkedIn Profile','efLI',emp.linkedinProfile)}${editField('Employee Status','efStatus',emp.status)}
+                            ${editField('LinkedIn Profile', 'efLI', emp.linkedinProfile)}${editField('Employee Status', 'efStatus', emp.status)}
                         </div>
                     </div>
                     <!-- TAB 1: Job Details -->
                     <div id="editSt1" style="display:none;">
                         <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-briefcase mr-2"></i>Job Details</div>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
-                            ${editSelectField('Department ','efDept',['Information Technology','Human Resources','Sales & Marketing','Finance & Accounts','Operations'],emp.department,true)}${editField('Sub-Department','efSubDept',emp.subDepartment)}${editField('Designation ','efDesig',emp.designation,'text',true)}
+                            ${editSelectField('Department ', 'efDept', ['Information Technology', 'Human Resources', 'Sales & Marketing', 'Finance & Accounts', 'Operations'], emp.department, true)}${editField('Sub-Department', 'efSubDept', emp.subDepartment)}${editField('Designation ', 'efDesig', emp.designation, 'text', true)}
                         </div>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
-                            ${editSelectField('Employee Grade','efGrade',['L1','L2','L3','L4','L5','M1','M2'],emp.employeeGrade)}${editSelectField('Employment Type','efEmpType',['Full-Time','Part-Time','Contract','Intern'],emp.employmentType)}${editField('Joining Date','efJD',emp.joiningDate,'date',true)}
+                            ${editSelectField('Employee Grade', 'efGrade', ['L1', 'L2', 'L3', 'L4', 'L5', 'M1', 'M2'], emp.employeeGrade)}${editSelectField('Employment Type', 'efEmpType', ['Full-Time', 'Part-Time', 'Contract', 'Intern'], emp.employmentType)}${editField('Joining Date', 'efJD', emp.joiningDate, 'date', true)}
                         </div>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
-                            ${editField('Probation End Date','efProbEnd',emp.probationEndDate,'date')}${editField('Reporting Manager','efMgr',emp.reportingManager)}${editField('HR Business Partner','efHRBP',emp.hrBusinessPartner)}
+                            ${editField('Probation End Date', 'efProbEnd', emp.probationEndDate, 'date')}${editField('Reporting Manager', 'efMgr', emp.reportingManager)}${editField('HR Business Partner', 'efHRBP', emp.hrBusinessPartner)}
                         </div>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
-                            ${editSelectField('Work Location','efWL',['Mumbai HQ','Delhi Branch','Remote','Hybrid'],emp.workLocation)}${editField('Basic Salary (₹)','efBasic',emp.basicSalary,'number',true)}${editSelectField('Shift','efShift',['General (9AM-6PM)','Morning (7AM-4PM)','Evening (2PM-11PM)','Night (10PM-7AM)'],emp.shift)}
+                            ${editSelectField('Work Location', 'efWL', ['Mumbai HQ', 'Delhi Branch', 'Remote', 'Hybrid'], emp.workLocation)}${editField('Basic Salary (₹)', 'efBasic', emp.basicSalary, 'number', true)}${editSelectField('Shift', 'efShift', ['General (9AM-6PM)', 'Morning (7AM-4PM)', 'Evening (2PM-11PM)', 'Night (10PM-7AM)'], emp.shift)}
                         </div>
-                        <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:12px;">${editField('Cost Centre','efCC',emp.costCentre)}</div>
+                        <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:12px;">${editField('Cost Centre', 'efCC', emp.costCentre)}</div>
                         <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;margin-top:16px;"><i class="fas fa-building mr-2"></i>Bank Details</div>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
-                            ${editField('Bank Name','efBank',emp.bankName)}${editField('Account Number','efAccNo',emp.accountNumber)}${editField('IFSC Code','efIFSC',emp.ifscCode)}
+                            ${editField('Bank Name', 'efBank', emp.bankName)}${editField('Account Number', 'efAccNo', emp.accountNumber)}${editField('IFSC Code', 'efIFSC', emp.ifscCode)}
                         </div>
                     </div>
                     <!-- TAB 2: Contact & Address -->
                     <div id="editSt2" style="display:none;">
                         <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-address-book mr-2"></i>Contact Information</div>
                         <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:12px;">
-                            ${editField('Personal Email','efPEmail',emp.personalEmail,'email',true)}${editField('Work Email','efWEmail',emp.workEmail,'email')}${editField('Mobile *','efMob',emp.mobileNumber,'text',true)}${editField('Alternate Phone','efAlt',emp.alternateNumber)}
+                            ${editField('Personal Email', 'efPEmail', emp.personalEmail, 'email', true)}${editField('Work Email', 'efWEmail', emp.workEmail, 'email')}${editField('Mobile *', 'efMob', emp.mobileNumber, 'text', true)}${editField('Alternate Phone', 'efAlt', emp.alternateNumber)}
                         </div>
                         <div style="font-size:12px;font-weight:700;color:var(--text-light);margin-bottom:10px;margin-top:6px;">Current Address</div>
                         <div style="background:var(--primary-bg-light);border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid #1B738C;">
-                            ${editTextareaField('Street Address','efCAddr',emp.currentStreet)}
+                            ${editTextareaField('Street Address', 'efCAddr', emp.currentStreet)}
                             <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px;">
-                                ${editField('City','efCity',emp.currentCity)}${editField('State','efState',emp.currentState)}${editField('PIN Code','efPIN',emp.currentPincode)}${editField('Country','efCountry',emp.currentCountry||'India')}
+                                ${editField('City', 'efCity', emp.currentCity)}${editField('State', 'efState', emp.currentState)}${editField('PIN Code', 'efPIN', emp.currentPincode)}${editField('Country', 'efCountry', emp.currentCountry || 'India')}
                             </div>
                         </div>
                         <div style="font-size:12px;font-weight:700;color:var(--text-light);margin-bottom:10px;">Permanent Address</div>
                         <div style="background:var(--primary-bg-light);border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid #1B738C;">
-                            ${editTextareaField('Street Address','efPAddr',emp.permanentStreet)}
+                            ${editTextareaField('Street Address', 'efPAddr', emp.permanentStreet)}
                             <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px;">
-                                ${editField('City','efPCity',emp.permanentCity)}${editField('State','efPState',emp.permanentState)}${editField('PIN Code','efPPIN',emp.permanentPincode)}${editField('Country','efPCountry',emp.permanentCountry||'India')}
+                                ${editField('City', 'efPCity', emp.permanentCity)}${editField('State', 'efPState', emp.permanentState)}${editField('PIN Code', 'efPPIN', emp.permanentPincode)}${editField('Country', 'efPCountry', emp.permanentCountry || 'India')}
                             </div>
                         </div>
                         <div style="font-size:12px;font-weight:700;color:var(--text-light);margin-bottom:10px;">Emergency Contact</div>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
-                            ${editField('Name *','efECName',emp.emergencyName,'text',true)}${editSelectField('Relationship','efECRel',['Spouse','Father','Mother','Sibling'],emp.emergencyRelationship)}${editField('Phone *','efECPhone',emp.emergencyPhone,'text',true)}
+                            ${editField('Name *', 'efECName', emp.emergencyName, 'text', true)}${editSelectField('Relationship', 'efECRel', ['Spouse', 'Father', 'Mother', 'Sibling'], emp.emergencyRelationship)}${editField('Phone *', 'efECPhone', emp.emergencyPhone, 'text', true)}
                         </div>
                     </div>
                     <!-- TAB 3: Education & Family -->
@@ -1970,12 +1974,12 @@ function showEditOverlay(emp, loading, employeePrimeId) {
                         <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-folder mr-2"></i>Upload / Replace Documents</div>
                         <p style="font-size:12px;color:var(--text-light);margin-bottom:14px;">Upload a new file to replace the existing document. Leave blank to keep existing.</p>
                         <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
-                            ${editFileField('Aadhaar Card','efAadhaar',!!(emp.aadhaarDocumentUrl||emp.aadhaarDocumentImage),`${API_BASE}/${emp.employeeId}/aadhaar-image`)}
-                            ${editFileField('PAN Card','efPAN_doc',!!(emp.panDocumentUrl||emp.panDocumentImage),`${API_BASE}/${emp.employeeId}/pan-image`)}
-                            ${editFileField('Degree Certificate','efDegree',!!(emp.degreeDocumentUrl||emp.degreeDocumentImage),`${API_BASE}/${emp.employeeId}/degree-image`)}
-                            ${editFileField('Experience Letter','efExpDoc',!!(emp.experienceDocumentUrl||emp.experienceDocumentImage),`${API_BASE}/${emp.employeeId}/experience-image`)}
-                            ${editFileField('Offer Letter','efOfferLetter',!!(emp.offerLetterUrl||emp.offerLetterImage),`${API_BASE}/${emp.employeeId}/offer-letter`)}
-                            ${editFileField('Profile Photo','efProfilePhoto',!!(emp.profilePhotoUrl||emp.profilePhotoImage),`${API_BASE}/${emp.employeeId}/profile-image`)}
+                            ${editFileField('Aadhaar Card', 'efAadhaar', !!(emp.aadhaarDocumentUrl || emp.aadhaarDocumentImage), `${API_BASE}/${emp.employeeId}/aadhaar-image`)}
+                            ${editFileField('PAN Card', 'efPAN_doc', !!(emp.panDocumentUrl || emp.panDocumentImage), `${API_BASE}/${emp.employeeId}/pan-image`)}
+                            ${editFileField('Degree Certificate', 'efDegree', !!(emp.degreeDocumentUrl || emp.degreeDocumentImage), `${API_BASE}/${emp.employeeId}/degree-image`)}
+                            ${editFileField('Experience Letter', 'efExpDoc', !!(emp.experienceDocumentUrl || emp.experienceDocumentImage), `${API_BASE}/${emp.employeeId}/experience-image`)}
+                            ${editFileField('Offer Letter', 'efOfferLetter', !!(emp.offerLetterUrl || emp.offerLetterImage), `${API_BASE}/${emp.employeeId}/offer-letter`)}
+                            ${editFileField('Profile Photo', 'efProfilePhoto', !!(emp.profilePhotoUrl || emp.profilePhotoImage), `${API_BASE}/${emp.employeeId}/profile-image`)}
                         </div>
                     </div>
                 </div>
@@ -1989,357 +1993,357 @@ function showEditOverlay(emp, loading, employeePrimeId) {
             </form>
         </div>`;
 
-    try { if (emp.education) { JSON.parse(emp.education).forEach(e => addEditEduRow(e.degree, e.institution, e.year)); } } catch(e) {}
-    try { if (emp.family) { JSON.parse(emp.family).forEach(f => addEditFamRow(f.name, f.relationship, f.occupation)); } } catch(e) {}
-    try { if (emp.workExperience) { JSON.parse(emp.workExperience).forEach(x => addEditExpRow(x.company, x.designation, x.years)); } } catch(e) {}
+            try { if (emp.education) { JSON.parse(emp.education).forEach(e => addEditEduRow(e.degree, e.institution, e.year)); } } catch (e) { }
+            try { if (emp.family) { JSON.parse(emp.family).forEach(f => addEditFamRow(f.name, f.relationship, f.occupation)); } } catch (e) { }
+            try { if (emp.workExperience) { JSON.parse(emp.workExperience).forEach(x => addEditExpRow(x.company, x.designation, x.years)); } } catch (e) { }
 
-    overlay.addEventListener('click', function(e) { if (e.target === overlay) closeEditOverlay(); });
-}
+            overlay.addEventListener('click', function (e) { if (e.target === overlay) closeEditOverlay(); });
+        }
 
-function editField(label, id, value, type = 'text', required = false) {
-    const req = required ? 'required' : '';
-    // Handle null/undefined values
-    const val = (value !== null && value !== undefined) ? value : '';
-    return `<div>
+        function editField(label, id, value, type = 'text', required = false) {
+            const req = required ? 'required' : '';
+            // Handle null/undefined values
+            const val = (value !== null && value !== undefined) ? value : '';
+            return `<div>
         <label style="font-size:11px;font-weight:600; color: #1B738C; display:block;margin-bottom:4px;">${label} ${required ? '<span class="req">*</span>' : ''}</label>
         <input type="${type}" id="${id}" value="${String(val).replace(/"/g, '&quot;')}" ${req}
             style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
     </div>`;
-}
-function editSelectField(label, id, options, selected, required=false) {
-    const opts = options.map(o => `<option value="${o}" ${o===selected?'selected':''}>${o}</option>`).join('');
-    return `<div><label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">${label}</label><select id="${id}" ${required?'required':''} style="border:1px solid #1B738C; border-radius:10px;padding:8px 12px;width:100%;font-size:12px;box-sizing:border-box;color:var(--text-dark);"><option value="">Select</option>${opts}</select></div>`;
-}
-function editTextareaField(label, id, value) {
-    return `<div><label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">${label}</label><textarea id="${id}" rows="2" style="border:1px solid #1B738C; border-radius:10px;padding:8px 12px;width:100%;font-size:12px;box-sizing:border-box;resize:vertical;color:var(--text-dark);">${value||''}</textarea></div>`;
-}
-function editFileField(label, id, hasDoc, viewUrl) {
-    return `<div style="background:var(--primary-bg-light);border-radius:10px;padding:12px;border:1px solid #1B738C;">
+        }
+        function editSelectField(label, id, options, selected, required = false) {
+            const opts = options.map(o => `<option value="${o}" ${o === selected ? 'selected' : ''}>${o}</option>`).join('');
+            return `<div><label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">${label}</label><select id="${id}" ${required ? 'required' : ''} style="border:1px solid #1B738C; border-radius:10px;padding:8px 12px;width:100%;font-size:12px;box-sizing:border-box;color:var(--text-dark);"><option value="">Select</option>${opts}</select></div>`;
+        }
+        function editTextareaField(label, id, value) {
+            return `<div><label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">${label}</label><textarea id="${id}" rows="2" style="border:1px solid #1B738C; border-radius:10px;padding:8px 12px;width:100%;font-size:12px;box-sizing:border-box;resize:vertical;color:var(--text-dark);">${value || ''}</textarea></div>`;
+        }
+        function editFileField(label, id, hasDoc, viewUrl) {
+            return `<div style="background:var(--primary-bg-light);border-radius:10px;padding:12px;border:1px solid #1B738C;">
         <label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:6px;">${label}</label>
         ${hasDoc ? `<div style="margin-bottom:6px;"><a href="${viewUrl}" target="_blank" style="font-size:11px;color:#2b7a3e;font-weight:600;"><i class="fas fa-check-circle mr-1"></i>Current file — View</a></div>` : `<div style="margin-bottom:6px;font-size:11px;color:#dc3545;"><i class="fas fa-times-circle mr-1"></i>Not uploaded</div>`}
         <input type="file" id="${id}" accept=".pdf,.jpg,.png" style="border:1px solid #1B738C;border-radius:8px;padding:5px;width:100%;font-size:11px;box-sizing:border-box;">
         <div style="font-size:10px;color:var(--text-light);margin-top:3px;">Leave blank to keep existing</div>
     </div>`;
-}
+        }
 
-function switchEditTab(idx) {
-    for (let i = 0; i < 5; i++) {
-        const st = document.getElementById(`editSt${i}`);
-        const tb = document.getElementById(`editTab${i}`);
-        if (st) st.style.display = i === idx ? 'block' : 'none';
-        if (tb) { tb.style.color = i===idx ? 'var(--primary)' : 'var(--text-light)'; tb.style.borderBottomColor = i===idx ? 'var(--primary)' : 'transparent'; }
-    }
-}
+        function switchEditTab(idx) {
+            for (let i = 0; i < 5; i++) {
+                const st = document.getElementById(`editSt${i}`);
+                const tb = document.getElementById(`editTab${i}`);
+                if (st) st.style.display = i === idx ? 'block' : 'none';
+                if (tb) { tb.style.color = i === idx ? 'var(--primary)' : 'var(--text-light)'; tb.style.borderBottomColor = i === idx ? 'var(--primary)' : 'transparent'; }
+            }
+        }
 
-function addEditEduRow(degree='', institution='', year='') {
-    const row = document.createElement('div');
-    row.className = 'edit-edu-row';
-    row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr 32px;gap:8px;margin-bottom:8px;align-items:end;';
-    row.innerHTML = `<input placeholder="Degree" value="${degree}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Institution" value="${institution}" style="border:1px solid #1B738C; border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Year" value="${year}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
-    document.getElementById('editEduList').appendChild(row);
-}
-function addEditFamRow(name='', relationship='', occupation='') {
-    const row = document.createElement('div');
-    row.className = 'edit-fam-row';
-    row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr 32px;gap:8px;margin-bottom:8px;align-items:end;';
-    row.innerHTML = `<input placeholder="Name" value="${name}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Relationship" value="${relationship}" style="border:1px solid #1B738C; border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Occupation" value="${occupation}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
-    document.getElementById('editFamList').appendChild(row);
-}
-function addEditExpRow(company='', designation='', years='') {
-    const row = document.createElement('div');
-    row.className = 'edit-exp-row';
-    row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr 32px;gap:8px;margin-bottom:8px;align-items:end;';
-    row.innerHTML = `<input placeholder="Company" value="${company}" style="border:1px solid #1B738C; border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Designation" value="${designation}" style="border:1px solid #1B738C; border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Years" value="${years}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
-    document.getElementById('editExpList').appendChild(row);
-}
+        function addEditEduRow(degree = '', institution = '', year = '') {
+            const row = document.createElement('div');
+            row.className = 'edit-edu-row';
+            row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr 32px;gap:8px;margin-bottom:8px;align-items:end;';
+            row.innerHTML = `<input placeholder="Degree" value="${degree}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Institution" value="${institution}" style="border:1px solid #1B738C; border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Year" value="${year}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
+            document.getElementById('editEduList').appendChild(row);
+        }
+        function addEditFamRow(name = '', relationship = '', occupation = '') {
+            const row = document.createElement('div');
+            row.className = 'edit-fam-row';
+            row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr 32px;gap:8px;margin-bottom:8px;align-items:end;';
+            row.innerHTML = `<input placeholder="Name" value="${name}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Relationship" value="${relationship}" style="border:1px solid #1B738C; border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Occupation" value="${occupation}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
+            document.getElementById('editFamList').appendChild(row);
+        }
+        function addEditExpRow(company = '', designation = '', years = '') {
+            const row = document.createElement('div');
+            row.className = 'edit-exp-row';
+            row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr 32px;gap:8px;margin-bottom:8px;align-items:end;';
+            row.innerHTML = `<input placeholder="Company" value="${company}" style="border:1px solid #1B738C; border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Designation" value="${designation}" style="border:1px solid #1B738C; border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Years" value="${years}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
+            document.getElementById('editExpList').appendChild(row);
+        }
 
-function collectEditEducation() {
-    const rows = document.querySelectorAll('#editEduList .edit-edu-row');
-    const result = [];
-    rows.forEach(row => {
-        const inputs = row.querySelectorAll('input');
-        if (inputs[0]?.value.trim()) {
-            result.push({ 
-                degree: inputs[0].value, 
-                institution: inputs[1].value, 
-                year: inputs[2].value 
+        function collectEditEducation() {
+            const rows = document.querySelectorAll('#editEduList .edit-edu-row');
+            const result = [];
+            rows.forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                if (inputs[0]?.value.trim()) {
+                    result.push({
+                        degree: inputs[0].value,
+                        institution: inputs[1].value,
+                        year: inputs[2].value
+                    });
+                }
             });
+            return result.length ? JSON.stringify(result) : null;  // Return null, not empty string
+        } function collectEditFamily() { const rows = document.querySelectorAll('#editFamList .edit-fam-row'); const result = []; rows.forEach(row => { const inputs = row.querySelectorAll('input'); if (inputs[0]?.value.trim()) result.push({ name: inputs[0].value, relationship: inputs[1].value, occupation: inputs[2].value }); }); return result.length ? JSON.stringify(result) : null; }
+        function collectEditExperience() { const rows = document.querySelectorAll('#editExpList .edit-exp-row'); const result = []; rows.forEach(row => { const inputs = row.querySelectorAll('input'); if (inputs[0]?.value.trim()) result.push({ company: inputs[0].value, designation: inputs[1].value, years: inputs[2].value }); }); return result.length ? JSON.stringify(result) : null; }
+
+        async function submitEditEmployee(e, employeePrimeId) {
+            e.preventDefault();
+
+            // Validation
+            const firstName = document.getElementById('efFN')?.value.trim();
+            const lastName = document.getElementById('efLN')?.value.trim();
+            const email = document.getElementById('efPEmail')?.value.trim();
+            const mobile = document.getElementById('efMob')?.value.trim();
+            const dept = document.getElementById('efDept')?.value;
+            const desig = document.getElementById('efDesig')?.value.trim();
+            const joiningDate = document.getElementById('efJD')?.value;
+            const basicSalary = document.getElementById('efBasic')?.value;
+            const ecName = document.getElementById('efECName')?.value.trim();
+            const ecPhone = document.getElementById('efECPhone')?.value.trim();
+
+            if (!firstName || !lastName) { showToast('Please enter First Name and Last Name', 'error'); switchEditTab(0); return; }
+            if (!email || !mobile) { showToast('Please enter Email and Mobile number', 'error'); switchEditTab(2); return; }
+            if (!dept || !desig) { showToast('Please select Department and Designation', 'error'); switchEditTab(1); return; }
+            if (!joiningDate || !basicSalary) { showToast('Please enter Joining Date and Basic Salary', 'error'); switchEditTab(1); return; }
+            if (!ecName || !ecPhone) { showToast('Please enter Emergency Contact details', 'error'); switchEditTab(2); return; }
+
+            // Helper function to convert empty string to null
+            const toNull = (val) => (val === undefined || val === null || val === '') ? null : val;
+
+            const employeePayload = {
+                firstName: firstName || '',
+                middleName: toNull(document.getElementById('efMN')?.value.trim()),
+                lastName: lastName || '',
+                dateOfBirth: toNull(document.getElementById('efDOB')?.value),
+                gender: toNull(document.getElementById('efGender')?.value),
+                maritalStatus: toNull(document.getElementById('efMarital')?.value),
+                bloodGroup: toNull(document.getElementById('efBlood')?.value),
+                panNumber: toNull(document.getElementById('efPAN')?.value.trim().toUpperCase()),
+                aadhaarNumber: toNull(document.getElementById('efAAD')?.value.trim()),
+                nationality: document.getElementById('efNat')?.value.trim() || 'Indian',
+                religion: toNull(document.getElementById('efRel')?.value.trim()),
+                linkedinProfile: toNull(document.getElementById('efLI')?.value.trim()),
+                fatherSpouseName: toNull(document.getElementById('efFatherName')?.value.trim()),
+
+                // PWD fields (set to null by default)
+                isPhysicallyChallenged: false,
+                disabilityType: null,
+                disabilityPercentage: null,
+                certificateNumber: null,
+
+                // Job Details
+                department: dept || '',
+                subDepartment: toNull(document.getElementById('efSubDept')?.value.trim()),
+                designation: desig || '',
+                employeeGrade: toNull(document.getElementById('efGrade')?.value),
+                employmentType: toNull(document.getElementById('efEmpType')?.value),
+                joiningDate: joiningDate || '',
+                probationEndDate: toNull(document.getElementById('efProbEnd')?.value),
+                reportingManager: toNull(document.getElementById('efMgr')?.value.trim()),
+                hrBusinessPartner: toNull(document.getElementById('efHRBP')?.value.trim()),
+                workLocation: toNull(document.getElementById('efWL')?.value),
+                basicSalary: parseFloat(basicSalary) || 0,
+                shift: toNull(document.getElementById('efShift')?.value),
+                costCentre: toNull(document.getElementById('efCC')?.value.trim()),
+
+                // Bank
+                bankName: toNull(document.getElementById('efBank')?.value.trim()),
+                accountNumber: toNull(document.getElementById('efAccNo')?.value.trim()),
+                ifscCode: toNull(document.getElementById('efIFSC')?.value.trim().toUpperCase()),
+
+                // Contact
+                personalEmail: email || '',
+                workEmail: toNull(document.getElementById('efWEmail')?.value.trim()),
+                mobileNumber: mobile || '',
+                alternateNumber: toNull(document.getElementById('efAlt')?.value.trim()),
+
+                // Current Address
+                currentStreet: toNull(document.getElementById('efCAddr')?.value.trim()),
+                currentCity: toNull(document.getElementById('efCity')?.value.trim()),
+                currentState: toNull(document.getElementById('efState')?.value.trim()),
+                currentPincode: toNull(document.getElementById('efPIN')?.value.trim()),
+                currentCountry: document.getElementById('efCountry')?.value.trim() || 'India',
+
+                // Permanent Address
+                permanentStreet: toNull(document.getElementById('efPAddr')?.value.trim()),
+                permanentCity: toNull(document.getElementById('efPCity')?.value.trim()),
+                permanentState: toNull(document.getElementById('efPState')?.value.trim()),
+                permanentPincode: toNull(document.getElementById('efPPIN')?.value.trim()),
+                permanentCountry: document.getElementById('efPCountry')?.value.trim() || 'India',
+
+                // Emergency Contact
+                emergencyName: ecName || '',
+                emergencyRelationship: toNull(document.getElementById('efECRel')?.value),
+                emergencyPhone: ecPhone || '',
+
+                // Education, Family, Experience
+                education: collectEditEducation(),
+                family: collectEditFamily(),
+                workExperience: collectEditExperience(),
+            };
+
+            const formData = new FormData();
+            formData.append('employee', JSON.stringify(employeePayload));
+
+            // Append new document files if selected
+            const docFieldMap = {
+                'efAadhaar': 'aadhaarDocument',
+                'efPAN_doc': 'panDocument',
+                'efDegree': 'degreeDocument',
+                'efExpDoc': 'experienceDocument',
+                'efOfferLetter': 'offerLetter',
+                'efProfilePhoto': 'profilePhoto'
+            };
+
+            for (const [inputId, partName] of Object.entries(docFieldMap)) {
+                const fileInput = document.getElementById(inputId);
+                if (fileInput && fileInput.files && fileInput.files.length > 0) {
+                    formData.append(partName, fileInput.files[0]);
+                }
+            }
+
+            // Disable save button
+            const saveBtn = document.getElementById('editSaveBtn');
+            if (saveBtn) {
+                saveBtn.disabled = true;
+                saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Saving...';
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/update-employee/${employeePrimeId}`, {
+                    method: 'PUT',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (saveBtn) {
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = '<i class="fas fa-save mr-1"></i>Save Changes';
+                }
+
+                if (response.ok && result.success) {
+                    showToast(`Employee updated successfully!`, 'success');
+                    closeEditOverlay();
+                    await fetchAndRenderEmployees();
+                } else {
+                    showToast(result.message || 'Failed to update employee', 'error');
+                    console.error('Update error:', result);
+                }
+            } catch (error) {
+                if (saveBtn) {
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = '<i class="fas fa-save mr-1"></i>Save Changes';
+                }
+                showToast('Network error: ' + error.message, 'error');
+                console.error('Fetch error:', error);
+            }
         }
-    });
-    return result.length ? JSON.stringify(result) : null;  // Return null, not empty string
-}function collectEditFamily() { const rows = document.querySelectorAll('#editFamList .edit-fam-row'); const result = []; rows.forEach(row => { const inputs = row.querySelectorAll('input'); if (inputs[0]?.value.trim()) result.push({ name:inputs[0].value, relationship:inputs[1].value, occupation:inputs[2].value }); }); return result.length ? JSON.stringify(result) : null; }
-function collectEditExperience() { const rows = document.querySelectorAll('#editExpList .edit-exp-row'); const result = []; rows.forEach(row => { const inputs = row.querySelectorAll('input'); if (inputs[0]?.value.trim()) result.push({ company:inputs[0].value, designation:inputs[1].value, years:inputs[2].value }); }); return result.length ? JSON.stringify(result) : null; }
 
-async function submitEditEmployee(e, employeePrimeId) {
-    e.preventDefault();
+        function closeEditOverlay() { const o = document.getElementById('editEmployeeOverlay'); if (o) o.remove(); }
 
-    // Validation
-    const firstName   = document.getElementById('efFN')?.value.trim();
-    const lastName    = document.getElementById('efLN')?.value.trim();
-    const email       = document.getElementById('efPEmail')?.value.trim();
-    const mobile      = document.getElementById('efMob')?.value.trim();
-    const dept        = document.getElementById('efDept')?.value;
-    const desig       = document.getElementById('efDesig')?.value.trim();
-    const joiningDate = document.getElementById('efJD')?.value;
-    const basicSalary = document.getElementById('efBasic')?.value;
-    const ecName      = document.getElementById('efECName')?.value.trim();
-    const ecPhone     = document.getElementById('efECPhone')?.value.trim();
-
-    if (!firstName || !lastName)      { showToast('Please enter First Name and Last Name', 'error'); switchEditTab(0); return; }
-    if (!email || !mobile)            { showToast('Please enter Email and Mobile number', 'error'); switchEditTab(2); return; }
-    if (!dept || !desig)              { showToast('Please select Department and Designation', 'error'); switchEditTab(1); return; }
-    if (!joiningDate || !basicSalary) { showToast('Please enter Joining Date and Basic Salary', 'error'); switchEditTab(1); return; }
-    if (!ecName || !ecPhone)          { showToast('Please enter Emergency Contact details', 'error'); switchEditTab(2); return; }
-
-    // Helper function to convert empty string to null
-    const toNull = (val) => (val === undefined || val === null || val === '') ? null : val;
-
-    const employeePayload = {
-        firstName: firstName || '',
-        middleName: toNull(document.getElementById('efMN')?.value.trim()),
-        lastName: lastName || '',
-        dateOfBirth: toNull(document.getElementById('efDOB')?.value),
-        gender: toNull(document.getElementById('efGender')?.value),
-        maritalStatus: toNull(document.getElementById('efMarital')?.value),
-        bloodGroup: toNull(document.getElementById('efBlood')?.value),
-        panNumber: toNull(document.getElementById('efPAN')?.value.trim().toUpperCase()),
-        aadhaarNumber: toNull(document.getElementById('efAAD')?.value.trim()),
-        nationality: document.getElementById('efNat')?.value.trim() || 'Indian',
-        religion: toNull(document.getElementById('efRel')?.value.trim()),
-        linkedinProfile: toNull(document.getElementById('efLI')?.value.trim()),
-        fatherSpouseName: toNull(document.getElementById('efFatherName')?.value.trim()),
-
-        // PWD fields (set to null by default)
-        isPhysicallyChallenged: false,
-        disabilityType: null,
-        disabilityPercentage: null,
-        certificateNumber: null,
-
-        // Job Details
-        department: dept || '',
-        subDepartment: toNull(document.getElementById('efSubDept')?.value.trim()),
-        designation: desig || '',
-        employeeGrade: toNull(document.getElementById('efGrade')?.value),
-        employmentType: toNull(document.getElementById('efEmpType')?.value),
-        joiningDate: joiningDate || '',
-        probationEndDate: toNull(document.getElementById('efProbEnd')?.value),
-        reportingManager: toNull(document.getElementById('efMgr')?.value.trim()),
-        hrBusinessPartner: toNull(document.getElementById('efHRBP')?.value.trim()),
-        workLocation: toNull(document.getElementById('efWL')?.value),
-        basicSalary: parseFloat(basicSalary) || 0,
-        shift: toNull(document.getElementById('efShift')?.value),
-        costCentre: toNull(document.getElementById('efCC')?.value.trim()),
-
-        // Bank
-        bankName: toNull(document.getElementById('efBank')?.value.trim()),
-        accountNumber: toNull(document.getElementById('efAccNo')?.value.trim()),
-        ifscCode: toNull(document.getElementById('efIFSC')?.value.trim().toUpperCase()),
-
-        // Contact
-        personalEmail: email || '',
-        workEmail: toNull(document.getElementById('efWEmail')?.value.trim()),
-        mobileNumber: mobile || '',
-        alternateNumber: toNull(document.getElementById('efAlt')?.value.trim()),
-
-        // Current Address
-        currentStreet: toNull(document.getElementById('efCAddr')?.value.trim()),
-        currentCity: toNull(document.getElementById('efCity')?.value.trim()),
-        currentState: toNull(document.getElementById('efState')?.value.trim()),
-        currentPincode: toNull(document.getElementById('efPIN')?.value.trim()),
-        currentCountry: document.getElementById('efCountry')?.value.trim() || 'India',
-
-        // Permanent Address
-        permanentStreet: toNull(document.getElementById('efPAddr')?.value.trim()),
-        permanentCity: toNull(document.getElementById('efPCity')?.value.trim()),
-        permanentState: toNull(document.getElementById('efPState')?.value.trim()),
-        permanentPincode: toNull(document.getElementById('efPPIN')?.value.trim()),
-        permanentCountry: document.getElementById('efPCountry')?.value.trim() || 'India',
-
-        // Emergency Contact
-        emergencyName: ecName || '',
-        emergencyRelationship: toNull(document.getElementById('efECRel')?.value),
-        emergencyPhone: ecPhone || '',
-
-        // Education, Family, Experience
-        education: collectEditEducation(),
-        family: collectEditFamily(),
-        workExperience: collectEditExperience(),
-    };
-
-    const formData = new FormData();
-    formData.append('employee', JSON.stringify(employeePayload));
-
-    // Append new document files if selected
-    const docFieldMap = {
-        'efAadhaar': 'aadhaarDocument',
-        'efPAN_doc': 'panDocument',
-        'efDegree': 'degreeDocument',
-        'efExpDoc': 'experienceDocument',
-        'efOfferLetter': 'offerLetter',
-        'efProfilePhoto': 'profilePhoto'
-    };
-    
-    for (const [inputId, partName] of Object.entries(docFieldMap)) {
-        const fileInput = document.getElementById(inputId);
-        if (fileInput && fileInput.files && fileInput.files.length > 0) {
-            formData.append(partName, fileInput.files[0]);
+        // ==================== DELETE MODAL ====================
+        function openDeleteModal(employeePrimeId, name) {
+            deleteTargetId = employeePrimeId;
+            deleteTargetName = name;
+            document.getElementById('deleteEmployeeName').innerHTML = `Are you sure you want to delete <strong>${name}</strong>?`;
+            document.getElementById('deleteModal').classList.add('active');
         }
-    }
+        function closeDeleteModal() { document.getElementById('deleteModal').classList.remove('active'); deleteTargetId = null; }
 
-    // Disable save button
-    const saveBtn = document.getElementById('editSaveBtn');
-    if (saveBtn) { 
-        saveBtn.disabled = true; 
-        saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Saving...'; 
-    }
-
-    try {
-        const response = await fetch(`${API_BASE}/update-employee/${employeePrimeId}`, {
-            method: 'PUT',
-            body: formData
-        });
-        
-        const result = await response.json();
-
-        if (saveBtn) { 
-            saveBtn.disabled = false; 
-            saveBtn.innerHTML = '<i class="fas fa-save mr-1"></i>Save Changes'; 
+        async function confirmDeleteEmployee() {
+            if (!deleteTargetId) return;
+            const result = await apiFetch(`${API_BASE}/delete-employee/${deleteTargetId}`, { method: 'DELETE' });
+            if (result.ok) { showToast(`Employee ${deleteTargetName} deleted!`, 'success'); await fetchAndRenderEmployees(); }
+            else { showToast(result.data.message || 'Delete failed!', 'error'); }
+            closeDeleteModal();
         }
 
-        if (response.ok && result.success) {
-            showToast(`Employee updated successfully!`, 'success');
-            closeEditOverlay();
-            await fetchAndRenderEmployees();
-        } else {
-            showToast(result.message || 'Failed to update employee', 'error');
-            console.error('Update error:', result);
+        // ==================== WIZARD ====================
+        function updateWizardUI() {
+            for (let i = 0; i < totalSteps; i++) {
+                const wz = document.getElementById(`wz${i}`);
+                if (wz) {
+                    if (i < currentStep) { wz.classList.add('done'); wz.classList.remove('cur'); }
+                    else if (i === currentStep) { wz.classList.add('cur'); wz.classList.remove('done'); }
+                    else { wz.classList.remove('cur', 'done'); }
+                }
+                const stepDiv = document.getElementById(`st${i}`);
+                if (stepDiv) stepDiv.style.display = i === currentStep ? 'block' : 'none';
+            }
+            const prevBtn = document.getElementById('prevBtn'), nextBtn = document.getElementById('nextBtn'), saveBtn = document.getElementById('saveBtn');
+            if (prevBtn) prevBtn.style.display = currentStep === 0 ? 'none' : '';
+            if (nextBtn && saveBtn) {
+                if (currentStep === totalSteps - 1) { nextBtn.style.display = 'none'; saveBtn.style.display = 'inline-flex'; }
+                else { nextBtn.style.display = ''; saveBtn.style.display = 'none'; }
+            }
         }
-    } catch (error) {
-        if (saveBtn) { 
-            saveBtn.disabled = false; 
-            saveBtn.innerHTML = '<i class="fas fa-save mr-1"></i>Save Changes'; 
+        function nextStep() { if (currentStep < totalSteps - 1) { currentStep++; updateWizardUI(); } }
+        function prevStep() { if (currentStep > 0) { currentStep--; updateWizardUI(); } }
+
+        // ==================== FORM HELPERS ====================
+        function setPill(groupId, value, btn) {
+            document.querySelectorAll(`#${groupId} .rpill`).forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('fGender').value = value;
         }
-        showToast('Network error: ' + error.message, 'error');
-        console.error('Fetch error:', error);
-    }
-}
-
-function closeEditOverlay() { const o=document.getElementById('editEmployeeOverlay'); if (o) o.remove(); }
-
-// ==================== DELETE MODAL ====================
-function openDeleteModal(employeePrimeId, name) {
-    deleteTargetId = employeePrimeId;
-    deleteTargetName = name;
-    document.getElementById('deleteEmployeeName').innerHTML = `Are you sure you want to delete <strong>${name}</strong>?`;
-    document.getElementById('deleteModal').classList.add('active');
-}
-function closeDeleteModal() { document.getElementById('deleteModal').classList.remove('active'); deleteTargetId = null; }
-
-async function confirmDeleteEmployee() {
-    if (!deleteTargetId) return;
-    const result = await apiFetch(`${API_BASE}/delete-employee/${deleteTargetId}`, { method: 'DELETE' });
-    if (result.ok) { showToast(`Employee ${deleteTargetName} deleted!`, 'success'); await fetchAndRenderEmployees(); }
-    else { showToast(result.data.message || 'Delete failed!', 'error'); }
-    closeDeleteModal();
-}
-
-// ==================== WIZARD ====================
-function updateWizardUI() {
-    for (let i = 0; i < totalSteps; i++) {
-        const wz = document.getElementById(`wz${i}`);
-        if (wz) {
-            if (i < currentStep) { wz.classList.add('done'); wz.classList.remove('cur'); }
-            else if (i === currentStep) { wz.classList.add('cur'); wz.classList.remove('done'); }
-            else { wz.classList.remove('cur','done'); }
+        function togglePWD(toggle) {
+            const details = document.getElementById('pwdDetails'), label = document.getElementById('pwdToggleLabel');
+            if (toggle.checked) { details.style.display = 'block'; label.innerText = 'Yes'; }
+            else { details.style.display = 'none'; label.innerText = 'No'; }
         }
-        const stepDiv = document.getElementById(`st${i}`);
-        if (stepDiv) stepDiv.style.display = i === currentStep ? 'block' : 'none';
-    }
-    const prevBtn=document.getElementById('prevBtn'), nextBtn=document.getElementById('nextBtn'), saveBtn=document.getElementById('saveBtn');
-    if (prevBtn) prevBtn.style.display = currentStep===0 ? 'none' : '';
-    if (nextBtn && saveBtn) {
-        if (currentStep === totalSteps-1) { nextBtn.style.display='none'; saveBtn.style.display='inline-flex'; }
-        else { nextBtn.style.display=''; saveBtn.style.display='none'; }
-    }
-}
-function nextStep() { if (currentStep < totalSteps-1) { currentStep++; updateWizardUI(); } }
-function prevStep() { if (currentStep > 0) { currentStep--; updateWizardUI(); } }
 
-// ==================== FORM HELPERS ====================
-function setPill(groupId, value, btn) {
-    document.querySelectorAll(`#${groupId} .rpill`).forEach(p => p.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('fGender').value = value;
-}
-function togglePWD(toggle) {
-    const details = document.getElementById('pwdDetails'), label = document.getElementById('pwdToggleLabel');
-    if (toggle.checked) { details.style.display='block'; label.innerText='Yes'; }
-    else { details.style.display='none'; label.innerText='No'; }
-}
+        // ==================== DYNAMIC ROWS ====================
+        function addEduRow() {
+            const container = document.getElementById('eduList');
 
-// ==================== DYNAMIC ROWS ====================
-    function addEduRow() {
-        const container = document.getElementById('eduList');
+            const row = document.createElement('div');
+            row.className = 'dynamic-row';
 
-        const row = document.createElement('div');
-        row.className = 'dynamic-row';
-
-        row.innerHTML = `
+            row.innerHTML = `
             <input placeholder="Degree (e.g., B.Tech)" style="padding:2px 8px;">
             <input placeholder="Institution (e.g., IIT Delhi)" style="padding:2px 8px;">
             <input placeholder="Year (e.g., 2024)" style="padding:2px 8px;">
             <input placeholder="Percentage / CGPA" style="padding:2px 8px;">
             <button class="remove-btn" onclick="this.parentElement.remove()">X</button>`;
-        container.appendChild(row);
-    }
+            container.appendChild(row);
+        }
 
 
-    function addFamRow() {
-        const container = document.getElementById('famList');
+        function addFamRow() {
+            const container = document.getElementById('famList');
 
-        const row = document.createElement('div');
-        row.className = 'dynamic-row';
+            const row = document.createElement('div');
+            row.className = 'dynamic-row';
 
-        row.innerHTML = `
+            row.innerHTML = `
             <input placeholder="Name (e.g., Ramesh Sharma)" style="padding:2px 8px;">
             <input placeholder="Relationship (e.g., Father)" style="padding:2px 8px;">
             <input placeholder="Occupation" style="padding:2px 8px;">
             <input placeholder="Phone Number" style="padding:2px 8px;">
             <button class="remove-btn" onclick="this.parentElement.remove()">X</button>`;
-        container.appendChild(row);
-    }
+            container.appendChild(row);
+        }
 
 
 
-    function addExpRow() {
-        const container = document.getElementById('expList');
+        function addExpRow() {
+            const container = document.getElementById('expList');
 
-        const row = document.createElement('div');
-        row.className = 'dynamic-row';
+            const row = document.createElement('div');
+            row.className = 'dynamic-row';
 
-        row.innerHTML = `
+            row.innerHTML = `
             <input placeholder="Company (e.g., Infosys)" style="padding:2px 8px;">
             <input placeholder="Designation (e.g., Developer)" style="padding:2px 8px;">
             <input placeholder="Years (e.g., 2 years)" style="padding:2px 8px;">
             <input placeholder="Location" style="padding:2px 8px;">
             <button class="remove-btn" onclick="this.parentElement.remove()">X</button>`;
 
-        container.appendChild(row);
-    }
+            container.appendChild(row);
+        }
 
 
-// ==================== DOCUMENT PREVIEW ====================
+        // ==================== DOCUMENT PREVIEW ====================
 
-    function addDocRow(input, label) {
-        const file = input.files[0];
-        if (!file) return;
+        function addDocRow(input, label) {
+            const file = input.files[0];
+            if (!file) return;
 
-        const container = document.getElementById('uploadedDocList');
+            const container = document.getElementById('uploadedDocList');
 
-        const row = document.createElement('div');
-        row.className = 'doc-item';
+            const row = document.createElement('div');
+            row.className = 'doc-item';
 
-        row.innerHTML = `
+            row.innerHTML = `
             <div style="display:flex;align-items:center;gap:10px;">
             <i class="fas fa-file-alt" style="color:var(--primary);"></i>
             <div>
@@ -2358,163 +2362,164 @@ function togglePWD(toggle) {
             </div>`;
 
             container.appendChild(row);
-    }
-
-
-
-function updateDocList() {
-    const container = document.getElementById('uploadedDocList');
-    if (container) container.innerHTML = uploadedDocs.map(doc => `<div class="doc-item"><span><i class="fas fa-file-pdf" style="color:var(--primary);"></i>&nbsp; ${doc.name}: <strong>${doc.file}</strong></span><button type="button" onclick="removeDoc('${doc.name}')" style="color:#dc3545;background:none;border:none;cursor:pointer;"><i class="fas fa-trash"></i></button></div>`).join('');
-}
-function removeDoc(docName) { uploadedDocs = uploadedDocs.filter(d => d.name !== docName); updateDocList(); }
-
-function collectEducation() { const rows=document.querySelectorAll('.edu-row'); const result=[]; rows.forEach(row => { const inputs=row.querySelectorAll('input'); if (inputs[0]?.value.trim()) result.push({ degree:inputs[0].value, institution:inputs[1].value, year:inputs[2].value }); }); return result.length ? JSON.stringify(result) : null; }
-function collectFamily() { const rows=document.querySelectorAll('.fam-row'); const result=[]; rows.forEach(row => { const inputs=row.querySelectorAll('input'); if (inputs[0]?.value.trim()) result.push({ name:inputs[0].value, relationship:inputs[1].value, occupation:inputs[2].value }); }); return result.length ? JSON.stringify(result) : null; }
-function collectExperience() { const rows=document.querySelectorAll('.exp-row'); const result=[]; rows.forEach(row => { const inputs=row.querySelectorAll('input'); if (inputs[0]?.value.trim()) result.push({ company:inputs[0].value, designation:inputs[1].value, years:inputs[2].value }); }); return result.length ? JSON.stringify(result) : null; }
-
-// ==================== CUSTOM FIELDS ====================
-function showCFBuilder() { document.getElementById('cfBuilderPanel').style.display='block'; document.getElementById('addCFBtn').style.display='none'; }
-function closeCFBuilder() { document.getElementById('cfBuilderPanel').style.display='none'; document.getElementById('addCFBtn').style.display='flex'; document.getElementById('cfLabel').value=''; document.getElementById('cfType').value='text'; document.getElementById('cfOptions').value=''; document.getElementById('cfPlaceholder').value=''; document.getElementById('cfRequired').checked=false; document.getElementById('cfDropdownOptions').style.display='none'; }
-function toggleCFOptions() { document.getElementById('cfDropdownOptions').style.display = document.getElementById('cfType').value==='dropdown' ? 'block' : 'none'; }
-
-function addCustomField() {
-    const label = document.getElementById('cfLabel').value.trim();
-    if (!label) { showToast('Please enter field label','error'); return; }
-    const type=document.getElementById('cfType').value, section=document.getElementById('cfSection').value, placeholder=document.getElementById('cfPlaceholder').value, isRequired=document.getElementById('cfRequired').checked;
-    let options=[];
-    if (type==='dropdown') { const optionsStr=document.getElementById('cfOptions').value; options=optionsStr.split(',').map(o=>o.trim()).filter(o=>o); }
-    const fieldId=`cf_${Date.now()}`;
-    customFieldsList.push({ id:fieldId, label, type, section, placeholder, required:isRequired, options });
-    renderCustomFields(); closeCFBuilder(); showToast(`Custom field "${label}" added!`,'success');
-}
-
-function renderCustomFields() {
-    const container = document.getElementById('customFieldsList');
-    if (!container) return;
-    if (customFieldsList.length===0) { container.innerHTML='<div class="text-center text-sm py-4" style="color:var(--text-light);">No custom fields added yet.</div>'; return; }
-    let html='';
-    customFieldsList.forEach(field => {
-        let inputHtml='';
-        switch(field.type) {
-            case 'text': inputHtml=`<input type="text" id="${field.id}" placeholder="${field.placeholder}" ${field.required?'required':''}>`; break;
-            case 'number': inputHtml=`<input type="number" id="${field.id}" placeholder="${field.placeholder}" ${field.required?'required':''}>`; break;
-            case 'date': inputHtml=`<input type="date" id="${field.id}" ${field.required?'required':''}>`; break;
-            case 'textarea': inputHtml=`<textarea id="${field.id}" rows="2" placeholder="${field.placeholder}" ${field.required?'required':''}></textarea>`; break;
-            case 'checkbox': inputHtml=`<div class="toggle-switch-wrap"><span style="font-size:12px;color:var(--text-light);">No</span><label class="toggle-switch"><input type="checkbox" id="${field.id}"><span class="toggle-thumb"></span></label><span style="font-size:12px;color:var(--text-light);">Yes</span></div>`; break;
-            case 'dropdown': let opts=`<option value="">Select ${field.label}</option>`; field.options.forEach(opt => { opts+=`<option value="${opt}">${opt}</option>`; }); inputHtml=`<select id="${field.id}" ${field.required?'required':''}>${opts}</select>`; break;
-            default: inputHtml=`<input type="text" id="${field.id}" placeholder="${field.placeholder}">`;
         }
-        html+=`<div class="custom-field-card"><div style="flex:1;"><label>${field.label} ${field.required?'<span class="req">*</span>':''}</label>${inputHtml}</div><button type="button" onclick="removeCustomField('${field.id}')" style="color:#dc3545;background:none;border:none;cursor:pointer;margin-left:12px;"><i class="fas fa-trash"></i></button></div>`;
-    });
-    container.innerHTML = html;
-}
-function removeCustomField(fieldId) { customFieldsList=customFieldsList.filter(f=>f.id!==fieldId); renderCustomFields(); showToast('Custom field removed','info'); }
 
-// ==================== FORM SUBMIT ====================
-document.getElementById('addEmployeeForm')?.addEventListener('submit', async function(e) {
-    e.preventDefault();
-    const firstName=document.getElementById('fFN').value.trim(), lastName=document.getElementById('fLN').value.trim(), email=document.getElementById('fPEmail').value.trim(), mobile=document.getElementById('fMob').value.trim(), dept=document.getElementById('fDept').value, desig=document.getElementById('fDesig').value.trim(), joiningDate=document.getElementById('fJD').value, basicSalary=document.getElementById('fBasic').value, ecName=document.getElementById('fECName').value.trim(), ecPhone=document.getElementById('fECPhone').value.trim();
-    if (!firstName||!lastName) { showToast('Please enter First Name and Last Name','error'); return; }
-    if (!email||!mobile) { showToast('Please enter Email and Mobile number','error'); return; }
-    if (!dept||!desig) { showToast('Please select Department and Designation','error'); return; }
-    if (!joiningDate||!basicSalary) { showToast('Please enter Joining Date and Basic Salary','error'); return; }
-    if (!ecName||!ecPhone) { showToast('Please enter Emergency Contact details','error'); return; }
 
-    const pwdToggle = document.getElementById('fPWDToggle').checked;
-    const employeePayload = { firstName, middleName:document.getElementById('fMN').value.trim(), lastName, dateOfBirth:document.getElementById('fDOB').value||null, gender:document.getElementById('fGender').value, maritalStatus:document.getElementById('fMarital').value, bloodGroup:document.getElementById('fBlood').value, panNumber:document.getElementById('fPAN').value.trim().toUpperCase(), aadhaarNumber:document.getElementById('fAAD').value.trim(), nationality:document.getElementById('fNat').value.trim(), religion:document.getElementById('fRel').value.trim(), linkedinProfile:document.getElementById('fLI').value.trim(), fatherSpouseName:document.getElementById('fFatherName').value.trim(), isPhysicallyChallenged:pwdToggle, disabilityType:pwdToggle?document.getElementById('fPWDType').value:null, disabilityPercentage:pwdToggle?(parseInt(document.getElementById('fPWDPct').value)||null):null, certificateNumber:pwdToggle?document.getElementById('fPWDCert').value.trim():null, department:dept, subDepartment:document.getElementById('fSubDept').value.trim(), designation:desig, employeeGrade:document.getElementById('fGrade').value, employmentType:document.getElementById('fEmpType').value, joiningDate, probationEndDate:document.getElementById('fProbEnd').value||null, reportingManager:document.getElementById('fMgr').value.trim(), hrBusinessPartner:document.getElementById('fHRBP').value.trim(), workLocation:document.getElementById('fWL').value, basicSalary:parseFloat(basicSalary)||null, shift:document.getElementById('fShift').value, costCentre:document.getElementById('fCC').value.trim(), bankName:document.getElementById('fBank').value.trim(), accountNumber:document.getElementById('fAccNo').value.trim(), ifscCode:document.getElementById('fIFSC').value.trim().toUpperCase(), personalEmail:email, workEmail:document.getElementById('fWEmail').value.trim(), mobileNumber:mobile, alternateNumber:document.getElementById('fAlt').value.trim(), currentStreet:document.getElementById('fCAddr').value.trim(), currentCity:document.getElementById('fCity').value.trim(), currentState:document.getElementById('fState').value.trim(), currentPincode:document.getElementById('fPIN').value.trim(), currentCountry:document.getElementById('fCountry').value.trim(), permanentStreet:document.getElementById('fPAddr').value.trim(), permanentCity:document.getElementById('fPCity').value.trim(), permanentState:document.getElementById('fPState').value.trim(), permanentPincode:document.getElementById('fPPIN').value.trim(), permanentCountry:document.getElementById('fPCountry').value.trim(), emergencyName:ecName, emergencyRelationship:document.getElementById('fECRel').value, emergencyPhone:ecPhone, education:collectEducation(), family:collectFamily(), workExperience:collectExperience() };
 
-    const formData = new FormData();
-    formData.append('employee', JSON.stringify(employeePayload));
-    const docKeyMap = { 'Aadhaar Card':'aadhaarDocument', 'PAN Card':'panDocument', 'Degree Certificate':'degreeDocument', 'Experience Letter':'experienceDocument' };
-    uploadedDocs.forEach(doc => { const key=docKeyMap[doc.name]; if (key&&doc.fileObj) formData.append(key, doc.fileObj); });
+        function updateDocList() {
+            const container = document.getElementById('uploadedDocList');
+            if (container) container.innerHTML = uploadedDocs.map(doc => `<div class="doc-item"><span><i class="fas fa-file-pdf" style="color:var(--primary);"></i>&nbsp; ${doc.name}: <strong>${doc.file}</strong></span><button type="button" onclick="removeDoc('${doc.name}')" style="color:#dc3545;background:none;border:none;cursor:pointer;"><i class="fas fa-trash"></i></button></div>`).join('');
+        }
+        function removeDoc(docName) { uploadedDocs = uploadedDocs.filter(d => d.name !== docName); updateDocList(); }
 
-    const saveBtn = document.getElementById('saveBtn');
-    saveBtn.disabled=true; saveBtn.innerHTML='<i class="fas fa-spinner fa-spin"></i> Saving...';
+        function collectEducation() { const rows = document.querySelectorAll('.edu-row'); const result = []; rows.forEach(row => { const inputs = row.querySelectorAll('input'); if (inputs[0]?.value.trim()) result.push({ degree: inputs[0].value, institution: inputs[1].value, year: inputs[2].value }); }); return result.length ? JSON.stringify(result) : null; }
+        function collectFamily() { const rows = document.querySelectorAll('.fam-row'); const result = []; rows.forEach(row => { const inputs = row.querySelectorAll('input'); if (inputs[0]?.value.trim()) result.push({ name: inputs[0].value, relationship: inputs[1].value, occupation: inputs[2].value }); }); return result.length ? JSON.stringify(result) : null; }
+        function collectExperience() { const rows = document.querySelectorAll('.exp-row'); const result = []; rows.forEach(row => { const inputs = row.querySelectorAll('input'); if (inputs[0]?.value.trim()) result.push({ company: inputs[0].value, designation: inputs[1].value, years: inputs[2].value }); }); return result.length ? JSON.stringify(result) : null; }
 
-    let result, resData;
-    try { result=await fetch(`${API_BASE}/create-employee`,{method:'POST',body:formData}); resData=await result.json(); } catch(err) { saveBtn.disabled=false; saveBtn.innerHTML='<i class="fas fa-save mr-1"></i>Save Employee'; showToast('Network error.','error'); return; }
+        // ==================== CUSTOM FIELDS ====================
+        function showCFBuilder() { document.getElementById('cfBuilderPanel').style.display = 'block'; document.getElementById('addCFBtn').style.display = 'none'; }
+        function closeCFBuilder() { document.getElementById('cfBuilderPanel').style.display = 'none'; document.getElementById('addCFBtn').style.display = 'flex'; document.getElementById('cfLabel').value = ''; document.getElementById('cfType').value = 'text'; document.getElementById('cfOptions').value = ''; document.getElementById('cfPlaceholder').value = ''; document.getElementById('cfRequired').checked = false; document.getElementById('cfDropdownOptions').style.display = 'none'; }
+        function toggleCFOptions() { document.getElementById('cfDropdownOptions').style.display = document.getElementById('cfType').value === 'dropdown' ? 'block' : 'none'; }
 
-    saveBtn.disabled=false; saveBtn.innerHTML='<i class="fas fa-save mr-1"></i>Save Employee';
-    if (result.ok && resData.success) {
-        const savedName = resData.data?.fullName||`${firstName} ${lastName}`;
-        showToast(`Employee ${savedName} added successfully!`,'success');
-        resetAddForm.call(this);
-        document.querySelector('.tab-btn[data-tab="all"]').click();
-        await fetchAndRenderEmployees();
-    } else { showToast(resData.message||'Failed to save employee.','error'); }
-});
+        function addCustomField() {
+            const label = document.getElementById('cfLabel').value.trim();
+            if (!label) { showToast('Please enter field label', 'error'); return; }
+            const type = document.getElementById('cfType').value, section = document.getElementById('cfSection').value, placeholder = document.getElementById('cfPlaceholder').value, isRequired = document.getElementById('cfRequired').checked;
+            let options = [];
+            if (type === 'dropdown') { const optionsStr = document.getElementById('cfOptions').value; options = optionsStr.split(',').map(o => o.trim()).filter(o => o); }
+            const fieldId = `cf_${Date.now()}`;
+            customFieldsList.push({ id: fieldId, label, type, section, placeholder, required: isRequired, options });
+            renderCustomFields(); closeCFBuilder(); showToast(`Custom field "${label}" added!`, 'success');
+        }
 
-function resetAddForm() {
-    document.getElementById('addEmployeeForm').reset();
-    document.getElementById('fNat').value='Indian'; document.getElementById('fCountry').value='India'; document.getElementById('fPCountry').value='India';
-    document.getElementById('eduList').innerHTML=''; document.getElementById('famList').innerHTML=''; document.getElementById('expList').innerHTML='';
-    document.getElementById('uploadedDocList').innerHTML=''; uploadedDocs=[]; customFieldsList=[]; renderCustomFields();
-    currentStep=0; updateWizardUI();
-    document.querySelectorAll('#genderGroup .rpill').forEach(p => p.classList.remove('active'));
-    document.getElementById('fGender').value='';
-}
+        function renderCustomFields() {
+            const container = document.getElementById('customFieldsList');
+            if (!container) return;
+            if (customFieldsList.length === 0) { container.innerHTML = '<div class="text-center text-sm py-4" style="color:var(--text-light);">No custom fields added yet.</div>'; return; }
+            let html = '';
+            customFieldsList.forEach(field => {
+                let inputHtml = '';
+                switch (field.type) {
+                    case 'text': inputHtml = `<input type="text" id="${field.id}" placeholder="${field.placeholder}" ${field.required ? 'required' : ''}>`; break;
+                    case 'number': inputHtml = `<input type="number" id="${field.id}" placeholder="${field.placeholder}" ${field.required ? 'required' : ''}>`; break;
+                    case 'date': inputHtml = `<input type="date" id="${field.id}" ${field.required ? 'required' : ''}>`; break;
+                    case 'textarea': inputHtml = `<textarea id="${field.id}" rows="2" placeholder="${field.placeholder}" ${field.required ? 'required' : ''}></textarea>`; break;
+                    case 'checkbox': inputHtml = `<div class="toggle-switch-wrap"><span style="font-size:12px;color:var(--text-light);">No</span><label class="toggle-switch"><input type="checkbox" id="${field.id}"><span class="toggle-thumb"></span></label><span style="font-size:12px;color:var(--text-light);">Yes</span></div>`; break;
+                    case 'dropdown': let opts = `<option value="">Select ${field.label}</option>`; field.options.forEach(opt => { opts += `<option value="${opt}">${opt}</option>`; }); inputHtml = `<select id="${field.id}" ${field.required ? 'required' : ''}>${opts}</select>`; break;
+                    default: inputHtml = `<input type="text" id="${field.id}" placeholder="${field.placeholder}">`;
+                }
+                html += `<div class="custom-field-card"><div style="flex:1;"><label>${field.label} ${field.required ? '<span class="req">*</span>' : ''}</label>${inputHtml}</div><button type="button" onclick="removeCustomField('${field.id}')" style="color:#dc3545;background:none;border:none;cursor:pointer;margin-left:12px;"><i class="fas fa-trash"></i></button></div>`;
+            });
+            container.innerHTML = html;
+        }
+        function removeCustomField(fieldId) { customFieldsList = customFieldsList.filter(f => f.id !== fieldId); renderCustomFields(); showToast('Custom field removed', 'info'); }
 
-// ==================== DOCUMENTS TAB ====================
-function uploadDocument(docName) { const emp=document.getElementById('docEmployeeSelect').value; if (!emp) { showToast('Select employee first','error'); return; } showToast('To upload documents, use the Add/Edit Employee form','info'); }
+        // ==================== FORM SUBMIT ====================
+        document.getElementById('addEmployeeForm')?.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const firstName = document.getElementById('fFN').value.trim(), lastName = document.getElementById('fLN').value.trim(), email = document.getElementById('fPEmail').value.trim(), mobile = document.getElementById('fMob').value.trim(), dept = document.getElementById('fDept').value, desig = document.getElementById('fDesig').value.trim(), joiningDate = document.getElementById('fJD').value, basicSalary = document.getElementById('fBasic').value, ecName = document.getElementById('fECName').value.trim(), ecPhone = document.getElementById('fECPhone').value.trim();
+            if (!firstName || !lastName) { showToast('Please enter First Name and Last Name', 'error'); return; }
+            if (!email || !mobile) { showToast('Please enter Email and Mobile number', 'error'); return; }
+            if (!dept || !desig) { showToast('Please select Department and Designation', 'error'); return; }
+            if (!joiningDate || !basicSalary) { showToast('Please enter Joining Date and Basic Salary', 'error'); return; }
+            if (!ecName || !ecPhone) { showToast('Please enter Emergency Contact details', 'error'); return; }
 
-async function loadEmployeeDocuments() {
-    const employeeId = document.getElementById('docEmployeeSelect').value;
-    if (!employeeId) return;
-    const result = await apiFetch(`${API_BASE}/get-employee-by-employee-prime-id/${employeeId}`);
-    if (!result.ok) { showToast('Could not load documents','error'); return; }
-    const emp = result.data?.data;
-    if (!emp) return;
-    const docMap = [
-        { urlKey:'panDocumentUrl', statusId:'doc-pan-status' },
-        { urlKey:'aadhaarDocumentUrl', statusId:'doc-aadhar-status' },
-        { urlKey:'offerLetterUrl', statusId:'doc-offer-status' },
-        { urlKey:'degreeDocumentUrl', statusId:'doc-degree-status' },
-    ];
-    docMap.forEach(doc => {
-        const statusEl=document.getElementById(doc.statusId);
-        if (statusEl) { if (emp[doc.urlKey]) { statusEl.innerHTML=`<a href="${emp[doc.urlKey]}" target="_blank" style="color:#2b7a3e;font-weight:600;text-decoration:none;font-size:11px;"><i class="fas fa-check-circle mr-1"></i>View</a>`; } else { statusEl.innerHTML=`<span style="color:#dc3545;font-size:11px;">Not Uploaded</span>`; } }
-    });
-}
+            const pwdToggle = document.getElementById('fPWDToggle').checked;
+            const employeePayload = { firstName, middleName: document.getElementById('fMN').value.trim(), lastName, dateOfBirth: document.getElementById('fDOB').value || null, gender: document.getElementById('fGender').value, maritalStatus: document.getElementById('fMarital').value, bloodGroup: document.getElementById('fBlood').value, panNumber: document.getElementById('fPAN').value.trim().toUpperCase(), aadhaarNumber: document.getElementById('fAAD').value.trim(), nationality: document.getElementById('fNat').value.trim(), religion: document.getElementById('fRel').value.trim(), linkedinProfile: document.getElementById('fLI').value.trim(), fatherSpouseName: document.getElementById('fFatherName').value.trim(), isPhysicallyChallenged: pwdToggle, disabilityType: pwdToggle ? document.getElementById('fPWDType').value : null, disabilityPercentage: pwdToggle ? (parseInt(document.getElementById('fPWDPct').value) || null) : null, certificateNumber: pwdToggle ? document.getElementById('fPWDCert').value.trim() : null, department: dept, subDepartment: document.getElementById('fSubDept').value.trim(), designation: desig, employeeGrade: document.getElementById('fGrade').value, employmentType: document.getElementById('fEmpType').value, joiningDate, probationEndDate: document.getElementById('fProbEnd').value || null, reportingManager: document.getElementById('fMgr').value.trim(), hrBusinessPartner: document.getElementById('fHRBP').value.trim(), workLocation: document.getElementById('fWL').value, basicSalary: parseFloat(basicSalary) || null, shift: document.getElementById('fShift').value, costCentre: document.getElementById('fCC').value.trim(), bankName: document.getElementById('fBank').value.trim(), accountNumber: document.getElementById('fAccNo').value.trim(), ifscCode: document.getElementById('fIFSC').value.trim().toUpperCase(), personalEmail: email, workEmail: document.getElementById('fWEmail').value.trim(), mobileNumber: mobile, alternateNumber: document.getElementById('fAlt').value.trim(), currentStreet: document.getElementById('fCAddr').value.trim(), currentCity: document.getElementById('fCity').value.trim(), currentState: document.getElementById('fState').value.trim(), currentPincode: document.getElementById('fPIN').value.trim(), currentCountry: document.getElementById('fCountry').value.trim(), permanentStreet: document.getElementById('fPAddr').value.trim(), permanentCity: document.getElementById('fPCity').value.trim(), permanentState: document.getElementById('fPState').value.trim(), permanentPincode: document.getElementById('fPPIN').value.trim(), permanentCountry: document.getElementById('fPCountry').value.trim(), emergencyName: ecName, emergencyRelationship: document.getElementById('fECRel').value, emergencyPhone: ecPhone, education: collectEducation(), family: collectFamily(), workExperience: collectExperience() };
 
-async function populateDropdowns() {
-    const result = await apiFetch(`${API_BASE}/all-employees`);
-    const employees = result.ok ? (result.data || []) : [];
-    ['docEmployeeSelect'].forEach(id => {
-        const sel = document.getElementById(id);
-        if (sel) { let options='<option value="">Select Employee</option>'; employees.forEach(emp => { const name=`${emp.firstName||''} ${emp.lastName||''}`.trim(); options+=`<option value="${emp.employeeId}">${name} (${emp.employeeId})</option>`; }); sel.innerHTML=options; }
-    });
-}
+            const formData = new FormData();
+            formData.append('employee', JSON.stringify(employeePayload));
+            const docKeyMap = { 'Aadhaar Card': 'aadhaarDocument', 'PAN Card': 'panDocument', 'Degree Certificate': 'degreeDocument', 'Experience Letter': 'experienceDocument' };
+            uploadedDocs.forEach(doc => { const key = docKeyMap[doc.name]; if (key && doc.fileObj) formData.append(key, doc.fileObj); });
 
-// ==================== TAB NAVIGATION ====================
-function initTabs() {
-    const tabs = document.querySelectorAll('.tab-btn');
-    const contents = document.querySelectorAll('.tab-content');
-    tabs.forEach(tab => {
-        tab.addEventListener('click', function() {
-            const tabId = this.getAttribute('data-tab');
-            tabs.forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-            contents.forEach(c => c.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
+            const saveBtn = document.getElementById('saveBtn');
+            saveBtn.disabled = true; saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+
+            let result, resData;
+            try { result = await fetch(`${API_BASE}/create-employee`, { method: 'POST', body: formData }); resData = await result.json(); } catch (err) { saveBtn.disabled = false; saveBtn.innerHTML = '<i class="fas fa-save mr-1"></i>Save Employee'; showToast('Network error.', 'error'); return; }
+
+            saveBtn.disabled = false; saveBtn.innerHTML = '<i class="fas fa-save mr-1"></i>Save Employee';
+            if (result.ok && resData.success) {
+                const savedName = resData.data?.fullName || `${firstName} ${lastName}`;
+                showToast(`Employee ${savedName} added successfully!`, 'success');
+                resetAddForm.call(this);
+                document.querySelector('.tab-btn[data-tab="all"]').click();
+                await fetchAndRenderEmployees();
+            } else { showToast(resData.message || 'Failed to save employee.', 'error'); }
         });
-    });
-}
 
-// ==================== WIZARD STEP CLICK ====================
-document.querySelectorAll('.wz').forEach((wz, idx) => {
-    wz.addEventListener('click', () => { currentStep=idx; updateWizardUI(); });
-});
+        function resetAddForm() {
+            document.getElementById('addEmployeeForm').reset();
+            document.getElementById('fNat').value = 'Indian'; document.getElementById('fCountry').value = 'India'; document.getElementById('fPCountry').value = 'India';
+            document.getElementById('eduList').innerHTML = ''; document.getElementById('famList').innerHTML = ''; document.getElementById('expList').innerHTML = '';
+            document.getElementById('uploadedDocList').innerHTML = ''; uploadedDocs = []; customFieldsList = []; renderCustomFields();
+            currentStep = 0; updateWizardUI();
+            document.querySelectorAll('#genderGroup .rpill').forEach(p => p.classList.remove('active'));
+            document.getElementById('fGender').value = '';
+        }
 
-// ==================== INIT ====================
-document.addEventListener('DOMContentLoaded', async function() {
-    if (typeof loadSidebar==='function') loadSidebar();
-    if (typeof loadHeader==='function') loadHeader();
-    if (typeof setActiveMenu==='function') setTimeout(() => setActiveMenu('employees'), 500);
-    initTabs();
-    updateWizardUI();
-    renderCustomFields();
-    await fetchAndRenderEmployees();
-});
+        // ==================== DOCUMENTS TAB ====================
+        function uploadDocument(docName) { const emp = document.getElementById('docEmployeeSelect').value; if (!emp) { showToast('Select employee first', 'error'); return; } showToast('To upload documents, use the Add/Edit Employee form', 'info'); }
+
+        async function loadEmployeeDocuments() {
+            const employeeId = document.getElementById('docEmployeeSelect').value;
+            if (!employeeId) return;
+            const result = await apiFetch(`${API_BASE}/get-employee-by-employee-prime-id/${employeeId}`);
+            if (!result.ok) { showToast('Could not load documents', 'error'); return; }
+            const emp = result.data?.data;
+            if (!emp) return;
+            const docMap = [
+                { urlKey: 'panDocumentUrl', statusId: 'doc-pan-status' },
+                { urlKey: 'aadhaarDocumentUrl', statusId: 'doc-aadhar-status' },
+                { urlKey: 'offerLetterUrl', statusId: 'doc-offer-status' },
+                { urlKey: 'degreeDocumentUrl', statusId: 'doc-degree-status' },
+            ];
+            docMap.forEach(doc => {
+                const statusEl = document.getElementById(doc.statusId);
+                if (statusEl) { if (emp[doc.urlKey]) { statusEl.innerHTML = `<a href="${emp[doc.urlKey]}" target="_blank" style="color:#2b7a3e;font-weight:600;text-decoration:none;font-size:11px;"><i class="fas fa-check-circle mr-1"></i>View</a>`; } else { statusEl.innerHTML = `<span style="color:#dc3545;font-size:11px;">Not Uploaded</span>`; } }
+            });
+        }
+
+        async function populateDropdowns() {
+            const result = await apiFetch(`${API_BASE}/all-employees`);
+            const employees = result.ok ? (result.data || []) : [];
+            ['docEmployeeSelect'].forEach(id => {
+                const sel = document.getElementById(id);
+                if (sel) { let options = '<option value="">Select Employee</option>'; employees.forEach(emp => { const name = `${emp.firstName || ''} ${emp.lastName || ''}`.trim(); options += `<option value="${emp.employeeId}">${name} (${emp.employeeId})</option>`; }); sel.innerHTML = options; }
+            });
+        }
+
+        // ==================== TAB NAVIGATION ====================
+        function initTabs() {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const contents = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function () {
+                    const tabId = this.getAttribute('data-tab');
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    contents.forEach(c => c.classList.remove('active'));
+                    document.getElementById(tabId).classList.add('active');
+                });
+            });
+        }
+
+        // ==================== WIZARD STEP CLICK ====================
+        document.querySelectorAll('.wz').forEach((wz, idx) => {
+            wz.addEventListener('click', () => { currentStep = idx; updateWizardUI(); });
+        });
+
+        // ==================== INIT ====================
+        document.addEventListener('DOMContentLoaded', async function () {
+            if (typeof loadSidebar === 'function') loadSidebar();
+            if (typeof loadHeader === 'function') loadHeader();
+            if (typeof setActiveMenu === 'function') setTimeout(() => setActiveMenu('employees'), 500);
+            initTabs();
+            updateWizardUI();
+            renderCustomFields();
+            await fetchAndRenderEmployees();
+        });
     </script>
 </body>
+
 </html>
