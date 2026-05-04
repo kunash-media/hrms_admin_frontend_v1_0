@@ -118,42 +118,47 @@
                 <div class="flex flex-col lg:flex-row">
                     <!-- Left Side - Welcome Section -->
                     <div class="lg:w-3/5 text-white hidden lg:flex flex-col justify-between relative overflow-hidden"
-                        style="background: linear-gradient(135deg, #124f60 0%, #3788a2 100%);">
+                        style="background: linear-gradient(135deg, #124f60 0%, #255666 100%);">
                         <div class="relative z-10 p-8">
-                            <div class="flex items-center gap-2 mb-8">
-                                <div class="w-16 h-16 flex items-center justify-center">
+                            <div class="flex items-center gap-2 mb-10">
+                                <div class="w-24 h-18 flex items-center justify-center">
                                     <img src="/assets/images/logo.png" class="w-full h-full object-contain">
                                 </div>
 
                             </div>
                             <div class="space-y-3">
-                                <h1 class="text-3xl font-bold leading-tight">Welcome to<br><span
-                                        style="color: #EBF4F6;">HRMS Platform</span></h1>
-                                <p class="text-sm leading-relaxed text-white/80">Complete HR Management Solution for
-                                    modern organizations.</p>
+                                <h1 class="text-3xl font-semibold leading-tight">Welcome to<br><span
+                                        style="color: #EBF4F6;">SIEC</span></h1>
+                                <p class="text-sm leading-relaxed text-white/80">Powering sustainable, integrated environments for smarter organizations.</p>
                             </div>
+
                             <div class="mt-8 space-y-3">
                                 <div class="flex items-center gap-2 text-sm">
-                                    <div class="w-5 h-5 rounded-full flex items-center justify-center bg-white/20"><i
-                                            class="fas fa-check text-[10px]"></i></div><span>Centralized Employee
-                                        Database</span>
+                                    <div class="w-5 h-5 rounded-full flex items-center justify-center bg-white/20">
+                                        <i class="fas fa-check text-[10px]"></i>
+                                    </div>
+                                    <span>Workforce data, unified in one place</span>
                                 </div>
                                 <div class="flex items-center gap-2 text-sm">
-                                    <div class="w-5 h-5 rounded-full flex items-center justify-center bg-white/20"><i
-                                            class="fas fa-check text-[10px]"></i></div><span>Automated Attendance &
-                                        Leave</span>
+                                    <div class="w-5 h-5 rounded-full flex items-center justify-center bg-white/20">
+                                        <i class="fas fa-check text-[10px]"></i>
+                                    </div>
+                                    <span>Smart automation for attendance and leave</span>
                                 </div>
                                 <div class="flex items-center gap-2 text-sm">
-                                    <div class="w-5 h-5 rounded-full flex items-center justify-center bg-white/20"><i
-                                            class="fas fa-check text-[10px]"></i></div><span>Secure Payroll
-                                        Management</span>
+                                    <div class="w-5 h-5 rounded-full flex items-center justify-center bg-white/20">
+                                        <i class="fas fa-check text-[10px]"></i>
+                                    </div>
+                                    <span>Accurate and secure payroll, made effortless</span>
                                 </div>
                                 <div class="flex items-center gap-2 text-sm">
-                                    <div class="w-5 h-5 rounded-full flex items-center justify-center bg-white/20"><i
-                                            class="fas fa-check text-[10px]"></i></div><span>Real-time Analytics &
-                                        Reports</span>
+                                    <div class="w-5 h-5 rounded-full flex items-center justify-center bg-white/20">
+                                        <i class="fas fa-check text-[10px]"></i>
+                                    </div>
+                                    <span>Real-time insights to power better decisions</span>
                                 </div>
                             </div>
+
                         </div>
                         <div class="relative z-10 p-8 pt-0 text-[11px] text-white/70"><i
                                 class="fas fa-shield-alt mr-1"></i> Secure & Reliable</div>
@@ -161,9 +166,9 @@
 
                     <!-- Right Side - Login Form -->
                     <div class="lg:w-3/5 p-8 bg-white">
-                        <div class="text-center lg:text-left mb-6">
-                            <h2 class="text-2xl font-bold mb-1" style="color: #1B738C;">Sign In</h2>
-                            <p class="text-sm" style="color: #1a677c;">Enter your credentials to access the admin panel
+                        <div class="text-center lg:text-left mb-10">
+                            <h2 class="text-2xl text-center font-bold mb-1" style="color: #1B738C;">Admin Login</h2>
+                            <p class="text-sm text-center" style="color: #1a677c;">Enter your credentials to access the admin panel
                             </p>
                         </div>
 
@@ -182,7 +187,7 @@
                                 <div class="relative">
                                     <input type="password" id="password" name="password"
                                         placeholder="Enter your password"
-                                        class="w-full px-4 py-2.5 border rounded-lg focus:outline-none input-focus-effect"
+                                        class="w-full px-4 mb-4 py-2.5 border rounded-lg focus:outline-none input-focus-effect"
                                         style="border-color: #1B738C;" autocomplete="off" required>
                                     <button type="button" id="togglePassword"
                                         class="absolute inset-y-0 right-0 pr-3 flex items-center"><i
@@ -197,7 +202,7 @@
                                     class="fas fa-sign-in-alt text-sm"></i><span>Sign In</span></button>
 
                             <div class="text-center pt-3">
-                                <p class="text-[11px]" style="color: #1B738C;">© 2026 SIEC. All rights
+                                <p class="text-[11px] mt-14" style="color: #1B738C;">© 2026 SIEC. All rights
                                     reserved.</p>
                             </div>
                         </form>
@@ -390,7 +395,7 @@
                     console.log('  fullName:', userData.fullName);
                     console.log('  All keys:', Object.keys(localStorage));
 
-                    showNotification('Login successful! Redirecting...', 'success');
+                    showNotification('Login successful!', 'success');
                     setTimeout(() => { window.location.href = 'dashboard.html'; }, 1000);
                 } else {
                     showNotification(data.message || data.error || 'Invalid credentials', 'error');
@@ -399,7 +404,7 @@
                 }
             } catch (error) {
                 console.error('Login error:', error);
-                showNotification('Network error. Please check if backend is running on port 8086', 'error');
+                showNotification('Network error. Please check if server is running.', 'error');
                 setLoading(false);
             }
         }

@@ -1752,9 +1752,9 @@
             const statusColor = (emp.status || '').toLowerCase() === 'active' ? '#2b7a3e' : '#dc3545';
 
             let eduRows = '', famRows = '', expRows = '';
-            try { const edu = emp.education ? JSON.parse(emp.education) : []; eduRows = edu.map(e => `<tr style="border-bottom:1px solid var(--primary-soft);"><td style="padding:6px 10px;font-size:12px;color:var(--primary);">${e.degree || '—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${e.institution || '—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${e.year || '—'}</td></tr>`).join(''); } catch (e) { }
-            try { const fam = emp.family ? JSON.parse(emp.family) : []; famRows = fam.map(f => `<tr style="border-bottom:1px solid var(--primary-soft);"><td style="padding:6px 10px;font-size:12px;color:var(--primary);">${f.name || '—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${f.relationship || '—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${f.occupation || '—'}</td></tr>`).join(''); } catch (e) { }
-            try { const exp = emp.workExperience ? JSON.parse(emp.workExperience) : []; expRows = exp.map(x => `<tr style="border-bottom:1px solid var(--primary-soft);"><td style="padding:6px 10px;font-size:12px;color:var(--primary);">${x.company || '—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${x.designation || '—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${x.years || '—'}</td></tr>`).join(''); } catch (e) { }
+            try { const edu = emp.education ? JSON.parse(emp.education) : []; eduRows = edu.map(e => `<tr style="border-bottom:1px solid #62C9EA;"><td style="padding:6px 10px;font-size:12px;color:var(--primary);">${e.degree || '—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${e.institution || '—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${e.year || '—'}</td></tr>`).join(''); } catch (e) { }
+            try { const fam = emp.family ? JSON.parse(emp.family) : []; famRows = fam.map(f => `<tr style="border-bottom:1px solid #62C9EA;"><td style="padding:6px 10px;font-size:12px;color:var(--primary);">${f.name || '—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${f.relationship || '—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${f.occupation || '—'}</td></tr>`).join(''); } catch (e) { }
+            try { const exp = emp.workExperience ? JSON.parse(emp.workExperience) : []; expRows = exp.map(x => `<tr style="border-bottom:1px solid #62C9EA;"><td style="padding:6px 10px;font-size:12px;color:var(--primary);">${x.company || '—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${x.designation || '—'}</td><td style="padding:6px 10px;font-size:12px;color:var(--text-light);">${x.years || '—'}</td></tr>`).join(''); } catch (e) { }
 
             const empId = emp.employeeId || '';
             const docLinks = [
@@ -1803,8 +1803,8 @@
                         <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:12px;"><i class="fas fa-address-book mr-2"></i>Contact & Address</div>
                         ${viewRow('Personal Email', val(emp.personalEmail))}${viewRow('Work Email', val(emp.workEmail))}${viewRow('Mobile', val(emp.mobileNumber))}${viewRow('Alternate Phone', val(emp.alternateNumber))}
                         <div style="margin-top:10px;padding-top:8px;border-top:1px solid #1B738C;"><div style="font-size:11px;font-weight:700;color:var(--text-light);margin-bottom:6px;">Current Address</div>${viewRow('Street', val(emp.currentStreet))}${viewRow('City / State', `${val(emp.currentCity)}, ${val(emp.currentState)} — ${val(emp.currentPincode)}`)}</div>
-                        <div style="margin-top:10px;padding-top:8px;border-top:1px solid #1B738C;"><div style="font-size:11px;font-weight:700;color:var(--text-light);margin-bottom:6px;">Permanent Address</div>${viewRow('Street', val(emp.permanentStreet))}${viewRow('City / State', `${val(emp.permanentCity)}, ${val(emp.permanentState)} — ${val(emp.permanentPincode)}`)}</div>
-                        <div style="margin-top:10px;padding-top:8px;border-top:1px solid #1B738C;"><div style="font-size:11px;font-weight:700;color:var(--text-light);margin-bottom:6px;">Emergency Contact</div>${viewRow('Name', val(emp.emergencyName))}${viewRow('Relationship', val(emp.emergencyRelationship))}${viewRow('Phone', val(emp.emergencyPhone))}</div>
+                        <div style="margin-top:10px;padding-top:8px;"><div style="font-size:11px;font-weight:700;color:var(--text-light);margin-bottom:6px;">Permanent Address</div>${viewRow('Street', val(emp.permanentStreet))}${viewRow('City / State', `${val(emp.permanentCity)}, ${val(emp.permanentState)} — ${val(emp.permanentPincode)}`)}</div>
+                        <div style="margin-top:10px;padding-top:8px;"><div style="font-size:11px;font-weight:700;color:var(--text-light);margin-bottom:6px;">Emergency Contact</div>${viewRow('Name', val(emp.emergencyName))}${viewRow('Relationship', val(emp.emergencyRelationship))}${viewRow('Phone', val(emp.emergencyPhone))}</div>
                     </div>
                     <div>
                         <div style="background:var(--primary-bg-light);border-radius:12px;padding:16px;border:1px solid #1B738C;margin-bottom:16px;">
@@ -1844,7 +1844,7 @@
 
 
         function viewRow(label, value) {
-            return `<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:4px 0;border-bottom:1px solid rgba(189,228,238,0.5);">
+            return `<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:4px 0;border-bottom:1px solid #62C9EA;">
         <span style="font-size:11px;color:var(--text-light);min-width:120px;">${label}</span>
         <span style="font-size:12px;color:var(--text-dark);font-weight:500;text-align:right;">${value}</span>
     </div>`;
@@ -1932,6 +1932,7 @@
                             ${editField('Bank Name', 'efBank', emp.bankName)}${editField('Account Number', 'efAccNo', emp.accountNumber)}${editField('IFSC Code', 'efIFSC', emp.ifscCode)}
                         </div>
                     </div>
+
                     <!-- TAB 2: Contact & Address -->
                     <div id="editSt2" style="display:none;">
                         <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-address-book mr-2"></i>Contact Information</div>
@@ -1954,9 +1955,10 @@
                         </div>
                         <div style="font-size:12px;font-weight:700;color:var(--text-light);margin-bottom:10px;">Emergency Contact</div>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
-                            ${editField('Name *', 'efECName', emp.emergencyName, 'text', true)}${editSelectField('Relationship', 'efECRel', ['Spouse', 'Father', 'Mother', 'Sibling'], emp.emergencyRelationship)}${editField('Phone *', 'efECPhone', emp.emergencyPhone, 'text', true)}
+                            ${editField('Name ', 'efECName', emp.emergencyName, 'text', true)}${editSelectField('Relationship', 'efECRel', ['Spouse', 'Father', 'Mother', 'Sibling'], emp.emergencyRelationship)}${editField('Phone ', 'efECPhone', emp.emergencyPhone, 'text', true)}
                         </div>
                     </div>
+
                     <!-- TAB 3: Education & Family -->
                     <div id="editSt3" style="display:none;">
                         <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-graduation-cap mr-2"></i>Education Details</div>
