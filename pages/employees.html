@@ -2008,7 +2008,7 @@
             const val = (value !== null && value !== undefined) ? value : '';
             return `<div>
         <label style="font-size:11px;font-weight:600; color: #1B738C; display:block;margin-bottom:4px;">${label} ${required ? '<span class="req">*</span>' : ''}</label>
-        <input type="${type}" id="${id}" value="${String(val).replace(/"/g, '&quot;')}" ${req}
+        <input type="${type}" id="${id}"  value="${String(val).replace(/"/g, '&quot;')}" ${req}
             style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
     </div>`;
         }

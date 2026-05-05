@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,25 +7,17 @@
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
     <style>
-        * {
-            font-family: 'Inter', sans-serif;
-        }
+        * { font-family: 'Inter', sans-serif; }
 
-        
-
-        /* Dashboard Theme Colors */
         :root {
             --primary: #1B738C;
             --primary-light: #62C9EA;
             --primary-soft: #BDE4EE;
             --primary-bg-light: #e9f2f4;
             --button-hover: #166278;
-            --border-color: #1B738C;
-            --text-dark: #1B738C;
             --text-light: #5a7c8a;
         }
 
@@ -49,18 +40,7 @@
             font-weight: 600;
             border: none;
         }
-
-        .btn-primary:hover {
-            background-color: var(--button-hover);
-            transform: translateY(-1px);
-            box-shadow: 0 4px 10px rgba(27, 115, 140, 0.2);
-        }
-
-        .btn-primary:disabled {
-            background-color: var(--primary-soft);
-            cursor: not-allowed;
-            transform: none;
-        }
+        .btn-primary:hover { background-color: var(--button-hover); transform: translateY(-1px); }
 
         .btn-secondary {
             background-color: var(--primary-light);
@@ -72,11 +52,7 @@
             font-weight: 500;
             border: none;
         }
-
-        .btn-secondary:hover {
-            background-color: var(--primary);
-            color: white;
-        }
+        .btn-secondary:hover { background-color: var(--primary); color: white; }
 
         .btn-outline {
             border: 1px solid var(--primary-light);
@@ -87,119 +63,80 @@
             cursor: pointer;
             font-weight: 500;
         }
-
-        .btn-outline:hover {
-            background-color: var(--primary-bg-light);
-            border-color: var(--primary);
-        }
+        .btn-outline:hover { background-color: var(--primary-bg-light); }
 
         .btn-success {
             background-color: #2b7a3e;
             transition: all 0.3s ease;
             color: white;
-            padding: 10px 26px;
+            padding: 12px 32px;
             border-radius: 12px;
             cursor: pointer;
             font-weight: 600;
             border: none;
+            font-size: 1rem;
         }
-
-        .btn-success:hover:not(:disabled) {
-            background-color: #1e5a2e;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 10px rgba(43, 122, 62, 0.2);
-        }
-
-        .btn-success:disabled {
-            background-color: #a0c4a8;
-            cursor: not-allowed;
-        }
+        .btn-success:hover:not(:disabled) { background-color: #1e5a2e; transform: translateY(-1px); }
 
         .btn-danger {
-            background-color: #dc3545;
-            color: white;
-            padding: 8px 18px;
-            border-radius: 10px;
+            /* background-color: #dc3545; */
+            color: red;
+            padding: 6px 14px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 500;
-            border: none;
+            border: 2px solid #dfedefa9;
+            font-size: 12px;
         }
-
-        .btn-danger:hover {
-            background-color: #c82333;
-        }
+        /* .btn-danger:hover { background-color: #c82333; } */
 
         .btn-info {
-            background-color: var(--primary-light);
-            color: var(--primary);
-            padding: 8px 18px;
-            border-radius: 10px;
+            /* background-color: #17a2b8; */
+            color: rgb(100, 93, 17);
+            padding: 6px 14px;
+            border-radius: 8px;
             cursor: pointer;
             font-weight: 500;
-            border: none;
+            border: 2px solid #dfedefa9;
+            font-size: 12px;
         }
+        /* .btn-info:hover { background-color: #138496; } */
 
-        .btn-info:hover {
-            background-color: var(--primary);
-            color: white;
+        .btn-warning {
+            /* background-color: #f0a500; */
+            color: rgb(66, 18, 237);
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            border: 2px solid #dfedefa9;
+            font-size: 12px;
         }
+        /* .btn-warning:hover { background-color: #d4920a; } */
 
-        input,
-        select,
-        textarea {
-            border: 1px solid var(--primary-soft);
-            border-radius: 12px;
-            padding: 10px 14px;
-            width: 100%;
-            transition: 0.2s;
-        }
+        input, select, textarea {
+    min-height: 36px;
+    padding: 10px 14px;
+    font-size: 10px;
+    line-height: 1.2;
+}
 
-        input:focus,
-        select:focus,
-        textarea:focus {
+        input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(27, 115, 140, 0.1);
+            box-shadow: 0 0 0 2px rgba(27, 115, 140, 0.1);
         }
+        /* input, select { height: 28px; } */
+        
+
+        .form-group { margin-bottom: 10px; }
 
         label {
-            font-size: 13px;
-            font-weight: 600;
+            font-size: 12px;
+            font-weight: 500;
             color: var(--primary);
             margin-bottom: 6px;
             display: block;
-        }
-
-        .submodule-nav {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 28px;
-            padding-bottom: 12px;
-            border-bottom: 2px solid var(--primary-soft);
-            flex-wrap: wrap;
-        }
-
-        .tab-btn {
-            padding: 8px 24px;
-            border-radius: 40px;
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 600;
-            transition: all 0.2s;
-            background: transparent;
-            color: var(--primary);
-            cursor: pointer;
-            position: relative;
-        }
-
-        .tab-btn:hover {
-            background-color: var(--primary-bg-light);
-            color: var(--button-hover);
-        }
-
-        .tab-btn.active {
-            background-color: var(--primary);
-            color: white;
         }
 
         .day-checkbox-group {
@@ -212,26 +149,9 @@
             border: 1px solid var(--primary-soft);
         }
 
-        .day-checkbox {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-
-        .day-checkbox input {
-            width: 18px;
-            height: 18px;
-            cursor: pointer;
-            accent-color: var(--primary);
-        }
-
-        .day-checkbox label {
-            margin-bottom: 0;
-            cursor: pointer;
-            font-weight: 500;
-            color: var(--primary);
-        }
+        .day-checkbox { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+        .day-checkbox input { width: 18px; height: 18px; cursor: pointer; accent-color: var(--primary); }
+        .day-checkbox label { margin-bottom: 0; cursor: pointer; font-weight: 500; }
 
         .time-input-group {
             display: flex;
@@ -259,11 +179,7 @@
             gap: 6px;
             transition: all 0.2s;
         }
-
-        .add-custom-btn:hover {
-            background: var(--primary-light);
-            transform: translateY(-1px);
-        }
+        .add-custom-btn:hover { background: var(--primary-light); }
 
         .toast {
             position: fixed;
@@ -277,37 +193,13 @@
             font-weight: 500;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
         }
-
-        .toast.success {
-            background-color: #2b7a3e;
-        }
-
-        .toast.error {
-            background-color: #dc3545;
-        }
-
-        .toast.info {
-            background-color: var(--primary);
-        }
+        .toast.success { background-color: #2b7a3e; }
+        .toast.error { background-color: #dc3545; }
+        .toast.info { background-color: var(--primary); }
 
         @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
-            }
-
-            to {
-                transform: translateX(0);
-                opacity: 1;
-            }
-        }
-
-        .page-content {
-            display: none;
-        }
-
-        .page-content.active {
-            display: block;
+            from { transform: translateX(100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
         }
 
         .badge-custom {
@@ -319,14 +211,6 @@
             font-weight: 500;
         }
 
-        .navigation-buttons {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 24px;
-            padding-top: 20px;
-            border-top: 2px solid var(--primary-soft);
-        }
-
         .modal-overlay {
             position: fixed;
             inset: 0;
@@ -336,10 +220,7 @@
             justify-content: center;
             z-index: 1000;
         }
-
-        .modal-overlay.active {
-            display: flex;
-        }
+        .modal-overlay.active { display: flex; }
 
         .modal-container {
             background: white;
@@ -349,7 +230,16 @@
             max-width: 90%;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-container-lg {
+            background: white;
+            border-radius: 24px;
+            padding: 24px;
+            width: 800px;
+            max-width: 95%;
+            max-height: 92vh;
+            overflow-y: auto;
         }
 
         .modal-header {
@@ -360,38 +250,10 @@
             padding-bottom: 12px;
             border-bottom: 2px solid var(--primary-soft);
         }
+        .modal-header h3 { font-weight: 700; color: var(--primary); font-size: 1.25rem; }
+        .modal-close { cursor: pointer; font-size: 24px; color: var(--primary-light); }
 
-        .modal-header h3 {
-            font-weight: 700;
-            color: var(--primary);
-            font-size: 1.25rem;
-        }
-
-        .modal-close {
-            cursor: pointer;
-            font-size: 24px;
-            color: var(--primary-light);
-            transition: 0.2s;
-        }
-
-        .modal-close:hover {
-            color: var(--primary);
-        }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
-
-        .inline-add-wrapper {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .inline-add-wrapper select,
-        .inline-add-wrapper input {
-            flex: 1;
-        }
+        .inline-add-wrapper { display: flex; gap: 10px; align-items: center; }
 
         .loading-spinner {
             display: inline-block;
@@ -402,650 +264,1029 @@
             border-top-color: white;
             animation: spin 1s ease-in-out infinite;
         }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .error-message {
-            background-color: #f8d7da;
-            border: 1px solid #f5c6cb;
-            color: #721c24;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .error-message.show {
-            display: block;
-        }
-
-        .success-message {
-            background-color: #d4edda;
-            border: 1px solid #c3e6cb;
-            color: #155724;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            display: none;
-        }
-
-        .success-message.show {
-            display: block;
-        }
-
-        .view-mode {
-            background-color: var(--primary-bg-light);
-            padding: 16px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-        }
-
-        .view-mode h4 {
-            color: var(--primary);
-            margin-bottom: 12px;
-            font-weight: 600;
-        }
-
-        .view-mode-item {
-            display: flex;
-            padding: 8px 0;
-            border-bottom: 1px solid var(--primary-soft);
-        }
-
-        .view-mode-label {
-            font-weight: 600;
-            width: 150px;
-            color: var(--text-light);
-        }
-
-        .view-mode-value {
-            color: var(--primary);
-            flex: 1;
-        }
-
-        .confirm-modal-overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.5);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-        }
-
-        .confirm-modal-overlay.active {
-            display: flex;
-        }
-
-        .confirm-modal-container {
-            background: white;
-            border-radius: 24px;
-            padding: 24px;
-            width: 400px;
-            max-width: 90%;
-            text-align: center;
-        }
-
-        .confirm-modal-container h3 {
-            color: var(--primary);
-            font-size: 1.25rem;
-            margin-bottom: 16px;
-        }
-
-        .confirm-modal-container p {
-            color: var(--text-light);
-            margin-bottom: 24px;
-        }
-
-        .confirm-buttons {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-        }
+        @keyframes spin { to { transform: rotate(360deg); } }
 
         .dept-card {
             border: 1px solid var(--primary-soft);
             border-radius: 12px;
-            transition: all 0.3s ease;
+            padding: 14px;
+            transition: all 0.2s ease;
+            background: white;
         }
+        .dept-card:hover { border-color: var(--primary-light); box-shadow: 0 4px 12px rgba(27, 115, 140, 0.08); }
 
-        .dept-card:hover {
-            border-color: var(--primary-light);
-            box-shadow: 0 4px 12px rgba(27, 115, 140, 0.08);
+        .empty-state { text-align: center; padding: 30px; color: var(--text-light); font-size: 13px; }
+
+        .logo-preview {
+            width: 80px; height: 80px;
+            border-radius: 16px;
+            border: 2px dashed var(--primary-light);
+            background-color: var(--primary-bg-light);
+            display: flex; align-items: center; justify-content: center;
+            overflow: hidden;
         }
+        .logo-preview img { width: 100%; height: 100%; object-fit: cover; }
 
-        .dept-card .rounded-full {
-            background-color: var(--primary-soft) !important;
-        }
-
-        .dept-card .rounded-full i {
-            color: var(--primary) !important;
-        }
-
-        .dept-card h4 {
+        table th {
+            font-size: 12px;
+            font-weight: 600;
+            padding: 12px 10px;
+            text-align: left;
             color: var(--primary);
+            background: var(--primary-bg-light);
+        }
+        table td { padding: 12px 10px; font-size: 13px; vertical-align: middle; }
+        tbody tr:hover { background: var(--primary-bg-light); }
+        tbody tr { border-bottom: 1px solid var(--primary-soft); }
+
+        /* Companies main table */
+        .companies-table { width: 100%; border-collapse: collapse; }
+        .companies-table thead tr { background: var(--primary-bg-light); }
+        .companies-table thead th { border-bottom: 2px solid var(--primary-soft); }
+
+        /* View modal info grid */
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .info-item label { font-size: 11px; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+        .info-item p { font-size: 14px; color: var(--primary); font-weight: 500; }
+
+        /* Disabled form overlay */
+        .view-mode input, .view-mode select, .view-mode textarea { background-color: #f8fbfc; pointer-events: none; color: #444; }
+        .view-mode .btn-success, .view-mode .btn-secondary { display: none; }
+
+        /* Registered banner */
+        .registered-banner {
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            border: 1px solid #a5d6a7;
+            border-radius: 12px;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
         }
 
-        @media (max-width: 768px) {
-            .section-card {
-                padding: 18px;
-            }
+        .action-btn-group { display: flex; gap: 6px; flex-wrap: nowrap; }
 
-            .tab-btn {
-                padding: 6px 16px;
-            }
-
-            .modal-container {
-                width: 95%;
-                padding: 18px;
-            }
-
-            .view-mode-item {
-                flex-direction: column;
-            }
-
-            .view-mode-label {
-                width: 100%;
-                margin-bottom: 4px;
-            }
+        @media (max-width: 640px) {
+            .info-grid { grid-template-columns: 1fr; }
+            .action-btn-group { flex-wrap: wrap; }
         }
     </style>
 </head>
+<body class="bg-gray-50">
 
-<body>
+<div class="flex h-screen overflow-hidden">
+    <div id="sidebar-container"></div>
 
-    <div class="flex h-screen overflow-hidden">
-        <div id="sidebar-container"></div>
+    <div class="flex-1 flex flex-col overflow-hidden">
+        <div id="header-container"></div>
 
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <div id="header-container"></div>
-
-            <main class="flex-1 overflow-y-auto p-5 main-content">
-                <div class="mb-5 mt-16">
+        <main class="flex-1 overflow-y-auto p-5 main-content">
+            <div class="mb-5 mt-16 flex items-center justify-between flex-wrap gap-3">
+                <div>
                     <h1 class="text-xl font-bold" style="color: #1B738C;">Company Management</h1>
-                    <p class="text-sm mt-1" style="color: #1B738C;">Complete all sections and submit at the end</p>
+                    <p class="text-sm mt-1" style="color: #1B738C;">Manage your registered company details</p>
+                </div>
+                <button id="registerNewBtn" onclick="openRegisterForm()" class="btn-primary text-sm">
+                    <i class="fas fa-plus mr-2"></i> Register Company
+                </button>
+            </div>
+
+            <!-- ===== COMPANIES TABLE VIEW ===== -->
+            <div id="companiesTableSection">
+                <div class="section-card">
+                    <div class="overflow-x-auto">
+                        <table class="companies-table">
+                            <thead>
+                                <tr>
+                                    <th style="width:50px;">#</th>
+                                    <th>Company Name</th>
+                                    <th>Email</th>
+                                    <th>Phone</th>
+                                    <th>GST Number</th>
+                                    <th>Established</th>
+                                    <th>Status</th>
+                                    <th style="width:180px; text-align:center;">Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody id="companiesTableBody">
+                                <tr>
+                                    <td colspan="8" class="empty-state">
+                                        <i class="fas fa-building text-4xl mb-3" style="color: var(--primary-soft);"></i>
+                                        <p>No company registered yet. Click <strong>Register Company</strong> to get started.</p>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+             <!-- REGISTER / EDIT FORM SECTION -->
+            <div id="formSection" style="display:none;">
+                <div id="formBanner" class="section-card" style="padding: 14px 20px; margin-bottom: 0; border-radius: 16px 16px 0 0; border-bottom: none; background: linear-gradient(135deg, var(--primary), var(--button-hover));">
+                    <div class="flex items-center justify-between flex-wrap gap-2">
+                        <div class="flex items-center gap-4">
+                            <button onclick="backToTable()" style="background:rgba(255,255,255,0.2); border:none; color:white; padding:8px 16px; border-radius:10px; cursor:pointer; font-size:13px; font-weight:600;">
+                                <i class="fas fa-arrow-left mr-1"></i> Back
+                            </button>
+                            <h2 id="formTitle" class="text-xl font-bold text-white">Register Company</h2>
+                        </div>
+                        <span id="formMode" class="badge-custom" style="background:rgba(255,255,255,0.2); color:white; font-size:12px; padding: 4px 14px;"></span>
+                    </div>
                 </div>
 
-                <div id="errorContainer" class="error-message"></div>
-                <div id="successContainer" class="success-message"></div>
+                <form id="companyForm" class="space-y-0" style="border: 1px solid var(--primary-light); border-top:none; border-radius: 0 0 16px 16px; overflow:hidden;">
 
-                <!-- Navigation Tabs -->
-                <div id="navTabs" class="submodule-nav">
-                    <div class="tab-btn active" data-page="profile">Company Profile</div>
-                    <div class="tab-btn" data-page="holidays">Holidays</div>
-                    <div class="tab-btn" data-page="departments">Departments</div>
-                    <div class="tab-btn" data-page="designations">Designations</div>
-                </div>
-
-                <!-- VIEW MODE -->
-                <div id="view-mode-container" style="display: none;">
-                    <div class="section-card">
-                        <div class="flex items-center gap-6 flex-wrap pb-5 border-b mb-6"
-                            style="border-color: var(--primary-soft);">
-                            <div id="viewLogoPreview"
-                                class="w-24 h-24 rounded-2xl border-2 border-solid flex items-center justify-center"
-                                style="border-color: var(--primary-light); background-color: var(--primary-bg-light);">
+                    <!-- SECTION 1: COMPANY PROFILE -->
+                    <div class="section-card" style="border-radius:0; border-left:none; border-right:none; border-top:none; margin-bottom:0; border-bottom: 1px solid var(--primary-soft);">
+                        <div class="flex items-center gap-6 flex-wrap pb-6 border-b mb-6" style="border-color: var(--primary-soft);">
+                            <div id="logoPreview" class="logo-preview">
                                 <i class="fas fa-building text-4xl" style="color: var(--primary-light);"></i>
                             </div>
                             <div>
-                                <h2 id="viewCompanyName" class="text-2xl font-bold" style="color: var(--primary);">
-                                    Company Name</h2>
-                                <p id="viewCompanyEmail" class="text-sm mt-1" style="color: var(--text-light);"></p>
+                                <button type="button" id="uploadLogoBtn" onclick="document.getElementById('logoInput').click()" class="btn-secondary text-sm">
+                                    <i class="fas fa-cloud-upload-alt mr-2"></i>Upload Logo
+                                </button>
+                                <input type="file" id="logoInput" accept="image/*" style="display:none;" onchange="handleLogoSelection(this)">
+                                <p class="text-xs mt-2 opacity-70" style="color: var(--text-light);">PNG, JPG up to 2MB</p>
                             </div>
                         </div>
 
-                        <div class="view-mode">
-                            <h4>Company Information</h4>
-                            <div class="view-mode-item">
-                                <div class="view-mode-label">Company Name:</div>
-                                <div class="view-mode-value" id="viewName">-</div>
-                            </div>
-                            <div class="view-mode-item">
-                                <div class="view-mode-label">GST Number:</div>
-                                <div class="view-mode-value" id="viewGst">-</div>
-                            </div>
-                            <div class="view-mode-item">
-                                <div class="view-mode-label">PAN Number:</div>
-                                <div class="view-mode-value" id="viewPan">-</div>
-                            </div>
-                            <div class="view-mode-item">
-                                <div class="view-mode-label">CIN Number:</div>
-                                <div class="view-mode-value" id="viewCin">-</div>
-                            </div>
-                            <div class="view-mode-item">
-                                <div class="view-mode-label">Email:</div>
-                                <div class="view-mode-value" id="viewEmail">-</div>
-                            </div>
-                            <div class="view-mode-item">
-                                <div class="view-mode-label">Phone:</div>
-                                <div class="view-mode-value" id="viewPhone">-</div>
-                            </div>
-                            <div class="view-mode-item">
-                                <div class="view-mode-label">Website:</div>
-                                <div class="view-mode-value" id="viewWebsite">-</div>
-                            </div>
-                            <div class="view-mode-item">
-                                <div class="view-mode-label">Established Year:</div>
-                                <div class="view-mode-value" id="viewYear">-</div>
-                            </div>
-                            <div class="view-mode-item">
-                                <div class="view-mode-label">Address:</div>
-                                <div class="view-mode-value" id="viewAddress">-</div>
-                            </div>
-                            <div class="view-mode-item">
-                                <div class="view-mode-label">Description:</div>
-                                <div class="view-mode-value" id="viewDescription">-</div>
-                            </div>
-                        </div>
-
-                        <div class="view-mode">
-                            <h4>Working Hours</h4>
-                            <div class="view-mode-item">
-                                <div class="view-mode-label">Working Days:</div>
-                                <div class="view-mode-value" id="viewWorkingDays">-</div>
-                            </div>
-                            <div class="view-mode-item">
-                                <div class="view-mode-label">Timings:</div>
-                                <div class="view-mode-value" id="viewTimings">-</div>
-                            </div>
-                        </div>
-
-                        <div class="view-mode">
-                            <h4>Holidays</h4>
-                            <div id="viewHolidaysList" class="space-y-2"></div>
-                        </div>
-
-                        <div class="view-mode">
-                            <h4>Departments</h4>
-                            <div id="viewDepartmentsList" class="space-y-2"></div>
-                        </div>
-
-                        <div class="view-mode">
-                            <h4>Designations</h4>
-                            <div id="viewDesignationsList" class="space-y-2"></div>
-                        </div>
-
-                        <div class="navigation-buttons">
-                            <div></div>
-                            <button onclick="setMode('edit')" class="btn-primary">
-                                <i class="fas fa-edit mr-2"></i> Edit Company
-                            </button>
+                        <h3 class="text-xl font-bold mb-5" style="color: var(--primary);">Company Information</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mb-2">
+                            <div class="form-group"><label>Company Name <span class="text-red-500">*</span></label><input type="text" id="comp_name" placeholder="e.g., Acme Solutions Pvt Ltd" ></div>
+                            <div class="form-group"><label>GST Number</label><input type="text" id="comp_gst" placeholder="GSTIN: 22AAAAA0000A1Z"></div>
+                            <div class="form-group"><label>PAN Number</label><input type="text" id="comp_pan" placeholder="PAN: AAAPL1234C"></div>
+                            <div class="form-group"><label>CIN Number</label><input type="text" id="comp_cin" placeholder="CIN: U12345DL2020PTC123456"></div>
+                            <div class="form-group"><label>Email <span class="text-red-500">*</span></label><input type="email" id="comp_email" placeholder="contact@company.com"></div>
+                            <div class="form-group"><label>Phone <span class="text-red-500">*</span></label><input type="tel" id="comp_phone" placeholder="+91 9876543210"></div>
+                            <div class="form-group"><label>Website</label><input type="url" id="comp_website" placeholder="https://www.company.com"></div>
+                            <div class="form-group"><label>Established Year</label><input type="number" id="comp_year" placeholder="e.g., 2015"></div>
+                            <div class="form-group md:col-span-2"><label>Address</label><textarea id="comp_address" placeholder="Full company address" rows="2" style="resize: vertical;"></textarea></div>
+                            <div class="form-group md:col-span-2"><label>Description</label><textarea id="comp_desc" placeholder="Brief description about the company" rows="2" style="resize: vertical;"></textarea></div>
                         </div>
                     </div>
+
+                    <!-- SECTION 2: WORKING HOURS -->
+                    <div class="section-card" style="border-radius:0; border-left:none; border-right:none; border-top:none; margin-bottom:0; border-bottom: 1px solid var(--primary-soft);">
+                        <h3 class="text-xl font-bold mb-4" style="color: var(--primary);">Weekly Working Hours</h3>
+                        <div class="time-input-group">
+                            <div class="form-group"><label>Start Time</label><input type="time" id="global_start_time" value="09:00"></div>
+                            <div class="form-group"><label>End Time</label><input type="time" id="global_end_time" value="18:00"></div>
+                        </div>
+                        <div class="day-checkbox-group">
+                            <div class="day-checkbox"><input type="checkbox" id="day_mon" checked><label for="day_mon">Monday</label></div>
+                            <div class="day-checkbox"><input type="checkbox" id="day_tue" checked><label for="day_tue">Tuesday</label></div>
+                            <div class="day-checkbox"><input type="checkbox" id="day_wed" checked><label for="day_wed">Wednesday</label></div>
+                            <div class="day-checkbox"><input type="checkbox" id="day_thu" checked><label for="day_thu">Thursday</label></div>
+                            <div class="day-checkbox"><input type="checkbox" id="day_fri" checked><label for="day_fri">Friday</label></div>
+                            <div class="day-checkbox"><input type="checkbox" id="day_sat" checked><label for="day_sat">Saturday</label></div>
+                            <div class="day-checkbox"><input type="checkbox" id="day_sun"><label for="day_sun">Sunday</label></div>
+                        </div>
+                    </div>
+
+                    <!-- SECTION 3: DEPARTMENTS -->
+                    <div class="section-card" style="border-radius:0; border-left:none; border-right:none; border-top:none; margin-bottom:0; border-bottom: 1px solid var(--primary-soft);">
+                        <div class="flex justify-between items-center mb-5 flex-wrap gap-3">
+                            <h3 class="text-xl font-bold" style="color: var(--primary);">Departments</h3>
+                            <button type="button" id="addDeptBtn" onclick="openDepartmentModal()" class="btn-primary text-sm"><i class="fas fa-plus mr-1"></i> Add Department</button>
+                        </div>
+                        <div class="mb-4"><input type="text" id="deptSearch" placeholder="🔍 Search department..." style="width:280px; height:42px;"></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="departmentsList"></div>
+                    </div>
+
+                    <!-- SECTION 4: DESIGNATIONS -->
+                    <div class="section-card" style="border-radius:0; border-left:none; border-right:none; border-top:none; margin-bottom:0; border-bottom: 1px solid var(--primary-soft);">
+                        <div class="flex justify-between items-center mb-5 flex-wrap gap-3">
+                            <h3 class="text-xl font-bold" style="color: var(--primary);">Designations</h3>
+                            <button type="button" id="addDesigBtn" onclick="openDesignationModal()" class="btn-primary text-sm"><i class="fas fa-plus mr-1"></i> Add Designation</button>
+                        </div>
+                        <div class="filter-bar flex gap-4 mb-5 flex-wrap">
+                            <input type="text" id="desigSearch" placeholder="🔍 Search designation..." style="width:260px; height:42px;">
+                            <select id="deptFilterDesignation" style="width:220px; height:42px;"><option value="all">All Departments</option></select>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table class="w-full" style="border-collapse: separate; border-spacing: 0;">
+                                <thead>
+                                    <tr style="border-bottom: 1px solid var(--primary-soft); background: #f9fcfd;">
+                                        <th style="padding: 14px 10px;">Designation</th>
+                                        <th>Department</th>
+                                        <th>Level</th>
+                                        <th>Base Salary</th>
+                                        <th style="text-align:center;">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="designationsList"></tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- SUBMIT BUTTON -->
+                    <div class="flex justify-end p-6 bg-white" style="border-top: 1px solid var(--primary-soft);">
+                        <button type="button" onclick="backToTable()" class="btn-outline mr-4">Cancel</button>
+                        <button type="submit" id="submitBtn" class="btn-success"><i class="fas fa-check-circle mr-2"></i> <span id="submitBtnText">Register Company</span></button>
+                    </div>
+                </form>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<!-- ============================= MODALS ============================= -->
+
+<!-- Department Modal -->
+<div id="departmentModal" class="modal-overlay">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3>Add / Edit Department</h3>
+            <span class="modal-close" onclick="closeDepartmentModal()">&times;</span>
+        </div>
+        <form id="departmentForm">
+            <input type="hidden" id="deptId">
+            <div class="form-group"><label>Department Name *</label><input type="text" id="deptName" required placeholder="e.g., Engineering"></div>
+            <div class="form-group"><label>Head of Department</label><input type="text" id="deptHead" placeholder="HOD name"></div>
+            <div class="flex justify-end gap-2 mt-4">
+                <button type="button" onclick="closeDepartmentModal()" class="btn-outline">Cancel</button>
+                <button type="submit" class="btn-primary">Save Department</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Custom Department Modal -->
+<div id="customDepartmentModal" class="modal-overlay">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3>Add Custom Department</h3>
+            <span class="modal-close" onclick="closeCustomDepartmentModal()">&times;</span>
+        </div>
+        <form id="customDepartmentForm">
+            <div class="form-group"><label>Department Name *</label><input type="text" id="customDeptName" required placeholder="e.g., Engineering"></div>
+            <div class="form-group"><label>Head of Department</label><input type="text" id="customDeptHead" placeholder="HOD name"></div>
+            <div class="flex justify-end gap-2 mt-4">
+                <button type="button" onclick="closeCustomDepartmentModal()" class="btn-outline">Cancel</button>
+                <button type="submit" class="btn-primary">Add Department</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Designation Modal -->
+<div id="designationModal" class="modal-overlay">
+    <div class="modal-container">
+        <div class="modal-header">
+            <h3 id="desigModalTitle">Add Designation</h3>
+            <span class="modal-close" onclick="closeDesignationModal()">&times;</span>
+        </div>
+        <form id="designationForm">
+            <input type="hidden" id="desigId">
+            <div class="form-group"><label>Designation Name *</label><input type="text" id="desigName" required placeholder="e.g., Senior Manager"></div>
+            <div class="form-group">
+                <label>Department *</label>
+                <div class="inline-add-wrapper">
+                    <select id="desigDeptSelect" required><option value="">Select Department</option></select>
+                    <button type="button" onclick="openCustomDepartmentModal()" class="add-custom-btn"><i class="fas fa-plus-circle"></i> New</button>
                 </div>
-
-                <!-- EDIT MODE -->
-                <div id="edit-mode-container">
-                    <!-- PAGE 1: COMPANY PROFILE -->
-                    <div id="page-profile" class="page-content active">
-                        <div class="section-card">
-                            <div class="flex items-center gap-6 flex-wrap pb-5 border-b mb-6"
-                                style="border-color: var(--primary-soft);">
-                                <div id="logoPreview"
-                                    class="w-24 h-24 rounded-2xl border-2 border-dashed flex items-center justify-center"
-                                    style="border-color: var(--primary-light); background-color: var(--primary-bg-light);">
-                                    <i class="fas fa-building text-4xl" style="color: var(--primary-light);"></i>
-                                </div>
-                                <div>
-                                    <button type="button" onclick="document.getElementById('logoInput').click()"
-                                        class="btn-secondary text-sm" id="uploadLogoBtn">
-                                        <i class="fas fa-cloud-upload-alt mr-2"></i>Upload Logo
-                                    </button>
-                                    <input type="file" id="logoInput" accept="image/*" style="display: none;"
-                                        onchange="handleLogoSelection(this)">
-                                    <p class="text-xs mt-2" style="color: var(--text-light);">PNG, JPG up to 2MB</p>
-                                </div>
-                            </div>
-                            <form id="profileForm">
-                                <h3 class="text-lg font-bold mb-4" style="color: var(--primary);">Company Information
-                                </h3>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-6">
-                                    <div><label>Company Name *</label><input type="text" id="comp_name"
-                                            placeholder="Enter company name"></div>
-                                    <div><label>GST Number</label><input type="text" id="comp_gst" placeholder="GSTIN">
-                                    </div>
-                                    <div><label>PAN Number</label><input type="text" id="comp_pan" placeholder="PAN">
-                                    </div>
-                                    <div><label>CIN Number</label><input type="text" id="comp_cin" placeholder="CIN">
-                                    </div>
-                                    <div><label>Email *</label><input type="email" id="comp_email"
-                                            placeholder="contact@company.com"></div>
-                                    <div><label>Phone *</label><input type="tel" id="comp_phone"
-                                            placeholder="Phone number"></div>
-                                    <div><label>Website</label><input type="url" id="comp_website"
-                                            placeholder="https://"></div>
-                                    <div><label>Established Year</label><input type="number" id="comp_year"
-                                            placeholder="YYYY"></div>
-                                    <div class="md:col-span-2"><label>Address</label><textarea id="comp_address"
-                                            rows="2" placeholder="Complete address"></textarea></div>
-                                    <div class="md:col-span-2"><label>Description</label><textarea id="comp_desc"
-                                            rows="2" placeholder="Brief about company"></textarea></div>
-                                </div>
-                                <hr class="my-6" style="border-color: var(--primary-soft);">
-                                <h3 class="text-lg font-bold mb-4" style="color: var(--primary);">Weekly Working Hours
-                                </h3>
-                                <div class="time-input-group">
-                                    <div><label>Start Time</label><input type="time" id="global_start_time"
-                                            value="09:00"></div>
-                                    <div><label>End Time</label><input type="time" id="global_end_time" value="18:00">
-                                    </div>
-                                </div>
-                                <div class="day-checkbox-group mb-6">
-                                    <div class="day-checkbox"><input type="checkbox" id="day_mon"
-                                            checked><label>Monday</label></div>
-                                    <div class="day-checkbox"><input type="checkbox" id="day_tue"
-                                            checked><label>Tuesday</label></div>
-                                    <div class="day-checkbox"><input type="checkbox" id="day_wed"
-                                            checked><label>Wednesday</label></div>
-                                    <div class="day-checkbox"><input type="checkbox" id="day_thu"
-                                            checked><label>Thursday</label></div>
-                                    <div class="day-checkbox"><input type="checkbox" id="day_fri"
-                                            checked><label>Friday</label></div>
-                                    <div class="day-checkbox"><input type="checkbox" id="day_sat"
-                                            checked><label>Saturday</label></div>
-                                    <div class="day-checkbox"><input type="checkbox" id="day_sun"><label>Sunday</label>
-                                    </div>
-                                </div>
-                            </form>
-                            <div class="navigation-buttons">
-                                <div></div><button onclick="goToNextTab()" class="btn-primary">Next: Holidays →</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PAGE 2: HOLIDAYS -->
-                    <div id="page-holidays" class="page-content">
-                        <div class="section-card">
-                            <div class="flex justify-between items-center mb-5">
-                                <h3 class="text-lg font-bold" style="color: var(--primary);">Holiday Calendar</h3>
-                                <button onclick="openHolidayModal()" class="btn-primary text-sm"><i
-                                        class="fas fa-plus mr-1"></i>Add Holiday</button>
-                            </div>
-                            <div class="flex flex-wrap gap-3 mb-5">
-                                <select id="holidayYearFilter" class="w-32">
-                                    <option value="all">All Years</option>
-                                    <option>2024</option>
-                                    <option>2025</option>
-                                </select>
-                                <select id="holidayTypeFilter" class="w-40">
-                                    <option value="all">All Types</option>
-                                    <option>National</option>
-                                    <option>Festival</option>
-                                    <option>Optional</option>
-                                </select>
-                                <input type="text" id="holidaySearch" placeholder="Search holidays..." class="w-48">
-                            </div>
-                            <div class="overflow-x-auto">
-                                <table class="w-full">
-                                    <thead>
-                                        <tr class="border-b" style="border-color: var(--primary-soft);">
-                                            <th class="text-left py-3" style="color: var(--primary);">Date</th>
-                                            <th style="color: var(--primary);">Holiday Name</th>
-                                            <th style="color: var(--primary);">Type</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="holidaysList"></tbody>
-                                </table>
-                            </div>
-                            <div class="navigation-buttons"><button onclick="goToPreviousTab()" class="btn-outline">←
-                                    Previous</button><button onclick="goToNextTab()" class="btn-primary">Next →</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PAGE 3: DEPARTMENTS -->
-                    <div id="page-departments" class="page-content">
-                        <div class="section-card">
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="text-lg font-bold" style="color: var(--primary);">Departments</h3>
-                                <button onclick="openDepartmentModal()" class="btn-primary text-sm"><i
-                                        class="fas fa-plus mr-1"></i>Add Department</button>
-                            </div>
-                            <input type="text" id="deptSearch" placeholder="Search departments..." class="w-64 mb-4"
-                                onkeyup="filterDepartments()">
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="departmentsList">
-                            </div>
-                            <div class="navigation-buttons"><button onclick="goToPreviousTab()" class="btn-outline">←
-                                    Previous</button><button onclick="goToNextTab()" class="btn-primary">Next →</button>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- PAGE 4: DESIGNATIONS -->
-                    <div id="page-designations" class="page-content">
-                        <div class="section-card">
-                            <div class="flex justify-between items-center mb-4">
-                                <h3 class="text-lg font-bold" style="color: var(--primary);">Designations</h3>
-                                <button onclick="openDesignationModal()" class="btn-primary text-sm"><i
-                                        class="fas fa-plus mr-1"></i>Add Designation</button>
-                            </div>
-                            <div class="flex flex-wrap gap-3 mb-4">
-                                <input type="text" id="desigSearch" placeholder="Search designations..." class="w-56"
-                                    onkeyup="filterDesignations()">
-                                <select id="deptFilterDesignation" onchange="filterDesignations()" class="w-56">
-                                    <option value="all">All Departments</option>
-                                </select>
-                            </div>
-                            <div class="overflow-x-auto">
-                                <table class="w-full">
-                                    <thead>
-                                        <tr style="border-bottom: 1px solid var(--primary-soft);">
-                                            <th class="text-left py-2" style="color: var(--primary);">Designation</th>
-                                            <th style="color: var(--primary);">Department</th>
-                                            <th style="color: var(--primary);">Level</th>
-                                            <th style="color: var(--primary);">Base Salary</th>
-                                            <th></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="designationsList"></tbody>
-                                </table>
-                            </div>
-                            <div class="navigation-buttons"><button onclick="goToPreviousTab()" class="btn-outline">←
-                                    Previous</button><button onclick="submitAllData()" class="btn-success"
-                                    id="submitBtn"><i class="fas fa-check-circle mr-2"></i> Submit All Data</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </main>
-        </div>
-    </div>
-
-    <!-- MODALS -->
-    <div id="departmentModal" class="modal-overlay">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h3 id="deptModalTitle">Add Department</h3><span class="modal-close"
-                    onclick="closeDepartmentModal()">&times;</span>
             </div>
-            <form id="departmentForm"><input type="hidden" id="deptId">
-                <div class="form-group"><label>Department Name *</label><input type="text" id="deptName" required
-                        placeholder="e.g., Engineering, HR"></div>
-                <div class="form-group"><label>Head of Department</label><input type="text" id="deptHead"
-                        placeholder="HOD name"></div>
-                <div class="flex justify-end gap-2 mt-4"><button type="button" onclick="closeDepartmentModal()"
-                        class="btn-outline">Cancel</button><button type="submit" class="btn-primary">Save
-                        Department</button></div>
-            </form>
-        </div>
-    </div>
-
-    <div id="customDepartmentModal" class="modal-overlay">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h3>Add Custom Department</h3><span class="modal-close"
-                    onclick="closeCustomDepartmentModal()">&times;</span>
+            <div class="form-group">
+                <label>Level</label>
+                <select id="desigLevel"><option>Level 1</option><option>Level 2</option><option>Level 3</option><option>Level 4</option><option>Level 5</option></select>
             </div>
-            <form id="customDepartmentForm">
-                <div class="form-group"><label>Department Name *</label><input type="text" id="customDeptName" required
-                        placeholder="e.g., Engineering, HR"></div>
-                <div class="form-group"><label>Head of Department (Optional)</label><input type="text"
-                        id="customDeptHead" placeholder="HOD name"></div>
-                <div class="flex justify-end gap-2 mt-4"><button type="button" onclick="closeCustomDepartmentModal()"
-                        class="btn-outline">Cancel</button><button type="submit" class="btn-primary">Add
-                        Department</button></div>
-            </form>
-        </div>
-    </div>
-
-    <div id="confirmDeleteModal" class="confirm-modal-overlay">
-        <div class="confirm-modal-container">
-            <h3>Confirm Delete</h3>
-            <p id="confirmDeleteMessage">Are you sure you want to delete this item?</p>
-            <div class="confirm-buttons"><button onclick="closeConfirmModal()"
-                    class="btn-outline">Cancel</button><button id="confirmDeleteBtn" class="btn-danger">Delete</button>
+            <div class="form-group"><label>Base Salary (₹)</label><input type="number" id="desigSalary" placeholder="Amount" step="1000"></div>
+            <div class="flex justify-end gap-2 mt-4">
+                <button type="button" onclick="closeDesignationModal()" class="btn-outline">Cancel</button>
+                <button type="submit" class="btn-primary">Save Designation</button>
             </div>
+        </form>
+    </div>
+</div>
+
+<!-- View Company Modal -->
+<div id="viewCompanyModal" class="modal-overlay">
+    <div class="modal-container-lg">
+        <div class="modal-header">
+            <h3><i class="fas fa-building mr-2"></i> Company Details</h3>
+            <span class="modal-close" onclick="closeModal('viewCompanyModal')">&times;</span>
+        </div>
+        <div id="viewCompanyContent"></div>
+    </div>
+</div>
+
+<!-- Confirm Delete Modal -->
+<div id="confirmDeleteModal" class="modal-overlay">
+    <div class="modal-container" style="text-align:center; max-width:400px;">
+        <div style="width:60px; height:60px; background:#fde8ea; border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 16px;">
+            <i class="fas fa-trash" style="color:#dc3545; font-size:24px;"></i>
+        </div>
+        <h3 style="color:var(--primary); margin-bottom:8px; font-size:1.1rem; font-weight:700;">Confirm Delete</h3>
+        <p id="confirmDeleteMessage" style="color:var(--text-light); margin-bottom:24px; font-size:14px;">Are you sure?</p>
+        <div style="display:flex; gap:12px; justify-content:center;">
+            <button onclick="closeConfirmModal()" class="btn-outline">Cancel</button>
+            <button id="confirmDeleteBtn" class="btn-danger" style="padding:10px 24px;">Delete</button>
         </div>
     </div>
+</div>
 
-    <div id="designationModal" class="modal-overlay">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h3 id="desigModalTitle">Add Designation</h3><span class="modal-close"
-                    onclick="closeDesignationModal()">&times;</span>
-            </div>
-            <form id="designationForm"><input type="hidden" id="desigId">
-                <div class="form-group"><label>Designation Name *</label><input type="text" id="desigName" required
-                        placeholder="e.g., Senior Manager, Team Lead"></div>
-                <div class="form-group"><label>Department *</label>
-                    <div class="inline-add-wrapper"><select id="desigDeptSelect" required>
-                            <option value="">Select Department</option>
-                        </select><button type="button" onclick="openCustomDepartmentModal()" class="add-custom-btn"><i
-                                class="fas fa-plus-circle"></i> New</button></div>
-                </div>
-                <div class="form-group"><label>Level</label><select id="desigLevel">
-                        <option>Level 1</option>
-                        <option>Level 2</option>
-                        <option>Level 3</option>
-                        <option>Level 4</option>
-                        <option>Level 5</option>
-                    </select></div>
-                <div class="form-group"><label>Base Salary (₹)</label><input type="number" id="desigSalary"
-                        placeholder="Amount" step="1000"></div>
-                <div class="flex justify-end gap-2 mt-4"><button type="button" onclick="closeDesignationModal()"
-                        class="btn-outline">Cancel</button><button type="submit" class="btn-primary">Save
-                        Designation</button></div>
-            </form>
-        </div>
-    </div>
 
-    <div id="holidayModal" class="modal-overlay">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h3>Add Holiday</h3><span class="modal-close" onclick="closeHolidayModal()">&times;</span>
-            </div>
-            <form id="holidayForm"><input type="hidden" id="holidayId">
-                <div class="form-group"><label>Holiday Name *</label><input type="text" id="holidayName" required></div>
-                <div class="form-group"><label>Date *</label><input type="date" id="holidayDate" required></div>
-                <div class="form-group"><label>Type</label><select id="holidayTypeSelect">
-                        <option>National</option>
-                        <option>Festival</option>
-                        <option>Optional</option>
-                    </select></div>
-                <div class="flex justify-end gap-2"><button type="button" onclick="closeHolidayModal()"
-                        class="btn-outline">Cancel</button><button type="submit" class="btn-primary">Save</button></div>
-            </form>
-        </div>
-    </div>
-
-    <script src="/assets/js/common.js"></script>
+ <script src="/assets/js/common.js"></script>
     <script src="/assets/js/sidebar.js"></script>
     <script src="/assets/js/header.js"></script>
 
-    <script>
-        // API Configuration
-        const COMPANY_API_URL = (typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : 'http://localhost:8086') + '/api/company';
+<script>
+    // ===== API CONFIG =====
+    // const API_BASE_URL = typeof window.API_BASE_URL !== 'undefined' ? window.API_BASE_URL : 'http://localhost:8086';
+    const COMPANY_API_URL = API_BASE_URL + '/api/CompanyEntity';
 
-        let currentCompanyId = null;
-        let holidaysData = [];
-        let departmentsData = [];
-        let designationsData = [];
-        let currentEditDeptIndex = null;
-        let currentEditDesigIndex = null;
-        let currentEditHolidayIndex = null;
-        let currentMode = 'edit';
-        let selectedLogoFile = null;
-        let pendingDeleteCallback = null;
+    // ===== STATE =====
+    let currentCompanyId = null;
+    let departmentsData = [];
+    let designationsData = [];
+    let selectedLogoFile = null;
+    let currentEditDeptIndex = null;
+    let currentEditDesigIndex = null;
+    let isViewMode = false;
+    let isEditMode = false;
+    let savedLogoBase64 = null;
 
-        // Utility Functions
-        function showToast(msg, type = 'success') {
-            let toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            toast.innerText = msg;
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+    // ===== LOCAL STORAGE KEY =====
+    const COMPANY_STORAGE_KEY = 'hrms_company_registered';
+    const COMPANY_DATA_KEY = 'hrms_company_data';
+
+    // ===== UTILITIES =====
+    function showToast(msg, type = 'success') {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.innerText = msg;
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 3000);
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+    }
+
+    function openModal(id) { document.getElementById(id).classList.add('active'); }
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    function closeConfirmModal() { closeModal('confirmDeleteModal'); }
+    function openCustomDepartmentModal() { openModal('customDepartmentModal'); }
+    function closeCustomDepartmentModal() { closeModal('customDepartmentModal'); }
+    function closeDepartmentModal() { closeModal('departmentModal'); }
+    function closeDesignationModal() { closeModal('designationModal'); }
+
+    // ===== LOGO HANDLER =====
+    function handleLogoSelection(input) {
+        if (input.files && input.files[0]) {
+            selectedLogoFile = input.files[0];
+            const reader = new FileReader();
+            reader.onload = e => {
+                savedLogoBase64 = e.target.result;
+                document.getElementById('logoPreview').innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover rounded-2xl">`;
+            };
+            reader.readAsDataURL(selectedLogoFile);
+            showToast('Logo selected', 'info');
+        }
+    }
+
+    // ===== DEPARTMENTS =====
+    function openDepartmentModal(i = null) {
+        currentEditDeptIndex = i;
+        document.getElementById('deptId').value = i !== null ? i : '';
+        document.getElementById('deptName').value = i !== null ? departmentsData[i].departmentName : '';
+        document.getElementById('deptHead').value = i !== null ? (departmentsData[i].headOfDepartment || '') : '';
+        openModal('departmentModal');
+    }
+
+    function editDepartment(i) { openDepartmentModal(i); }
+
+    function confirmDeleteDepartment(i) {
+        showConfirmModal('Delete this department? This may affect designations.', () => {
+            departmentsData.splice(i, 1);
+            renderDepartmentsList();
+            loadDepartmentsIntoSelects();
+            filterDesignations();
+            showToast('Department deleted', 'success');
+        });
+    }
+
+    function renderDepartmentsList() {
+        const container = document.getElementById('departmentsList');
+        if (!container) return;
+        if (departmentsData.length === 0) {
+            container.innerHTML = '<div class="empty-state col-span-3"><i class="fas fa-inbox text-2xl mb-2" style="color:var(--primary-soft);"></i><br>No departments added yet</div>';
+            return;
+        }
+        container.innerHTML = departmentsData.map((d, i) => `
+            <div class="dept-card" data-dept-name="${d.departmentName.toLowerCase()}">
+                <div class="flex justify-between items-start">
+                    <div>
+                        <div class="w-10 h-10 rounded-full flex items-center justify-center mb-2" style="background: var(--primary-soft);">
+                            <i class="fas fa-building" style="color:var(--primary);"></i>
+                        </div>
+                        <h4 class="font-bold" style="color: var(--primary);">${escapeHtml(d.departmentName)}</h4>
+                        <p class="text-xs mt-1" style="color: var(--text-light);">HOD: ${escapeHtml(d.headOfDepartment || '—')}</p>
+                    </div>
+                    ${!isViewMode ? `
+                    <div class="flex gap-2">
+                        <button type="button" onclick="editDepartment(${i})" title="Edit" style="background:var(--primary-bg-light); border:none; border-radius:8px; padding:6px 10px; cursor:pointer; color:var(--primary);">
+                            <i class="fas fa-edit" style="font-size:13px;"></i>
+                        </button>
+                        <button type="button" onclick="confirmDeleteDepartment(${i})" title="Delete" style="background:#fde8ea; border:none; border-radius:8px; padding:6px 10px; cursor:pointer; color:#dc3545;">
+                            <i class="fas fa-trash" style="font-size:13px;"></i>
+                        </button>
+                    </div>` : ''}
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function filterDepartments() {
+        const s = document.getElementById('deptSearch').value.toLowerCase();
+        document.querySelectorAll('.dept-card').forEach(c => {
+            c.style.display = c.getAttribute('data-dept-name').includes(s) ? '' : 'none';
+        });
+    }
+
+    // ===== DESIGNATIONS =====
+    function openDesignationModal(i = null) {
+        currentEditDesigIndex = i;
+        loadDepartmentsIntoSelects();
+        document.getElementById('desigModalTitle').innerText = i !== null ? 'Edit Designation' : 'Add Designation';
+        document.getElementById('desigId').value = i !== null ? i : '';
+        document.getElementById('desigName').value = i !== null ? designationsData[i].designationName : '';
+        if (i !== null) document.getElementById('desigDeptSelect').value = designationsData[i].departmentName;
+        document.getElementById('desigLevel').value = i !== null ? (designationsData[i].level || 'Level 1') : 'Level 1';
+        document.getElementById('desigSalary').value = i !== null ? (designationsData[i].baseSalary || '') : '';
+        openModal('designationModal');
+    }
+
+    function editDesignation(i) { openDesignationModal(i); }
+
+    function confirmDeleteDesignation(i) {
+        showConfirmModal('Delete this designation?', () => {
+            designationsData.splice(i, 1);
+            renderDesignationsList();
+            filterDesignations();
+            showToast('Designation deleted', 'success');
+        });
+    }
+
+    function renderDesignationsList() {
+        const tbody = document.getElementById('designationsList');
+        if (!tbody) return;
+        if (designationsData.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" class="empty-state"><i class="fas fa-inbox text-2xl mb-2" style="color:var(--primary-soft);"></i><br>No designations added yet</td></tr>`;
+            return;
+        }
+        tbody.innerHTML = designationsData.map((d, i) => `
+            <tr>
+                <td class="font-medium" style="color: var(--primary);">${escapeHtml(d.designationName)}</td>
+                <td><span class="badge-custom">${escapeHtml(d.departmentName)}</span></td>
+                <td style="color: var(--text-light);">${escapeHtml(d.level || '—')}</td>
+                <td style="color: var(--primary);">₹${parseInt(d.baseSalary || 0).toLocaleString()}</td>
+                <td style="text-align:center;">
+                    ${!isViewMode ? `
+                    <div class="action-btn-group justify-center">
+                        <button type="button" onclick="editDesignation(${i})" title="Edit" style="background:var(--primary-bg-light); border:none; border-radius:8px; padding:5px 10px; cursor:pointer; color:var(--primary);">
+                            <i class="fas fa-edit" style="font-size:12px;"></i>
+                        </button>
+                        <button type="button" onclick="confirmDeleteDesignation(${i})" title="Delete" style="background:#fde8ea; border:none; border-radius:8px; padding:5px 10px; cursor:pointer; color:#dc3545;">
+                            <i class="fas fa-trash" style="font-size:12px;"></i>
+                        </button>
+                    </div>` : '<span style="color:var(--text-light); font-size:12px;">—</span>'}
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    function filterDesignations() {
+        const s = document.getElementById('desigSearch')?.value.toLowerCase();
+        const df = document.getElementById('deptFilterDesignation')?.value;
+        let filtered = designationsData;
+        if (s) filtered = filtered.filter(d => d.designationName.toLowerCase().includes(s));
+        if (df && df !== 'all') filtered = filtered.filter(d => d.departmentName === df);
+        const tbody = document.getElementById('designationsList');
+        if (!tbody) return;
+        if (filtered.length === 0) {
+            tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No matching designations</td></tr>`;
+            return;
+        }
+        tbody.innerHTML = filtered.map((d) => {
+            const originalIdx = designationsData.findIndex(orig => orig === d);
+            return `<tr>
+                <td class="font-medium" style="color: var(--primary);">${escapeHtml(d.designationName)}</td>
+                <td><span class="badge-custom">${escapeHtml(d.departmentName)}</span></td>
+                <td style="color: var(--text-light);">${escapeHtml(d.level || '—')}</td>
+                <td style="color: var(--primary);">₹${parseInt(d.baseSalary || 0).toLocaleString()}</td>
+                <td style="text-align:center;">
+                    ${!isViewMode ? `
+                    <div class="action-btn-group justify-center">
+                        <button type="button" onclick="editDesignation(${originalIdx})" style="background:var(--primary-bg-light); border:none; border-radius:8px; padding:5px 10px; cursor:pointer; color:var(--primary);"><i class="fas fa-edit" style="font-size:12px;"></i></button>
+                        <button type="button" onclick="confirmDeleteDesignation(${originalIdx})" style="background:#fde8ea; border:none; border-radius:8px; padding:5px 10px; cursor:pointer; color:#dc3545;"><i class="fas fa-trash" style="font-size:12px;"></i></button>
+                    </div>` : '<span style="color:var(--text-light); font-size:12px;">—</span>'}
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    function loadDepartmentsIntoSelects() {
+        const df = document.getElementById('deptFilterDesignation');
+        if (df) {
+            df.innerHTML = '<option value="all">All Departments</option>';
+            departmentsData.forEach(d => df.appendChild(new Option(d.departmentName, d.departmentName)));
+        }
+        const ds = document.getElementById('desigDeptSelect');
+        if (ds) {
+            const cv = ds.value;
+            ds.innerHTML = '<option value="">Select Department</option>';
+            departmentsData.forEach(d => ds.appendChild(new Option(d.departmentName, d.departmentName)));
+            if (cv && departmentsData.some(d => d.departmentName === cv)) ds.value = cv;
+        }
+    }
+
+    // ===== CONFIRM MODAL =====
+    function showConfirmModal(msg, onConfirm) {
+        document.getElementById('confirmDeleteMessage').innerText = msg;
+        openModal('confirmDeleteModal');
+        const confirmBtn = document.getElementById('confirmDeleteBtn');
+        const newBtn = confirmBtn.cloneNode(true);
+        confirmBtn.parentNode.replaceChild(newBtn, confirmBtn);
+        newBtn.addEventListener('click', () => { closeModal('confirmDeleteModal'); if (onConfirm) onConfirm(); });
+    }
+
+    // ===== FORM MODE: SHOW / HIDE =====
+    function setViewMode(enabled) {
+        isViewMode = enabled;
+        const form = document.getElementById('companyForm');
+        const inputs = form.querySelectorAll('input:not([type="file"]):not([type="checkbox"]), select, textarea');
+        const checkboxes = form.querySelectorAll('input[type="checkbox"]');
+        inputs.forEach(el => el.disabled = enabled);
+        checkboxes.forEach(el => el.disabled = enabled);
+        document.getElementById('submitBtn').style.display = enabled ? 'none' : '';
+        document.getElementById('uploadLogoBtn').style.display = enabled ? 'none' : '';
+        document.getElementById('addDeptBtn').style.display = enabled ? 'none' : '';
+        document.getElementById('addDesigBtn').style.display = enabled ? 'none' : '';
+        document.getElementById('deptSearch').disabled = enabled;
+        document.getElementById('desigSearch').disabled = enabled;
+        renderDepartmentsList();
+        renderDesignationsList();
+    }
+
+    function openRegisterForm() {
+        // ONE TIME registration check
+        const existing = getStoredCompany();
+        if (existing && !isEditMode) {
+            showToast('Company already registered! Use Edit to modify.', 'error');
+            return;
+        }
+        isViewMode = false;
+        isEditMode = false;
+        resetForm();
+        document.getElementById('formTitle').innerText = 'Register Company';
+        document.getElementById('formMode').innerText = 'New Registration';
+        document.getElementById('submitBtnText').innerText = 'Register Company';
+        document.getElementById('formSection').style.display = 'block';
+        document.getElementById('companiesTableSection').style.display = 'none';
+        document.getElementById('registerNewBtn').style.display = 'none';
+        setViewMode(false);
+        window.scrollTo(0, 0);
+    }
+
+    function openEditForm(companyData) {
+        isViewMode = false;
+        isEditMode = true;
+        resetForm();
+        populateForm(companyData);
+        document.getElementById('formTitle').innerText = 'Edit Company';
+        document.getElementById('formMode').innerText = 'Editing';
+        document.getElementById('submitBtnText').innerText = 'Update Company';
+        document.getElementById('formSection').style.display = 'block';
+        document.getElementById('companiesTableSection').style.display = 'none';
+        document.getElementById('registerNewBtn').style.display = 'none';
+        setViewMode(false);
+        window.scrollTo(0, 0);
+    }
+
+    function openViewForm(companyData) {
+        isViewMode = true;
+        isEditMode = false;
+        resetForm();
+        populateForm(companyData);
+        document.getElementById('formTitle').innerText = 'View Company Details';
+        document.getElementById('formMode').innerText = 'Read Only';
+        document.getElementById('formSection').style.display = 'block';
+        document.getElementById('companiesTableSection').style.display = 'none';
+        document.getElementById('registerNewBtn').style.display = 'none';
+        setViewMode(true);
+        window.scrollTo(0, 0);
+    }
+
+    function backToTable() {
+        isViewMode = false;
+        isEditMode = false;
+        document.getElementById('formSection').style.display = 'none';
+        document.getElementById('companiesTableSection').style.display = 'block';
+        const existing = getStoredCompany();
+        document.getElementById('registerNewBtn').style.display = existing ? 'none' : '';
+        renderCompaniesTable();
+    }
+
+    // ===== FORM RESET =====
+    function resetForm() {
+        document.getElementById('comp_name').value = '';
+        document.getElementById('comp_gst').value = '';
+        document.getElementById('comp_pan').value = '';
+        document.getElementById('comp_cin').value = '';
+        document.getElementById('comp_email').value = '';
+        document.getElementById('comp_phone').value = '';
+        document.getElementById('comp_website').value = '';
+        document.getElementById('comp_year').value = '';
+        document.getElementById('comp_address').value = '';
+        document.getElementById('comp_desc').value = '';
+        document.getElementById('global_start_time').value = '09:00';
+        document.getElementById('global_end_time').value = '18:00';
+        ['mon','tue','wed','thu','fri','sat'].forEach(d => { const cb = document.getElementById(`day_${d}`); if(cb) cb.checked = true; });
+        const sun = document.getElementById('day_sun'); if(sun) sun.checked = false;
+        document.getElementById('logoPreview').innerHTML = '<i class="fas fa-building text-4xl" style="color: var(--primary-light);"></i>';
+        selectedLogoFile = null;
+        departmentsData = [];
+        designationsData = [];
+        renderDepartmentsList();
+        renderDesignationsList();
+        loadDepartmentsIntoSelects();
+    }
+
+    // ===== POPULATE FORM =====
+    function populateForm(d) {
+        // CRITICAL: restore real DB id so edit payload sends correct id to backend
+        if (d.dbId) {
+            currentCompanyId = d.dbId;
+            console.log('[Company] Restored DB id for edit:', currentCompanyId);
+        }
+        document.getElementById('comp_name').value = d.companyName || '';
+        document.getElementById('comp_gst').value = d.gstNumber || '';
+        document.getElementById('comp_pan').value = d.panNumber || '';
+        document.getElementById('comp_cin').value = d.cinNumber || '';
+        document.getElementById('comp_email').value = d.email || '';
+        document.getElementById('comp_phone').value = d.phone || '';
+        document.getElementById('comp_website').value = d.website || '';
+        document.getElementById('comp_year').value = d.establishedYear || '';
+        document.getElementById('comp_address').value = d.address || '';
+        document.getElementById('comp_desc').value = d.description || '';
+
+        if (d.workingDays && Array.isArray(d.workingDays)) {
+            d.workingDays.forEach(day => {
+                const cb = document.getElementById(`day_${day.dayOfWeek.toLowerCase().substring(0,3)}`);
+                if (cb) cb.checked = day.active;
+            });
+            if (d.workingDays.length) {
+                document.getElementById('global_start_time').value = d.workingDays[0].startTime || '09:00';
+                document.getElementById('global_end_time').value = d.workingDays[0].endTime || '18:00';
+            }
         }
 
-        function showError(msg) { const c = document.getElementById('errorContainer'); c.innerHTML = msg; c.classList.add('show'); setTimeout(() => c.classList.remove('show'), 5000); }
-        function showSuccess(msg) { const c = document.getElementById('successContainer'); c.innerHTML = msg; c.classList.add('show'); setTimeout(() => c.classList.remove('show'), 5000); }
-        function escapeHtml(str) { if (!str) return ''; return String(str).replace(/[&<>]/g, m => m === '&' ? '&amp;' : m === '<' ? '&lt;' : '&gt;'); }
+        departmentsData = Array.isArray(d.departments) ? [...d.departments] : [];
+        designationsData = Array.isArray(d.designations) ? [...d.designations] : [];
 
-        // Modal Management
-        function openModal(id) { document.getElementById(id).classList.add('active'); document.body.style.overflow = 'hidden'; }
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); document.body.style.overflow = ''; }
-        function openCustomDepartmentModal() { openModal('customDepartmentModal'); }
-        function closeCustomDepartmentModal() { closeModal('customDepartmentModal'); }
-        function openDepartmentModal(i = null) { currentEditDeptIndex = i; document.getElementById('deptModalTitle').innerText = i !== null ? 'Edit Department' : 'Add Department'; document.getElementById('deptId').value = i !== null ? i : ''; document.getElementById('deptName').value = i !== null ? departmentsData[i].departmentName : ''; document.getElementById('deptHead').value = i !== null ? (departmentsData[i].headOfDepartment || '') : ''; openModal('departmentModal'); }
-        function closeDepartmentModal() { closeModal('departmentModal'); }
-        function openDesignationModal(i = null) { currentEditDesigIndex = i; loadDepartmentsIntoSelects(); document.getElementById('desigModalTitle').innerText = i !== null ? 'Edit Designation' : 'Add Designation'; document.getElementById('desigId').value = i !== null ? i : ''; document.getElementById('desigName').value = i !== null ? designationsData[i].designationName : ''; if (i !== null) document.getElementById('desigDeptSelect').value = designationsData[i].departmentName; document.getElementById('desigLevel').value = i !== null ? (designationsData[i].level || 'Level 1') : 'Level 1'; document.getElementById('desigSalary').value = i !== null ? (designationsData[i].baseSalary || '') : ''; openModal('designationModal'); }
-        function closeDesignationModal() { closeModal('designationModal'); }
-        function openHolidayModal(i = null) { currentEditHolidayIndex = i; if (i !== null && holidaysData[i]) { document.getElementById('holidayId').value = i; document.getElementById('holidayName').value = holidaysData[i].holidayName; document.getElementById('holidayDate').value = holidaysData[i].holidayDate; document.getElementById('holidayTypeSelect').value = holidaysData[i].type || 'National'; } else document.getElementById('holidayForm').reset(); openModal('holidayModal'); }
-        function closeHolidayModal() { closeModal('holidayModal'); }
-        function editDepartment(i) { openDepartmentModal(i); }
-        function editDesignation(i) { openDesignationModal(i); }
-        function editHoliday(i) { openHolidayModal(i); }
+        if (d.logoBase64) {
+            document.getElementById('logoPreview').innerHTML = `<img src="${d.logoBase64}" class="w-full h-full object-cover rounded-2xl">`;
+            savedLogoBase64 = d.logoBase64;
+        }
 
-        function showConfirmModal(msg, onConfirm) { const modal = document.getElementById('confirmDeleteModal'); document.getElementById('confirmDeleteMessage').innerText = msg; modal.classList.add('active'); document.body.style.overflow = 'hidden'; const confirmBtn = document.getElementById('confirmDeleteBtn'); const newBtn = confirmBtn.cloneNode(true); confirmBtn.parentNode.replaceChild(newBtn, confirmBtn); newBtn.addEventListener('click', () => { closeConfirmModal(); if (onConfirm) onConfirm(); }); }
-        function closeConfirmModal() { const modal = document.getElementById('confirmDeleteModal'); modal.classList.remove('active'); document.body.style.overflow = ''; }
+        renderDepartmentsList();
+        renderDesignationsList();
+        loadDepartmentsIntoSelects();
+        filterDesignations();
+    }
 
-        function confirmDeleteDepartment(i) { showConfirmModal('Delete this department? This may affect designations.', () => { departmentsData.splice(i, 1); renderDepartmentsList(); loadDepartmentsIntoSelects(); showToast('Department deleted', 'success'); }); }
-        function confirmDeleteDesignation(i) { showConfirmModal('Delete this designation?', () => { designationsData.splice(i, 1); renderDesignationsList(); filterDesignations(); showToast('Designation deleted', 'success'); }); }
-        function confirmDeleteHoliday(i) { showConfirmModal('Delete this holiday?', () => { holidaysData.splice(i, 1); renderHolidaysList(); filterHolidays(); showToast('Holiday deleted', 'success'); }); }
+    // ===== LOCAL STORAGE =====
+    function getStoredCompany() {
+        try {
+            const raw = localStorage.getItem(COMPANY_DATA_KEY);
+            return raw ? JSON.parse(raw) : null;
+        } catch(e) { return null; }
+    }
 
-        function handleLogoSelection(input) { if (input.files && input.files[0]) { selectedLogoFile = input.files[0]; const reader = new FileReader(); reader.onload = e => { document.getElementById('logoPreview').innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover rounded-2xl">`; }; reader.readAsDataURL(selectedLogoFile); showToast('Logo selected', 'info'); } }
+    function saveCompanyToStorage(data) {
+        // Always persist the real DB id separately so edit can find it on reload
+        if (currentCompanyId) data.dbId = currentCompanyId;
+        localStorage.setItem(COMPANY_DATA_KEY, JSON.stringify(data));
+        localStorage.setItem(COMPANY_STORAGE_KEY, 'true');
+    }
 
-        // Render Functions
-        function renderDepartmentsList() { const container = document.getElementById('departmentsList'); if (!container) return; if (departmentsData.length === 0) { container.innerHTML = '<p class="col-span-full text-center py-8" style="color: var(--text-light);">No departments added yet</p>'; return; } container.innerHTML = departmentsData.map((d, i) => `<div class="dept-card p-4 rounded-xl" data-dept-name="${d.departmentName.toLowerCase()}"><div class="flex justify-between items-start"><div><div class="w-10 h-10 rounded-full flex items-center justify-center"><i class="fas fa-building"></i></div><h4 class="font-bold mt-2">${escapeHtml(d.departmentName)}</h4><p class="text-xs" style="color: var(--text-light);">HOD: ${escapeHtml(d.headOfDepartment || '—')}</p></div><div><button onclick="editDepartment(${i})" class="mr-2" style="color: var(--primary);"><i class="fas fa-edit"></i></button><button onclick="confirmDeleteDepartment(${i})" style="color: var(--primary-light);"><i class="fas fa-trash"></i></button></div></div></div>`).join(''); }
+    function deleteCompanyFromStorage() {
+        localStorage.removeItem(COMPANY_DATA_KEY);
+        localStorage.removeItem(COMPANY_STORAGE_KEY);
+        currentCompanyId = null;
+    }
 
-        function renderDesignationsList(filtered = null) { const tbody = document.getElementById('designationsList'); if (!tbody) return; const items = filtered || designationsData; if (items.length === 0) { tbody.innerHTML = '<tr><td colspan="5" class="text-center py-8" style="color: var(--text-light);">No designations added yet</td></tr>'; return; } tbody.innerHTML = items.map((d, i) => `<tr class="border-b" style="border-color: var(--primary-soft);"><td class="py-2 font-medium" style="color: var(--primary);">${escapeHtml(d.designationName)}</td><td><span class="badge-custom">${escapeHtml(d.departmentName)}</span></td><td style="color: var(--text-light);">${escapeHtml(d.level || '—')}</td><td style="color: var(--primary);">₹${parseInt(d.baseSalary || 0).toLocaleString()}</td><td><button onclick="editDesignation(${i})" class="mr-2" style="color: var(--primary);"><i class="fas fa-edit"></i></button><button onclick="confirmDeleteDesignation(${i})" style="color: var(--primary-light);"><i class="fas fa-trash"></i></button></td></tr>`).join(''); }
+    // ===== COMPANIES TABLE =====
+    function renderCompaniesTable() {
+        const tbody = document.getElementById('companiesTableBody');
+        const company = getStoredCompany();
+        const registerBtn = document.getElementById('registerNewBtn');
 
-        function renderHolidaysList(filtered = null) { const tbody = document.getElementById('holidaysList'); if (!tbody) return; const items = filtered || holidaysData; if (items.length === 0) { tbody.innerHTML = '<tr><td colspan="4" class="text-center py-8" style="color: var(--text-light);">No holidays added yet</td></tr>'; return; } tbody.innerHTML = items.map((h, i) => `<tr class="border-b" style="border-color: var(--primary-soft);"><td class="py-2" style="color: var(--primary);">${h.holidayDate}</td><td style="color: var(--primary);">${escapeHtml(h.holidayName)}</td><td><span class="badge-custom">${escapeHtml(h.type || 'National')}</span></td><td><button onclick="editHoliday(${i})" class="mr-2" style="color: var(--primary);"><i class="fas fa-edit"></i></button><button onclick="confirmDeleteHoliday(${i})" style="color: var(--primary-light);"><i class="fas fa-trash"></i></button></td></tr>`).join(''); }
+        if (!company) {
+            registerBtn.style.display = '';
+            tbody.innerHTML = `
+                <tr>
+                    <td colspan="8">
+                        <div class="empty-state">
+                            <i class="fas fa-building text-4xl mb-3" style="color: var(--primary-soft); display:block;"></i>
+                            <p>No company registered yet. Click <strong>Register Company</strong> to get started.</p>
+                        </div>
+                    </td>
+                </tr>`;
+            return;
+        }
 
-        function filterDepartments() { const s = document.getElementById('deptSearch').value.toLowerCase(); document.querySelectorAll('.dept-card').forEach(c => { c.style.display = c.getAttribute('data-dept-name').includes(s) ? '' : 'none'; }); }
-        function filterDesignations() { const s = document.getElementById('desigSearch')?.value.toLowerCase(); const df = document.getElementById('deptFilterDesignation')?.value; let f = designationsData; if (s) f = f.filter(d => d.designationName.toLowerCase().includes(s)); if (df && df !== 'all') f = f.filter(d => d.departmentName === df); renderDesignationsList(f); }
-        function filterHolidays() { const y = document.getElementById('holidayYearFilter')?.value; const t = document.getElementById('holidayTypeFilter')?.value; const s = document.getElementById('holidaySearch')?.value.toLowerCase(); let f = holidaysData; if (y && y !== 'all') f = f.filter(h => h.holidayDate?.startsWith(y)); if (t && t !== 'all') f = f.filter(h => h.type === t); if (s) f = f.filter(h => h.holidayName.toLowerCase().includes(s)); renderHolidaysList(f); }
+        // Company is registered → hide Register button
+        registerBtn.style.display = 'none';
 
-        function loadDepartmentsIntoSelects() { const df = document.getElementById('deptFilterDesignation'); if (df) { df.innerHTML = '<option value="all">All Departments</option>'; departmentsData.forEach(d => df.appendChild(new Option(d.departmentName, d.departmentName))); } const ds = document.getElementById('desigDeptSelect'); if (ds) { const cv = ds.value; ds.innerHTML = '<option value="">Select Department</option>'; departmentsData.forEach(d => ds.appendChild(new Option(d.departmentName, d.departmentName))); if (cv && departmentsData.some(d => d.departmentName === cv)) ds.value = cv; } }
+        const workingDaysStr = Array.isArray(company.workingDays)
+            ? company.workingDays.filter(d => d.active).map(d => d.dayOfWeek.substring(0,3)).join(', ')
+            : '—';
 
-        // Form Submissions
-        document.getElementById('departmentForm')?.addEventListener('submit', function (e) { e.preventDefault(); const n = document.getElementById('deptName').value.trim(); if (!n) { showToast('Department name required', 'error'); return; } const d = { departmentName: n, headOfDepartment: document.getElementById('deptHead').value.trim() }; if (currentEditDeptIndex !== null && document.getElementById('deptId').value !== '') departmentsData[currentEditDeptIndex] = d; else departmentsData.push(d); renderDepartmentsList(); loadDepartmentsIntoSelects(); closeDepartmentModal(); showToast('Department saved', 'success'); currentEditDeptIndex = null; });
+        tbody.innerHTML = `
+            <tr>
+                <td class="font-bold" style="color:var(--primary);">1</td>
+                <td>
+                    <div class="flex items-center gap-3">
+                        ${company.logoBase64
+                            ? `<img src="${company.logoBase64}" style="width:36px;height:36px;border-radius:8px;object-fit:cover;border:1px solid var(--primary-soft);">`
+                            : `<div style="width:36px;height:36px;border-radius:8px;background:var(--primary-soft);display:flex;align-items:center;justify-content:center;"><i class="fas fa-building" style="color:var(--primary);font-size:16px;"></i></div>`
+                        }
+                        <div>
+                            <div class="font-semibold" style="color:var(--primary);">${escapeHtml(company.companyName)}</div>
+                            <div style="font-size:11px; color:var(--text-light);">${escapeHtml(company.cinNumber || '—')}</div>
+                        </div>
+                    </div>
+                </td>
+                <td style="color:var(--text-light);">${escapeHtml(company.email)}</td>
+                <td style="color:var(--text-light);">${escapeHtml(company.phone)}</td>
+                <td>${company.gstNumber ? `<span class="badge-custom">${escapeHtml(company.gstNumber)}</span>` : '<span style="color:var(--text-light);">—</span>'}</td>
+                <td style="color:var(--text-light);">${company.establishedYear || '—'}</td>
+                <td><span style="background:#d4edda; color:#155724; padding:4px 12px; border-radius:40px; font-size:12px; font-weight:600;"><i class="fas fa-check-circle mr-1"></i></span></td>
+                <td>
+                    <div class="action-btn-group" style="justify-content:center;">
+                        <button onclick="handleViewCompany()" class="btn-info" title="View">
+                            <i class="fas fa-eye mr-1"></i>
+                        </button>
+                        <button onclick="handleEditCompany()" class="btn-warning" title="Edit">
+                            <i class="fas fa-edit mr-1"></i>
+                        </button>
+                        <button onclick="handleDeleteCompany()" class="btn-danger" title="Delete">
+                            <i class="fas fa-trash mr-1"></i>
+                        </button>
+                    </div>
+                </td>
+            </tr>`;
+    }
 
-        document.getElementById('designationForm')?.addEventListener('submit', function (e) { e.preventDefault(); const n = document.getElementById('desigName').value.trim(); const dept = document.getElementById('desigDeptSelect').value; if (!n) { showToast('Designation name required', 'error'); return; } if (!dept) { showToast('Select department', 'error'); return; } const d = { designationName: n, departmentName: dept, level: document.getElementById('desigLevel').value, baseSalary: parseFloat(document.getElementById('desigSalary').value) || 0 }; if (currentEditDesigIndex !== null && document.getElementById('desigId').value !== '') designationsData[currentEditDesigIndex] = d; else designationsData.push(d); renderDesignationsList(); filterDesignations(); closeDesignationModal(); showToast('Designation saved', 'success'); currentEditDesigIndex = null; });
+    // ===== ACTION HANDLERS =====
+    function handleViewCompany() {
+        const company = getStoredCompany();
+        if (!company) return;
+        openViewForm(company);
+    }
 
-        document.getElementById('holidayForm')?.addEventListener('submit', function (e) { e.preventDefault(); const h = { holidayName: document.getElementById('holidayName').value, holidayDate: document.getElementById('holidayDate').value, type: document.getElementById('holidayTypeSelect').value }; if (currentEditHolidayIndex !== null && document.getElementById('holidayId').value !== '') holidaysData[currentEditHolidayIndex] = h; else holidaysData.push(h); renderHolidaysList(); filterHolidays(); closeHolidayModal(); showToast('Holiday saved', 'success'); currentEditHolidayIndex = null; });
+    function handleEditCompany() {
+        const company = getStoredCompany();
+        if (!company) return;
+        openEditForm(company);
+    }
 
-        document.getElementById('customDepartmentForm')?.addEventListener('submit', function (e) { e.preventDefault(); const n = document.getElementById('customDeptName').value.trim(); if (!n) { showToast('Department name required', 'error'); return; } if (!departmentsData.some(d => d.departmentName === n)) { departmentsData.push({ departmentName: n, headOfDepartment: document.getElementById('customDeptHead').value.trim() || '' }); renderDepartmentsList(); loadDepartmentsIntoSelects(); showToast(`Department "${n}" added`, 'success'); closeCustomDepartmentModal(); const ds = document.getElementById('desigDeptSelect'); if (ds) ds.value = n; } else showToast('Department already exists', 'error'); });
+    function handleDeleteCompany() {
+        showConfirmModal('Are you sure you want to delete the registered company? This action cannot be undone.', async () => {
+            const stored = getStoredCompany();
+            const dbId = stored?.dbId || currentCompanyId;
 
-        // API Calls
-        async function saveCompanyToBackend() { const btn = document.getElementById('submitBtn'); const orig = btn.innerHTML; btn.disabled = true; btn.innerHTML = '<span class="loading-spinner"></span> Submitting...'; try { const name = document.getElementById('comp_name').value.trim(); const email = document.getElementById('comp_email').value.trim(); const phone = document.getElementById('comp_phone').value.trim(); if (!name || !email || !phone) { showToast('Please fill required fields', 'error'); return false; } const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']; const workingDays = days.map(day => ({ dayOfWeek: day.charAt(0).toUpperCase() + day.slice(1), active: document.getElementById(`day_${day}`).checked, startTime: document.getElementById('global_start_time').value, endTime: document.getElementById('global_end_time').value })); const payload = { id: currentCompanyId, companyName: name, gstNumber: document.getElementById('comp_gst').value || null, panNumber: document.getElementById('comp_pan').value || null, cinNumber: document.getElementById('comp_cin').value || null, registrationNumber: null, email, phone, website: document.getElementById('comp_website').value || null, establishedYear: document.getElementById('comp_year').value ? parseInt(document.getElementById('comp_year').value) : null, employeeCount: null, companyType: null, industryType: null, address: document.getElementById('comp_address').value || null, description: document.getElementById('comp_desc').value || null, workingDays: JSON.stringify(workingDays), breakTimings: JSON.stringify({ lunchStart: "13:00", lunchEnd: "14:00", eveningStart: "16:30", eveningEnd: "16:45" }), holidays: JSON.stringify(holidaysData), departments: JSON.stringify(departmentsData), designations: JSON.stringify(designationsData), socialMedia: "[]", contactPersons: "[]", bankDetails: "[]" }; const resp = await fetch(`${COMPANY_API_URL}/profile`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) }); const result = await resp.json(); if (result.success) { currentCompanyId = result.data.id; if (selectedLogoFile) { const fd = new FormData(); fd.append('file', selectedLogoFile); await fetch(`${COMPANY_API_URL}/logo/${currentCompanyId}`, { method: 'POST', body: fd }); } showSuccess('Company saved successfully!'); showToast('Company saved!', 'success'); await loadCompanyDataIntoView(); setMode('view'); return true; } else { showToast(result.message || 'Failed', 'error'); return false; } } catch (e) { console.error(e); showToast('Error: ' + e.message, 'error'); return false; } finally { btn.disabled = false; btn.innerHTML = orig; } }
+            // Call backend DELETE API if we have a real DB id
+            if (dbId) {
+                try {
+                    const resp = await fetch(`${COMPANY_API_URL}/profile/${dbId}`, {
+                        method: 'DELETE',
+                        headers: { 'Content-Type': 'application/json' }
+                    });
+                    const result = await resp.json().catch(() => ({}));
+                    if (!resp.ok) {
+                        showToast(result.message || 'Failed to delete from server', 'error');
+                        return; // Do NOT clear localStorage if backend delete failed
+                    }
+                    console.log('[Company] Deleted from DB, id:', dbId);
+                } catch (err) {
+                    showToast('Network error: ' + err.message, 'error');
+                    return;
+                }
+            }
 
-        async function loadCompanyData(id) { try { const resp = await fetch(`${COMPANY_API_URL}/profile/${id}`); const result = await resp.json(); if (result.success) { const d = result.data; document.getElementById('comp_name').value = d.companyName || ''; document.getElementById('comp_gst').value = d.gstNumber || ''; document.getElementById('comp_pan').value = d.panNumber || ''; document.getElementById('comp_cin').value = d.cinNumber || ''; document.getElementById('comp_email').value = d.email || ''; document.getElementById('comp_phone').value = d.phone || ''; document.getElementById('comp_website').value = d.website || ''; document.getElementById('comp_year').value = d.establishedYear || ''; document.getElementById('comp_address').value = d.address || ''; document.getElementById('comp_desc').value = d.description || ''; if (d.workingDaysJson && d.workingDaysJson !== 'null') { try { const wd = JSON.parse(d.workingDaysJson); wd.forEach(day => { const cb = document.getElementById(`day_${day.dayOfWeek.toLowerCase()}`); if (cb) cb.checked = day.active; }); if (wd[0]) { document.getElementById('global_start_time').value = wd[0].startTime || '09:00'; document.getElementById('global_end_time').value = wd[0].endTime || '18:00'; } } catch (e) { } } if (d.holidaysJson && d.holidaysJson !== 'null') { try { holidaysData = JSON.parse(d.holidaysJson); renderHolidaysList(); filterHolidays(); } catch (e) { } } else { holidaysData = []; renderHolidaysList(); } if (d.departmentsJson && d.departmentsJson !== 'null') { try { departmentsData = JSON.parse(d.departmentsJson); renderDepartmentsList(); loadDepartmentsIntoSelects(); } catch (e) { } } else { departmentsData = []; renderDepartmentsList(); } if (d.designationsJson && d.designationsJson !== 'null') { try { designationsData = JSON.parse(d.designationsJson); renderDesignationsList(); filterDesignations(); } catch (e) { } } else { designationsData = []; renderDesignationsList(); } if (d.logoUrl) { document.getElementById('logoPreview').innerHTML = `<img src="http://localhost:8086${d.logoUrl}?t=${Date.now()}" class="w-full h-full object-cover rounded-2xl">`; } showToast('Company data loaded', 'success'); } } catch (e) { console.error(e); showToast('Error loading data', 'error'); } }
+            deleteCompanyFromStorage();
+            renderCompaniesTable();
+            showToast('Company deleted successfully', 'success');
+        });
+    }
 
-        async function loadCompanyDataIntoView() { if (!currentCompanyId) return; try { const resp = await fetch(`${COMPANY_API_URL}/profile/${currentCompanyId}`); const result = await resp.json(); if (result.success) { const d = result.data; document.getElementById('viewName').innerText = d.companyName || '-'; document.getElementById('viewGst').innerText = d.gstNumber || '-'; document.getElementById('viewPan').innerText = d.panNumber || '-'; document.getElementById('viewCin').innerText = d.cinNumber || '-'; document.getElementById('viewEmail').innerText = d.email || '-'; document.getElementById('viewPhone').innerText = d.phone || '-'; document.getElementById('viewWebsite').innerText = d.website || '-'; document.getElementById('viewYear').innerText = d.establishedYear || '-'; document.getElementById('viewAddress').innerText = d.address || '-'; document.getElementById('viewDescription').innerText = d.description || '-'; document.getElementById('viewCompanyName').innerText = d.companyName || 'Company Name'; document.getElementById('viewCompanyEmail').innerText = d.email || ''; if (d.logoUrl) { document.getElementById('viewLogoPreview').innerHTML = `<img src="http://localhost:8086${d.logoUrl}?t=${Date.now()}" class="w-full h-full object-cover rounded-2xl">`; } if (d.workingDaysJson && d.workingDaysJson !== 'null') { try { const wd = JSON.parse(d.workingDaysJson); const activeDays = wd.filter(w => w.active).map(w => w.dayOfWeek).join(', '); document.getElementById('viewWorkingDays').innerText = activeDays || 'None'; if (wd[0]) document.getElementById('viewTimings').innerText = `${wd[0].startTime} - ${wd[0].endTime}`; } catch (e) { } } if (d.holidaysJson && d.holidaysJson !== 'null') { try { const hols = JSON.parse(d.holidaysJson); document.getElementById('viewHolidaysList').innerHTML = hols.map(h => `<div class="view-mode-item"><div class="view-mode-label">${h.holidayDate}:</div><div class="view-mode-value">${h.holidayName} (${h.type || 'National'})</div></div>`).join('') || '<div class="text-gray-500">No holidays added</div>'; } catch (e) { } } if (d.departmentsJson && d.departmentsJson !== 'null') { try { const depts = JSON.parse(d.departmentsJson); document.getElementById('viewDepartmentsList').innerHTML = depts.map(dep => `<div class="view-mode-item"><div class="view-mode-label">${escapeHtml(dep.departmentName)}:</div><div class="view-mode-value">HOD: ${escapeHtml(dep.headOfDepartment || 'Not assigned')}</div></div>`).join('') || '<div class="text-gray-500">No departments added</div>'; } catch (e) { } } if (d.designationsJson && d.designationsJson !== 'null') { try { const desigs = JSON.parse(d.designationsJson); document.getElementById('viewDesignationsList').innerHTML = desigs.map(dsg => `<div class="view-mode-item"><div class="view-mode-label">${escapeHtml(dsg.designationName)}:</div><div class="view-mode-value">${escapeHtml(dsg.departmentName)} | ${dsg.level || 'N/A'} | ₹${(dsg.baseSalary || 0).toLocaleString()}</div></div>`).join('') || '<div class="text-gray-500">No designations added</div>'; } catch (e) { } } } } catch (e) { console.error(e); } }
+    // ===== FORM SUBMIT =====
+    document.getElementById('companyForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
 
-        // Mode and Navigation
-        function setMode(mode) { currentMode = mode; const navTabs = document.getElementById('navTabs'); if (mode === 'view') { document.getElementById('view-mode-container').style.display = 'block'; document.getElementById('edit-mode-container').style.display = 'none'; navTabs.style.display = 'none'; loadCompanyDataIntoView(); } else { document.getElementById('view-mode-container').style.display = 'none'; document.getElementById('edit-mode-container').style.display = 'block'; navTabs.style.display = 'flex'; } }
+        const btn = document.getElementById('submitBtn');
+        const origHTML = btn.innerHTML;
+        btn.disabled = true;
+        btn.innerHTML = '<span class="loading-spinner"></span> Saving...';
 
-        const tabs = ['profile', 'holidays', 'departments', 'designations']; function getCurrentPage() { const a = document.querySelector('.tab-btn.active'); return a ? a.getAttribute('data-page') : 'profile'; } function showPage(p) { document.querySelectorAll('.page-content').forEach(pg => pg.classList.remove('active')); document.getElementById(`page-${p}`).classList.add('active'); document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active')); document.querySelector(`.tab-btn[data-page="${p}"]`).classList.add('active'); localStorage.setItem('companyMgmtPage', p); } function goToNextTab() { const idx = tabs.indexOf(getCurrentPage()); if (idx < tabs.length - 1) showPage(tabs[idx + 1]); } function goToPreviousTab() { const idx = tabs.indexOf(getCurrentPage()); if (idx > 0) showPage(tabs[idx - 1]); } async function submitAllData() { const s = await saveCompanyToBackend(); if (s) window.history.pushState({ path: window.location.pathname + '?id=' + currentCompanyId }, '', window.location.pathname + '?id=' + currentCompanyId); } window.submitAllData = submitAllData; function getCompanyIdFromUrl() { const params = new URLSearchParams(window.location.search); return params.get('id'); }
+        try {
+            const name = document.getElementById('comp_name').value.trim();
+            const email = document.getElementById('comp_email').value.trim();
+            const phone = document.getElementById('comp_phone').value.trim();
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', async function () { if (typeof loadSidebar === 'function') loadSidebar(); if (typeof loadHeader === 'function') loadHeader(); setTimeout(() => { if (typeof setActiveMenu === 'function') setActiveMenu('company'); }, 500); let saved = localStorage.getItem('companyMgmtPage'); if (!tabs.includes(saved)) saved = 'profile'; showPage(saved); renderDepartmentsList(); renderDesignationsList(); renderHolidaysList(); loadDepartmentsIntoSelects(); document.querySelectorAll('.tab-btn').forEach(btn => btn.addEventListener('click', () => showPage(btn.getAttribute('data-page')))); const cid = getCompanyIdFromUrl(); if (cid) { currentCompanyId = parseInt(cid); await loadCompanyData(currentCompanyId); setMode('view'); } else setMode('edit'); });
-    </script>
+            if (!name) throw new Error('Company Name is required');
+            if (!email) throw new Error('Email is required');
+            if (!phone) throw new Error('Phone is required');
+
+            const days = ['mon','tue','wed','thu','fri','sat','sun'];
+            const dayNames = { mon:'Mon', tue:'Tue', wed:'Wed', thu:'Thu', fri:'Fri', sat:'Sat', sun:'Sun' };
+            const workingDays = days.map(day => ({
+                dayOfWeek: dayNames[day],
+                active: document.getElementById(`day_${day}`).checked,
+                startTime: document.getElementById('global_start_time').value,
+                endTime: document.getElementById('global_end_time').value
+            }));
+
+            // Use the real DB id for edit; null for new registration
+            const dbIdForPayload = isEditMode ? currentCompanyId : null;
+
+            const companyObj = {
+                dbId: dbIdForPayload,          // real DB primary key — used by backend
+                companyName: name,
+                gstNumber: document.getElementById('comp_gst').value.trim() || null,
+                panNumber: document.getElementById('comp_pan').value.trim() || null,
+                cinNumber: document.getElementById('comp_cin').value.trim() || null,
+                email: email,
+                phone: phone,
+                website: document.getElementById('comp_website').value.trim() || null,
+                establishedYear: document.getElementById('comp_year').value ? parseInt(document.getElementById('comp_year').value) : null,
+                address: document.getElementById('comp_address').value.trim() || null,
+                description: document.getElementById('comp_desc').value.trim() || null,
+                workingDays: workingDays,
+                departments: [...departmentsData],
+                designations: [...designationsData],
+                logoBase64: savedLogoBase64 || null,
+                registeredAt: isEditMode ? getStoredCompany()?.registeredAt : new Date().toISOString(),
+                updatedAt: new Date().toISOString()
+            };
+
+            // Try API save
+            try {
+                const payload = {
+                    id: dbIdForPayload,        // null = INSERT, real id = UPDATE
+                    companyName: companyObj.companyName,
+                    gstNumber: companyObj.gstNumber,
+                    panNumber: companyObj.panNumber,
+                    cinNumber: companyObj.cinNumber,
+                    email: companyObj.email,
+                    phone: companyObj.phone,
+                    website: companyObj.website,
+                    establishedYear: companyObj.establishedYear,
+                    address: companyObj.address,
+                    description: companyObj.description,
+                    workingDays: JSON.stringify(workingDays),
+                    breakTimings: JSON.stringify({ lunchStart: "13:00", lunchEnd: "14:00" }),
+                    holidays: "[]",
+                    departments: JSON.stringify(departmentsData),
+                    designations: JSON.stringify(designationsData),
+                    socialMedia: "[]",
+                    contactPersons: "[]",
+                    bankDetails: "[]"
+                };
+
+                console.log('[Company] Sending to API. isEdit:', isEditMode, 'id:', payload.id);
+
+                const resp = await fetch(`${COMPANY_API_URL}/profile`, {
+                    method: isEditMode ? 'PUT' : 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (resp.ok) {
+                    const result = await resp.json();
+                    if (result.success && result.data?.id) {
+                        currentCompanyId = result.data.id;
+                        companyObj.dbId = currentCompanyId;
+                        console.log('[Company] API success. DB id:', currentCompanyId);
+                        if (selectedLogoFile) {
+                            const fd = new FormData();
+                            fd.append('file', selectedLogoFile);
+                            await fetch(`${COMPANY_API_URL}/logo/${currentCompanyId}`, { method: 'POST', body: fd });
+                        }
+                    }
+                } else {
+                    const errBody = await resp.json().catch(() => ({}));
+                    throw new Error(errBody.message || `API error ${resp.status}`);
+                }
+            } catch(apiErr) {
+                console.warn('[Company] API call failed:', apiErr.message);
+                // Re-throw so the user sees the real error instead of silently failing
+                throw apiErr;
+            }
+
+            // Always save to localStorage
+            saveCompanyToStorage(companyObj);
+
+            showToast(isEditMode ? 'Company updated successfully!' : 'Company registered successfully!', 'success');
+
+            setTimeout(() => {
+                backToTable();
+            }, 800);
+
+        } catch(err) {
+            showToast(err.message || 'Error saving company', 'error');
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = origHTML;
+        }
+    });
+
+    // ===== DEPT FORM =====
+    document.getElementById('departmentForm')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const n = document.getElementById('deptName').value.trim();
+        if (!n) { showToast('Department name required', 'error'); return; }
+        const d = { departmentName: n, headOfDepartment: document.getElementById('deptHead').value.trim() };
+        if (currentEditDeptIndex !== null && document.getElementById('deptId').value !== '') {
+            departmentsData[currentEditDeptIndex] = d;
+        } else {
+            departmentsData.push(d);
+        }
+        renderDepartmentsList();
+        loadDepartmentsIntoSelects();
+        closeDepartmentModal();
+        showToast('Department saved', 'success');
+        currentEditDeptIndex = null;
+    });
+
+    // ===== DESIG FORM =====
+    document.getElementById('designationForm')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const n = document.getElementById('desigName').value.trim();
+        const dept = document.getElementById('desigDeptSelect').value;
+        if (!n) { showToast('Designation name required', 'error'); return; }
+        if (!dept) { showToast('Select department', 'error'); return; }
+        const d = {
+            designationName: n,
+            departmentName: dept,
+            level: document.getElementById('desigLevel').value,
+            baseSalary: parseFloat(document.getElementById('desigSalary').value) || 0
+        };
+        if (currentEditDesigIndex !== null && document.getElementById('desigId').value !== '') {
+            designationsData[currentEditDesigIndex] = d;
+        } else {
+            designationsData.push(d);
+        }
+        renderDesignationsList();
+        filterDesignations();
+        closeDesignationModal();
+        showToast('Designation saved', 'success');
+        currentEditDesigIndex = null;
+    });
+
+    // ===== CUSTOM DEPT FORM =====
+    document.getElementById('customDepartmentForm')?.addEventListener('submit', function(e) {
+        e.preventDefault();
+        const n = document.getElementById('customDeptName').value.trim();
+        if (!n) { showToast('Department name required', 'error'); return; }
+        if (!departmentsData.some(d => d.departmentName === n)) {
+            departmentsData.push({ departmentName: n, headOfDepartment: document.getElementById('customDeptHead').value.trim() || '' });
+            renderDepartmentsList();
+            loadDepartmentsIntoSelects();
+            showToast(`Department "${n}" added`, 'success');
+            closeCustomDepartmentModal();
+            const ds = document.getElementById('desigDeptSelect');
+            if (ds) ds.value = n;
+        } else {
+            showToast('Department already exists', 'error');
+        }
+    });
+
+    // ===== INITIALIZE =====
+    document.addEventListener('DOMContentLoaded', function() {
+        if (typeof loadSidebar === 'function') loadSidebar();
+        if (typeof loadHeader === 'function') loadHeader();
+
+        // Restore DB id from previously saved company data
+        const stored = getStoredCompany();
+        if (stored && stored.dbId) {
+            currentCompanyId = stored.dbId;
+            console.log('[Company] Restored currentCompanyId on load:', currentCompanyId);
+        }
+
+        renderDepartmentsList();
+        renderDesignationsList();
+        loadDepartmentsIntoSelects();
+        renderCompaniesTable();
+    });
+</script>
 </body>
-
 </html>
