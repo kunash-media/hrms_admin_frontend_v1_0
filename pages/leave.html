@@ -14,7 +14,6 @@
     <style>
         * { font-family: 'Inter', sans-serif; }
 
-        /* ===== COMPANY MANAGEMENT THEME (same as reference) ===== */
         :root {
             --primary: #1B738C;
             --primary-light: #62C9EA;
@@ -51,7 +50,6 @@
             border-color: var(--primary-light);
         }
 
-        /* ===== BUTTONS (same as Company Management) ===== */
         .btn-primary {
             background-color: var(--primary);
             transition: all 0.3s ease;
@@ -115,7 +113,6 @@
             border-color: var(--primary);
         }
 
-        /* ===== INPUTS (same as Company Management) ===== */
         input, select, textarea {
             border: 1px solid var(--primary-soft);
             border-radius: 10px;
@@ -140,7 +137,6 @@
             display: block;
         }
 
-        /* ===== TABS (same pill style as Company Management) ===== */
         .tab-nav {
             display: flex;
             gap: 8px;
@@ -162,33 +158,21 @@
             border: none;
         }
 
-        .tab-btn:hover {
-            background-color: var(--primary-bg-light);
-            color: var(--button-hover);
-        }
-
-        .tab-btn.active {
-            background-color: var(--primary);
-            color: white;
-        }
+        .tab-btn:hover { background-color: var(--primary-bg-light); color: var(--button-hover); }
+        .tab-btn.active { background-color: var(--primary); color: white; }
 
         .tab-content { display: none; }
         .tab-content.active { display: block; }
 
-        /* ===== STATUS BADGES ===== */
         .status-pending  { background: rgba(255,193,7,0.18); color: #856404; }
         .status-approved { background: rgba(43,122,62,0.15); color: #155724; }
         .status-rejected { background: rgba(220,53,69,0.15); color: #721c24; }
 
-        /* ===== TABLE ===== */
         table { width: 100%; border-collapse: collapse; }
-
         .data-row:hover { background-color: var(--primary-bg-light); cursor: pointer; }
-
         th { font-weight: 600; font-size: 12px; color: var(--text-light); text-align: left; padding: 12px 8px; }
         td { padding: 10px 8px; }
 
-        /* ===== MODAL ===== */
         .modal {
             display: none;
             position: fixed;
@@ -222,13 +206,8 @@
             border-bottom: 2px solid var(--primary-soft);
         }
 
-        .modal-header h3 {
-            font-weight: 700;
-            color: var(--primary);
-            font-size: 1.1rem;
-        }
+        .modal-header h3 { font-weight: 700; color: var(--primary); font-size: 1.1rem; }
 
-        /* ===== TOAST ===== */
         .toast {
             position: fixed;
             bottom: 24px;
@@ -246,6 +225,7 @@
         .toast.success { background-color: #2b7a3e; }
         .toast.error   { background-color: #dc3545; }
         .toast.info    { background-color: var(--primary); }
+        .toast.warn    { background-color: #856404; }
 
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
@@ -265,28 +245,11 @@
             margin-bottom: 16px;
         }
 
-        .balance-progress {
-            height: 6px;
-            background: #e5e7eb;
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .balance-fill {
-            height: 100%;
-            border-radius: 10px;
-            transition: width 0.5s ease;
-        }
-
+        .balance-progress { height: 6px; background: #e5e7eb; border-radius: 10px; overflow: hidden; }
+        .balance-fill { height: 100%; border-radius: 10px; transition: width 0.5s ease; }
         .pie-chart-container { max-width: 200px; margin: 0 auto; }
 
-        .badge {
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 600;
-        }
-
+        .badge { padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 600; }
         .badge-regular  { background: var(--primary-bg-light); color: var(--primary); }
         .badge-intern   { background: rgba(23,162,184,0.12); color: #0c5460; }
         .badge-contract { background: rgba(253,126,20,0.12); color: #7d3f00; }
@@ -299,6 +262,33 @@
             color: var(--primary);
             font-weight: 500;
         }
+
+        /* Offline banner */
+        #offlineBanner {
+            display: none;
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            color: #856404;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 12px;
+            margin-bottom: 14px;
+            align-items: center;
+            gap: 8px;
+        }
+        #offlineBanner.show { display: flex; }
+
+        .spinner {
+            display: inline-block;
+            width: 20px; height: 20px;
+            border: 3px solid var(--primary-soft);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .loading-row td { text-align: center; padding: 40px; color: var(--text-light); }
 
         @media (max-width: 768px) {
             .section-card { padding: 14px; }
@@ -325,6 +315,12 @@
                     </div>
                 </div>
 
+                <!-- Offline Banner -->
+                <div id="offlineBanner">
+                    <i class="fas fa-plug-circle-xmark"></i>
+                    <span>Backend not reachable — showing demo data. Changes won't be saved until the server is connected.</span>
+                </div>
+
                 <!-- Tabs -->
                 <div class="tab-nav">
                     <button class="tab-btn active" data-tab="pending">Pending Approvals</button>
@@ -343,7 +339,7 @@
                                 </div>
                             </div>
                             <p class="text-[11px] mb-0.5" style="color: var(--text-light);">PENDING REQUESTS</p>
-                            <p class="text-2xl font-bold" style="color: var(--primary);" id="statPending">0</p>
+                            <p class="text-2xl font-bold" style="color: var(--primary);" id="statPending">—</p>
                             <p class="text-[10px] mt-1" style="color: #856404;">Awaiting approval</p>
                         </div>
                         <div class="stat-card">
@@ -353,7 +349,7 @@
                                 </div>
                             </div>
                             <p class="text-[11px] mb-0.5" style="color: var(--text-light);">APPROVED THIS MONTH</p>
-                            <p class="text-2xl font-bold" style="color: #2b7a3e;" id="statApproved">0</p>
+                            <p class="text-2xl font-bold" style="color: #2b7a3e;" id="statApproved">—</p>
                             <p class="text-[10px] mt-1" style="color: #2b7a3e;">This month</p>
                         </div>
                         <div class="stat-card">
@@ -363,7 +359,7 @@
                                 </div>
                             </div>
                             <p class="text-[11px] mb-0.5" style="color: var(--text-light);">REJECTED THIS MONTH</p>
-                            <p class="text-2xl font-bold" style="color: #dc3545;" id="statRejected">0</p>
+                            <p class="text-2xl font-bold" style="color: #dc3545;" id="statRejected">—</p>
                             <p class="text-[10px] mt-1" style="color: #dc3545;">This month</p>
                         </div>
                         <div class="stat-card">
@@ -373,7 +369,7 @@
                                 </div>
                             </div>
                             <p class="text-[11px] mb-0.5" style="color: var(--text-light);">TOTAL LEAVE DAYS</p>
-                            <p class="text-2xl font-bold" style="color: var(--primary);" id="statDays">0</p>
+                            <p class="text-2xl font-bold" style="color: var(--primary);" id="statDays">—</p>
                             <p class="text-[10px] mt-1" style="color: var(--text-light);">Approved this month</p>
                         </div>
                     </div>
@@ -384,12 +380,8 @@
                             <div class="flex gap-2 flex-wrap">
                                 <select id="filterDept" class="w-40 text-sm" onchange="renderPending()" style="padding: 6px 10px;">
                                     <option value="all">All Departments</option>
-                                    <option>IT</option>
-                                    <option>HR</option>
-                                    <option>Sales</option>
-                                    <option>Finance</option>
-                                    <option>Operations</option>
-                                    <option>Marketing</option>
+                                    <option>IT</option><option>HR</option><option>Sales</option>
+                                    <option>Finance</option><option>Operations</option><option>Marketing</option>
                                 </select>
                                 <input type="text" id="searchPending" placeholder="Search employee..." class="w-48 text-sm" oninput="renderPending()" style="padding: 6px 10px;">
                             </div>
@@ -398,17 +390,14 @@
                             <table>
                                 <thead>
                                     <tr class="border-b" style="border-color: var(--primary-soft);">
-                                        <th>Employee</th>
-                                        <th>Department</th>
-                                        <th>Leave Type</th>
-                                        <th>Date</th>
-                                        <th>Days</th>
-                                        <th>Reason</th>
-                                        <th>Balance Left</th>
-                                        <th>Action</th>
+                                        <th>Employee</th><th>Department</th><th>Leave Type</th>
+                                        <th>Date</th><th>Days</th><th>Reason</th>
+                                        <th>Balance Left</th><th>Action</th>
                                     </tr>
                                 </thead>
-                                <tbody id="pendingTableBody"></tbody>
+                                <tbody id="pendingTableBody">
+                                    <tr class="loading-row"><td colspan="8"><span class="spinner"></span> Loading...</td></tr>
+                                </tbody>
                             </table>
                             <div id="pendingEmpty" style="display:none;text-align:center;padding:40px;color:var(--text-light);">
                                 <i class="fas fa-check-circle text-3xl mb-2" style="color:#2b7a3e;display:block;"></i>
@@ -431,6 +420,7 @@
                                     <option value="pending">Pending</option>
                                 </select>
                                 <select id="historyYear" class="w-32 text-sm" onchange="renderHistory()">
+                                    <option value="2026">2026</option>
                                     <option value="2025">2025</option>
                                     <option value="2024">2024</option>
                                 </select>
@@ -442,16 +432,13 @@
                             <table>
                                 <thead>
                                     <tr class="border-b" style="border-color: var(--primary-soft);">
-                                        <th>Employee</th>
-                                        <th>Leave Type</th>
-                                        <th>Date</th>
-                                        <th>Days</th>
-                                        <th>Status</th>
-                                        <th>Approved By</th>
-                                        <th>Remarks</th>
+                                        <th>Employee</th><th>Leave Type</th><th>Date</th>
+                                        <th>Days</th><th>Status</th><th>Approved By</th><th>Remarks</th>
                                     </tr>
                                 </thead>
-                                <tbody id="historyTableBody"></tbody>
+                                <tbody id="historyTableBody">
+                                    <tr class="loading-row"><td colspan="7"><span class="spinner"></span> Loading...</td></tr>
+                                </tbody>
                             </table>
                             <div id="historyEmpty" style="display:none;text-align:center;padding:40px;color:var(--text-light);">
                                 <i class="fas fa-history text-3xl mb-2" style="display:block;"></i>
@@ -469,12 +456,8 @@
                             <div class="flex gap-2 flex-wrap">
                                 <select id="balanceDept" class="w-40 text-sm" onchange="renderBalance()">
                                     <option value="all">All Departments</option>
-                                    <option>IT</option>
-                                    <option>HR</option>
-                                    <option>Sales</option>
-                                    <option>Finance</option>
-                                    <option>Operations</option>
-                                    <option>Marketing</option>
+                                    <option>IT</option><option>HR</option><option>Sales</option>
+                                    <option>Finance</option><option>Operations</option><option>Marketing</option>
                                 </select>
                                 <input type="text" id="balanceSearch" placeholder="Search employee..." class="w-48 text-sm" oninput="renderBalance()">
                                 <button onclick="exportBalance()" class="btn-outline text-sm"><i class="fas fa-download mr-1"></i>Export</button>
@@ -483,7 +466,9 @@
                         <div class="overflow-x-auto">
                             <table id="balanceTable">
                                 <thead id="balanceThead"></thead>
-                                <tbody id="balanceTableBody"></tbody>
+                                <tbody id="balanceTableBody">
+                                    <tr class="loading-row"><td colspan="8"><span class="spinner"></span> Loading...</td></tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -523,7 +508,9 @@
                         <div class="overflow-x-auto">
                             <table>
                                 <thead id="rulesThead"></thead>
-                                <tbody id="rulesTableBody"></tbody>
+                                <tbody id="rulesTableBody">
+                                    <tr class="loading-row"><td colspan="6"><span class="spinner"></span> Loading...</td></tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -572,12 +559,8 @@
                     <label>Department (specific or All)</label>
                     <select id="rl-dept">
                         <option value="All">All Departments</option>
-                        <option>IT</option>
-                        <option>HR</option>
-                        <option>Sales</option>
-                        <option>Finance</option>
-                        <option>Operations</option>
-                        <option>Marketing</option>
+                        <option>IT</option><option>HR</option><option>Sales</option>
+                        <option>Finance</option><option>Operations</option><option>Marketing</option>
                     </select>
                 </div>
             </div>
@@ -614,383 +597,840 @@
     <script src="/assets/js/header.js"></script>
 
     <script>
-        // ===================== STATE =====================
-        const DEPT_COLORS = ['#1B738C','#62C9EA','#2b7a3e','#ffc107','#fd7e14','#6f42c1','#dc3545','#20c997'];
+    // =====================================================================
+    //  CONFIG
+    // =====================================================================
+    const BASE_URL = 'http://localhost:8086/api';
 
-        let S = {
-            leaveTypes: ['Casual Leave','Sick Leave','Paid Leave','Emergency Leave'],
-            rules: [
-                { id:1, empType:'Regular',  dept:'All', allotments:{'Casual Leave':12,'Sick Leave':10,'Paid Leave':20,'Emergency Leave':3} },
-                { id:2, empType:'Intern',   dept:'All', allotments:{'Casual Leave':5, 'Sick Leave':3, 'Paid Leave':0, 'Emergency Leave':1} },
-                { id:3, empType:'Contract', dept:'All', allotments:{'Casual Leave':8, 'Sick Leave':6, 'Paid Leave':10,'Emergency Leave':2} },
-            ],
-            employees: [
-                { id:'EMP001', name:'Rajesh Kumar',  dept:'IT',         empType:'Regular' },
-                { id:'EMP002', name:'Priya Sharma',  dept:'HR',         empType:'Regular' },
-                { id:'EMP003', name:'Amit Mehta',    dept:'Sales',      empType:'Regular' },
-                { id:'EMP004', name:'Neha Gupta',    dept:'Finance',    empType:'Regular' },
-                { id:'EMP005', name:'Sunita Verma',  dept:'Operations', empType:'Regular' },
-                { id:'EMP006', name:'Ravi Intern',   dept:'IT',         empType:'Intern'  },
-            ],
-            requests: [
-                { id:1, empId:'EMP002', empName:'Priya Sharma', dept:'HR',      empType:'Regular', leaveType:'Sick Leave',   from:'2025-04-15', days:3,  reason:'Fever and rest required', status:'pending',  addedOn:'2025-04-12', actionBy:'', actionDate:'', remarks:'' },
-                { id:2, empId:'EMP003', empName:'Amit Mehta',   dept:'Sales',   empType:'Regular', leaveType:'Casual Leave', from:'2025-04-20', days:3,  reason:'Family function',         status:'pending',  addedOn:'2025-04-13', actionBy:'', actionDate:'', remarks:'' },
-                { id:3, empId:'EMP004', empName:'Neha Gupta',   dept:'Finance', empType:'Regular', leaveType:'Paid Leave',   from:'2025-05-01', days:10, reason:'Vacation',                status:'pending',  addedOn:'2025-04-14', actionBy:'', actionDate:'', remarks:'' },
-                { id:4, empId:'EMP001', empName:'Rajesh Kumar', dept:'IT',      empType:'Regular', leaveType:'Paid Leave',   from:'2025-03-10', days:6,  reason:'Annual vacation',         status:'approved', addedOn:'2025-03-05', actionBy:'HR Admin', actionDate:'2025-03-06', remarks:'Approved' },
-                { id:5, empId:'EMP002', empName:'Priya Sharma', dept:'HR',      empType:'Regular', leaveType:'Sick Leave',   from:'2025-03-20', days:3,  reason:'Medical checkup',         status:'approved', addedOn:'2025-03-18', actionBy:'HR Admin', actionDate:'2025-03-19', remarks:'' },
-                { id:6, empId:'EMP003', empName:'Amit Mehta',   dept:'Sales',   empType:'Regular', leaveType:'Casual Leave', from:'2025-03-05', days:1,  reason:'Personal work',           status:'rejected', addedOn:'2025-03-03', actionBy:'HR Admin', actionDate:'2025-03-04', remarks:'Team shortage that day' },
-                { id:7, empId:'EMP006', empName:'Ravi Intern',  dept:'IT',      empType:'Intern',  leaveType:'Casual Leave', from:'2025-04-08', days:1,  reason:'Personal work',           status:'approved', addedOn:'2025-04-07', actionBy:'HR Admin', actionDate:'2025-04-07', remarks:'' },
-            ],
-            nextId: 8,
-            ruleEditId: null,
-            actionId: null,
-            actionType: null,
-        };
+    // =====================================================================
+    //  MOCK / FALLBACK DATA  (used when backend is unreachable)
+    // =====================================================================
+    const MOCK = {
+        leaveTypes: [
+            { id:1, name:'Casual Leave',   isActive:true },
+            { id:2, name:'Sick Leave',     isActive:true },
+            { id:3, name:'Paid Leave',     isActive:true },
+            { id:4, name:'Emergency Leave',isActive:true },
+        ],
+        rules: [
+            { empType:'Regular',  dept:'All', allotments:{'Casual Leave':12,'Sick Leave':10,'Paid Leave':20,'Emergency Leave':3} },
+            { empType:'Intern',   dept:'All', allotments:{'Casual Leave':5, 'Sick Leave':3, 'Paid Leave':0, 'Emergency Leave':1} },
+            { empType:'Contract', dept:'All', allotments:{'Casual Leave':8, 'Sick Leave':6, 'Paid Leave':10,'Emergency Leave':2} },
+        ],
+        employees: [
+            { id:'EMP001', name:'Rajesh Kumar',  dept:'IT',         empType:'Regular' },
+            { id:'EMP002', name:'Priya Sharma',  dept:'HR',         empType:'Regular' },
+            { id:'EMP003', name:'Amit Mehta',    dept:'Sales',      empType:'Regular' },
+            { id:'EMP004', name:'Neha Gupta',    dept:'Finance',    empType:'Regular' },
+            { id:'EMP005', name:'Sunita Verma',  dept:'Operations', empType:'Regular' },
+            { id:'EMP006', name:'Ravi Intern',   dept:'IT',         empType:'Intern'  },
+        ],
+        requests: [
+            { id:1, empId:'EMP002', empName:'Priya Sharma', dept:'HR',      empType:'Regular', leaveType:'Sick Leave',   from:'2025-04-15', days:3,  reason:'Fever and rest required', status:'pending',  addedOn:'2025-04-12', actionBy:'', actionDate:'', remarks:'' },
+            { id:2, empId:'EMP003', empName:'Amit Mehta',   dept:'Sales',   empType:'Regular', leaveType:'Casual Leave', from:'2025-04-20', days:3,  reason:'Family function',         status:'pending',  addedOn:'2025-04-13', actionBy:'', actionDate:'', remarks:'' },
+            { id:3, empId:'EMP004', empName:'Neha Gupta',   dept:'Finance', empType:'Regular', leaveType:'Paid Leave',   from:'2025-05-01', days:10, reason:'Vacation',                status:'pending',  addedOn:'2025-04-14', actionBy:'', actionDate:'', remarks:'' },
+            { id:4, empId:'EMP001', empName:'Rajesh Kumar', dept:'IT',      empType:'Regular', leaveType:'Paid Leave',   from:'2025-03-10', days:6,  reason:'Annual vacation',         status:'approved', addedOn:'2025-03-05', actionBy:'HR Admin', actionDate:'2025-03-06', remarks:'Approved' },
+            { id:5, empId:'EMP002', empName:'Priya Sharma', dept:'HR',      empType:'Regular', leaveType:'Sick Leave',   from:'2025-03-20', days:3,  reason:'Medical checkup',         status:'approved', addedOn:'2025-03-18', actionBy:'HR Admin', actionDate:'2025-03-19', remarks:'' },
+            { id:6, empId:'EMP003', empName:'Amit Mehta',   dept:'Sales',   empType:'Regular', leaveType:'Casual Leave', from:'2025-03-05', days:1,  reason:'Personal work',           status:'rejected', addedOn:'2025-03-03', actionBy:'HR Admin', actionDate:'2025-03-04', remarks:'Team shortage that day' },
+            { id:7, empId:'EMP006', empName:'Ravi Intern',  dept:'IT',      empType:'Intern',  leaveType:'Casual Leave', from:'2025-04-08', days:1,  reason:'Personal work',           status:'approved', addedOn:'2025-04-07', actionBy:'HR Admin', actionDate:'2025-04-07', remarks:'' },
+        ],
+    };
 
-        // ===================== HELPERS =====================
-        function fmtDate(d) {
-            if (!d) return '—';
-            const [y,m,day] = d.split('-');
-            return `${day} ${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][+m-1]} ${y}`;
+    // =====================================================================
+    //  STATE  — starts as mock; gets replaced by API data when online
+    // =====================================================================
+    const DEPT_COLORS = ['#1B738C','#62C9EA','#2b7a3e','#ffc107','#fd7e14','#6f42c1','#dc3545','#20c997'];
+
+    let isOffline = false;  // set to true the first time a network error occurs
+
+    let S = {
+        // Live copies — populated either from API or MOCK
+        leaveTypes: [],       // string[]
+        _leaveTypeObjects: [],// { id, name, isActive }[]
+        rules: [],            // { empType, dept, allotments }[]
+        requests: [],         // full request list (used in offline mode)
+        employees: [],        // used in offline balance calc
+        // Action state
+        actionId: null,
+        actionType: null,
+        ruleEditIdx: null,
+        _pendingList: [],
+        _historyList: [],
+        _balanceList: [],
+        _nextMockId: 100,     // for offline id generation
+    };
+
+    // =====================================================================
+    //  OFFLINE MODE HELPERS
+    // =====================================================================
+    function markOffline() {
+        if (!isOffline) {
+            isOffline = true;
+            document.getElementById('offlineBanner').classList.add('show');
+            // Seed S from MOCK data (deep clone so mutations don't corrupt MOCK)
+            S.requests      = JSON.parse(JSON.stringify(MOCK.requests));
+            S.employees     = JSON.parse(JSON.stringify(MOCK.employees));
+            S._leaveTypeObjects = JSON.parse(JSON.stringify(MOCK.leaveTypes));
+            S.leaveTypes    = S._leaveTypeObjects.map(t => t.name);
+            S.rules         = JSON.parse(JSON.stringify(MOCK.rules));
         }
+    }
 
-        function showToast(msg, type='success') {
-            const t = document.createElement('div');
-            t.className = `toast ${type}`; t.innerText = msg;
-            document.body.appendChild(t);
-            setTimeout(() => t.remove(), 3000);
-        }
+    // Local balance calc (mirrors Document 2 logic)
+    function getMockRule(empType, dept) {
+        return S.rules.find(r => r.empType === empType && r.dept === dept)
+            || S.rules.find(r => r.empType === empType && r.dept === 'All')
+            || null;
+    }
 
-        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+    function getMockUsed(empId, year) {
+        const u = {};
+        S.leaveTypes.forEach(lt => u[lt] = 0);
+        S.requests
+            .filter(r => r.empId === empId && r.status === 'approved' && (r.addedOn||'').startsWith(year))
+            .forEach(r => { if (u[r.leaveType] !== undefined) u[r.leaveType] += r.days; });
+        return u;
+    }
 
-        function getRule(empType, dept) {
-            return S.rules.find(r => r.empType === empType && r.dept === dept)
-                || S.rules.find(r => r.empType === empType && r.dept === 'All')
-                || null;
-        }
+    function getMockBalance(empId, empType, dept, year) {
+        const rule = getMockRule(empType, dept);
+        if (!rule) return null;
+        const used = getMockUsed(empId, year);
+        const bal = {};
+        S.leaveTypes.forEach(lt => {
+            const a = rule.allotments[lt] || 0;
+            bal[lt] = { allot:a, used:used[lt]||0, remaining: a-(used[lt]||0) };
+        });
+        return bal;
+    }
 
-        function getUsed(empId, year) {
-            const u = {};
-            S.leaveTypes.forEach(lt => u[lt] = 0);
-            S.requests.filter(r => r.empId === empId && r.status === 'approved' && (r.addedOn||'').startsWith(year))
-                .forEach(r => { if (u[r.leaveType] !== undefined) u[r.leaveType] += r.days; });
-            return u;
-        }
+    // =====================================================================
+    //  UTILS
+    // =====================================================================
+    function fmtDate(d) {
+        if (!d) return '—';
+        const dt = new Date(d);
+        if (isNaN(dt)) return d;
+        return dt.toLocaleDateString('en-IN', { day:'2-digit', month:'short', year:'numeric' });
+    }
 
-        function getBalance(empId, empType, dept, year) {
-            const rule = getRule(empType, dept);
-            if (!rule) return null;
-            const used = getUsed(empId, year);
-            const bal = {};
-            S.leaveTypes.forEach(lt => {
-                const a = rule.allotments[lt] || 0;
-                bal[lt] = { allot:a, used:used[lt]||0, remaining: a-(used[lt]||0) };
+    function showToast(msg, type='success') {
+        const t = document.createElement('div');
+        t.className = `toast ${type}`;
+        t.innerText = msg;
+        document.body.appendChild(t);
+        setTimeout(() => t.remove(), 3000);
+    }
+
+    function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+    function loadingRow(cols) {
+        return `<tr class="loading-row"><td colspan="${cols}"><span class="spinner"></span> Loading...</td></tr>`;
+    }
+
+    function emptyRow(cols, msg='No records found.') {
+        return `<tr><td colspan="${cols}" style="text-align:center;padding:40px;color:var(--text-light);">${msg}</td></tr>`;
+    }
+
+    // =====================================================================
+    //  API LAYER  — tries real backend; falls back to MOCK on network error
+    // =====================================================================
+    async function api(path, options={}) {
+        try {
+            const res = await fetch(BASE_URL + path, {
+                headers: { 'Content-Type': 'application/json' },
+                ...options,
             });
-            return bal;
+            const data = await res.json();
+            if (!res.ok) throw new Error(data.error || `HTTP ${res.status}`);
+            return { data, fromApi: true };
+        } catch (err) {
+            // Network error (backend not running) → switch to offline mode silently
+            if (err instanceof TypeError) {
+                markOffline();
+                return { data: null, fromApi: false };
+            }
+            // Server error (4xx/5xx) — still show the message
+            console.error('API error:', path, err);
+            showToast(err.message || 'Server error', 'error');
+            throw err;
         }
+    }
 
-        // ===================== STATS =====================
-        function updateStats() {
-            const now = new Date(), ym = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
-            document.getElementById('statPending').textContent  = S.requests.filter(r => r.status==='pending').length;
-            document.getElementById('statApproved').textContent = S.requests.filter(r => r.status==='approved' && (r.actionDate||'').startsWith(ym)).length;
-            document.getElementById('statRejected').textContent = S.requests.filter(r => r.status==='rejected' && (r.actionDate||'').startsWith(ym)).length;
-            document.getElementById('statDays').textContent     = S.requests.filter(r => r.status==='approved' && (r.actionDate||'').startsWith(ym)).reduce((s,r)=>s+r.days,0);
-        }
+    // Convenience: try API first; if offline return fallback value directly
+    async function apiOrFallback(path, fallback, options={}) {
+        const { data, fromApi } = await api(path, options);
+        return fromApi ? data : fallback;
+    }
 
-        // ===================== PENDING =====================
-        function renderPending() {
-            const search = document.getElementById('searchPending').value.toLowerCase();
-            const dept   = document.getElementById('filterDept').value;
-            const year   = String(new Date().getFullYear());
-            const list   = S.requests.filter(r => {
+    // =====================================================================
+    //  1. STATS
+    // =====================================================================
+    async function loadStats() {
+        if (isOffline) { updateMockStats(); return; }
+        try {
+            const stats = await apiOrFallback('/leave/stats', null);
+            if (!stats) { updateMockStats(); return; }
+            document.getElementById('statPending').textContent  = stats.pendingCount   ?? stats.pending   ?? 0;
+            document.getElementById('statApproved').textContent = stats.approvedThisMonth ?? stats.approved ?? 0;
+            document.getElementById('statRejected').textContent = stats.rejectedThisMonth ?? stats.rejected ?? 0;
+            document.getElementById('statDays').textContent     = stats.totalLeaveDaysThisMonth ?? stats.totalDays ?? 0;
+        } catch (_) { updateMockStats(); }
+    }
+
+    function updateMockStats() {
+        const now = new Date();
+        const ym  = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+        document.getElementById('statPending').textContent  = S.requests.filter(r => r.status==='pending').length;
+        document.getElementById('statApproved').textContent = S.requests.filter(r => r.status==='approved' && (r.actionDate||'').startsWith(ym)).length;
+        document.getElementById('statRejected').textContent = S.requests.filter(r => r.status==='rejected' && (r.actionDate||'').startsWith(ym)).length;
+        document.getElementById('statDays').textContent     = S.requests.filter(r => r.status==='approved' && (r.actionDate||'').startsWith(ym)).reduce((s,r)=>s+r.days,0);
+    }
+
+    // =====================================================================
+    //  2. PENDING
+    // =====================================================================
+    async function renderPending() {
+        const dept   = document.getElementById('filterDept').value;
+        const search = document.getElementById('searchPending').value.toLowerCase();
+        document.getElementById('pendingTableBody').innerHTML = loadingRow(8);
+        document.getElementById('pendingEmpty').style.display = 'none';
+
+        let list;
+
+        if (isOffline) {
+            // Filter locally
+            list = S.requests.filter(r => {
                 if (r.status !== 'pending') return false;
                 if (dept !== 'all' && r.dept !== dept) return false;
-                if (search && !r.empName.toLowerCase().includes(search) && !r.empId.toLowerCase().includes(search)) return false;
+                if (search && !r.empName.toLowerCase().includes(search) && !(r.empId||'').toLowerCase().includes(search)) return false;
                 return true;
             });
-            const tbody = document.getElementById('pendingTableBody'), empty = document.getElementById('pendingEmpty');
-            if (!list.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
-            empty.style.display = 'none';
-            tbody.innerHTML = list.map(r => {
-                const bal    = getBalance(r.empId, r.empType, r.dept, year);
-                const remObj = bal ? bal[r.leaveType] : null;
-                const rem    = remObj != null ? remObj.remaining : '—';
-                const low    = typeof rem==='number' && rem < r.days;
-                return `<tr class="border-b data-row" style="border-color:#e5e7eb;">
-                    <td>
-                        <p class="text-sm font-semibold" style="color:var(--primary);">${r.empName}</p>
-                        <p class="text-xs" style="color:var(--text-light);">${r.empId} <span class="badge badge-${r.empType.toLowerCase()}">${r.empType}</span></p>
-                    </td>
-                    <td class="text-sm" style="color:var(--text-light);">${r.dept}</td>
-                    <td><span class="badge-custom">${r.leaveType}</span></td>
-                    <td class="text-sm" style="color:var(--text-light);">${fmtDate(r.from)}</td>
-                    <td class="text-sm font-semibold" style="color:var(--primary);">${r.days}</td>
-                    <td class="text-sm" style="color:var(--text-light);max-width:130px;">${r.reason}</td>
-                    <td class="text-sm font-semibold" style="color:${low?'#dc3545':'#2b7a3e'};">${rem}${low?' ⚠️':''}</td>
-                    <td>
-                        <button onclick="openAction(${r.id},'approve')" class="btn-success mr-1"><i class="fas fa-check mr-1"></i>Approve</button>
-                        <button onclick="openAction(${r.id},'reject')" class="btn-danger"><i class="fas fa-times mr-1"></i>Reject</button>
-                    </td>
-                </tr>`;
-            }).join('');
+        } else {
+            try {
+                const params = new URLSearchParams({ dept, search });
+                list = await apiOrFallback(`/leave/requests/pending?${params}`, null);
+                if (list === null) {
+                    // fell back to offline
+                    return renderPending();
+                }
+            } catch (_) {
+                document.getElementById('pendingTableBody').innerHTML = emptyRow(8, 'Failed to load data.');
+                return;
+            }
         }
 
-        function openAction(id, type) {
-            S.actionId=id; S.actionType=type;
-            const r = S.requests.find(x=>x.id===id);
-            document.getElementById('actionTitle').textContent = type==='approve' ? '✅ Approve Leave' : '❌ Reject Leave';
-            document.getElementById('actionBody').innerHTML = `
-                <div style="background:var(--primary-bg-light);border-radius:10px;padding:14px;margin-bottom:4px;">
-                    <p class="text-sm font-semibold" style="color:var(--primary);">${r.empName} (${r.empId}) <span class="badge badge-${r.empType.toLowerCase()}">${r.empType}</span></p>
-                    <p class="text-xs mt-1" style="color:var(--text-light);">${r.leaveType} • ${fmtDate(r.from)} • ${r.days} day(s)</p>
-                    <p class="text-xs mt-1" style="color:var(--text-light);">Reason: ${r.reason}</p>
-                </div>`;
-            const btn = document.getElementById('actionConfirmBtn');
-            btn.textContent = type==='approve' ? 'Approve' : 'Reject';
-            btn.style.background = type==='approve' ? '#2b7a3e' : '#dc3545';
-            document.getElementById('actionRemarks').value='';
-            document.getElementById('actionModal').classList.add('active');
+        S._pendingList = list;
+
+        if (!list.length) {
+            document.getElementById('pendingTableBody').innerHTML = '';
+            document.getElementById('pendingEmpty').style.display = 'block';
+            return;
         }
 
-        function confirmAction() {
-            const r = S.requests.find(x=>x.id===S.actionId);
-            if (!r) return;
-            r.status    = S.actionType==='approve' ? 'approved' : 'rejected';
-            r.actionBy  = 'HR Admin';
-            r.actionDate= new Date().toISOString().split('T')[0];
-            r.remarks   = document.getElementById('actionRemarks').value;
+        const year = String(new Date().getFullYear());
+
+        document.getElementById('pendingTableBody').innerHTML = list.map(r => {
+            const empName   = r.empName   || r.employeeName || '—';
+            const empId     = r.empId     || r.employeeId   || '—';
+            const empType   = r.empType   || r.employeeType || 'Regular';
+            const deptName  = r.dept      || r.department   || '—';
+            const from      = r.from      || r.fromDate     || r.startDate;
+            const days      = r.days      || r.numberOfDays || 0;
+            const reason    = r.reason    || '—';
+            const leaveType = r.leaveType || '—';
+
+            let rem;
+            if (isOffline) {
+                const bal = getMockBalance(r.empId, r.empType, r.dept, year);
+                rem = bal && bal[r.leaveType] != null ? bal[r.leaveType].remaining : '—';
+            } else {
+                rem = r.balanceRemaining != null ? r.balanceRemaining : '—';
+            }
+            const low = typeof rem === 'number' && rem < days;
+
+            return `<tr class="border-b data-row" style="border-color:#e5e7eb;">
+                <td>
+                    <p class="text-sm font-semibold" style="color:var(--primary);">${empName}</p>
+                    <p class="text-xs" style="color:var(--text-light);">${empId} <span class="badge badge-${empType.toLowerCase()}">${empType}</span></p>
+                </td>
+                <td class="text-sm" style="color:var(--text-light);">${deptName}</td>
+                <td><span class="badge-custom">${leaveType}</span></td>
+                <td class="text-sm" style="color:var(--text-light);">${fmtDate(from)}</td>
+                <td class="text-sm font-semibold" style="color:var(--primary);">${days}</td>
+                <td class="text-sm" style="color:var(--text-light);max-width:130px;">${reason}</td>
+                <td class="text-sm font-semibold" style="color:${low?'#dc3545':'#2b7a3e'};">${rem}${low?' ⚠️':''}</td>
+                <td>
+                    <button onclick="openAction(${r.id},'approve')" class="btn-success mr-1"><i class="fas fa-check mr-1"></i>Approve</button>
+                    <button onclick="openAction(${r.id},'reject')" class="btn-danger"><i class="fas fa-times mr-1"></i>Reject</button>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    // =====================================================================
+    //  2b. ACTION MODAL
+    // =====================================================================
+    function openAction(id, type) {
+        S.actionId = id;
+        S.actionType = type;
+        const list = S._pendingList || [];
+        const r = list.find(x => x.id == id);
+        const empName   = r ? (r.empName   || r.employeeName || '—') : '—';
+        const empId     = r ? (r.empId     || r.employeeId   || '—') : '—';
+        const empType   = r ? (r.empType   || r.employeeType || '')  : '';
+        const leaveType = r ? (r.leaveType || '—') : '—';
+        const from      = r ? (r.from      || r.fromDate || '') : '';
+        const days      = r ? (r.days      || r.numberOfDays || 0) : 0;
+        const reason    = r ? (r.reason    || '—') : '—';
+
+        document.getElementById('actionTitle').textContent = type === 'approve' ? '✅ Approve Leave' : '❌ Reject Leave';
+        document.getElementById('actionBody').innerHTML = `
+            <div style="background:var(--primary-bg-light);border-radius:10px;padding:14px;margin-bottom:4px;">
+                <p class="text-sm font-semibold" style="color:var(--primary);">${empName} (${empId}) <span class="badge badge-${empType.toLowerCase()}">${empType}</span></p>
+                <p class="text-xs mt-1" style="color:var(--text-light);">${leaveType} • ${fmtDate(from)} • ${days} day(s)</p>
+                <p class="text-xs mt-1" style="color:var(--text-light);">Reason: ${reason}</p>
+            </div>`;
+        const btn = document.getElementById('actionConfirmBtn');
+        btn.textContent = type === 'approve' ? 'Approve' : 'Reject';
+        btn.style.background = type === 'approve' ? '#2b7a3e' : '#dc3545';
+        document.getElementById('actionRemarks').value = '';
+        document.getElementById('actionModal').classList.add('active');
+    }
+
+    async function confirmAction() {
+        const btn = document.getElementById('actionConfirmBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner" style="width:14px;height:14px;border-width:2px;vertical-align:middle;"></span>';
+
+        const remarks = document.getElementById('actionRemarks').value;
+
+        if (isOffline) {
+            // Mutate mock state locally
+            const r = S.requests.find(x => x.id == S.actionId);
+            if (r) {
+                r.status     = S.actionType === 'approve' ? 'approved' : 'rejected';
+                r.actionBy   = 'HR Admin';
+                r.actionDate = new Date().toISOString().split('T')[0];
+                r.remarks    = remarks;
+            }
             closeModal('actionModal');
-            renderPending(); updateStats();
-            showToast(`${r.empName}'s leave ${r.status}!`, r.status==='approved'?'success':'error');
+            await Promise.all([renderPending(), loadStats()]);
+            showToast(`Leave ${S.actionType === 'approve' ? 'approved' : 'rejected'} (demo mode).`,
+                      S.actionType === 'approve' ? 'success' : 'error');
+        } else {
+            try {
+                await api(`/leave/requests/${S.actionId}/action`, {
+                    method: 'POST',
+                    body: JSON.stringify({ action: S.actionType, remarks, actionBy: 'HR Admin' })
+                });
+                closeModal('actionModal');
+                await Promise.all([renderPending(), loadStats()]);
+                showToast(`Leave ${S.actionType === 'approve' ? 'approved' : 'rejected'} successfully!`,
+                          S.actionType === 'approve' ? 'success' : 'error');
+            } catch (_) {}
         }
 
-        // ===================== HISTORY =====================
-        function renderHistory() {
-            const search = document.getElementById('searchHistory').value.toLowerCase();
-            const status = document.getElementById('historyStatus').value;
-            const year   = document.getElementById('historyYear').value;
-            const list   = S.requests.filter(r => {
-                if (status!=='all' && r.status!==status) return false;
+        btn.disabled = false;
+        btn.textContent = S.actionType === 'approve' ? 'Approve' : 'Reject';
+    }
+
+    // =====================================================================
+    //  3. HISTORY
+    // =====================================================================
+    async function renderHistory() {
+        const status = document.getElementById('historyStatus').value;
+        const year   = document.getElementById('historyYear').value;
+        const search = document.getElementById('searchHistory').value.toLowerCase();
+        document.getElementById('historyTableBody').innerHTML = loadingRow(7);
+        document.getElementById('historyEmpty').style.display = 'none';
+
+        let list;
+
+        if (isOffline) {
+            list = S.requests.filter(r => {
+                if (status !== 'all' && r.status !== status) return false;
                 if (!(r.addedOn||'').startsWith(year)) return false;
-                if (search && !r.empName.toLowerCase().includes(search) && !r.empId.toLowerCase().includes(search)) return false;
+                if (search && !r.empName.toLowerCase().includes(search) && !(r.empId||'').toLowerCase().includes(search)) return false;
                 return true;
             }).sort((a,b)=>(b.addedOn||'').localeCompare(a.addedOn||''));
-            const tbody=document.getElementById('historyTableBody'), empty=document.getElementById('historyEmpty');
-            if (!list.length) { tbody.innerHTML=''; empty.style.display='block'; return; }
-            empty.style.display='none';
-            tbody.innerHTML = list.map(r=>`
-                <tr class="border-b data-row" style="border-color:#e5e7eb;">
-                    <td>
-                        <p class="text-sm font-semibold" style="color:var(--primary);">${r.empName}</p>
-                        <p class="text-xs" style="color:var(--text-light);">${r.empId}</p>
-                    </td>
-                    <td><span class="badge-custom">${r.leaveType}</span></td>
-                    <td class="text-sm" style="color:var(--text-light);">${fmtDate(r.from)}</td>
-                    <td class="text-sm font-semibold" style="color:var(--primary);">${r.days}</td>
-                    <td><span class="status-${r.status} text-xs px-2 py-1 rounded-full font-medium">${r.status[0].toUpperCase()+r.status.slice(1)}</span></td>
-                    <td class="text-sm" style="color:var(--text-light);">${r.actionBy||'—'}</td>
-                    <td class="text-sm" style="color:var(--text-light);max-width:140px;">${r.remarks||'—'}</td>
-                </tr>`).join('');
-        }
-
-        function exportHistory() {
-            const rows=[['Employee','EmpID','Dept','Type','Leave Type','Date','Days','Status','Action By','Remarks']];
-            S.requests.forEach(r=>rows.push([r.empName,r.empId,r.dept,r.empType,r.leaveType,r.from,r.days,r.status,r.actionBy||'',r.remarks||'']));
-            const a=document.createElement('a');
-            a.href=URL.createObjectURL(new Blob([rows.map(r=>r.join(',')).join('\n')],{type:'text/csv'}));
-            a.download='leave_history.csv'; a.click();
-            showToast('Exported!','success');
-        }
-
-        // ===================== BALANCE =====================
-        function renderBalance() {
-            const search = document.getElementById('balanceSearch').value.toLowerCase();
-            const deptF  = document.getElementById('balanceDept').value;
-            const year   = String(new Date().getFullYear());
-            const emps   = S.employees.filter(e=>{
-                if (deptF!=='all' && e.dept!==deptF) return false;
-                if (search && !e.name.toLowerCase().includes(search)) return false;
-                return true;
-            });
-            document.getElementById('balanceThead').innerHTML=`<tr class="border-b" style="border-color:var(--primary-soft);">
-                <th>Employee</th><th>Dept</th><th>Type</th>
-                ${S.leaveTypes.map(lt=>`<th>${lt}</th>`).join('')}
-                <th>Used</th><th>Remaining</th><th>Progress</th>
-            </tr>`;
-            document.getElementById('balanceTableBody').innerHTML=emps.map(e=>{
-                const bal=getBalance(e.id,e.empType,e.dept,year);
-                const totalAllot=bal?S.leaveTypes.reduce((s,lt)=>s+(bal[lt]?.allot||0),0):0;
-                const totalUsed =bal?S.leaveTypes.reduce((s,lt)=>s+(bal[lt]?.used||0),0):0;
-                const rem=totalAllot-totalUsed;
-                const pct=totalAllot?Math.round(totalUsed/totalAllot*100):0;
-                const fc=pct>70?'#dc3545':pct>40?'#ffc107':'#2b7a3e';
-                return `<tr class="border-b data-row" style="border-color:#e5e7eb;">
-                    <td><p class="text-sm font-semibold" style="color:var(--primary);">${e.name}</p><p class="text-xs" style="color:var(--text-light);">${e.id}</p></td>
-                    <td class="text-sm" style="color:var(--text-light);">${e.dept}</td>
-                    <td><span class="badge badge-${e.empType.toLowerCase()}">${e.empType}</span></td>
-                    ${S.leaveTypes.map(lt=>{ const b=bal?bal[lt]:null; return `<td class="text-sm" style="color:var(--text-light);">${b?b.remaining+'/'+b.allot:'—'}</td>`; }).join('')}
-                    <td class="text-sm" style="color:var(--text-light);">${totalUsed}</td>
-                    <td class="text-sm font-semibold" style="color:${rem<5?'#dc3545':'#2b7a3e'};">${rem}</td>
-                    <td class="w-28"><div class="balance-progress"><div class="balance-fill" style="width:${pct}%;background:${fc};"></div></div>
-                    <p class="text-xs mt-1" style="color:var(--text-light);">${pct}% used</p></td>
-                </tr>`;
-            }).join('');
-            updatePieChart();
-        }
-
-        function exportBalance() { showToast('Balance exported!','success'); }
-
-        let pieChart=null;
-        function updatePieChart() {
-            const dm={};
-            S.requests.filter(r=>r.status==='approved').forEach(r=>{ dm[r.dept]=(dm[r.dept]||0)+r.days; });
-            if (!Object.keys(dm).length) { ['IT','HR','Sales','Finance','Operations','Marketing'].forEach((d,i)=>dm[d]=[45,28,52,30,25,18][i]); }
-            const labels=Object.keys(dm), values=Object.values(dm), total=values.reduce((a,b)=>a+b,0);
-            const ctx=document.getElementById('deptPieChart').getContext('2d');
-            if (pieChart) pieChart.destroy();
-            pieChart=new Chart(ctx,{
-                type:'pie',
-                data:{ labels, datasets:[{ data:values, backgroundColor:DEPT_COLORS.slice(0,labels.length), borderWidth:0, hoverOffset:10 }] },
-                options:{
-                    responsive:true, maintainAspectRatio:true,
-                    plugins:{
-                        legend:{display:false},
-                        tooltip:{
-                            backgroundColor:'#1B738C', titleColor:'white', bodyColor:'#e9f2f4',
-                            callbacks:{ label:c=>`${c.label}: ${c.raw} days (${((c.raw/total)*100).toFixed(1)}%)` }
-                        }
-                    }, layout:{padding:5}
-                }
-            });
-            document.getElementById('pieLegend').innerHTML=labels.map((l,i)=>`
-                <div class="flex items-center gap-2">
-                    <div class="w-3 h-3 rounded-full" style="background:${DEPT_COLORS[i]};flex-shrink:0;"></div>
-                    <span class="text-xs" style="color:var(--primary);">${l} - ${values[i]} days</span>
-                </div>`).join('');
-            const hi=labels[values.indexOf(Math.max(...values))], lo=labels[values.indexOf(Math.min(...values))];
-            document.getElementById('pieSummary').innerHTML=`
-                <div class="text-center"><p class="text-xs" style="color:var(--text-light);">Total Leaves</p><p class="text-lg font-bold" style="color:var(--primary);">${total}</p></div>
-                <div class="text-center"><p class="text-xs" style="color:var(--text-light);">Avg/Dept</p><p class="text-lg font-bold" style="color:var(--primary);">${Math.round(total/labels.length)}</p></div>
-                <div class="text-center"><p class="text-xs" style="color:var(--text-light);">Highest</p><p class="text-sm font-semibold" style="color:#ffc107;">${hi} (${Math.max(...values)})</p></div>
-                <div class="text-center"><p class="text-xs" style="color:var(--text-light);">Lowest</p><p class="text-sm font-semibold" style="color:#2b7a3e;">${lo} (${Math.min(...values)})</p></div>`;
-        }
-
-        function exportPieData() { showToast('Exported!','success'); }
-
-        // ===================== RULES =====================
-        function renderRules() {
-            document.getElementById('rulesThead').innerHTML=`<tr class="border-b" style="border-color:var(--primary-soft);">
-                <th>Employee Type</th><th>Department</th>
-                ${S.leaveTypes.map(lt=>`<th>${lt}</th>`).join('')}
-                <th>Total/Year</th><th>Action</th>
-            </tr>`;
-            document.getElementById('rulesTableBody').innerHTML=S.rules.map(r=>{
-                const total=S.leaveTypes.reduce((s,lt)=>s+(r.allotments[lt]||0),0);
-                return `<tr class="border-b data-row" style="border-color:#e5e7eb;">
-                    <td><span class="badge badge-${r.empType.toLowerCase()}">${r.empType}</span></td>
-                    <td class="text-sm" style="color:var(--text-light);">${r.dept}</td>
-                    ${S.leaveTypes.map(lt=>`<td class="text-sm" style="color:var(--text-light);">${r.allotments[lt]||0}</td>`).join('')}
-                    <td class="text-sm font-bold" style="color:var(--primary);">${total}</td>
-                    <td>
-                        <button onclick="editRule(${r.id})" style="background:none;border:none;cursor:pointer;color:var(--primary);margin-right:8px;"><i class="fas fa-edit"></i></button>
-                        <button onclick="deleteRule(${r.id})" style="background:none;border:none;cursor:pointer;color:#dc3545;"><i class="fas fa-trash"></i></button>
-                    </td>
-                </tr>`;
-            }).join('');
-            document.getElementById('leaveTypeChips').innerHTML=S.leaveTypes.map(lt=>
-                `<span style="background:var(--primary-bg-light);color:var(--primary);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500;">${lt}</span>`).join('');
-        }
-
-        function openRuleModal(editId=null) {
-            S.ruleEditId=editId;
-            document.getElementById('ruleModalTitle').textContent=editId?'Edit Leave Rule':'Add Leave Rule';
-            if (editId) {
-                const r=S.rules.find(x=>x.id===editId);
-                document.getElementById('rl-emptype').value=r.empType;
-                document.getElementById('rl-dept').value=r.dept;
-                document.getElementById('rl-leaveInputs').innerHTML=S.leaveTypes.map(lt=>`
-                    <div><label>${lt} (days/yr)</label><input type="number" id="rl-lt-${lt.replace(/\s+/g,'_')}" value="${r.allotments[lt]||0}" min="0"></div>`).join('');
-            } else {
-                document.getElementById('rl-emptype').value='Regular';
-                document.getElementById('rl-dept').value='All';
-                document.getElementById('rl-leaveInputs').innerHTML=S.leaveTypes.map(lt=>`
-                    <div><label>${lt} (days/yr)</label><input type="number" id="rl-lt-${lt.replace(/\s+/g,'_')}" value="0" min="0"></div>`).join('');
+        } else {
+            try {
+                const params = new URLSearchParams({ status, year, search });
+                list = await apiOrFallback(`/leave/requests/history?${params}`, null);
+                if (list === null) return renderHistory();
+            } catch (_) {
+                document.getElementById('historyTableBody').innerHTML = emptyRow(7, 'Failed to load history.');
+                return;
             }
-            document.getElementById('ruleModal').classList.add('active');
         }
 
-        function editRule(id) { openRuleModal(id); }
+        S._historyList = list;
 
-        function saveRule() {
-            const empType=document.getElementById('rl-emptype').value;
-            const dept=document.getElementById('rl-dept').value;
-            const allotments={};
-            S.leaveTypes.forEach(lt=>{ allotments[lt]=parseInt(document.getElementById('rl-lt-'+lt.replace(/\s+/g,'_')).value)||0; });
-            if (S.ruleEditId) { const r=S.rules.find(x=>x.id===S.ruleEditId); r.empType=empType; r.dept=dept; r.allotments=allotments; }
-            else S.rules.push({ id:Date.now(), empType, dept, allotments });
-            closeModal('ruleModal'); renderRules(); showToast('Rule saved!','success');
+        if (!list.length) {
+            document.getElementById('historyTableBody').innerHTML = '';
+            document.getElementById('historyEmpty').style.display = 'block';
+            return;
         }
 
-        function deleteRule(id) {
-            if (!confirm('Delete this rule?')) return;
-            S.rules=S.rules.filter(r=>r.id!==id);
-            renderRules(); showToast('Rule deleted!','success');
-        }
+        document.getElementById('historyTableBody').innerHTML = list.map(r => {
+            const empName   = r.empName   || r.employeeName || '—';
+            const empId     = r.empId     || r.employeeId   || '—';
+            const leaveType = r.leaveType || '—';
+            const from      = r.from      || r.fromDate     || r.startDate;
+            const days      = r.days      || r.numberOfDays || 0;
+            const sts       = r.status    || 'pending';
+            const actionBy  = r.actionBy  || '—';
+            const remarks   = r.remarks   || '—';
+            return `<tr class="border-b data-row" style="border-color:#e5e7eb;">
+                <td>
+                    <p class="text-sm font-semibold" style="color:var(--primary);">${empName}</p>
+                    <p class="text-xs" style="color:var(--text-light);">${empId}</p>
+                </td>
+                <td><span class="badge-custom">${leaveType}</span></td>
+                <td class="text-sm" style="color:var(--text-light);">${fmtDate(from)}</td>
+                <td class="text-sm font-semibold" style="color:var(--primary);">${days}</td>
+                <td><span class="status-${sts} text-xs px-2 py-1 rounded-full font-medium">${sts.charAt(0).toUpperCase()+sts.slice(1)}</span></td>
+                <td class="text-sm" style="color:var(--text-light);">${actionBy}</td>
+                <td class="text-sm" style="color:var(--text-light);max-width:140px;">${remarks}</td>
+            </tr>`;
+        }).join('');
+    }
 
-        // ===================== LEAVE TYPES =====================
-        function openLeaveTypeModal() { renderLeaveTypeList(); document.getElementById('newLeaveTypeName').value=''; document.getElementById('leaveTypeModal').classList.add('active'); }
+    function exportHistory() {
+        const list = S._historyList || [];
+        if (!list.length) { showToast('Nothing to export!', 'error'); return; }
+        const rows = [['Employee','EmpID','Leave Type','Date','Days','Status','Action By','Remarks']];
+        list.forEach(r => rows.push([
+            r.empName||r.employeeName||'', r.empId||r.employeeId||'',
+            r.leaveType||'', r.from||r.fromDate||'',
+            r.days||r.numberOfDays||0, r.status||'', r.actionBy||'', r.remarks||''
+        ]));
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([rows.map(r=>r.join(',')).join('\n')], {type:'text/csv'}));
+        a.download = 'leave_history.csv';
+        a.click();
+        showToast('Exported!', 'success');
+    }
 
-        function renderLeaveTypeList() {
-            document.getElementById('ltypeList').innerHTML=S.leaveTypes.map((lt,i)=>`
-                <div class="flex justify-between items-center p-2 border rounded-lg" style="border-color:var(--primary-soft);">
-                    <span class="text-sm font-medium" style="color:var(--primary);">${lt}</span>
-                    ${S.leaveTypes.length>1?`<button onclick="removeLeaveType(${i})" style="background:none;border:none;cursor:pointer;color:#dc3545;"><i class="fas fa-trash text-xs"></i></button>`:''}
-                </div>`).join('');
-        }
+    // =====================================================================
+    //  4. BALANCE
+    // =====================================================================
+    async function renderBalance() {
+        const dept   = document.getElementById('balanceDept').value;
+        const search = document.getElementById('balanceSearch').value.toLowerCase();
+        document.getElementById('balanceTableBody').innerHTML = loadingRow(8);
 
-        function addLeaveType() {
-            const name=document.getElementById('newLeaveTypeName').value.trim();
-            if (!name) { showToast('Enter a name!','error'); return; }
-            if (S.leaveTypes.includes(name)) { showToast('Already exists!','error'); return; }
-            S.leaveTypes.push(name);
-            S.rules.forEach(r=>{ if (!r.allotments[name]) r.allotments[name]=0; });
-            renderLeaveTypeList(); document.getElementById('newLeaveTypeName').value='';
-            showToast('Leave type added!','success');
-        }
+        let list;
 
-        function removeLeaveType(idx) {
-            if (!confirm('Remove this leave type?')) return;
-            const lt=S.leaveTypes[idx];
-            S.leaveTypes.splice(idx,1);
-            S.rules.forEach(r=>delete r.allotments[lt]);
-            renderLeaveTypeList(); showToast('Removed!','success');
-        }
-
-        // ===================== TABS =====================
-        function initTabs() {
-            document.querySelectorAll('.tab-btn').forEach(btn=>{
-                btn.addEventListener('click', function(){
-                    const tab=this.getAttribute('data-tab');
-                    document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-                    document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
-                    this.classList.add('active');
-                    document.getElementById('tab-'+tab).classList.add('active');
-                    localStorage.setItem('leaveActiveTab', tab);
-                    if (tab==='balance') renderBalance();
-                    if (tab==='history') renderHistory();
-                    if (tab==='rules')   renderRules();
+        if (isOffline) {
+            // Build balance from mock employees
+            const year = String(new Date().getFullYear());
+            list = S.employees
+                .filter(e => {
+                    if (dept !== 'all' && e.dept !== dept) return false;
+                    if (search && !e.name.toLowerCase().includes(search)) return false;
+                    return true;
+                })
+                .map(e => {
+                    const bal = getMockBalance(e.id, e.empType, e.dept, year) || {};
+                    return { empId: e.id, empName: e.name, dept: e.dept, empType: e.empType, balances: bal };
                 });
-            });
-            const saved=localStorage.getItem('leaveActiveTab');
-            if (saved) { const btn=document.querySelector(`.tab-btn[data-tab="${saved}"]`); if (btn) btn.click(); }
+        } else {
+            try {
+                const params = new URLSearchParams({ dept, search, year: new Date().getFullYear() });
+                list = await apiOrFallback(`/leave/balance/all?${params}`, null);
+                if (list === null) return renderBalance();
+            } catch (_) {
+                document.getElementById('balanceTableBody').innerHTML = emptyRow(8, 'Failed to load balance data.');
+                return;
+            }
         }
 
-        // ===================== INIT =====================
-        document.addEventListener('DOMContentLoaded', function(){
-            try { loadSidebar(); loadHeader(); setActiveMenu('leave'); } catch(e){}
-            initTabs(); updateStats(); renderPending();
+        S._balanceList = list;
+
+        if (!list.length) {
+            document.getElementById('balanceThead').innerHTML = '';
+            document.getElementById('balanceTableBody').innerHTML = emptyRow(5, 'No employee balance data found.');
+            return;
+        }
+
+        const firstBalance  = list[0].balances || {};
+        const leaveTypeKeys = Object.keys(firstBalance).length ? Object.keys(firstBalance) : S.leaveTypes;
+
+        document.getElementById('balanceThead').innerHTML = `<tr class="border-b" style="border-color:var(--primary-soft);">
+            <th>Employee</th><th>Dept</th><th>Type</th>
+            ${leaveTypeKeys.map(lt=>`<th>${lt}</th>`).join('')}
+            <th>Used</th><th>Remaining</th><th>Progress</th>
+        </tr>`;
+
+        document.getElementById('balanceTableBody').innerHTML = list.map(e => {
+            const empName = e.empName || e.employeeName || '—';
+            const empId   = e.empId   || e.employeeId   || '—';
+            const deptN   = e.dept    || e.department   || '—';
+            const empType = e.empType || e.employeeType || 'Regular';
+            const bal     = e.balances || {};
+            const totalAllot = leaveTypeKeys.reduce((s,lt)=>s+(bal[lt]?.allot||0),0);
+            const totalUsed  = leaveTypeKeys.reduce((s,lt)=>s+(bal[lt]?.used||0),0);
+            const rem        = totalAllot - totalUsed;
+            const pct        = totalAllot ? Math.round(totalUsed/totalAllot*100) : 0;
+            const fc         = pct > 70 ? '#dc3545' : pct > 40 ? '#ffc107' : '#2b7a3e';
+            return `<tr class="border-b data-row" style="border-color:#e5e7eb;">
+                <td><p class="text-sm font-semibold" style="color:var(--primary);">${empName}</p><p class="text-xs" style="color:var(--text-light);">${empId}</p></td>
+                <td class="text-sm" style="color:var(--text-light);">${deptN}</td>
+                <td><span class="badge badge-${empType.toLowerCase()}">${empType}</span></td>
+                ${leaveTypeKeys.map(lt=>{ const b=bal[lt]; return `<td class="text-sm" style="color:var(--text-light);">${b?b.remaining+'/'+b.allot:'—'}</td>`; }).join('')}
+                <td class="text-sm" style="color:var(--text-light);">${totalUsed}</td>
+                <td class="text-sm font-semibold" style="color:${rem<5?'#dc3545':'#2b7a3e'};">${rem}</td>
+                <td class="w-28">
+                    <div class="balance-progress"><div class="balance-fill" style="width:${pct}%;background:${fc};"></div></div>
+                    <p class="text-xs mt-1" style="color:var(--text-light);">${pct}% used</p>
+                </td>
+            </tr>`;
+        }).join('');
+
+        await updatePieChart();
+    }
+
+    function exportBalance() { showToast('Balance exported!', 'success'); }
+
+    let pieChart = null;
+
+    async function updatePieChart() {
+        let dm;
+
+        if (isOffline) {
+            dm = {};
+            S.requests.filter(r=>r.status==='approved').forEach(r=>{ dm[r.dept]=(dm[r.dept]||0)+r.days; });
+            if (!Object.keys(dm).length) {
+                ['IT','HR','Sales','Finance','Operations','Marketing'].forEach((d,i)=>dm[d]=[45,28,52,30,25,18][i]);
+            }
+        } else {
+            try {
+                dm = await apiOrFallback('/leave/stats/dept-summary', null);
+                if (!dm) return;
+            } catch (_) { return; }
+        }
+
+        const labels = Object.keys(dm);
+        const values = Object.values(dm);
+        if (!labels.length) return;
+
+        const total = values.reduce((a,b)=>a+b,0);
+        const ctx   = document.getElementById('deptPieChart').getContext('2d');
+        if (pieChart) pieChart.destroy();
+
+        pieChart = new Chart(ctx, {
+            type: 'pie',
+            data: { labels, datasets:[{ data:values, backgroundColor:DEPT_COLORS.slice(0,labels.length), borderWidth:0, hoverOffset:10 }] },
+            options: {
+                responsive:true, maintainAspectRatio:true,
+                plugins:{
+                    legend:{ display:false },
+                    tooltip:{
+                        backgroundColor:'#1B738C', titleColor:'white', bodyColor:'#e9f2f4',
+                        callbacks:{ label:c=>`${c.label}: ${c.raw} days (${((c.raw/total)*100).toFixed(1)}%)` }
+                    }
+                },
+                layout:{ padding:5 }
+            }
         });
+
+        document.getElementById('pieLegend').innerHTML = labels.map((l,i)=>`
+            <div class="flex items-center gap-2">
+                <div class="w-3 h-3 rounded-full" style="background:${DEPT_COLORS[i]};flex-shrink:0;"></div>
+                <span class="text-xs" style="color:var(--primary);">${l} - ${values[i]} days</span>
+            </div>`).join('');
+
+        const hi = labels[values.indexOf(Math.max(...values))];
+        const lo = labels[values.indexOf(Math.min(...values))];
+        document.getElementById('pieSummary').innerHTML = `
+            <div class="text-center"><p class="text-xs" style="color:var(--text-light);">Total Leaves</p><p class="text-lg font-bold" style="color:var(--primary);">${total}</p></div>
+            <div class="text-center"><p class="text-xs" style="color:var(--text-light);">Avg/Dept</p><p class="text-lg font-bold" style="color:var(--primary);">${Math.round(total/labels.length)}</p></div>
+            <div class="text-center"><p class="text-xs" style="color:var(--text-light);">Highest</p><p class="text-sm font-semibold" style="color:#ffc107;">${hi} (${Math.max(...values)})</p></div>
+            <div class="text-center"><p class="text-xs" style="color:var(--text-light);">Lowest</p><p class="text-sm font-semibold" style="color:#2b7a3e;">${lo} (${Math.min(...values)})</p></div>`;
+    }
+
+    function exportPieData() { showToast('Exported!', 'success'); }
+
+    // =====================================================================
+    //  5. LEAVE TYPES
+    // =====================================================================
+    async function loadLeaveTypes() {
+        if (isOffline) {
+            refreshLeaveTypeChips();
+            return;
+        }
+        try {
+            const types = await apiOrFallback('/leave/types', null);
+            if (!types) return; // offline — already seeded
+            S._leaveTypeObjects = types;
+            S.leaveTypes = types.map(t => t.name);
+            refreshLeaveTypeChips();
+        } catch (_) {}
+    }
+
+    function refreshLeaveTypeChips() {
+        const chips = document.getElementById('leaveTypeChips');
+        if (!chips) return;
+        chips.innerHTML = S.leaveTypes.length
+            ? S.leaveTypes.map(lt =>
+                `<span style="background:var(--primary-bg-light);color:var(--primary);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500;">${lt}</span>`
+              ).join('')
+            : `<span style="color:var(--text-light);font-size:12px;">No leave types configured yet.</span>`;
+    }
+
+    async function openLeaveTypeModal() {
+        document.getElementById('newLeaveTypeName').value = '';
+        document.getElementById('leaveTypeModal').classList.add('active');
+        document.getElementById('ltypeList').innerHTML =
+            `<div style="text-align:center;padding:16px;"><span class="spinner"></span></div>`;
+        await loadLeaveTypes();
+        renderLeaveTypeList();
+    }
+
+    function renderLeaveTypeList() {
+        const objects = S._leaveTypeObjects || [];
+        if (!objects.length) {
+            document.getElementById('ltypeList').innerHTML =
+                `<p style="color:var(--text-light);font-size:13px;text-align:center;padding:12px;">No leave types yet. Add one below.</p>`;
+            return;
+        }
+        document.getElementById('ltypeList').innerHTML = objects.map(t => `
+            <div class="flex justify-between items-center p-2 border rounded-lg" style="border-color:var(--primary-soft);">
+                <span class="text-sm font-medium" style="color:var(--primary);">${t.name}</span>
+                ${objects.length > 1
+                    ? `<button onclick="removeLeaveType(${t.id})" style="background:none;border:none;cursor:pointer;color:#dc3545;padding:4px 8px;"><i class="fas fa-trash text-xs"></i></button>`
+                    : `<span style="font-size:11px;color:var(--text-light);">Default</span>`}
+            </div>`).join('');
+    }
+
+    async function addLeaveType() {
+        const nameInput = document.getElementById('newLeaveTypeName');
+        const name = nameInput.value.trim();
+        if (!name) { showToast('Enter a leave type name!', 'error'); return; }
+        if (S.leaveTypes.map(x=>x.toLowerCase()).includes(name.toLowerCase())) {
+            showToast(`"${name}" already exists!`, 'error'); return;
+        }
+
+        if (isOffline) {
+            const newId = ++S._nextMockId;
+            const obj = { id: newId, name, isActive: true };
+            S._leaveTypeObjects.push(obj);
+            S.leaveTypes.push(name);
+            // Add 0-allotment to all existing rules
+            S.rules.forEach(r => { if (!r.allotments[name]) r.allotments[name]=0; });
+            nameInput.value = '';
+            renderLeaveTypeList();
+            refreshLeaveTypeChips();
+            showToast(`"${name}" added (demo mode)!`, 'success');
+            return;
+        }
+
+        try {
+            await api('/leave/types', { method:'POST', body:JSON.stringify({ name }) });
+            nameInput.value = '';
+            await loadLeaveTypes();
+            renderLeaveTypeList();
+            showToast(`"${name}" added!`, 'success');
+        } catch (_) {}
+    }
+
+    async function removeLeaveType(id) {
+        const typeObj = (S._leaveTypeObjects||[]).find(t=>t.id===id);
+        const typeName = typeObj ? typeObj.name : 'this type';
+        if (!confirm(`Remove "${typeName}"? All related rules will also be deleted.`)) return;
+
+        if (isOffline) {
+            S._leaveTypeObjects = S._leaveTypeObjects.filter(t=>t.id!==id);
+            S.leaveTypes = S._leaveTypeObjects.map(t=>t.name);
+            S.rules.forEach(r=>delete r.allotments[typeName]);
+            renderLeaveTypeList();
+            refreshLeaveTypeChips();
+            showToast(`"${typeName}" removed (demo mode)!`, 'success');
+            return;
+        }
+
+        try {
+            await api(`/leave/types/${id}`, { method:'DELETE' });
+            await loadLeaveTypes();
+            renderLeaveTypeList();
+            showToast(`"${typeName}" removed!`, 'success');
+        } catch (_) {}
+    }
+
+    // =====================================================================
+    //  6. RULES
+    // =====================================================================
+    async function renderRules() {
+        document.getElementById('rulesTableBody').innerHTML = loadingRow(6);
+
+        let rules;
+
+        if (isOffline) {
+            rules = S.rules;
+        } else {
+            try {
+                rules = await apiOrFallback('/leave/rules', null);
+                if (rules === null) return renderRules(); // now offline, retry
+                S.rules = rules;
+            } catch (_) {
+                document.getElementById('rulesTableBody').innerHTML = emptyRow(6, 'Failed to load rules.');
+                return;
+            }
+        }
+
+        if (!rules.length) {
+            document.getElementById('rulesThead').innerHTML = '';
+            document.getElementById('rulesTableBody').innerHTML = emptyRow(4, 'No rules configured yet.');
+            return;
+        }
+
+        const ltCols = S.leaveTypes.length ? S.leaveTypes
+            : [...new Set(rules.flatMap(r=>Object.keys(r.allotments||{})))];
+
+        document.getElementById('rulesThead').innerHTML = `<tr class="border-b" style="border-color:var(--primary-soft);">
+            <th>Employee Type</th><th>Department</th>
+            ${ltCols.map(lt=>`<th>${lt}</th>`).join('')}
+            <th>Total/Year</th><th>Action</th>
+        </tr>`;
+
+        document.getElementById('rulesTableBody').innerHTML = rules.map((r,idx) => {
+            const empType = r.empType || r.employeeType;
+            const dept    = r.dept    || r.department || 'All';
+            const allot   = r.allotments || {};
+            const total   = ltCols.reduce((s,lt)=>s+(allot[lt]||0),0);
+            return `<tr class="border-b data-row" style="border-color:#e5e7eb;">
+                <td><span class="badge badge-${(empType||'').toLowerCase()}">${empType}</span></td>
+                <td class="text-sm" style="color:var(--text-light);">${dept}</td>
+                ${ltCols.map(lt=>`<td class="text-sm" style="color:var(--text-light);">${allot[lt]||0}</td>`).join('')}
+                <td class="text-sm font-bold" style="color:var(--primary);">${total}</td>
+                <td>
+                    <button onclick="editRule(${idx})" style="background:none;border:none;cursor:pointer;color:var(--primary);margin-right:8px;"><i class="fas fa-edit"></i></button>
+                    <button onclick="deleteRule('${empType}','${dept}')" style="background:none;border:none;cursor:pointer;color:#dc3545;"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>`;
+        }).join('');
+    }
+
+    function openRuleModal(editIdx=null) {
+        const isEdit = editIdx !== null && editIdx >= 0;
+        document.getElementById('ruleModalTitle').textContent = isEdit ? 'Edit Leave Rule' : 'Add Leave Rule';
+
+        if (!S.leaveTypes.length) {
+            showToast('Please add leave types first via "Manage Types".', 'info');
+            return;
+        }
+
+        if (isEdit) {
+            const r = S.rules[editIdx];
+            const empType = r.empType || r.employeeType;
+            const dept    = r.dept    || r.department || 'All';
+            document.getElementById('rl-emptype').value = empType;
+            document.getElementById('rl-dept').value    = dept;
+            document.getElementById('rl-leaveInputs').innerHTML = S.leaveTypes.map(lt=>`
+                <div><label>${lt} (days/yr)</label>
+                <input type="number" id="rl-lt-${lt.replace(/\s+/g,'_')}" value="${(r.allotments||{})[lt]??0}" min="0"></div>`).join('');
+        } else {
+            document.getElementById('rl-emptype').value = 'Regular';
+            document.getElementById('rl-dept').value    = 'All';
+            document.getElementById('rl-leaveInputs').innerHTML = S.leaveTypes.map(lt=>`
+                <div><label>${lt} (days/yr)</label>
+                <input type="number" id="rl-lt-${lt.replace(/\s+/g,'_')}" value="0" min="0"></div>`).join('');
+        }
+
+        S.ruleEditIdx = editIdx;
+        document.getElementById('ruleModal').classList.add('active');
+    }
+
+    function editRule(idx) { openRuleModal(idx); }
+
+    async function saveRule() {
+        const empType = document.getElementById('rl-emptype').value;
+        const dept    = document.getElementById('rl-dept').value;
+        const allotments = {};
+        S.leaveTypes.forEach(lt => {
+            allotments[lt] = parseInt(document.getElementById('rl-lt-'+lt.replace(/\s+/g,'_')).value)||0;
+        });
+
+        if (isOffline) {
+            const idx = S.ruleEditIdx;
+            if (idx !== null && idx >= 0) {
+                S.rules[idx] = { ...S.rules[idx], empType, dept, allotments };
+            } else {
+                S.rules.push({ empType, dept, allotments });
+            }
+            closeModal('ruleModal');
+            renderRules();
+            showToast('Rule saved (demo mode)!', 'success');
+            return;
+        }
+
+        try {
+            await api('/leave/rules', {
+                method: 'POST',
+                body: JSON.stringify({ employeeType: empType, department: dept, allotments })
+            });
+            closeModal('ruleModal');
+            await renderRules();
+            showToast('Rule saved!', 'success');
+        } catch (_) {}
+    }
+
+    async function deleteRule(empType, dept) {
+        if (!confirm(`Delete rule for ${empType} / ${dept}?`)) return;
+
+        if (isOffline) {
+            S.rules = S.rules.filter(r => !(
+                (r.empType||r.employeeType) === empType &&
+                (r.dept||r.department||'All') === dept
+            ));
+            renderRules();
+            showToast('Rule deleted (demo mode)!', 'success');
+            return;
+        }
+
+        try {
+            const params = new URLSearchParams({ employeeType: empType, department: dept });
+            await api(`/leave/rules?${params}`, { method: 'DELETE' });
+            await renderRules();
+            showToast('Rule deleted!', 'success');
+        } catch (_) {}
+    }
+
+    // =====================================================================
+    //  TABS
+    // =====================================================================
+    function initTabs() {
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', async function() {
+                const tab = this.getAttribute('data-tab');
+                document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c=>c.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById('tab-'+tab).classList.add('active');
+                localStorage.setItem('leaveActiveTab', tab);
+                if (tab === 'balance') await renderBalance();
+                if (tab === 'history') await renderHistory();
+                if (tab === 'rules')   { await loadLeaveTypes(); await renderRules(); }
+            });
+        });
+        const saved = localStorage.getItem('leaveActiveTab');
+        if (saved) {
+            const btn = document.querySelector(`.tab-btn[data-tab="${saved}"]`);
+            if (btn) btn.click();
+        }
+    }
+
+    // =====================================================================
+    //  INIT
+    // =====================================================================
+    document.addEventListener('DOMContentLoaded', async function() {
+        try { loadSidebar(); loadHeader(); setActiveMenu('leave'); } catch(e) {}
+        initTabs();
+        await loadLeaveTypes();
+        await Promise.all([loadStats(), renderPending()]);
+    });
     </script>
 </body>
 </html>

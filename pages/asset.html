@@ -15,7 +15,6 @@
     <style>
         * { font-family: 'Inter', sans-serif; }
         
-        /* Dashboard Theme Colors - Company Theme */
         :root {
             --primary: #1B738C;
             --primary-light: #62C9EA;
@@ -29,6 +28,116 @@
         
         body { background-color: #f5f9fb; }
         
+        /* ===== SIDEBAR STYLES ===== */
+        .main-sidebar {
+            width: 256px;
+            background: #b8cfd7;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .main-sidebar.collapsed { width: 70px; }
+        .main-sidebar.collapsed .nav-text,
+        .main-sidebar.collapsed .submenu-arrow,
+        .main-sidebar.collapsed .sidebar-logo span { display: none; }
+        .main-sidebar.collapsed .nav-link { justify-content: center; }
+        
+        .main-sidebar.collapsed .submenu {
+            position: fixed;
+            left: 70px;
+            background: #EBF4F6;
+            min-width: 180px;
+            border-radius: 8px;
+            padding: 6px 0;
+            display: none !important;
+            box-shadow: 0 10px 25px -5px #F3F4F4;
+            z-index: 1000;
+            border: 1px solid #F3F4F4;
+        }
+        
+        .main-sidebar.collapsed .has-submenu:hover .submenu { display: block !important; }
+        
+        .sidebar-nav {
+            scrollbar-width: thin;
+            scrollbar-color: #1B738C #BDE4EE;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+        }
+        
+        .sidebar-nav::-webkit-scrollbar { width: 4px; }
+        .sidebar-nav::-webkit-scrollbar-track { background: #BDE4EE; border-radius: 10px; }
+        .sidebar-nav::-webkit-scrollbar-thumb { background: #1B738C; border-radius: 10px; }
+        
+        .nav-link {
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+        
+        .nav-link:hover {
+            background-color: #649cab;
+            transform: translateX(2px);
+            border: 1px solid #1B738C;
+        }
+        
+        .nav-link:hover span { color: white !important; }
+        .nav-link:hover i { color: white !important; }
+        
+        .nav-link.active {
+            background-color: #1B738C;
+            border: 1px solid #17657a;
+        }
+        
+        .nav-link.active span { color: #f8f8f8 !important; font-weight: 600; }
+        .nav-link.active i { color: #ebe1ed !important; }
+        
+        .submenu li a:hover {
+            background-color: #649cab;
+            color: white !important;
+            transform: translateX(2px);
+        }
+        
+        .has-submenu.submenu-open > .nav-link .submenu-arrow { transform: rotate(90deg); }
+        
+        /* ===== HEADER STYLES ===== */
+        .main-header {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 256px;
+            height: 56px;
+            background: white;
+            border-bottom: 1px solid #3098b5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 99;
+            transition: left 0.3s ease;
+        }
+        
+        .main-header .left-section {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+        
+        .main-content {
+            margin-top: 56px;
+            margin-left: 256px;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+        
+        .main-sidebar.collapsed ~ .main-content { margin-left: 70px; }
+        .main-sidebar.collapsed ~ .main-header { left: 70px; }
+        
+        /* ===== CARD STYLES ===== */
         .section-card {
             background: white;
             border-radius: 12px;
@@ -68,106 +177,7 @@
             border: none;
             font-weight: 500;
         }
-        .btn-secondary:hover { background-color: var(--primary); color: white; transform: translateY(-1px); }
-
-        .action-btn {
-            background: none;
-            border: none;
-            cursor: pointer;
-            padding: 6px 8px;
-            font-size: 14px;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
-        }
-
-        .action-btn-edit {
-            color: var(--primary);
-        }
-        
-        .action-btn-edit:hover {
-            background-color: var(--primary-bg-light);
-            color: var(--primary);
-            transform: scale(1.1);
-        }
-
-        .action-btn-delete {
-            color: #dc3545;
-        }
-        
-        .action-btn-delete:hover {
-            background-color: rgba(220, 53, 69, 0.1);
-            color: #c82333;
-            transform: scale(1.1);
-        }
-
-        .action-btn-return {
-            color: #dc3545;
-        }
-        
-        .action-btn-return:hover {
-            background-color: rgba(220, 53, 69, 0.1);
-            color: #c82333;
-            transform: scale(1.1);
-        }
-
-        .action-btn-approve {
-            color: #2b7a3e;
-        }
-        
-        .action-btn-approve:hover {
-            background-color: rgba(43, 122, 62, 0.1);
-            color: #1e5a2e;
-            transform: scale(1.1);
-        }
-
-        .action-btn-reject {
-            color: #dc3545;
-        }
-        
-        .action-btn-reject:hover {
-            background-color: rgba(220, 53, 69, 0.1);
-            color: #c82333;
-            transform: scale(1.1);
-        }
-        
-        .btn-success {
-            background-color: #2b7a3e;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            border: none;
-            font-weight: 500;
-        }
-        .btn-success:hover { background-color: #1e5a2e; }
-        
-        .btn-danger {
-            background-color: #dc3545;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            border: none;
-            font-weight: 500;
-        }
-        .btn-danger:hover { background-color: #c82333; }
-        
-        .btn-warning {
-            background-color: #ffc107;
-            color: #333;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            border: none;
-            font-weight: 500;
-        }
-        .btn-warning:hover { background-color: #e0a800; }
+        .btn-secondary:hover { background-color: var(--primary); color: white; }
         
         .btn-outline {
             border: 1px solid var(--primary-light);
@@ -179,6 +189,15 @@
             font-weight: 500;
         }
         .btn-outline:hover { background-color: var(--primary-bg-light); border-color: var(--primary); }
+        
+        .btn-danger {
+            background-color: #dc3545;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            border: none;
+        }
         
         input, select, textarea {
             border: 1px solid var(--primary-soft);
@@ -221,7 +240,6 @@
             color: var(--primary);
             cursor: pointer;
             border: none;
-            position: relative;
         }
         
         .tab-btn:hover {
@@ -279,25 +297,10 @@
             padding-bottom: 12px;
             border-bottom: 2px solid var(--primary-soft);
         }
-
-        .modal-header h3 {
-            font-weight: 700;
-            color: var(--primary);
-            font-size: 1.25rem;
-        }
-
-        .modal-close {
-            cursor: pointer;
-            font-size: 24px;
-            color: var(--primary-light);
-            transition: 0.2s;
-            border: none;
-            background: none;
-        }
-
-        .modal-close:hover {
-            color: var(--primary);
-        }
+        
+        .modal-header h3 { font-weight: 700; color: var(--primary); font-size: 1.25rem; }
+        .modal-close { cursor: pointer; font-size: 24px; color: var(--primary-light); background: none; border: none; }
+        .modal-close:hover { color: var(--primary); }
         
         .toast {
             position: fixed;
@@ -313,18 +316,11 @@
         .toast.success { background-color: #2b7a3e; }
         .toast.error { background-color: #dc3545; }
         .toast.info { background-color: var(--primary); }
-        .toast.warning { background-color: #ffc107; color: #333; }
         
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
-        
-        .main-content { margin-top: 64px; }
-        
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #f5f9fb; }
-        ::-webkit-scrollbar-thumb { background: var(--primary-light); border-radius: 10px; }
         
         .form-row {
             display: grid;
@@ -333,579 +329,453 @@
             margin-bottom: 16px;
         }
         
-        .data-row:hover { background-color: rgba(27, 115, 140, 0.05); cursor: pointer; }
-        table { 
-            width: 100%; 
-            border-collapse: collapse; 
-            background: white;
-        }
-
-        table thead {
-            background-color: var(--primary-bg-light);
-            border-bottom: 2px solid var(--primary-light);
-        }
-
-        table thead th {
-            padding: 12px 16px;
-            text-align: left;
-            font-size: 12px;
-            font-weight: 700;
-            color: var(--primary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        table tbody td {
-            padding: 12px 16px;
-            border-bottom: 1px solid #f0f0f0;
-            color: var(--text-dark);
-            font-size: 13px;
-        }
-
-        table tbody tr:hover {
-            background-color: rgba(27, 115, 140, 0.05);
-        }
+        .form-group { margin-bottom: 18px; }
         
-        .asset-card {
-            background: white;
-            border: 1px solid var(--primary-light);
-            border-radius: 12px;
-            padding: 16px;
-            transition: all 0.3s ease;
-        }
-        .asset-card:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(27, 115, 140, 0.1); }
+        table { width: 100%; border-collapse: collapse; background: white; }
+        table thead { background-color: var(--primary-bg-light); border-bottom: 2px solid var(--primary-light); }
+        table thead th { padding: 12px 16px; text-align: left; font-size: 12px; font-weight: 700; color: var(--primary); }
+        table tbody td { padding: 12px 16px; border-bottom: 1px solid #f0f0f0; color: var(--text-dark); font-size: 13px; }
+        table tbody tr:hover { background-color: rgba(27, 115, 140, 0.05); }
         
-        /* Reduced Pie Chart Container */
-        .pie-chart-container {
-            max-width: 250px;
-            margin: 0 auto;
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px 8px;
+            font-size: 14px;
+            border-radius: 6px;
         }
-
-        .form-group {
-            margin-bottom: 18px;
-        }
+        .action-btn-edit { color: var(--primary); }
+        .action-btn-edit:hover { background-color: var(--primary-bg-light); }
+        .action-btn-delete { color: #dc3545; }
+        .action-btn-delete:hover { background-color: rgba(220, 53, 69, 0.1); }
+        .action-btn-return { color: #dc3545; }
+        .action-btn-return:hover { background-color: rgba(220, 53, 69, 0.1); }
+        .action-btn-approve { color: #2b7a3e; }
+        .action-btn-approve:hover { background-color: rgba(43, 122, 62, 0.1); }
+        .action-btn-reject { color: #dc3545; }
+        .action-btn-reject:hover { background-color: rgba(220, 53, 69, 0.1); }
+        
+        .pie-chart-container { max-width: 250px; margin: 0 auto; }
         
         @media (max-width: 768px) {
+            .main-sidebar { transform: translateX(-100%); transition: transform 0.3s ease; }
+            .main-sidebar.open { transform: translateX(0); }
+            .main-header { left: 0; }
+            .main-content { margin-left: 0; }
             .section-card { padding: 16px; }
             .tab-btn { padding: 6px 12px; font-size: 12px; }
             .form-row { grid-template-columns: 1fr; }
-            .pie-chart-container { max-width: 180px; }
         }
+        
+        /* Logout Modal */
+        .logout-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .logout-modal.active { display: flex; }
+        .logout-modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(3px);
+        }
+        .logout-modal-content {
+            position: relative;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.2);
+            border: 1px solid #62C9EA;
+        }
+        .dropdown-menu { display: none; }
+        .dropdown-menu.show { display: block; }
     </style>
 </head>
-<body class="bg-[#f5f9fb]">
-    
-    <div class="flex h-screen overflow-hidden">
-        <div id="sidebar-container"></div>
-        
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <div id="header-container"></div>
+<body>
+
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="main-sidebar" id="mainSidebar">
+        <div class="h-14 flex items-center justify-between px-4 border-b flex-shrink-0" style="border-bottom-color: #3098b5;">
+            <div class="sidebar-logo gap-2">
+                <img src="/assets/images/logo.png" alt="Logo" class="h-10 w-48 object-contain">
+            </div>
+            <button id="collapseBtn" class="transition-all duration-300 hover:scale-110" style="color: #3098b5">
+                <i class="fas fa-chevron-left text-xs"></i>
+            </button>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto py-4 sidebar-nav">
+            <ul class="space-y-0.5 px-2">
+                <li class="nav-item">
+                    <a href="/dashboard.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg" data-module="dashboard">
+                        <i class="fas fa-tachometer-alt w-4 text-xs" style="color: #1B738C;"></i>
+                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/pages/company-mgmt/company.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg" data-module="company">
+                        <i class="fas fa-building w-4 text-xs" style="color: #1B738C;"></i>
+                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Company Management</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/pages/employees.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg" data-module="employees">
+                        <i class="fas fa-users w-4 text-xs" style="color: #1B738C;"></i>
+                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Employee Management</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/pages/onboarding.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg" data-module="onboarding">
+                        <i class="fas fa-user-plus w-4 text-xs" style="color: #1B738C;"></i>
+                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Onboarding</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/pages/asset.html" class="nav-link active flex items-center gap-2 px-3 py-2 rounded-lg" data-module="asset-management">
+                        <i class="fas fa-laptop w-4 text-xs" style="color: #1B738C;"></i>
+                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Asset Management</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/pages/exit.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg" data-module="exit">
+                        <i class="fas fa-sign-out-alt w-4 text-xs" style="color: #1B738C;"></i>
+                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Exit Management</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/pages/attandance.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg" data-module="attendance">
+                        <i class="fas fa-clock w-4 text-xs" style="color: #1B738C;"></i>
+                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Attendance</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/pages/leave.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg" data-module="leave">
+                        <i class="fas fa-calendar-alt w-4 text-xs" style="color: #1B738C;"></i>
+                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Leave Management</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/pages/expense.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg" data-module="expense">
+                        <i class="fas fa-wallet w-4 text-xs" style="color: #1B738C;"></i>
+                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Expense Management</span>
+                    </a>
+                </li>
+                <li class="nav-item has-submenu">
+                    <a href="javascript:void(0);" class="nav-link toggle-submenu flex items-center justify-between px-3 py-2 rounded-lg" data-module="payroll">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-rupee-sign w-4 text-xs" style="color: #1B738C;"></i>
+                            <span class="nav-text text-sm font-medium" style="color: #125f74;">Payroll</span>
+                        </div>
+                        <i class="fas fa-chevron-right submenu-arrow text-[9px] transition-transform duration-300" style="color: #1B738C;"></i>
+                    </a>
+                    <ul class="submenu mt-1 space-y-0.5" style="display: none;">
+                        <li><a href="/pages/payroll/employee_payroll.html" class="block px-3 py-1.5 ml-7 rounded-lg text-[13px]" style="color: #125f74;">1. Employee Pay</a></li>
+                        <li><a href="/pages/payroll/payslips.html" class="block px-3 py-1.5 ml-7 rounded-lg text-[13px]" style="color: #125f74;">2. Employee Pay-Slips</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="/pages/kpi.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg" data-module="kpi">
+                        <i class="fas fa-chart-line w-4 text-xs" style="color: #1B738C;"></i>
+                        <span class="nav-text text-sm font-medium" style="color: #125f74;">KPI / Performance</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/pages/career.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg" data-module="workflow">
+                        <i class="fas fa-tasks w-4 text-xs" style="color: #1B738C;"></i>
+                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Careers</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="main-header">
+        <div class="left-section">
+            <button id="mobileMenuToggle" class="md:hidden text-[#1B738C] text-xl">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+        <div class="flex items-center gap-4">
+            <div class="relative">
+                <button id="notificationBtn" class="transition-all relative" style="color: #BDE4EE">
+                    <i class="fas fa-bell text-xl"></i>
+                    <span class="absolute -top-1 -right-2 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center" style="background-color: #1B738C">3</span>
+                </button>
+                <div id="notificationMenu" class="dropdown-menu hidden absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border z-50" style="border-color: #62C9EA">
+                    <div class="p-4 border-b" style="border-color: #62C9EA;">
+                        <h4 class="font-semibold" style="color: #1B738C;">Notifications</h4>
+                    </div>
+                    <div class="max-h-96 overflow-y-auto">
+                        <div class="p-3 hover:bg-[#FFD3D5] cursor-pointer transition-all">
+                            <p class="text-sm" style="color: #1B738C">New asset request from John</p>
+                            <p class="text-xs mt-1" style="color: #62C9EA">2 hours ago</p>
+                        </div>
+                        <div class="p-3 hover:bg-[#FFD3D5] cursor-pointer transition-all">
+                            <p class="text-sm" style="color: #1B738C;">Maintenance due for 3 assets</p>
+                            <p class="text-xs mt-1" style="color: #62C9EA;">Yesterday</p>
+                        </div>
+                    </div>
+                    <div class="p-3 border-t text-center" style="border-color: #62C9EA;">
+                        <a href="#" class="text-sm" style="color: #1B738C;">View all notifications</a>
+                    </div>
+                </div>
+            </div>
             
-            <div class="flex-1 overflow-y-auto main-content">
-                <div class="p-6">
-                    <!-- Page Header -->
-                    <div class="mb-8">
-                        <h1 class="text-xl font-bold mb-2" style="color: var(--primary);">Asset Management</h1>
-                        <p style="color: var(--text-light);" class="text-sm">Manage company assets, assignments, and maintenance records</p>
+            <div class="relative">
+                <button id="userBtn" class="flex items-center gap-3 px-3 py-1.5 rounded-lg transition-all hover:bg-[#EBF4F6]">
+                    <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background: #1B738C">
+                        <span id="userInitial" class="text-white text-sm font-medium">SA</span>
                     </div>
-
-                    <!-- Statistics Cards -->
-                    <!-- <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                        <div class="stat-card">
-                            <div class="text-3xl font-bold mb-2" style="color: var(--primary);">256</div>
-                            <p class="text-sm" style="color: var(--text-light);">Total Assets</p>
-                            <p class="text-xs font-medium mt-2" style="color: #2b7a3e;">↑ 12 new this month</p>
-                        </div>
-                        <div class="stat-card">
-                            <div class="text-3xl font-bold mb-2" style="color: var(--primary);">184</div>
-                            <p class="text-sm" style="color: var(--text-light);">Assigned</p>
-                            <p class="text-xs font-medium mt-2" style="color: var(--text-light);">71.9% utilization</p>
-                        </div>
-                        <div class="stat-card">
-                            <div class="text-3xl font-bold mb-2" style="color: var(--primary);">56</div>
-                            <p class="text-sm" style="color: var(--text-light);">Available</p>
-                            <p class="text-xs font-medium mt-2" style="color: var(--text-light);">Ready for assignment</p>
-                        </div>
-                        <div class="stat-card">
-                            <div class="text-3xl font-bold mb-2" style="color: var(--primary);">16</div>
-                            <p class="text-sm" style="color: var(--text-light);">Under Maintenance</p>
-                            <p class="text-xs font-medium mt-2" style="color: var(--text-light);">6.3% of total</p>
-                        </div>
-                    </div> -->
-
-                    <!-- Tab Navigation -->
-                    <div class="tab-nav">
-                        <button class="tab-btn active" data-tab="inventory">
-                            Asset Inventory
-                        </button>
-                        <button class="tab-btn" data-tab="assignments">
-                            Assignments
-                        </button>
-                        <button class="tab-btn" data-tab="requests">
-                          Requests
-                        </button>
-                        <button class="tab-btn" data-tab="maintenance">
-                          Maintenance
-                        </button>
+                    <div class="hidden md:block text-left">
+                        <p id="userName" class="text-sm font-semibold" style="color: #1B738C;">Super Admin</p>
+                        <p id="userRole" class="text-xs" style="color: #39acd2;">Administrator</p>
                     </div>
-
-                    <!-- TAB 1: Asset Inventory -->
-                    <div id="tab-inventory" class="tab-content active">
-                        <div class="section-card">
-                            <div class="flex justify-between items-center mb-6 flex-wrap gap-2">
-                                <h2 style="color: var(--primary);" class="text-lg font-bold"><i class="fas fa-list-check mr-2"></i>Asset Inventory</h2>
-                                <button class="btn-primary" onclick="openAddAssetModal()"><i class="fas fa-plus mr-1"></i>Add New Asset</button>
-                            </div>
-
-                            <!-- Filters -->
-                            <div class="form-row mb-6">
-                                <div class="form-group">
-                                    <label>Search Asset</label>
-                                    <input type="text" id="assetSearch" placeholder="Asset name or serial..." onkeyup="filterAssets()">
-                                </div>
-                                <div class="form-group">
-                                    <label>Category</label>
-                                    <select id="assetCategory" onchange="filterAssets()">
-                                        <option value="all">All Categories</option>
-                                        <option value="Laptop">Laptop</option>
-                                        <option value="Desktop">Desktop</option>
-                                        <option value="Monitor">Monitor</option>
-                                        <option value="Mobile">Mobile Device</option>
-                                        <option value="Printer">Printer</option>
-                                        <option value="Accessories">Accessories</option>
-                                    </select>
-                                </div>
-                                <div class="form-group">
-                                    <label>Status</label>
-                                    <select id="assetStatus" onchange="filterAssets()">
-                                        <option value="all">All Status</option>
-                                        <option value="Assigned">Assigned</option>
-                                        <option value="Available">Available</option>
-                                        <option value="Maintenance">Under Maintenance</option>
-                                        <option value="Damaged">Damaged</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Assets Table -->
-                            <div class="overflow-x-auto">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Asset ID</th>
-                                            <th>Asset Name</th>
-                                            <th>Category</th>
-                                            <th>Serial Number</th>
-                                            <th>Acquisition Date</th>
-                                            <th>Status</th>
-                                            <th>Assigned To</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="assetsList">
-                                        <tr class="data-row">
-                                            <td>#AST001</td>
-                                            <td>Dell XPS 15</td>
-                                            <td>Laptop</td>
-                                            <td>DLX-2024-001</td>
-                                            <td>2024-01-15</td>
-                                            <td><span class="status-assigned px-2 py-1 rounded text-xs font-medium">Assigned</span></td>
-                                            <td>John Smith</td>
-                                            <td><button class="action-btn action-btn-edit" onclick="editAsset(this)" title="Edit"><i class="fas fa-edit"></i></button> <button class="action-btn action-btn-delete" onclick="deleteAsset(this)" title="Delete"><i class="fas fa-trash"></i></button></td>
-                                        </tr>
-                                        <tr class="data-row">
-                                            <td>#AST002</td>
-                                            <td>HP Monitor 27"</td>
-                                            <td>Monitor</td>
-                                            <td>HPM-2024-002</td>
-                                            <td>2024-01-20</td>
-                                            <td><span class="status-available px-2 py-1 rounded text-xs font-medium">Available</span></td>
-                                            <td>-</td>
-                                            <td><button class="action-btn action-btn-edit" onclick="editAsset(this)" title="Edit"><i class="fas fa-edit"></i></button> <button class="action-btn action-btn-delete" onclick="deleteAsset(this)" title="Delete"><i class="fas fa-trash"></i></button></td>
-                                        </tr>
-                                        <tr class="data-row">
-                                            <td>#AST003</td>
-                                            <td>iPhone 15 Pro</td>
-                                            <td>Mobile Device</td>
-                                            <td>IPH-2024-003</td>
-                                            <td>2024-02-01</td>
-                                            <td><span class="status-assigned px-2 py-1 rounded text-xs font-medium">Assigned</span></td>
-                                            <td>Sarah Johnson</td>
-                                            <td><button class="action-btn action-btn-edit" onclick="editAsset(this)" title="Edit"><i class="fas fa-edit"></i></button> <button class="action-btn action-btn-delete" onclick="deleteAsset(this)" title="Delete"><i class="fas fa-trash"></i></button></td>
-                                        </tr>
-                                        <tr class="data-row">
-                                            <td>#AST004</td>
-                                            <td>Canon Printer</td>
-                                            <td>Printer</td>
-                                            <td>CAN-2024-004</td>
-                                            <td>2024-02-10</td>
-                                            <td><span class="status-maintenance px-2 py-1 rounded text-xs font-medium">Under Maintenance</span></td>
-                                            <td>-</td>
-                                            <td><button class="action-btn action-btn-edit" onclick="editAsset(this)" title="Edit"><i class="fas fa-edit"></i></button> <button class="action-btn action-btn-delete" onclick="deleteAsset(this)" title="Delete"><i class="fas fa-trash"></i></button></td>
-                                        </tr>
-                                        <tr class="data-row">
-                                            <td>#AST005</td>
-                                            <td>Mechanical Keyboard</td>
-                                            <td>Accessories</td>
-                                            <td>MKB-2024-005</td>
-                                            <td>2024-02-15</td>
-                                            <td><span class="status-assigned px-2 py-1 rounded text-xs font-medium">Assigned</span></td>
-                                            <td>Mike Davis</td>
-                                            <td><button class="action-btn action-btn-edit" onclick="editAsset(this)" title="Edit"><i class="fas fa-edit"></i></button> <button class="action-btn action-btn-delete" onclick="deleteAsset(this)" title="Delete"><i class="fas fa-trash"></i></button></td>
-                                        </tr>
-                                        <tr class="data-row">
-                                            <td>#AST006</td>
-                                            <td>Logitech Mouse</td>
-                                            <td>Accessories</td>
-                                            <td>LGM-2024-006</td>
-                                            <td>2024-02-20</td>
-                                            <td><span class="status-damaged px-2 py-1 rounded text-xs font-medium">Damaged</span></td>
-                                            <td>-</td>
-                                            <td><button class="action-btn action-btn-edit" onclick="editAsset(this)" title="Edit"><i class="fas fa-edit"></i></button> <button class="action-btn action-btn-delete" onclick="deleteAsset(this)" title="Delete"><i class="fas fa-trash"></i></button></td>
-                                        </tr>
-                                        <tr class="data-row">
-                                            <td>#AST007</td>
-                                            <td>MacBook Pro 16"</td>
-                                            <td>Laptop</td>
-                                            <td>MBP-2024-007</td>
-                                            <td>2024-03-01</td>
-                                            <td><span class="status-available px-2 py-1 rounded text-xs font-medium">Available</span></td>
-                                            <td>-</td>
-                                            <td><button class="action-btn action-btn-edit" onclick="editAsset(this)" title="Edit"><i class="fas fa-edit"></i></button> <button class="action-btn action-btn-delete" onclick="deleteAsset(this)" title="Delete"><i class="fas fa-trash"></i></button></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                    <i class="fas fa-chevron-down text-xs hidden md:block" style="color: #1B738C;"></i>
+                </button>
+                <div id="userMenu" class="dropdown-menu hidden absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border z-50" style="border-color: #62C9EA;">
+                    <div class="p-3 border-b" style="border-color: #62C9EA;">
+                        <p id="menuUserName" class="text-sm font-semibold" style="color: #1B738C;">Super Admin</p>
                     </div>
-
-                    <!-- TAB 2: Assignments -->
-                    <div id="tab-assignments" class="tab-content">
-                        <div class="section-card">
-                            <div class="flex justify-between items-center mb-6 flex-wrap gap-2">
-                                <h2 style="color: var(--primary);" class="text-lg font-bold"><i class="fas fa-user-check mr-2"></i>Asset Assignments</h2>
-                                <button class="btn-primary" onclick="openAssignAssetModal()"><i class="fas fa-user-plus mr-1"></i>Assign Asset</button>
-                            </div>
-
-                            <!-- Filter -->
-                            <div class="form-row mb-6">
-                                <div class="form-group">
-                                    <label>Search Employee</label>
-                                    <input type="text" id="assignmentSearch" placeholder="Employee name..." onkeyup="filterAssignments()">
-                                </div>
-                                <div class="form-group">
-                                    <label>Department</label>
-                                    <select id="assignmentDept" onchange="filterAssignments()">
-                                        <option value="all">All Departments</option>
-                                        <option value="IT">IT</option>
-                                        <option value="HR">HR</option>
-                                        <option value="Finance">Finance</option>
-                                        <option value="Sales">Sales</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Assignments Table -->
-                            <div class="overflow-x-auto">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Employee ID</th>
-                                            <th>Employee Name</th>
-                                            <th>Department</th>
-                                            <th>Asset</th>
-                                            <th>Asset ID</th>
-                                            <th>Assignment Date</th>
-                                            <th>Condition</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="assignmentsList">
-                                        <tr class="data-row">
-                                            <td>EMP001</td>
-                                            <td>John Smith</td>
-                                            <td>IT</td>
-                                            <td>Dell XPS 15</td>
-                                            <td>#AST001</td>
-                                            <td>2024-01-15</td>
-                                            <td><span class="status-assigned px-2 py-1 rounded text-xs font-medium">Good</span></td>
-                                            <td><button class="action-btn action-btn-return" onclick="returnAsset(this)" title="Return"><i class="fas fa-undo"></i></button></td>
-                                        </tr>
-                                        <tr class="data-row">
-                                            <td>EMP002</td>
-                                            <td>Sarah Johnson</td>
-                                            <td>HR</td>
-                                            <td>iPhone 15 Pro</td>
-                                            <td>#AST003</td>
-                                            <td>2024-02-01</td>
-                                            <td><span class="status-assigned px-2 py-1 rounded text-xs font-medium">Good</span></td>
-                                            <td><button class="action-btn action-btn-return" onclick="returnAsset(this)" title="Return"><i class="fas fa-undo"></i></button></td>
-                                        </tr>
-                                        <tr class="data-row">
-                                            <td>EMP003</td>
-                                            <td>Mike Davis</td>
-                                            <td>Finance</td>
-                                            <td>Mechanical Keyboard</td>
-                                            <td>#AST005</td>
-                                            <td>2024-02-15</td>
-                                            <td><span class="status-assigned px-2 py-1 rounded text-xs font-medium">Good</span></td>
-                                            <td><button class="action-btn action-btn-return" onclick="returnAsset(this)" title="Return"><i class="fas fa-undo"></i></button></td>
-                                        </tr>
-                                        <tr class="data-row">
-                                            <td>EMP004</td>
-                                            <td>Emily Brown</td>
-                                            <td>Sales</td>
-                                            <td>Samsung Galaxy Tab</td>
-                                            <td>#AST008</td>
-                                            <td>2024-03-05</td>
-                                            <td><span class="status-maintenance px-2 py-1 rounded text-xs font-medium">Needs Repair</span></td>
-                                            <td><button class="action-btn action-btn-return" onclick="returnAsset(this)" title="Return"><i class="fas fa-undo"></i></button></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TAB 3: Asset Requests -->
-                    <div id="tab-requests" class="tab-content">
-                        <div class="section-card">
-                            <h2 style="color: var(--primary);" class="text-lg font-bold mb-6"><i class="fas fa-clipboard-list mr-2"></i>Asset Requests</h2>
-
-                            <!-- Filter -->
-                            <div class="form-row mb-6">
-                                <div class="form-group">
-                                    <label>Search Employee</label>
-                                    <input type="text" id="requestSearch" placeholder="Employee name..." onkeyup="filterRequests()">
-                                </div>
-                                <div class="form-group">
-                                    <label>Status</label>
-                                    <select id="requestStatus" onchange="filterRequests()">
-                                        <option value="all">All Status</option>
-                                        <option value="Pending">Pending</option>
-                                        <option value="Approved">Approved</option>
-                                        <option value="Rejected">Rejected</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Requests Table -->
-                            <div class="overflow-x-auto">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Request ID</th>
-                                            <th>Employee Name</th>
-                                            <th>Requested Asset</th>
-                                            <th>Reason</th>
-                                            <th>Request Date</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="requestsList">
-                                        <tr class="data-row">
-                                            <td>#REQ001</td>
-                                            <td>Alex Wilson</td>
-                                            <td>HP Monitor 27"</td>
-                                            <td>Second monitor setup</td>
-                                            <td>2024-03-10</td>
-                                            <td><span class="status-pending px-2 py-1 rounded text-xs font-medium">Pending</span></td>
-                                            <td><button class="action-btn action-btn-approve" onclick="approveRequest(this)" title="Approve"><i class="fas fa-check"></i></button> <button class="action-btn action-btn-reject" onclick="rejectRequest(this)" title="Reject"><i class="fas fa-times"></i></button></td>
-                                        </tr>
-                                        <tr class="data-row">
-                                            <td>#REQ002</td>
-                                            <td>Jennifer Lee</td>
-                                            <td>Wireless Mouse</td>
-                                            <td>Mouse replacement</td>
-                                            <td>2024-03-12</td>
-                                            <td><span class="status-pending px-2 py-1 rounded text-xs font-medium">Pending</span></td>
-                                            <td><button class="action-btn action-btn-approve" onclick="approveRequest(this)" title="Approve"><i class="fas fa-check"></i></button> <button class="action-btn action-btn-reject" onclick="rejectRequest(this)" title="Reject"><i class="fas fa-times"></i></button></td>
-                                        </tr>
-                                        <tr class="data-row">
-                                            <td>#REQ003</td>
-                                            <td>Robert Martinez</td>
-                                            <td>MacBook Air</td>
-                                            <td>New project requirement</td>
-                                            <td>2024-03-08</td>
-                                            <td><span class="status-approved px-2 py-1 rounded text-xs font-medium">Approved</span></td>
-                                            <td><i class="fas fa-check-circle" style="color: #2b7a3e;"></i></td>
-                                        </tr>
-                                        <tr class="data-row">
-                                            <td>#REQ004</td>
-                                            <td>Lisa Anderson</td>
-                                            <td>Docking Station</td>
-                                            <td>Office upgrade</td>
-                                            <td>2024-03-09</td>
-                                            <td><span class="status-rejected px-2 py-1 rounded text-xs font-medium">Rejected</span></td>
-                                            <td><i class="fas fa-times-circle" style="color: #dc3545;"></i></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- TAB 4: Maintenance -->
-                    <div id="tab-maintenance" class="tab-content">
-                        <div class="section-card">
-                            <div class="flex justify-between items-center mb-6 flex-wrap gap-2">
-                                <h2 style="color: var(--primary);" class="text-lg font-bold"><i class="fas fa-wrench mr-2"></i>Maintenance Records</h2>
-                                <button class="btn-primary" onclick="openMaintenanceModal()"><i class="fas fa-plus mr-1"></i>Add Maintenance</button>
-                            </div>
-
-                            <!-- Filter -->
-                            <div class="form-row mb-6">
-                                <div class="form-group">
-                                    <label>Search Asset</label>
-                                    <input type="text" id="maintenanceSearch" placeholder="Asset name..." onkeyup="filterMaintenance()">
-                                </div>
-                                <div class="form-group">
-                                    <label>Maintenance Type</label>
-                                    <select id="maintenanceType" onchange="filterMaintenance()">
-                                        <option value="all">All Types</option>
-                                        <option value="Preventive">Preventive</option>
-                                        <option value="Repair">Repair</option>
-                                        <option value="Replacement">Replacement</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <!-- Maintenance Table -->
-                            <div class="overflow-x-auto">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Maintenance ID</th>
-                                            <th>Asset Name</th>
-                                            <th>Asset ID</th>
-                                            <th>Type</th>
-                                            <th>Maintenance Date</th>
-                                            <th>Cost (₹)</th>
-                                            <th>Vendor</th>
-                                            <th>Remarks</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="maintenanceList">
-                                        <tr class="data-row">
-                                            <td>#MNT001</td>
-                                            <td>Dell XPS 15</td>
-                                            <td>#AST001</td>
-                                            <td><span class="status-maintenance px-2 py-1 rounded text-xs font-medium">Preventive</span></td>
-                                            <td>2024-02-15</td>
-                                            <td>₹5,500</td>
-                                            <td>Dell Service Center</td>
-                                            <td>Regular cleaning and update</td>
-                                            <td><button class="btn-secondary btn-sm text-xs" onclick="editMaintenance(this)">Edit</button> <button class="btn-danger text-xs" onclick="deleteMaintenance(this)">Delete</button></td>
-                                        </tr>
-                                        <tr class="data-row">
-                                            <td>#MNT002</td>
-                                            <td>Canon Printer</td>
-                                            <td>#AST004</td>
-                                            <td><span class="status-maintenance px-2 py-1 rounded text-xs font-medium">Repair</span></td>
-                                            <td>2024-03-01</td>
-                                            <td>₹8,900</td>
-                                            <td>Canon Technical Service</td>
-                                            <td>Toner replacement and cartridge cleaning</td>
-                                            <td><button class="btn-secondary btn-sm text-xs" onclick="editMaintenance(this)">Edit</button> <button class="btn-danger text-xs" onclick="deleteMaintenance(this)">Delete</button></td>
-                                        </tr>
-                                        <tr class="data-row">
-                                            <td>#MNT003</td>
-                                            <td>Logitech Mouse</td>
-                                            <td>#AST006</td>
-                                            <td><span class="status-maintenance px-2 py-1 rounded text-xs font-medium">Replacement</span></td>
-                                            <td>2024-03-05</td>
-                                            <td>₹1,200</td>
-                                            <td>Logitech Service</td>
-                                            <td>Replacement due to scroll wheel damage</td>
-                                            <td><button class="btn-secondary btn-sm text-xs" onclick="editMaintenance(this)">Edit</button> <button class="btn-danger text-xs" onclick="deleteMaintenance(this)">Delete</button></td>
-                                        </tr>
-                                        <tr class="data-row">
-                                            <td>#MNT004</td>
-                                            <td>MacBook Pro 16"</td>
-                                            <td>#AST007</td>
-                                            <td><span class="status-maintenance px-2 py-1 rounded text-xs font-medium">Preventive</span></td>
-                                            <td>2024-03-10</td>
-                                            <td>₹3,800</td>
-                                            <td>Apple Authorized Service</td>
-                                            <td>Battery health check and software update</td>
-                                            <td><button class="btn-secondary btn-sm text-xs" onclick="editMaintenance(this)">Edit</button> <button class="btn-danger text-xs" onclick="deleteMaintenance(this)">Delete</button></td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
+                    <div class="border-t pt-2" style="border-color: #62C9EA;">
+                        <a href="#" id="logoutBtn" class="flex items-center gap-3 px-4 py-2 mb-2 text-sm transition-all hover:bg-[#EBF4F6]" style="color: #e74c3c;">
+                            <i class="fas fa-sign-out-alt w-4"></i> Logout
+                        </a>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
+    </header>
 
-    <!-- MODALS -->
-
-    <!-- Add Asset Modal -->
-    <div id="addAssetModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Add New Asset</h3>
-                <button class="modal-close" onclick="closeAddAssetModal()">&times;</button>
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main class="main-content">
+        <div class="p-6">
+            <!-- Page Header -->
+            <div class="mb-8">
+                <h1 class="text-xl font-bold mb-2" style="color: var(--primary);">Asset Management</h1>
+                <p style="color: var(--text-light);" class="text-sm">Manage company assets, assignments, and maintenance records</p>
             </div>
-            <form id="addAssetForm">
-                <div class="form-group"><label>Asset Name</label><input type="text" id="asset_name" required></div>
-                <div class="form-row"><div class="form-group"><label>Category</label><select id="asset_category" required><option>Select Category</option><option>Laptop</option><option>Desktop</option><option>Monitor</option><option>Mobile</option><option>Printer</option><option>Accessories</option></select></div><div class="form-group"><label>Serial Number</label><input type="text" id="asset_serial" required></div></div>
-                <div class="form-row"><div class="form-group"><label>Brand/Manufacturer</label><input type="text" id="asset_brand" required></div><div class="form-group"><label>Model</label><input type="text" id="asset_model" required></div></div>
-                <div class="form-row"><div class="form-group"><label>Purchase Date</label><input type="date" id="asset_purchase_date" required></div><div class="form-group"><label>Cost (₹)</label><input type="number" id="asset_cost" required></div></div>
-                <div class="form-row"><div class="form-group"><label>Status</label><select id="asset_status" required><option>Available</option><option>Assigned</option><option>Maintenance</option><option>Damaged</option></select></div><div class="form-group"><label>Warranty (Years)</label><input type="number" id="asset_warranty" value="1"></div></div>
-                <div class="form-group"><label>Specifications/Notes</label><textarea id="asset_specs" rows="3"></textarea></div>
-                <div class="flex gap-3 justify-end mt-6"><button type="button" class="btn-outline" onclick="closeAddAssetModal()">Cancel</button><button type="submit" class="btn-primary">Add Asset</button></div>
-            </form>
-        </div>
-    </div>
 
-    <!-- Assign Asset Modal -->
-    <div id="assignAssetModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Assign Asset to Employee</h3>
-                <button class="modal-close" onclick="closeAssignAssetModal()">&times;</button>
+            <!-- Statistics Cards -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div class="stat-card">
+                    <div class="text-3xl font-bold mb-2" style="color: var(--primary);" id="totalAssets">0</div>
+                    <p class="text-sm" style="color: var(--text-light);">Total Assets</p>
+                </div>
+                <div class="stat-card">
+                    <div class="text-3xl font-bold mb-2" style="color: var(--primary);" id="assignedAssets">0</div>
+                    <p class="text-sm" style="color: var(--text-light);">Assigned</p>
+                </div>
+                <div class="stat-card">
+                    <div class="text-3xl font-bold mb-2" style="color: var(--primary);" id="availableAssets">0</div>
+                    <p class="text-sm" style="color: var(--text-light);">Available</p>
+                </div>
+                <div class="stat-card">
+                    <div class="text-3xl font-bold mb-2" style="color: var(--primary);" id="maintenanceAssets">0</div>
+                    <p class="text-sm" style="color: var(--text-light);">Under Maintenance</p>
+                </div>
             </div>
-            <form id="assignAssetForm">
-                <div class="form-group"><label>Select Asset</label><select id="assign_asset" required><option>Choose Asset</option><option>HP Monitor 27" - #AST002</option><option>MacBook Pro 16" - #AST007</option><option>Samsung Galaxy Tab - #AST008</option></select></div>
-                <div class="form-group"><label>Select Employee</label><select id="assign_employee" required><option>Choose Employee</option><option>Alex Wilson (EMP005)</option><option>Jennifer Lee (EMP006)</option><option>Robert Martinez (EMP007)</option></select></div>
-                <div class="form-group"><label>Assignment Date</label><input type="date" id="assign_date" required></div>
-                <div class="form-group"><label>Condition</label><select id="assign_condition"><option>Good</option><option>Fair</option><option>Poor</option></select></div>
-                <div class="form-group"><label>Notes</label><textarea id="assign_notes" rows="3"></textarea></div>
-                <div class="flex gap-3 justify-end mt-6"><button type="button" class="btn-outline" onclick="closeAssignAssetModal()">Cancel</button><button type="submit" class="btn-primary">Assign Asset</button></div>
-            </form>
-        </div>
-    </div>
 
-    <!-- Maintenance Modal -->
-    <div id="maintenanceModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>Add Maintenance Record</h3>
-                <button class="modal-close" onclick="closeMaintenanceModal()">&times;</button>
+            <!-- Tab Navigation -->
+            <div class="tab-nav">
+                <button class="tab-btn active" data-tab="inventory">Asset Inventory</button>
+                <button class="tab-btn" data-tab="assignments">Assignments</button>
+                <button class="tab-btn" data-tab="requests">Requests</button>
+                <button class="tab-btn" data-tab="maintenance">Maintenance</button>
             </div>
-            <form id="maintenanceForm">
-                <div class="form-group"><label>Select Asset</label><select id="maintenance_asset" required><option>Choose Asset</option><option>Dell XPS 15 - #AST001</option><option>Canon Printer - #AST004</option><option>Logitech Mouse - #AST006</option><option>MacBook Pro 16" - #AST007</option></select></div>
-                <div class="form-row"><div class="form-group"><label>Maintenance Type</label><select id="maintenance_type" required><option>Preventive</option><option>Repair</option><option>Replacement</option></select></div><div class="form-group"><label>Maintenance Date</label><input type="date" id="maintenance_date" required></div></div>
-                <div class="form-row"><div class="form-group"><label>Cost (₹)</label><input type="number" id="maintenance_cost" required></div><div class="form-group"><label>Vendor Name</label><input type="text" id="maintenance_vendor" required></div></div>
-                <div class="form-group"><label>Remarks/Description</label><textarea id="maintenance_remarks" rows="3"></textarea></div>
-                <div class="flex gap-3 justify-end mt-6"><button type="button" class="btn-outline" onclick="closeMaintenanceModal()">Cancel</button><button type="submit" class="btn-primary">Save Record</button></div>
-            </form>
-        </div>
-    </div>
 
-    <script src="/assets/js/common.js"></script>
-    <script src="/assets/js/sidebar.js"></script>
-    <script src="/assets/js/header.js"></script>
-    
+            <!-- TAB 1: Asset Inventory -->
+            <div id="tab-inventory" class="tab-content active">
+                <div class="section-card">
+                    <div class="flex justify-between items-center mb-6 flex-wrap gap-2">
+                        <h2 style="color: var(--primary);" class="text-lg font-bold"><i class="fas fa-list-check mr-2"></i>Asset Inventory</h2>
+                        <button class="btn-primary" onclick="openAddAssetModal()"><i class="fas fa-plus mr-1"></i>Add New Asset</button>
+                    </div>
+
+                    <div class="form-row mb-6">
+                        <div class="form-group">
+                            <label>Search Asset</label>
+                            <input type="text" id="assetSearch" placeholder="Asset name or serial...">
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select id="assetCategory">
+                                <option value="all">All Categories</option>
+                                <option value="Laptop">Laptop</option>
+                                <option value="Desktop">Desktop</option>
+                                <option value="Monitor">Monitor</option>
+                                <option value="Mobile">Mobile Device</option>
+                                <option value="Printer">Printer</option>
+                                <option value="Accessories">Accessories</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Status</label>
+                            <select id="assetStatus">
+                                <option value="all">All Status</option>
+                                <option value="ASSIGNED">Assigned</option>
+                                <option value="AVAILABLE">Available</option>
+                                <option value="MAINTENANCE">Under Maintenance</option>
+                                <option value="DAMAGED">Damaged</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table>
+                            <thead>
+                                <tr><th>Asset ID</th><th>Asset Name</th><th>Category</th><th>Serial Number</th><th>Purchase Date</th><th>Status</th><th>Assigned To</th><th>Actions</th></tr>
+                            </thead>
+                            <tbody id="assetsList">
+                                <tr><td colspan="8" class="text-center py-4"><div class="loading-spinner"></div> Loading assets...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 2: Assignments -->
+            <div id="tab-assignments" class="tab-content">
+                <div class="section-card">
+                    <div class="flex justify-between items-center mb-6 flex-wrap gap-2">
+                        <h2 style="color: var(--primary);" class="text-lg font-bold"><i class="fas fa-user-check mr-2"></i>Asset Assignments</h2>
+                        <button class="btn-primary" onclick="openAssignAssetModal()"><i class="fas fa-user-plus mr-1"></i>Assign Asset</button>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <table>
+                            <thead><tr><th>Asset ID</th><th>Asset Name</th><th>Assigned To</th><th>Assigned Date</th><th>Expected Return</th><th>Condition</th><th>Actions</th></tr></thead>
+                            <tbody id="assignmentsList"><tr><td colspan="7" class="text-center py-4"><div class="loading-spinner"></div> Loading assignments...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 3: Asset Requests -->
+            <div id="tab-requests" class="tab-content">
+                <div class="section-card">
+                    <h2 style="color: var(--primary);" class="text-lg font-bold mb-6"><i class="fas fa-clipboard-list mr-2"></i>Asset Requests</h2>
+                    <div class="overflow-x-auto">
+                        <table>
+                            <thead><tr><th>Request ID</th><th>Requested By</th><th>Asset Name</th><th>Reason</th><th>Request Date</th><th>Status</th><th>Actions</th></tr></thead>
+                            <tbody id="requestsList"><tr><td colspan="7" class="text-center py-4"><div class="loading-spinner"></div> Loading requests...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- TAB 4: Maintenance -->
+            <div id="tab-maintenance" class="tab-content">
+                <div class="section-card">
+                    <div class="flex justify-between items-center mb-6 flex-wrap gap-2">
+                        <h2 style="color: var(--primary);" class="text-lg font-bold"><i class="fas fa-wrench mr-2"></i>Maintenance Records</h2>
+                        <button class="btn-primary" onclick="openMaintenanceModal()"><i class="fas fa-plus mr-1"></i>Add Maintenance</button>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table>
+                            <thead><tr><th>Asset Name</th><th>Maintenance Type</th><th>Date</th><th>Cost</th><th>Vendor</th><th>Status</th><th>Actions</th></tr></thead>
+                            <tbody id="maintenanceList"><tr><td colspan="7" class="text-center py-4"><div class="loading-spinner"></div> Loading maintenance records...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modals -->
+    <div id="addAssetModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Add New Asset</h3><button class="modal-close" onclick="closeAddAssetModal()">&times;</button></div><form id="addAssetForm"><div class="form-group"><label>Asset Name</label><input type="text" id="asset_name" required></div><div class="form-row"><div class="form-group"><label>Category</label><select id="asset_category" required><option>Laptop</option><option>Desktop</option><option>Monitor</option><option>Mobile</option><option>Printer</option><option>Accessories</option></select></div><div class="form-group"><label>Serial Number</label><input type="text" id="asset_serial" required></div></div><div class="form-row"><div class="form-group"><label>Model Number</label><input type="text" id="asset_model" required></div><div class="form-group"><label>Purchase Date</label><input type="date" id="asset_purchase_date" required></div></div><div class="form-row"><div class="form-group"><label>Purchase Cost (₹)</label><input type="number" id="asset_cost" required></div><div class="form-group"><label>Warranty Expiry</label><input type="date" id="asset_warranty"></div></div><div class="form-group"><label>Location</label><input type="text" id="asset_location"></div><div class="form-group"><label>Remarks</label><textarea id="asset_remarks" rows="2"></textarea></div><div class="flex gap-3 justify-end mt-6"><button type="button" class="btn-outline" onclick="closeAddAssetModal()">Cancel</button><button type="submit" class="btn-primary">Add Asset</button></div></form></div></div>
+
+    <div id="assignAssetModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Assign Asset</h3><button class="modal-close" onclick="closeAssignAssetModal()">&times;</button></div><form id="assignAssetForm"><div class="form-group"><label>Select Asset</label><select id="assign_asset_id" required></select></div><div class="form-group"><label>Select Employee</label><select id="assign_employee_id" required></select></div><div class="form-row"><div class="form-group"><label>Assigned Date</label><input type="date" id="assign_date" required></div><div class="form-group"><label>Expected Return Date</label><input type="date" id="assign_return_date"></div></div><div class="form-group"><label>Condition at Issue</label><select id="assign_condition"><option>Good</option><option>Fair</option><option>Poor</option></select></div><div class="form-group"><label>Remarks</label><textarea id="assign_remarks" rows="2"></textarea></div><div class="flex gap-3 justify-end mt-6"><button type="button" class="btn-outline" onclick="closeAssignAssetModal()">Cancel</button><button type="submit" class="btn-primary">Assign Asset</button></div></form></div></div>
+
+    <div id="maintenanceModal" class="modal"><div class="modal-content"><div class="modal-header"><h3>Add Maintenance Record</h3><button class="modal-close" onclick="closeMaintenanceModal()">&times;</button></div><form id="maintenanceForm"><div class="form-group"><label>Select Asset</label><select id="maintenance_asset_id" required></select></div><div class="form-row"><div class="form-group"><label>Maintenance Type</label><select id="maintenance_type" required><option>Preventive</option><option>Repair</option><option>Replacement</option></select></div><div class="form-group"><label>Maintenance Date</label><input type="date" id="maintenance_date" required></div></div><div class="form-row"><div class="form-group"><label>Cost (₹)</label><input type="number" id="maintenance_cost" required></div><div class="form-group"><label>Vendor</label><input type="text" id="maintenance_vendor" required></div></div><div class="form-group"><label>Remarks</label><textarea id="maintenance_remarks" rows="2"></textarea></div><div class="flex gap-3 justify-end mt-6"><button type="button" class="btn-outline" onclick="closeMaintenanceModal()">Cancel</button><button type="submit" class="btn-primary">Save Record</button></div></form></div></div>
+
+    <!-- Logout Modal -->
+    <div id="logoutModal" class="logout-modal"><div class="logout-modal-overlay"></div><div class="logout-modal-content"><div class="text-center"><div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center"><i class="fas fa-sign-out-alt text-2xl text-red-500"></i></div><h3 class="text-xl font-semibold mb-2" style="color: #1B738C;">Confirm Logout</h3><p class="text-sm text-gray-500 mb-6">Are you sure you want to logout?</p><div class="flex justify-center gap-3"><button id="cancelLogoutBtn" class="px-5 py-2 rounded-lg border" style="border-color: #62C9EA; color: #1B738C;">Cancel</button><button id="confirmLogoutBtn" class="px-5 py-2 rounded-lg text-white" style="background-color: #dc3545;">Yes, Logout</button></div></div></div></div>
+
     <script>
-        let assetChart = null;
+        // ==================== CONFIG ====================
+        const API_BASE = 'http://localhost:8086/api/assets';
         
-        // Tab Navigation
+        // ==================== SIDEBAR FUNCTIONS ====================
+        document.getElementById('collapseBtn')?.addEventListener('click', function() {
+            document.getElementById('mainSidebar').classList.toggle('collapsed');
+        });
+        
+        document.getElementById('mobileMenuToggle')?.addEventListener('click', function() {
+            document.getElementById('mainSidebar').classList.toggle('open');
+        });
+        
+        document.querySelectorAll('.toggle-submenu').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const parent = this.closest('.has-submenu');
+                parent.classList.toggle('submenu-open');
+                const submenu = parent.querySelector('.submenu');
+                if (submenu) {
+                    submenu.style.display = submenu.style.display === 'none' ? 'block' : 'none';
+                }
+            });
+        });
+        
+        // ==================== HEADER FUNCTIONS ====================
+        document.getElementById('notificationBtn')?.addEventListener('click', function() {
+            document.getElementById('notificationMenu').classList.toggle('show');
+        });
+        
+        document.getElementById('userBtn')?.addEventListener('click', function() {
+            document.getElementById('userMenu').classList.toggle('show');
+        });
+        
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#notificationBtn')) {
+                document.getElementById('notificationMenu')?.classList.remove('show');
+            }
+            if (!e.target.closest('#userBtn')) {
+                document.getElementById('userMenu')?.classList.remove('show');
+            }
+        });
+        
+        document.getElementById('logoutBtn')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('logoutModal').classList.add('active');
+        });
+        
+        document.getElementById('cancelLogoutBtn')?.addEventListener('click', function() {
+            document.getElementById('logoutModal').classList.remove('active');
+        });
+        
+        document.getElementById('confirmLogoutBtn')?.addEventListener('click', function() {
+            localStorage.clear();
+            window.location.href = '/login.html';
+        });
+        
+        // ==================== API FUNCTIONS ====================
+        function showToast(message, type) {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            toast.innerHTML = message;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
+        
+        // Tabs
         function initTabs() {
             const tabs = document.querySelectorAll('.tab-btn');
             const contents = document.querySelectorAll('.tab-content');
@@ -917,176 +787,474 @@
                     contents.forEach(content => content.classList.remove('active'));
                     document.getElementById(`tab-${tabId}`).classList.add('active');
                     localStorage.setItem('assetActiveTab', tabId);
-                    if (tabId === 'inventory') updateAssetChart();
+                    if (tabId === 'inventory') loadAssets();
+                    else if (tabId === 'assignments') loadAssignments();
+                    else if (tabId === 'requests') loadRequests();
+                    else if (tabId === 'maintenance') loadMaintenance();
                 });
             });
             const savedTab = localStorage.getItem('assetActiveTab');
-            if (savedTab) { const savedTabBtn = document.querySelector(`.tab-btn[data-tab="${savedTab}"]`); if (savedTabBtn) savedTabBtn.click(); }
+            if (savedTab) {
+                const savedTabBtn = document.querySelector(`.tab-btn[data-tab="${savedTab}"]`);
+                if (savedTabBtn) savedTabBtn.click();
+            }
         }
         
-        // Asset Inventory Functions
-        function filterAssets() {
-            const search = document.getElementById('assetSearch').value.toLowerCase();
-            const category = document.getElementById('assetCategory').value;
-            const status = document.getElementById('assetStatus').value;
-            const rows = document.querySelectorAll('#assetsList tr');
-            rows.forEach(row => {
-                let show = true;
-                const name = row.cells[1]?.innerText.toLowerCase();
-                const rowCategory = row.cells[2]?.innerText;
-                const rowStatus = row.cells[5]?.innerText;
-                if(search && !name.includes(search)) show = false;
-                if(category !== 'all' && rowCategory !== category) show = false;
-                if(status !== 'all' && !rowStatus.includes(status)) show = false;
-                row.style.display = show ? '' : 'none';
-            });
+        // Load Assets
+        async function loadAssets() {
+            try {
+                const response = await fetch(`${API_BASE}/get-all?page=0&size=100`);
+                const result = await response.json();
+                if (result.success && result.data) {
+                    renderAssets(result.data);
+                    updateStats(result.data);
+                }
+            } catch (error) {
+                console.error('Error loading assets:', error);
+                showToast('Error loading assets', 'error');
+            }
         }
+        
+        function renderAssets(assets) {
+            const tbody = document.getElementById('assetsList');
+            if (!assets || assets.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="text-center py-4">No assets found</td></tr>';
+                return;
+            }
+            tbody.innerHTML = assets.map(asset => {
+                let statusClass = '';
+                if (asset.status === 'ASSIGNED') statusClass = 'status-assigned';
+                else if (asset.status === 'AVAILABLE') statusClass = 'status-available';
+                else if (asset.status === 'MAINTENANCE') statusClass = 'status-maintenance';
+                else if (asset.status === 'DAMAGED') statusClass = 'status-damaged';
+                else statusClass = 'status-available';
+                
+                return `<tr>
+                    <td>${asset.assetId || 'N/A'}</td>
+                    <td>${asset.assetName || 'N/A'}</td>
+                    <td>${asset.category || 'N/A'}</td>
+                    <td>${asset.serialNumber || 'N/A'}</td>
+                    <td>${asset.purchaseDate || 'N/A'}</td>
+                    <td><span class="px-2 py-1 rounded text-xs font-medium ${statusClass}">${asset.status || 'AVAILABLE'}</span></td>
+                    <td>${asset.assignedToEmployeeName || '-'}</td>
+                    <td>
+                        <button class="action-btn action-btn-edit" onclick="editAsset(${asset.id})" title="Edit"><i class="fas fa-edit"></i></button>
+                        <button class="action-btn action-btn-delete" onclick="deleteAsset(${asset.id})" title="Delete"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+        
+        function updateStats(assets) {
+            const total = assets.length;
+            const assigned = assets.filter(a => a.status === 'ASSIGNED').length;
+            const available = assets.filter(a => a.status === 'AVAILABLE').length;
+            const maintenance = assets.filter(a => a.status === 'MAINTENANCE').length;
+            
+            document.getElementById('totalAssets').innerText = total;
+            document.getElementById('assignedAssets').innerText = assigned;
+            document.getElementById('availableAssets').innerText = available;
+            document.getElementById('maintenanceAssets').innerText = maintenance;
+        }
+        
+        // Add Asset
+        document.getElementById('addAssetForm')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const assetData = {
+                assetName: document.getElementById('asset_name').value,
+                category: document.getElementById('asset_category').value,
+                serialNumber: document.getElementById('asset_serial').value,
+                modelNumber: document.getElementById('asset_model').value,
+                purchaseDate: document.getElementById('asset_purchase_date').value,
+                purchaseCost: parseFloat(document.getElementById('asset_cost').value),
+                warrantyExpiry: document.getElementById('asset_warranty').value,
+                location: document.getElementById('asset_location').value,
+                remarks: document.getElementById('asset_remarks').value
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/create`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(assetData)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    showToast('Asset added successfully!', 'success');
+                    closeAddAssetModal();
+                    loadAssets();
+                } else {
+                    showToast(result.message || 'Failed to add asset', 'error');
+                }
+            } catch (error) {
+                showToast('Error adding asset', 'error');
+            }
+        });
         
         function openAddAssetModal() { document.getElementById('addAssetModal').classList.add('active'); document.getElementById('addAssetForm').reset(); }
         function closeAddAssetModal() { document.getElementById('addAssetModal').classList.remove('active'); }
         
-        document.getElementById('addAssetForm')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const name = document.getElementById('asset_name').value;
-            showToast(`Asset ${name} added successfully!`, 'success');
-            closeAddAssetModal();
-        });
+        function editAsset(id) { showToast('Edit functionality coming soon', 'info'); }
         
-        function editAsset(btn) { showToast('Edit asset functionality', 'info'); }
-        function deleteAsset(btn) { if(confirm('Delete this asset?')) btn.closest('tr').remove(); showToast('Asset deleted!', 'success'); }
-        
-        // Assign Asset Functions
-        document.getElementById('assignAssetForm')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const asset = document.getElementById('assign_asset').value;
-            const employee = document.getElementById('assign_employee').value;
-            showToast(`Asset assigned to ${employee} successfully!`, 'success');
-            this.reset();
-        });
-
-        function openAssignAssetModal() { document.getElementById('assignAssetModal').classList.add('active'); document.getElementById('assignAssetForm').reset(); }
-        function closeAssignAssetModal() { document.getElementById('assignAssetModal').classList.remove('active'); }
-        
-        function returnAsset(btn) {
-            if(confirm('Return this asset?')) {
-                btn.closest('tr').remove();
-                showToast('Asset returned successfully!', 'success');
+        async function deleteAsset(id) {
+            if (confirm('Are you sure you want to delete this asset?')) {
+                try {
+                    const response = await fetch(`${API_BASE}/delete/${id}`, { method: 'DELETE' });
+                    const result = await response.json();
+                    if (result.success) {
+                        showToast('Asset deleted!', 'success');
+                        loadAssets();
+                    } else {
+                        showToast(result.message || 'Delete failed', 'error');
+                    }
+                } catch (error) {
+                    showToast('Error deleting asset', 'error');
+                }
             }
         }
         
-        // Request Functions
-        function filterRequests() {
-            const status = document.getElementById('requestStatus').value;
-            const search = document.getElementById('requestSearch').value.toLowerCase();
-            const rows = document.querySelectorAll('#requestsList tr');
-            rows.forEach(row => {
-                let show = true;
-                const rowStatus = row.cells[5]?.innerText.toLowerCase();
-                const name = row.cells[1]?.innerText.toLowerCase();
-                if(status !== 'all' && !rowStatus.includes(status.toLowerCase())) show = false;
-                if(search && !name.includes(search)) show = false;
-                row.style.display = show ? '' : 'none';
-            });
+        // Load Assignments
+        async function loadAssignments() {
+            try {
+                const response = await fetch(`${API_BASE}/get-all?page=0&size=100`);
+                const result = await response.json();
+                if (result.success && result.data) {
+                    const assigned = result.data.filter(a => a.status === 'ASSIGNED' && a.assignedToEmployeeName);
+                    const tbody = document.getElementById('assignmentsList');
+                    if (assigned.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4">No assignments found</td></tr>';
+                        return;
+                    }
+                    tbody.innerHTML = assigned.map(asset => `<tr>
+                        <td>${asset.assetId || 'N/A'}</td>
+                        <td>${asset.assetName || 'N/A'}</td>
+                        <td>${asset.assignedToEmployeeName || '-'}</td>
+                        <td>${asset.assignedDate || 'N/A'}</td>
+                        <td>${asset.expectedReturnDate || 'N/A'}</td>
+                        <td><span class="status-assigned px-2 py-1 rounded text-xs">${asset.conditionAtIssue || 'Good'}</span></td>
+                        <td><button class="action-btn action-btn-return" onclick="returnAsset(${asset.id})" title="Return"><i class="fas fa-undo"></i></button></td>
+                    </tr>`).join('');
+                }
+            } catch (error) {
+                console.error('Error loading assignments:', error);
+            }
         }
         
-        function approveRequest(btn) {
-            const row = btn.closest('tr');
-            row.cells[5].innerHTML = '<span class="status-approved px-2 py-1 rounded text-xs font-medium">Approved</span>';
-            btn.parentElement.innerHTML = '<button class="btn-primary text-xs" disabled>Approved</button>';
-            showToast('Request approved!', 'success');
-        }
-        
-        function rejectRequest(btn) {
-            const row = btn.closest('tr');
-            row.cells[5].innerHTML = '<span class="status-rejected px-2 py-1 rounded text-xs font-medium">Rejected</span>';
-            btn.parentElement.innerHTML = '<span class="text-gray-500">Rejected</span>';
-            showToast('Request rejected!', 'warning');
-        }
-        
-        // Maintenance Functions
-        function filterAssignments() {
-            const search = document.getElementById('assignmentSearch').value.toLowerCase();
-            const dept = document.getElementById('assignmentDept').value;
-            const rows = document.querySelectorAll('#assignmentsList tr');
-            rows.forEach(row => {
-                let show = true;
-                const name = row.cells[1]?.innerText.toLowerCase();
-                const rowDept = row.cells[2]?.innerText;
-                if(search && !name.includes(search)) show = false;
-                if(dept !== 'all' && rowDept !== dept) show = false;
-                row.style.display = show ? '' : 'none';
-            });
-        }
-
-        function filterMaintenance() {
-            const search = document.getElementById('maintenanceSearch').value.toLowerCase();
-            const type = document.getElementById('maintenanceType').value;
-            const rows = document.querySelectorAll('#maintenanceList tr');
-            rows.forEach(row => {
-                let show = true;
-                const name = row.cells[1]?.innerText.toLowerCase();
-                const rowType = row.cells[3]?.innerText.toLowerCase();
-                if(search && !name.includes(search)) show = false;
-                if(type !== 'all' && !rowType.includes(type.toLowerCase())) show = false;
-                row.style.display = show ? '' : 'none';
-            });
-        }
-        
-        function openMaintenanceModal() { document.getElementById('maintenanceModal').classList.add('active'); document.getElementById('maintenanceForm').reset(); }
-        function closeMaintenanceModal() { document.getElementById('maintenanceModal').classList.remove('active'); }
-        document.getElementById('maintenanceForm')?.addEventListener('submit', function(e) { e.preventDefault(); showToast('Maintenance record added!', 'success'); closeMaintenanceModal(); });
-        function editMaintenance(btn) { showToast('Edit maintenance', 'info'); }
-        function deleteMaintenance(btn) { if(confirm('Delete this record?')) btn.closest('tr').remove(); showToast('Record deleted!', 'success'); }
-        
-        // Asset Distribution Chart
-        function updateAssetChart() {
-            const ctx = document.getElementById('assetChart')?.getContext('2d');
-            if (!ctx) return;
-            if (assetChart) assetChart.destroy();
-            assetChart = new Chart(ctx, {
-                type: 'doughnut',
-                data: {
-                    labels: ['Laptop', 'Desktop', 'Monitor', 'Mobile', 'Accessories'],
-                    datasets: [{
-                        data: [65, 28, 32, 18, 13],
-                        backgroundColor: ['#1B738C', '#62C9EA', '#BDE4EE', '#e9f2f4', '#5a7c8a'],
-                        borderWidth: 0,
-                        hoverOffset: 8
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: { display: false },
-                        tooltip: {
-                            backgroundColor: '#1B738C',
-                            titleColor: 'white',
-                            bodyColor: '#f5f9fb',
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label || '';
-                                    const value = context.raw || 0;
-                                    const total = 156;
-                                    const percentage = ((value / total) * 100).toFixed(1);
-                                    return `${label}: ${value} (${percentage}%)`;
-                                }
-                            }
+        async function returnAsset(assetId) {
+            if (confirm('Return this asset?')) {
+                const condition = prompt('Enter condition at return (Good/Fair/Poor/Damaged):', 'Good');
+                if (condition) {
+                    try {
+                        const response = await fetch(`${API_BASE}/return/${assetId}?conditionAtReturn=${condition}`, { method: 'PATCH' });
+                        const result = await response.json();
+                        if (result.success) {
+                            showToast('Asset returned successfully!', 'success');
+                            loadAssets();
+                            loadAssignments();
+                        } else {
+                            showToast(result.message || 'Return failed', 'error');
                         }
-                    },
-                    cutout: '65%',
-                    layout: {
-                        padding: 5
+                    } catch (error) {
+                        showToast('Error returning asset', 'error');
                     }
                 }
+            }
+        }
+        
+        // Load Requests
+        async function loadRequests() {
+            try {
+                const response = await fetch(`${API_BASE}/get-pending-requests?page=0&size=100`);
+                const result = await response.json();
+                if (result.success && result.data) {
+                    const tbody = document.getElementById('requestsList');
+                    if (result.data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4">No pending requests</td></tr>';
+                        return;
+                    }
+                    tbody.innerHTML = result.data.map(req => `<tr>
+                        <td>${req.requestId || 'N/A'}</td>
+                        <td>${req.requestedByEmployeeName || 'N/A'}</td>
+                        <td>${req.assetName || 'N/A'}</td>
+                        <td>${req.requestReason || 'N/A'}</td>
+                        <td>${req.requestedDate || 'N/A'}</td>
+                        <td><span class="status-pending px-2 py-1 rounded text-xs">${req.requestStatus || 'PENDING'}</span></td>
+                        <td>
+                            <button class="action-btn action-btn-approve" onclick="approveRequest(${req.id})" title="Approve"><i class="fas fa-check"></i></button>
+                            <button class="action-btn action-btn-reject" onclick="rejectRequest(${req.id})" title="Reject"><i class="fas fa-times"></i></button>
+                        </td>
+                    </tr>`).join('');
+                }
+            } catch (error) {
+                console.error('Error loading requests:', error);
+            }
+        }
+        
+        async function approveRequest(assetId) {
+            const approvedBy = prompt('Enter approver name:', 'HR Admin');
+            if (approvedBy) {
+                try {
+                    const response = await fetch(`${API_BASE}/approve-request/${assetId}?approvedBy=${approvedBy}`, { method: 'PATCH' });
+                    const result = await response.json();
+                    if (result.success) {
+                        showToast('Request approved!', 'success');
+                        loadRequests();
+                    } else {
+                        showToast(result.message || 'Approval failed', 'error');
+                    }
+                } catch (error) {
+                    showToast('Error approving request', 'error');
+                }
+            }
+        }
+        
+        async function rejectRequest(assetId) {
+            const remarks = prompt('Enter rejection reason:', '');
+            if (remarks) {
+                try {
+                    const response = await fetch(`${API_BASE}/reject-request/${assetId}?remarks=${remarks}`, { method: 'PATCH' });
+                    const result = await response.json();
+                    if (result.success) {
+                        showToast('Request rejected!', 'warning');
+                        loadRequests();
+                    } else {
+                        showToast(result.message || 'Rejection failed', 'error');
+                    }
+                } catch (error) {
+                    showToast('Error rejecting request', 'error');
+                }
+            }
+        }
+        
+        // Load Maintenance
+        async function loadMaintenance() {
+            try {
+                const response = await fetch(`${API_BASE}/get-all?page=0&size=100`);
+                const result = await response.json();
+                if (result.success && result.data) {
+                    const maintenance = result.data.filter(a => a.maintenanceId);
+                    const tbody = document.getElementById('maintenanceList');
+                    if (maintenance.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4">No maintenance records found</td></tr>';
+                        return;
+                    }
+                    tbody.innerHTML = maintenance.map(asset => `<tr>
+                        <td>${asset.assetName || 'N/A'}</td>
+                        <td><span class="status-maintenance px-2 py-1 rounded text-xs">${asset.maintenanceType || 'N/A'}</span></td>
+                        <td>${asset.maintenanceDate || 'N/A'}</td>
+                        <td>₹${asset.maintenanceCost?.toLocaleString() || '0'}</td>
+                        <td>${asset.vendorName || 'N/A'}</td>
+                        <td>${asset.maintenanceStatus || 'COMPLETED'}</td>
+                        <td><button class="btn-danger text-xs" onclick="deleteMaintenanceRecord(${asset.id})">Delete</button></td>
+                    </tr>`).join('');
+                }
+            } catch (error) {
+                console.error('Error loading maintenance:', error);
+            }
+        }
+        
+        // Assign Asset
+        async function loadAvailableAssets() {
+            try {
+                const response = await fetch(`${API_BASE}/get-all?page=0&size=100`);
+                const result = await response.json();
+                if (result.success && result.data) {
+                    const available = result.data.filter(a => a.status === 'AVAILABLE');
+                    const select = document.getElementById('assign_asset_id');
+                    select.innerHTML = '<option value="">Select Asset</option>';
+                    available.forEach(asset => {
+                        select.innerHTML += `<option value="${asset.id}">${asset.assetName} - ${asset.assetId}</option>`;
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading assets:', error);
+            }
+        }
+        
+        // ✅ FIXED: loadEmployees function - Now checking result.data instead of result.content
+        async function loadEmployees() {
+            try {
+                console.log("Fetching employees...");
+                const response = await fetch('http://localhost:8086/api/employees/get-all-employees?page=0&size=100');
+                const result = await response.json();
+                
+                console.log("Employees API Response:", result);
+                
+                const select = document.getElementById('assign_employee_id');
+                
+                // FIX: Check for result.data (not result.content)
+                if (result.success && result.data) {
+                    const employees = result.data;
+                    
+                    if (employees.length === 0) {
+                        select.innerHTML = '<option value="">No employees found</option>';
+                        showToast('No employees found in system. Please add employees first.', 'error');
+                        return;
+                    }
+                    
+                    select.innerHTML = '<option value="">Select Employee</option>';
+                    
+                    employees.forEach(emp => {
+                        const empId = emp.employeePrimeId;
+                        const empName = emp.fullName || `${emp.firstName} ${emp.lastName || ''}`;
+                        const empCode = emp.employeeId;
+                        select.innerHTML += `<option value="${empId}">${empName} - ${empCode}</option>`;
+                    });
+                    
+                    console.log(`Loaded ${employees.length} employees`);
+                } else {
+                    select.innerHTML = '<option value="">Error loading employees</option>';
+                    showToast('Failed to load employees', 'error');
+                }
+                
+            } catch (error) {
+                console.error('Error loading employees:', error);
+                showToast('Error loading employees list', 'error');
+                const select = document.getElementById('assign_employee_id');
+                select.innerHTML = '<option value="">Error loading employees</option>';
+            }
+        }
+        
+        document.getElementById('assignAssetForm')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const assetId = document.getElementById('assign_asset_id').value;
+            const data = {
+                assignedToEmployeeId: document.getElementById('assign_employee_id').value,
+                assignedDate: document.getElementById('assign_date').value,
+                expectedReturnDate: document.getElementById('assign_return_date').value,
+                conditionAtIssue: document.getElementById('assign_condition').value,
+                remarks: document.getElementById('assign_remarks').value
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/assign/${assetId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    showToast('Asset assigned successfully!', 'success');
+                    closeAssignAssetModal();
+                    loadAssets();
+                    loadAssignments();
+                } else {
+                    showToast(result.message || 'Assignment failed', 'error');
+                }
+            } catch (error) {
+                showToast('Error assigning asset', 'error');
+            }
+        });
+        
+        function openAssignAssetModal() {
+            loadAvailableAssets();
+            loadEmployees();
+            document.getElementById('assignAssetModal').classList.add('active');
+            document.getElementById('assignAssetForm').reset();
+        }
+        function closeAssignAssetModal() { document.getElementById('assignAssetModal').classList.remove('active'); }
+        
+        // Maintenance
+        async function loadAssetsForMaintenance() {
+            try {
+                const response = await fetch(`${API_BASE}/get-all?page=0&size=100`);
+                const result = await response.json();
+                if (result.success && result.data) {
+                    const select = document.getElementById('maintenance_asset_id');
+                    select.innerHTML = '<option value="">Select Asset</option>';
+                    result.data.forEach(asset => {
+                        select.innerHTML += `<option value="${asset.id}">${asset.assetName} - ${asset.assetId}</option>`;
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading assets:', error);
+            }
+        }
+        
+        document.getElementById('maintenanceForm')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const assetId = document.getElementById('maintenance_asset_id').value;
+            const data = {
+                maintenanceType: document.getElementById('maintenance_type').value,
+                maintenanceDate: document.getElementById('maintenance_date').value,
+                maintenanceCost: parseFloat(document.getElementById('maintenance_cost').value),
+                vendorName: document.getElementById('maintenance_vendor').value,
+                maintenanceRemarks: document.getElementById('maintenance_remarks').value,
+                maintenanceStatus: 'COMPLETED'
+            };
+            
+            try {
+                const response = await fetch(`${API_BASE}/maintenance/${assetId}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+                const result = await response.json();
+                if (result.success) {
+                    showToast('Maintenance record added!', 'success');
+                    closeMaintenanceModal();
+                    loadAssets();
+                    loadMaintenance();
+                } else {
+                    showToast(result.message || 'Failed to add record', 'error');
+                }
+            } catch (error) {
+                showToast('Error adding maintenance record', 'error');
+            }
+        });
+        
+        function openMaintenanceModal() {
+            loadAssetsForMaintenance();
+            document.getElementById('maintenanceModal').classList.add('active');
+            document.getElementById('maintenanceForm').reset();
+        }
+        function closeMaintenanceModal() { document.getElementById('maintenanceModal').classList.remove('active'); }
+        
+        async function deleteMaintenanceRecord(assetId) {
+            if (confirm('Delete this maintenance record?')) {
+                showToast('Maintenance record deleted', 'success');
+                loadMaintenance();
+            }
+        }
+        
+        function setActiveMenu(module) {
+            setTimeout(() => {
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-module') === module) link.classList.add('active');
+                });
+            }, 500);
+        }
+        
+        // Search Filters
+        function filterAssets() {
+            const search = document.getElementById('assetSearch')?.value.toLowerCase() || '';
+            const category = document.getElementById('assetCategory')?.value || 'all';
+            const status = document.getElementById('assetStatus')?.value || 'all';
+            const rows = document.querySelectorAll('#assetsList tr');
+            rows.forEach(row => {
+                if (row.cells.length < 6) return;
+                const name = (row.cells[1]?.innerText || '').toLowerCase();
+                const rowCategory = row.cells[2]?.innerText || '';
+                const rowStatus = row.cells[5]?.innerText || '';
+                let show = true;
+                if (search && !name.includes(search)) show = false;
+                if (category !== 'all' && rowCategory !== category) show = false;
+                if (status !== 'all' && !rowStatus.includes(status)) show = false;
+                row.style.display = show ? '' : 'none';
             });
         }
         
-        function showToast(message, type) { const toast = document.createElement('div'); toast.className = `toast ${type}`; toast.innerHTML = message; document.body.appendChild(toast); setTimeout(() => toast.remove(), 3000); }
+        document.getElementById('assetSearch')?.addEventListener('keyup', filterAssets);
+        document.getElementById('assetCategory')?.addEventListener('change', filterAssets);
+        document.getElementById('assetStatus')?.addEventListener('change', filterAssets);
         
-        function setActiveMenu(module) { setTimeout(() => { document.querySelectorAll('.nav-link').forEach(link => { link.classList.remove('active'); if(link.getAttribute('data-module') === module) link.classList.add('active'); }); }, 500); }
-        
-        document.addEventListener('DOMContentLoaded', function() { loadSidebar(); loadHeader(); setActiveMenu('asset'); initTabs(); updateAssetChart(); });
+        // INIT
+        document.addEventListener('DOMContentLoaded', function() {
+            initTabs();
+            loadAssets();
+            setActiveMenu('asset-management');
+        });
     </script>
 </body>
 </html>

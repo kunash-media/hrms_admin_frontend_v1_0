@@ -968,6 +968,8 @@
 
                     <div class="tab-btn active" data-tab="all">All Employees</div>
                     <div class="tab-btn " data-tab="add">Add Employee</div>
+                    <div class="tab-btn" data-tab="promotion">Promotions</div> <!-- ✅ ADD THIS LINE -->
+
 
                     <!-- <div class="tab-btn" data-tab="documents">Documents</div> -->
                 </div>
@@ -1178,6 +1180,31 @@
                                     <div class="form-group"><label>Designation <span class="req">*</span></label><input
                                             id="fDesig" placeholder="e.g. Senior Developer"></div>
                                 </div>
+
+                                <!-- ✅ ADD THIS PASSWORD FIELD ROW -->
+                                <div class="grid-3 mb-4">
+                                    <div class="form-group">
+                                        <label>Login Password <span class="req">*</span></label>
+                                        <input type="password" id="fPassword" placeholder="Enter login password"
+                                            required>
+                                        <div class="fhint">Used for employee login portal</div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Confirm Password <span class="req">*</span></label>
+                                        <input type="password" id="fConfirmPassword" placeholder="Re-enter password"
+                                            required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>&nbsp;</label>
+                                        <div class="toggle-switch-wrap">
+                                            <label class="toggle-switch"><input type="checkbox" id="fShowPassword"
+                                                    onchange="togglePasswordVisibility()"><span
+                                                    class="toggle-thumb"></span></label>
+                                            <span style="font-size:12px;color:var(--text-light);">Show Password</span>
+                                        </div>
+                                    </div>
+                                </div>
+
                                 <div class="grid-4 mb-4">
                                     <div class="form-group"><label>Employee Grade</label><select id="fGrade">
                                             <option>L1</option>
@@ -1485,6 +1512,131 @@
                     </div>
                 </div>
 
+
+                <!-- ==================== TAB: PROMOTIONS ==================== -->
+                <div id="promotion" class="tab-content">
+                    <div class="section-card">
+                        <div class="flex justify-between items-center mb-5 flex-wrap gap-3">
+                            <h3 class="text-md font-bold" style="color: var(--primary);">Employee Promotions</h3>
+                            <div class="flex gap-2 flex-wrap">
+                                <select id="promotionEmployeeSelect"
+                                    style="width:256px;padding:8px 14px;font-size:13px;"
+                                    onchange="loadEmployeePromotions()">
+                                    <option value="">Select Employee</option>
+                                </select>
+                                <button onclick="openAddPromotionModal()" class="btn-primary btn-sm">
+                                    <i class="fas fa-plus mr-1"></i>Add Promotion
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Promotions Table -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead class="border" style="border-color: #1B738C;">
+                                    <tr>
+                                        <th style="color:var(--primary);">ID</th>
+                                        <th style="color:var(--primary);">Previous Designation</th>
+                                        <th style="color:var(--primary);">New Designation</th>
+                                        <th style="color:var(--primary);">Previous Salary</th>
+                                        <th style="color:var(--primary);">New Salary</th>
+                                        <th style="color:var(--primary);">Promotion Date</th>
+                                        <th style="color:var(--primary);">Effective From</th>
+                                        <th style="color:var(--primary);">Remarks</th>
+                                        <th style="color:var(--primary);">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="promotionsList">
+                                    <tr>
+                                        <td colspan="9" class="py-8 text-center" style="color:var(--text-light);">
+                                            <i class="fas fa-info-circle mr-2"></i>Select an employee to view promotions
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== ADD/EDIT PROMOTION MODAL ==================== -->
+                <div id="promotionModal" class="modal-overlay">
+                    <div class="modal-container" style="max-width: 550px;">
+                        <div class="modal-header">
+                            <h3 id="promotionModalTitle">Add Promotion</h3>
+                            <span class="modal-close" onclick="closePromotionModal()">&times;</span>
+                        </div>
+                        <form id="promotionForm" onsubmit="savePromotion(event)">
+                            <input type="hidden" id="promotionId">
+
+                            <div class="form-group">
+                                <label>Employee <span class="req">*</span></label>
+                                <select id="promoEmployeeId" required>
+                                    <option value="">Select Employee</option>
+                                </select>
+                            </div>
+
+                            <div class="grid-2 mb-3">
+                                <div class="form-group">
+                                    <label>Previous Designation</label>
+                                    <input type="text" id="prevDesig" placeholder="e.g., Software Engineer">
+                                </div>
+                                <div class="form-group">
+                                    <label>New Designation <span class="req">*</span></label>
+                                    <input type="text" id="newDesig" placeholder="e.g., Senior Software Engineer"
+                                        required>
+                                </div>
+                            </div>
+
+                            <div class="grid-2 mb-3">
+                                <div class="form-group">
+                                    <label>Previous Salary (₹)</label>
+                                    <input type="number" id="prevSalary" class="mono" placeholder="0.00">
+                                </div>
+                                <div class="form-group">
+                                    <label>New Salary (₹)</label>
+                                    <input type="number" id="newSalary" class="mono" placeholder="0.00">
+                                </div>
+                            </div>
+
+                            <div class="grid-2 mb-3">
+                                <div class="form-group">
+                                    <label>Promotion Date <span class="req">*</span></label>
+                                    <input type="date" id="promoDate" required>
+                                </div>
+                                <div class="form-group">
+                                    <label>Effective From</label>
+                                    <input type="date" id="effectiveFrom">
+                                    <div class="fhint">Leave blank to use Promotion Date</div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Remarks</label>
+                                <textarea id="remarks" rows="3"
+                                    placeholder="Additional notes about the promotion..."></textarea>
+                            </div>
+
+                            <div class="flex justify-end gap-3 mt-4 pt-3 border-t"
+                                style="border-color: var(--primary-soft);">
+                                <button type="button" class="btn-outline"
+                                    onclick="closePromotionModal()">Cancel</button>
+                                <button type="submit" class="btn-success">Save Promotion</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- ==================== DELETE PROMOTION CONFIRM MODAL ==================== -->
+                <div id="deletePromoModal" class="confirm-modal-overlay">
+                    <div class="confirm-modal-container">
+                        <h3>Confirm Delete</h3>
+                        <p>Are you sure you want to delete this promotion record?</p>
+                        <div class="confirm-buttons">
+                            <button onclick="closeDeletePromoModal()" class="btn-outline">Cancel</button>
+                            <button onclick="confirmDeletePromotion()" class="btn-danger">Delete</button>
+                        </div>
+                    </div>
+                </div>
             </main>
         </div>
     </div>
@@ -1931,6 +2083,21 @@
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
                             ${editField('Bank Name', 'efBank', emp.bankName)}${editField('Account Number', 'efAccNo', emp.accountNumber)}${editField('IFSC Code', 'efIFSC', emp.ifscCode)}
                         </div>
+                            <!-- 🔴🔴🔴 YAHAN PE ADD KARO (Bank Details ke BAAD) 🔴🔴🔴 -->
+    <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;margin-top:16px;"><i class="fas fa-lock mr-2"></i>Login Credentials</div>
+    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
+        <div>
+            <label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">New Password</label>
+            <input type="password" id="efPassword" placeholder="Leave blank to keep current" style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
+            <div style="font-size:10px;color:var(--text-light);margin-top:3px;">Minimum 6 characters</div>
+        </div>
+        <div>
+            <label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">Confirm New Password</label>
+            <input type="password" id="efConfirmPassword" placeholder="Re-enter new password" style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
+        </div>
+    </div>
+    <!-- 🔴🔴🔴 ADD KARNA YAHAN TAK 🔴🔴🔴 -->
+
                     </div>
 
                     <!-- TAB 2: Contact & Address -->
@@ -2008,7 +2175,7 @@
             const val = (value !== null && value !== undefined) ? value : '';
             return `<div>
         <label style="font-size:11px;font-weight:600; color: #1B738C; display:block;margin-bottom:4px;">${label} ${required ? '<span class="req">*</span>' : ''}</label>
-        <input type="${type}" id="${id}"  value="${String(val).replace(/"/g, '&quot;')}" ${req}
+        <input type="${type}" id="${id}" value="${String(val).replace(/"/g, '&quot;')}" ${req}
             style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
     </div>`;
         }
@@ -2100,78 +2267,7 @@
             // Helper function to convert empty string to null
             const toNull = (val) => (val === undefined || val === null || val === '') ? null : val;
 
-            const employeePayload = {
-                firstName: firstName || '',
-                middleName: toNull(document.getElementById('efMN')?.value.trim()),
-                lastName: lastName || '',
-                dateOfBirth: toNull(document.getElementById('efDOB')?.value),
-                gender: toNull(document.getElementById('efGender')?.value),
-                maritalStatus: toNull(document.getElementById('efMarital')?.value),
-                bloodGroup: toNull(document.getElementById('efBlood')?.value),
-                panNumber: toNull(document.getElementById('efPAN')?.value.trim().toUpperCase()),
-                aadhaarNumber: toNull(document.getElementById('efAAD')?.value.trim()),
-                nationality: document.getElementById('efNat')?.value.trim() || 'Indian',
-                religion: toNull(document.getElementById('efRel')?.value.trim()),
-                linkedinProfile: toNull(document.getElementById('efLI')?.value.trim()),
-                fatherSpouseName: toNull(document.getElementById('efFatherName')?.value.trim()),
-
-                // PWD fields (set to null by default)
-                isPhysicallyChallenged: false,
-                disabilityType: null,
-                disabilityPercentage: null,
-                certificateNumber: null,
-
-                // Job Details
-                department: dept || '',
-                subDepartment: toNull(document.getElementById('efSubDept')?.value.trim()),
-                designation: desig || '',
-                employeeGrade: toNull(document.getElementById('efGrade')?.value),
-                employmentType: toNull(document.getElementById('efEmpType')?.value),
-                joiningDate: joiningDate || '',
-                probationEndDate: toNull(document.getElementById('efProbEnd')?.value),
-                reportingManager: toNull(document.getElementById('efMgr')?.value.trim()),
-                hrBusinessPartner: toNull(document.getElementById('efHRBP')?.value.trim()),
-                workLocation: toNull(document.getElementById('efWL')?.value),
-                basicSalary: parseFloat(basicSalary) || 0,
-                shift: toNull(document.getElementById('efShift')?.value),
-                costCentre: toNull(document.getElementById('efCC')?.value.trim()),
-
-                // Bank
-                bankName: toNull(document.getElementById('efBank')?.value.trim()),
-                accountNumber: toNull(document.getElementById('efAccNo')?.value.trim()),
-                ifscCode: toNull(document.getElementById('efIFSC')?.value.trim().toUpperCase()),
-
-                // Contact
-                personalEmail: email || '',
-                workEmail: toNull(document.getElementById('efWEmail')?.value.trim()),
-                mobileNumber: mobile || '',
-                alternateNumber: toNull(document.getElementById('efAlt')?.value.trim()),
-
-                // Current Address
-                currentStreet: toNull(document.getElementById('efCAddr')?.value.trim()),
-                currentCity: toNull(document.getElementById('efCity')?.value.trim()),
-                currentState: toNull(document.getElementById('efState')?.value.trim()),
-                currentPincode: toNull(document.getElementById('efPIN')?.value.trim()),
-                currentCountry: document.getElementById('efCountry')?.value.trim() || 'India',
-
-                // Permanent Address
-                permanentStreet: toNull(document.getElementById('efPAddr')?.value.trim()),
-                permanentCity: toNull(document.getElementById('efPCity')?.value.trim()),
-                permanentState: toNull(document.getElementById('efPState')?.value.trim()),
-                permanentPincode: toNull(document.getElementById('efPPIN')?.value.trim()),
-                permanentCountry: document.getElementById('efPCountry')?.value.trim() || 'India',
-
-                // Emergency Contact
-                emergencyName: ecName || '',
-                emergencyRelationship: toNull(document.getElementById('efECRel')?.value),
-                emergencyPhone: ecPhone || '',
-
-                // Education, Family, Experience
-                education: collectEditEducation(),
-                family: collectEditFamily(),
-                workExperience: collectEditExperience(),
-            };
-
+const employeePayload = { firstName, middleName: document.getElementById('fMN').value.trim(), lastName, password: password, dateOfBirth: document.getElementById('fDOB').value || null, gender: document.getElementById('fGender').value, maritalStatus: document.getElementById('fMarital').value, bloodGroup: document.getElementById('fBlood').value, panNumber: document.getElementById('fPAN').value.trim().toUpperCase(), aadhaarNumber: document.getElementById('fAAD').value.trim(), nationality: document.getElementById('fNat').value.trim(), religion: document.getElementById('fRel').value.trim(), linkedinProfile: document.getElementById('fLI').value.trim(), fatherSpouseName: document.getElementById('fFatherName').value.trim(), isPhysicallyChallenged: pwdToggle, disabilityType: pwdToggle ? document.getElementById('fPWDType').value : null, disabilityPercentage: pwdToggle ? (parseInt(document.getElementById('fPWDPct').value) || null) : null, certificateNumber: pwdToggle ? document.getElementById('fPWDCert').value.trim() : null, department: dept, subDepartment: document.getElementById('fSubDept').value.trim(), designation: desig, employeeGrade: document.getElementById('fGrade').value, employmentType: document.getElementById('fEmpType').value, joiningDate, probationEndDate: document.getElementById('fProbEnd').value || null, reportingManager: document.getElementById('fMgr').value.trim(), hrBusinessPartner: document.getElementById('fHRBP').value.trim(), workLocation: document.getElementById('fWL').value, basicSalary: parseFloat(basicSalary) || null, shift: document.getElementById('fShift').value, costCentre: document.getElementById('fCC').value.trim(), bankName: document.getElementById('fBank').value.trim(), accountNumber: document.getElementById('fAccNo').value.trim(), ifscCode: document.getElementById('fIFSC').value.trim().toUpperCase(), personalEmail: email, workEmail: document.getElementById('fWEmail').value.trim(), mobileNumber: mobile, alternateNumber: document.getElementById('fAlt').value.trim(), currentStreet: document.getElementById('fCAddr').value.trim(), currentCity: document.getElementById('fCity').value.trim(), currentState: document.getElementById('fState').value.trim(), currentPincode: document.getElementById('fPIN').value.trim(), currentCountry: document.getElementById('fCountry').value.trim(), permanentStreet: document.getElementById('fPAddr').value.trim(), permanentCity: document.getElementById('fPCity').value.trim(), permanentState: document.getElementById('fPState').value.trim(), permanentPincode: document.getElementById('fPPIN').value.trim(), permanentCountry: document.getElementById('fPCountry').value.trim(), emergencyName: ecName, emergencyRelationship: document.getElementById('fECRel').value, emergencyPhone: ecPhone, education: collectEducation(), family: collectFamily(), workExperience: collectExperience() };
             const formData = new FormData();
             formData.append('employee', JSON.stringify(employeePayload));
 
@@ -2420,6 +2516,22 @@
         document.getElementById('addEmployeeForm')?.addEventListener('submit', async function (e) {
             e.preventDefault();
             const firstName = document.getElementById('fFN').value.trim(), lastName = document.getElementById('fLN').value.trim(), email = document.getElementById('fPEmail').value.trim(), mobile = document.getElementById('fMob').value.trim(), dept = document.getElementById('fDept').value, desig = document.getElementById('fDesig').value.trim(), joiningDate = document.getElementById('fJD').value, basicSalary = document.getElementById('fBasic').value, ecName = document.getElementById('fECName').value.trim(), ecPhone = document.getElementById('fECPhone').value.trim();
+            // Password validation
+            const password = document.getElementById('fPassword').value.trim();
+            const confirmPassword = document.getElementById('fConfirmPassword').value.trim();
+
+            if (!password) {
+                showToast('Please enter a password', 'error');
+                return;
+            }
+            if (password.length < 6) {
+                showToast('Password must be at least 6 characters', 'error');
+                return;
+            }
+            if (password !== confirmPassword) {
+                showToast('Passwords do not match', 'error');
+                return;
+            }
             if (!firstName || !lastName) { showToast('Please enter First Name and Last Name', 'error'); return; }
             if (!email || !mobile) { showToast('Please enter Email and Mobile number', 'error'); return; }
             if (!dept || !desig) { showToast('Please select Department and Designation', 'error'); return; }
@@ -2427,8 +2539,7 @@
             if (!ecName || !ecPhone) { showToast('Please enter Emergency Contact details', 'error'); return; }
 
             const pwdToggle = document.getElementById('fPWDToggle').checked;
-            const employeePayload = { firstName, middleName: document.getElementById('fMN').value.trim(), lastName, dateOfBirth: document.getElementById('fDOB').value || null, gender: document.getElementById('fGender').value, maritalStatus: document.getElementById('fMarital').value, bloodGroup: document.getElementById('fBlood').value, panNumber: document.getElementById('fPAN').value.trim().toUpperCase(), aadhaarNumber: document.getElementById('fAAD').value.trim(), nationality: document.getElementById('fNat').value.trim(), religion: document.getElementById('fRel').value.trim(), linkedinProfile: document.getElementById('fLI').value.trim(), fatherSpouseName: document.getElementById('fFatherName').value.trim(), isPhysicallyChallenged: pwdToggle, disabilityType: pwdToggle ? document.getElementById('fPWDType').value : null, disabilityPercentage: pwdToggle ? (parseInt(document.getElementById('fPWDPct').value) || null) : null, certificateNumber: pwdToggle ? document.getElementById('fPWDCert').value.trim() : null, department: dept, subDepartment: document.getElementById('fSubDept').value.trim(), designation: desig, employeeGrade: document.getElementById('fGrade').value, employmentType: document.getElementById('fEmpType').value, joiningDate, probationEndDate: document.getElementById('fProbEnd').value || null, reportingManager: document.getElementById('fMgr').value.trim(), hrBusinessPartner: document.getElementById('fHRBP').value.trim(), workLocation: document.getElementById('fWL').value, basicSalary: parseFloat(basicSalary) || null, shift: document.getElementById('fShift').value, costCentre: document.getElementById('fCC').value.trim(), bankName: document.getElementById('fBank').value.trim(), accountNumber: document.getElementById('fAccNo').value.trim(), ifscCode: document.getElementById('fIFSC').value.trim().toUpperCase(), personalEmail: email, workEmail: document.getElementById('fWEmail').value.trim(), mobileNumber: mobile, alternateNumber: document.getElementById('fAlt').value.trim(), currentStreet: document.getElementById('fCAddr').value.trim(), currentCity: document.getElementById('fCity').value.trim(), currentState: document.getElementById('fState').value.trim(), currentPincode: document.getElementById('fPIN').value.trim(), currentCountry: document.getElementById('fCountry').value.trim(), permanentStreet: document.getElementById('fPAddr').value.trim(), permanentCity: document.getElementById('fPCity').value.trim(), permanentState: document.getElementById('fPState').value.trim(), permanentPincode: document.getElementById('fPPIN').value.trim(), permanentCountry: document.getElementById('fPCountry').value.trim(), emergencyName: ecName, emergencyRelationship: document.getElementById('fECRel').value, emergencyPhone: ecPhone, education: collectEducation(), family: collectFamily(), workExperience: collectExperience() };
-
+const employeePayload = { firstName, middleName: document.getElementById('fMN').value.trim(), lastName, password: password, dateOfBirth: document.getElementById('fDOB').value || null, gender: document.getElementById('fGender').value, maritalStatus: document.getElementById('fMarital').value, bloodGroup: document.getElementById('fBlood').value, panNumber: document.getElementById('fPAN').value.trim().toUpperCase(), aadhaarNumber: document.getElementById('fAAD').value.trim(), nationality: document.getElementById('fNat').value.trim(), religion: document.getElementById('fRel').value.trim(), linkedinProfile: document.getElementById('fLI').value.trim(), fatherSpouseName: document.getElementById('fFatherName').value.trim(), isPhysicallyChallenged: pwdToggle, disabilityType: pwdToggle ? document.getElementById('fPWDType').value : null, disabilityPercentage: pwdToggle ? (parseInt(document.getElementById('fPWDPct').value) || null) : null, certificateNumber: pwdToggle ? document.getElementById('fPWDCert').value.trim() : null, department: dept, subDepartment: document.getElementById('fSubDept').value.trim(), designation: desig, employeeGrade: document.getElementById('fGrade').value, employmentType: document.getElementById('fEmpType').value, joiningDate, probationEndDate: document.getElementById('fProbEnd').value || null, reportingManager: document.getElementById('fMgr').value.trim(), hrBusinessPartner: document.getElementById('fHRBP').value.trim(), workLocation: document.getElementById('fWL').value, basicSalary: parseFloat(basicSalary) || null, shift: document.getElementById('fShift').value, costCentre: document.getElementById('fCC').value.trim(), bankName: document.getElementById('fBank').value.trim(), accountNumber: document.getElementById('fAccNo').value.trim(), ifscCode: document.getElementById('fIFSC').value.trim().toUpperCase(), personalEmail: email, workEmail: document.getElementById('fWEmail').value.trim(), mobileNumber: mobile, alternateNumber: document.getElementById('fAlt').value.trim(), currentStreet: document.getElementById('fCAddr').value.trim(), currentCity: document.getElementById('fCity').value.trim(), currentState: document.getElementById('fState').value.trim(), currentPincode: document.getElementById('fPIN').value.trim(), currentCountry: document.getElementById('fCountry').value.trim(), permanentStreet: document.getElementById('fPAddr').value.trim(), permanentCity: document.getElementById('fPCity').value.trim(), permanentState: document.getElementById('fPState').value.trim(), permanentPincode: document.getElementById('fPPIN').value.trim(), permanentCountry: document.getElementById('fPCountry').value.trim(), emergencyName: ecName, emergencyRelationship: document.getElementById('fECRel').value, emergencyPhone: ecPhone, education: collectEducation(), family: collectFamily(), workExperience: collectExperience() };
             const formData = new FormData();
             formData.append('employee', JSON.stringify(employeePayload));
             const docKeyMap = { 'Aadhaar Card': 'aadhaarDocument', 'PAN Card': 'panDocument', 'Degree Certificate': 'degreeDocument', 'Experience Letter': 'experienceDocument' };
@@ -2460,6 +2571,20 @@
             document.getElementById('fGender').value = '';
         }
 
+        function togglePasswordVisibility() {
+            const passwordField = document.getElementById('fPassword');
+            const confirmField = document.getElementById('fConfirmPassword');
+            const showCheckbox = document.getElementById('fShowPassword');
+
+            if (showCheckbox.checked) {
+                passwordField.type = 'text';
+                confirmField.type = 'text';
+            } else {
+                passwordField.type = 'password';
+                confirmField.type = 'password';
+            }
+        }
+
         // ==================== DOCUMENTS TAB ====================
         function uploadDocument(docName) { const emp = document.getElementById('docEmployeeSelect').value; if (!emp) { showToast('Select employee first', 'error'); return; } showToast('To upload documents, use the Add/Edit Employee form', 'info'); }
 
@@ -2482,13 +2607,24 @@
             });
         }
 
+        // Replace the existing populateDropdowns function with this:
         async function populateDropdowns() {
             const result = await apiFetch(`${API_BASE}/all-employees`);
             const employees = result.ok ? (result.data || []) : [];
-            ['docEmployeeSelect'].forEach(id => {
-                const sel = document.getElementById(id);
-                if (sel) { let options = '<option value="">Select Employee</option>'; employees.forEach(emp => { const name = `${emp.firstName || ''} ${emp.lastName || ''}`.trim(); options += `<option value="${emp.employeeId}">${name} (${emp.employeeId})</option>`; }); sel.innerHTML = options; }
-            });
+
+            // Document tab dropdown
+            const docSel = document.getElementById('docEmployeeSelect');
+            if (docSel) {
+                let options = '<option value="">Select Employee</option>';
+                employees.forEach(emp => {
+                    const name = emp.fullName || `${emp.firstName || ''} ${emp.lastName || ''}`.trim();
+                    options += `<option value="${emp.employeeId}">${name} (${emp.employeeId})</option>`;
+                });
+                docSel.innerHTML = options;
+            }
+
+            // Promotion dropdowns
+            await populatePromotionEmployeeDropdown();
         }
 
         // ==================== TAB NAVIGATION ====================
@@ -2521,6 +2657,282 @@
             renderCustomFields();
             await fetchAndRenderEmployees();
         });
+
+        // ==================== PROMOTION VARIABLES ====================
+        const PROMOTION_API_BASE = 'http://localhost:8086/api/promotions';
+        let deletePromoId = null;
+        let currentSelectedEmployee = null;
+
+        // ==================== PROMOTION FUNCTIONS ====================
+
+        // Load promotions for selected employee
+        async function loadEmployeePromotions() {
+            const employeeSelect = document.getElementById('promotionEmployeeSelect');
+            const employeeId = employeeSelect?.value;
+
+            if (!employeeId) {
+                document.getElementById('promotionsList').innerHTML = `
+                <tr><td colspan="9" class="py-8 text-center" style="color:var(--text-light);">
+                    <i class="fas fa-info-circle mr-2"></i>Select an employee to view promotions
+                </td></tr>`;
+                return;
+            }
+
+            // Get employeePrimeId from employeeId string
+            const result = await apiFetch(`${API_BASE}/get-employee-by-employeeId/${employeeId}`);
+            if (!result.ok || !result.data?.data) {
+                showToast('Could not fetch employee details', 'error');
+                return;
+            }
+
+            const employee = result.data.data;
+            currentSelectedEmployee = employee;
+
+            // Fetch promotions
+            const promoResult = await apiFetch(`${PROMOTION_API_BASE}/employee/${employee.employeePrimeId}`);
+
+            if (!promoResult.ok) {
+                showToast('Failed to load promotions', 'error');
+                return;
+            }
+
+            const promotions = promoResult.data?.data || [];
+            renderPromotionsTable(promotions);
+        }
+
+        // Render promotions table
+        function renderPromotionsTable(promotions) {
+            const tbody = document.getElementById('promotionsList');
+
+            if (!promotions || promotions.length === 0) {
+                tbody.innerHTML = `
+                <tr><td colspan="9" class="py-8 text-center" style="color:var(--text-light);">
+                    <i class="fas fa-info-circle mr-2"></i>No promotion records found for this employee
+                </td></tr>`;
+                return;
+            }
+
+            let html = '';
+            promotions.forEach(promo => {
+                html += `
+                <tr class="border-b data-row" style="border-color:#1B738C;">
+                    <td class="py-3 text-sm" style="color:var(--text-light);">${promo.id || '-'}</td>
+                    <td class="py-3 text-sm" style="color:var(--text-light);">${promo.previousDesignation || '-'}</td>
+                    <td class="py-3 text-sm" style="color:var(--primary); font-weight:600;">${promo.newDesignation || '-'}</td>
+                    <td class="py-3 text-sm" style="color:var(--text-light);">${promo.previousSalary ? '₹' + Number(promo.previousSalary).toLocaleString('en-IN') : '-'}</td>
+                    <td class="py-3 text-sm" style="color:var(--primary); font-weight:500;">${promo.newSalary ? '₹' + Number(promo.newSalary).toLocaleString('en-IN') : '-'}</td>
+                    <td class="py-3 text-sm" style="color:var(--text-light);">${formatDate(promo.promotionDate)}</td>
+                    <td class="py-3 text-sm" style="color:var(--text-light);">${formatDate(promo.effectiveFrom) || '-'}</td>
+                    <td class="py-3 text-sm" style="color:var(--text-light); max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${promo.remarks || '-'}</td>
+                    <td class="py-3">
+                        <button onclick="deletePromotionRecord(${promo.id})" title="Delete"
+                            style="background:rgba(220,53,69,0.1); border:1px solid #dc3545; padding:5px 9px; border-radius:6px; cursor:pointer; font-size:12px; color:#dc3545;">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `;
+            });
+            tbody.innerHTML = html;
+        }
+
+        // Format date helper
+        function formatDate(dateStr) {
+            if (!dateStr) return null;
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+        }
+
+        // Open Add Promotion Modal
+        async function openAddPromotionModal() {
+            const employeeSelect = document.getElementById('promotionEmployeeSelect');
+            const employeeId = employeeSelect?.value;
+
+            if (!employeeId) {
+                showToast('Please select an employee first', 'error');
+                return;
+            }
+
+            // Get employee details
+            const result = await apiFetch(`${API_BASE}/get-employee-by-employeeId/${employeeId}`);
+            if (!result.ok || !result.data?.data) {
+                showToast('Could not fetch employee details', 'error');
+                return;
+            }
+
+            const employee = result.data.data;
+            currentSelectedEmployee = employee;
+
+            // Reset form
+            document.getElementById('promotionId').value = '';
+            document.getElementById('prevDesig').value = employee.designation || '';
+            document.getElementById('newDesig').value = '';
+            document.getElementById('prevSalary').value = employee.basicSalary || '';
+            document.getElementById('newSalary').value = '';
+            document.getElementById('promoDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('effectiveFrom').value = '';
+            document.getElementById('remarks').value = '';
+
+            // Set employee dropdown value
+            const promoEmployeeSelect = document.getElementById('promoEmployeeId');
+            promoEmployeeSelect.value = employee.employeePrimeId;
+            promoEmployeeSelect.disabled = true;
+
+            document.getElementById('promotionModalTitle').innerText = 'Add Promotion';
+            document.getElementById('promotionModal').classList.add('active');
+        }
+
+        // Close Promotion Modal
+        function closePromotionModal() {
+            document.getElementById('promotionModal').classList.remove('active');
+            const promoEmployeeSelect = document.getElementById('promoEmployeeId');
+            promoEmployeeSelect.disabled = false;
+            promoEmployeeSelect.value = '';
+        }
+
+        // Save Promotion (Create/Update)
+        async function savePromotion(event) {
+            event.preventDefault();
+
+            const employeePrimeId = document.getElementById('promoEmployeeId').value;
+            const promotionId = document.getElementById('promotionId').value;
+            const previousDesignation = document.getElementById('prevDesig').value;
+            const newDesignation = document.getElementById('newDesig').value.trim();
+            const previousSalary = document.getElementById('prevSalary').value ? parseFloat(document.getElementById('prevSalary').value) : null;
+            const newSalary = document.getElementById('newSalary').value ? parseFloat(document.getElementById('newSalary').value) : null;
+            const promotionDate = document.getElementById('promoDate').value;
+            const effectiveFrom = document.getElementById('effectiveFrom').value || promotionDate;
+            const remarks = document.getElementById('remarks').value;
+
+            if (!employeePrimeId) {
+                showToast('Please select an employee', 'error');
+                return;
+            }
+
+            if (!newDesignation) {
+                showToast('Please enter new designation', 'error');
+                return;
+            }
+
+            if (!promotionDate) {
+                showToast('Please select promotion date', 'error');
+                return;
+            }
+
+            const payload = {
+                employeePrimeId: parseInt(employeePrimeId),
+                previousDesignation: previousDesignation || null,
+                newDesignation: newDesignation,
+                promotionDate: promotionDate,
+                previousSalary: previousSalary,
+                newSalary: newSalary,
+                effectiveFrom: effectiveFrom,
+                remarks: remarks || null
+            };
+
+            const saveBtn = event.submitter;
+            const originalText = saveBtn.innerHTML;
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Saving...';
+
+            try {
+                let result;
+                if (promotionId) {
+                    // Update not implemented in controller, but we can do delete+create or just show error
+                    showToast('Update not supported. Please delete and create new.', 'error');
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = originalText;
+                    return;
+                } else {
+                    result = await fetch(`${PROMOTION_API_BASE}/create`, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                }
+
+                const response = await result.json();
+
+                if (result.ok && response.success) {
+                    showToast('Promotion added successfully!', 'success');
+                    closePromotionModal();
+                    // Refresh promotions list
+                    await loadEmployeePromotions();
+                    // Also refresh employee list to show updated designation
+                    await fetchAndRenderEmployees();
+                } else {
+                    showToast(response.message || 'Failed to save promotion', 'error');
+                }
+            } catch (error) {
+                showToast('Network error: ' + error.message, 'error');
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = originalText;
+            }
+        }
+
+        // Delete Promotion
+        let deletePromoIdLocal = null;
+
+        function deletePromotionRecord(promotionId) {
+            deletePromoIdLocal = promotionId;
+            document.getElementById('deletePromoModal').classList.add('active');
+        }
+
+        function closeDeletePromoModal() {
+            document.getElementById('deletePromoModal').classList.remove('active');
+            deletePromoIdLocal = null;
+        }
+
+        async function confirmDeletePromotion() {
+            if (!deletePromoIdLocal) return;
+
+            try {
+                const result = await fetch(`${PROMOTION_API_BASE}/${deletePromoIdLocal}`, {
+                    method: 'DELETE'
+                });
+
+                const response = await result.json();
+
+                if (result.ok && response.success) {
+                    showToast('Promotion deleted successfully!', 'success');
+                    closeDeletePromoModal();
+                    await loadEmployeePromotions();
+                    // Refresh employee list to show reverted designation (if needed)
+                    await fetchAndRenderEmployees();
+                } else {
+                    showToast(response.message || 'Failed to delete promotion', 'error');
+                }
+            } catch (error) {
+                showToast('Network error: ' + error.message, 'error');
+            }
+        }
+
+        // Update promotion employee dropdown
+        async function populatePromotionEmployeeDropdown() {
+            const result = await apiFetch(`${API_BASE}/all-employees`);
+            const employees = result.ok ? (result.data || []) : [];
+
+            const dropdowns = ['promotionEmployeeSelect', 'promoEmployeeId'];
+            dropdowns.forEach(id => {
+                const sel = document.getElementById(id);
+                if (sel && id === 'promotionEmployeeSelect') {
+                    let options = '<option value="">Select Employee</option>';
+                    employees.forEach(emp => {
+                        const name = emp.fullName || `${emp.firstName || ''} ${emp.lastName || ''}`.trim();
+                        options += `<option value="${emp.employeeId}">${name} (${emp.employeeId})</option>`;
+                    });
+                    sel.innerHTML = options;
+                } else if (sel && id === 'promoEmployeeId') {
+                    let options = '<option value="">Select Employee</option>';
+                    employees.forEach(emp => {
+                        const name = emp.fullName || `${emp.firstName || ''} ${emp.lastName || ''}`.trim();
+                        options += `<option value="${emp.employeePrimeId}">${name} (${emp.employeeId})</option>`;
+                    });
+                    sel.innerHTML = options;
+                }
+            });
+        }
     </script>
 </body>
 

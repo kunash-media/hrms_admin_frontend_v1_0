@@ -361,9 +361,6 @@
                 const data = await response.json();
                 console.log('Login response:', data);
 
-                // In index.html, update the successful login response handler:
-
-                // In index.html, update the successful login response handler:
 
                 if (response.ok) {
                     // CRITICAL: Store user data with firstName and lastName
@@ -382,13 +379,7 @@
                     // Store all user data
                     localStorage.setItem('hrms_logged_in', 'true');
                     localStorage.setItem('hrms_user', JSON.stringify(userData));
-                    // localStorage.setItem('hrms_mobile', userData.mobile);
-                    // localStorage.setItem('hrms_role', userData.role);
-                    // localStorage.setItem('hrms_adminId', userData.adminId);
-                    // localStorage.setItem('hrms_firstName', firstName);
-                    // localStorage.setItem('hrms_lastName', lastName);
-                    // localStorage.setItem('hrms_fullName', userData.fullName);
-
+                   
                     console.log('✅ User data stored in localStorage:');
                     console.log('  firstName:', firstName);
                     console.log('  lastName:', lastName);

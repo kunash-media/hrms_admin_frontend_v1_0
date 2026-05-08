@@ -12,108 +12,190 @@
     <style>
         * { font-family: 'Inter', sans-serif; }
         
+        :root {
+            --primary: #1B738C;
+            --primary-light: #62C9EA;
+            --primary-soft: #BDE4EE;
+            --primary-bg-light: #e9f2f4;
+            --button-hover: #166278;
+        }
         
+        body { background-color: #f0f7f9; }
+        
+        /* ===== SIDEBAR STYLES ===== */
+        .main-sidebar {
+            width: 256px;
+            background: #b8cfd7;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            left: 0;
+            top: 0;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .main-sidebar.collapsed { width: 70px; }
+        
+        .main-sidebar.collapsed .nav-text,
+        .main-sidebar.collapsed .submenu-arrow,
+        .main-sidebar.collapsed .sidebar-logo span { display: none; }
+        
+        .main-sidebar.collapsed .nav-link { justify-content: center; }
+        
+        .main-sidebar.collapsed .submenu {
+            position: fixed;
+            left: 70px;
+            background: #EBF4F6;
+            min-width: 180px;
+            border-radius: 8px;
+            padding: 6px 0;
+            display: none !important;
+            box-shadow: 0 10px 25px -5px #F3F4F4;
+            z-index: 1000;
+            border: 1px solid #F3F4F4;
+        }
+        
+        .main-sidebar.collapsed .has-submenu:hover .submenu { display: block !important; }
+        
+        /* Navigation Menu Scrollbar */
+        .sidebar-nav {
+            scrollbar-width: thin;
+            scrollbar-color: #1B738C #BDE4EE;
+            overflow-y: auto !important;
+            overflow-x: hidden !important;
+        }
+        
+        .sidebar-nav::-webkit-scrollbar { width: 4px; }
+        .sidebar-nav::-webkit-scrollbar-track { background: #BDE4EE; border-radius: 10px; }
+        .sidebar-nav::-webkit-scrollbar-thumb { background: #1B738C; border-radius: 10px; }
+        
+        .nav-link {
+            border: 1px solid transparent;
+            cursor: pointer;
+        }
+        
+        .nav-link:hover {
+            background-color: #649cab;
+            transform: translateX(2px);
+            border: 1px solid #1B738C;
+        }
+        
+        .nav-link:hover span { color: white !important; }
+        .nav-link:hover i { color: white !important; }
+        
+        .nav-link.active {
+            background-color: #1B738C;
+            border: 1px solid #17657a;
+        }
+        
+        .nav-link.active span { color: #f8f8f8 !important; font-weight: 600; }
+        .nav-link.active i { color: #ebe1ed !important; }
+        
+        .submenu li a:hover {
+            background-color: #649cab;
+            color: white !important;
+            transform: translateX(2px);
+        }
+        
+        .has-submenu.submenu-open > .nav-link .submenu-arrow { transform: rotate(90deg); }
+        
+        /* ===== HEADER STYLES ===== */
+        .main-header {
+            position: fixed;
+            top: 0;
+            right: 0;
+            left: 256px;
+            height: 56px;
+            background: white;
+            border-bottom: 1px solid #3098b5;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 24px;
+            z-index: 99;
+            transition: left 0.3s ease;
+        }
+        
+        .main-sidebar.collapsed ~ .flex-1 .main-header,
+        .main-sidebar.collapsed ~ header { left: 70px !important; }
+        
+        .main-content {
+            margin-top: 56px;
+            margin-left: 256px;
+            padding: 20px;
+            transition: margin-left 0.3s ease;
+        }
+        
+        .main-sidebar.collapsed ~ .flex-1 .main-content { margin-left: 70px; }
+        
+        /* ===== CARD STYLES ===== */
         .section-card {
             background: white;
             border-radius: 12px;
-            border: 1px solid #1B738C;
+            border: 1px solid var(--primary-light);
             padding: 20px;
             margin-bottom: 20px;
         }
         
         .btn-primary {
-            background-color: #1B738C;
-            transition: all 0.3s ease;
+            background-color: var(--primary);
             color: white;
             padding: 8px 16px;
             border-radius: 8px;
             cursor: pointer;
             border: none;
-        }
-        .btn-primary:hover { background-color: #1B738C; transform: translateY(-1px); }
-        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-        
-        .btn-secondary {
-            background-color: #1B738C;
             transition: all 0.3s ease;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            border: none;
         }
-        .btn-secondary:hover { background-color: #186a81; transform: translateY(-1px); }
+        .btn-primary:hover { background-color: var(--button-hover); transform: translateY(-1px); }
         
         .btn-outline {
-            border: 1px solid #6bd1ed;
-            color: #1B738C;
+            border: 1px solid var(--primary-light);
+            color: var(--primary);
             padding: 8px 16px;
             border-radius: 8px;
             background: transparent;
             cursor: pointer;
+            transition: all 0.2s;
         }
-        .btn-outline:hover { background-color: #1B738C; color: white; }
-        
-        .btn-success {
-            background-color: #28a745;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            border: none;
-        }
-        .btn-success:hover { background-color: #218838; }
+        .btn-outline:hover { background-color: var(--primary-bg-light); }
         
         .btn-danger {
             background-color: #dc3545;
             color: white;
             padding: 6px 12px;
             border-radius: 6px;
-            font-size: 12px;
             cursor: pointer;
             border: none;
         }
-        .btn-danger:hover { background-color: #c82333; }
-        
-        .btn-warning {
-            background-color: #ffc107;
-            color: #333;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            border: none;
-        }
-        .btn-warning:hover { background-color: #e0a800; }
         
         input, select, textarea {
-            border: 1px solid #66b5cb;
+            border: 1px solid var(--primary-soft);
             border-radius: 8px;
             padding: 8px 12px;
             width: 100%;
         }
         input:focus, select:focus, textarea:focus {
             outline: none;
-            border-color: #66b5cb;
-            box-shadow: 0 0 0 2px #1B738C;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(27, 115, 140, 0.1);
         }
         
         label {
             font-size: 13px;
-            font-weight: 500;
-            color: #1B738C;
+            font-weight: 600;
+            color: var(--primary);
             margin-bottom: 4px;
             display: block;
         }
         
-        /* Tab Navigation */
         .tab-nav {
             display: flex;
             gap: 8px;
             margin-bottom: 24px;
             padding-bottom: 12px;
-            border-bottom: 1px solid #1B738C;
+            border-bottom: 1px solid var(--primary);
             flex-wrap: wrap;
         }
         
@@ -122,27 +204,21 @@
             border-radius: 8px;
             font-size: 14px;
             font-weight: 500;
-            transition: all 0.3s ease;
             background: transparent;
-            color: #176b82;
+            color: var(--primary);
             cursor: pointer;
             border: none;
-        }
-        
-        .tab-btn:hover {
-            background-color: #83dbf439;
-            color: #1B738C;
+            transition: all 0.2s;
         }
         
         .tab-btn.active {
-            background-color: #17657b;
+            background-color: var(--primary);
             color: white;
         }
         
         .tab-content { display: none; }
         .tab-content.active { display: block; }
         
-        /* Status Badges */
         .status-badge {
             padding: 4px 10px;
             border-radius: 20px;
@@ -154,10 +230,7 @@
         .status-in-progress { background: rgba(23, 162, 184, 0.2); color: #0c5460; }
         .status-completed { background: rgba(40, 167, 69, 0.2); color: #155724; }
         .status-rejected { background: rgba(220, 53, 69, 0.2); color: #721c24; }
-        .status-offer-sent { background: rgba(0, 123, 255, 0.2); color: #004085; }
-        .status-offer-accepted { background: rgba(40, 167, 69, 0.2); color: #155724; }
         
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -181,7 +254,6 @@
             padding: 24px;
         }
         
-        /* Document Item */
         .doc-item {
             display: flex;
             align-items: center;
@@ -189,9 +261,7 @@
             padding: 12px;
             border-bottom: 1px solid #e5e7eb;
         }
-        .doc-item:last-child { border-bottom: none; }
         
-        /* Progress Bar */
         .progress-bar {
             height: 8px;
             background: #e5e7eb;
@@ -200,12 +270,11 @@
         }
         .progress-fill {
             height: 100%;
-            background: #1B738C;
+            background: var(--primary);
             border-radius: 10px;
             transition: width 0.5s ease;
         }
         
-        /* Toast */
         .toast {
             position: fixed;
             bottom: 20px;
@@ -218,546 +287,422 @@
         }
         .toast.success { background-color: #28a745; }
         .toast.error { background-color: #dc3545; }
-        .toast.info { background-color: #17a2b8; }
-        .toast.warning { background-color: #ffc107; color: #333; }
+        .toast.info { background-color: var(--primary); }
         
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
         }
         
-        .main-content { margin-top: 64px; }
-        
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #f3eeef; }
-        ::-webkit-scrollbar-thumb { background: #3aadcd9c; border-radius: 10px; }
-        
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 16px;
-            margin-bottom: 16px;
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
         }
         
-        /* Data Row Hover */
-        .data-row:hover { background-color: rgba(84, 8, 99, 0.05); cursor: pointer; }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
         
-        /* Table Styles */
         table { width: 100%; border-collapse: collapse; }
-        th { font-weight: 600; }
+        th { text-align: left; padding: 12px 8px; font-weight: 600; color: var(--primary); }
+        td { padding: 12px 8px; }
+        .data-row:hover { background-color: rgba(27, 115, 140, 0.05); cursor: pointer; }
+        
+        .dropdown-menu { display: none; }
+        .dropdown-menu.show { display: block; }
+        
+        /* Logout Modal */
+        .logout-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2000;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+        .logout-modal.active { display: flex; }
+        .logout-modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(3px);
+        }
+        .logout-modal-content {
+            position: relative;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.2);
+            animation: modalFadeIn 0.3s ease-out;
+            border: 1px solid #62C9EA;
+        }
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
         
         @media (max-width: 768px) {
-            .section-card { padding: 16px; }
-            .form-row { grid-template-columns: 1fr; }
+            .main-sidebar { transform: translateX(-100%); }
+            .main-sidebar.open { transform: translateX(0); }
+            .main-header { left: 0; }
+            .main-content { margin-left: 0; }
             .tab-btn { padding: 6px 12px; font-size: 12px; }
-            .overflow-x-auto { overflow-x: auto; }
         }
-        
-        /* Animation */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .fade-in { animation: fadeIn 0.3s ease; }
     </style>
 </head>
-<body class="bg-[#EBF4F6]">
-    
-    <div class="flex h-screen overflow-hidden">
-        <div id="sidebar-container"></div>
-        
-        <div class="flex-1 flex flex-col overflow-hidden">
-            <div id="header-container"></div>
+<body>
+
+    <!-- ==================== SIDEBAR ==================== -->
+    <aside class="main-sidebar" id="mainSidebar">
+        <div class="h-14 flex items-center justify-between px-4 border-b flex-shrink-0" style="border-bottom-color: #3098b5;">
+            <div class="sidebar-logo gap-2">
+                <img src="/assets/images/logo.png" alt="Logo" class="h-10 w-48 object-contain">
+            </div>
+            <button id="collapseBtn" class="transition-all duration-300 hover:scale-110" style="color: #3098b5">
+                <i class="fas fa-chevron-left text-xs"></i>
+            </button>
+        </div>
+
+        <nav class="flex-1 overflow-y-auto py-4 sidebar-nav">
+            <ul class="space-y-0.5 px-2">
+                <li class="nav-item">
+                    <a href="/dashboard.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="dashboard">
+                        <i class="fas fa-tachometer-alt w-4 text-xs" style="color: #1B738C;"></i>
+                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/pages/company-mgmt/company.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="company">
+                        <i class="fas fa-building w-4 text-xs" style="color: #1B738C;"></i>
+                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Company Management</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/pages/employees.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="employees">
+                        <i class="fas fa-users w-4 text-xs" style="color: #1B738C;"></i>
+                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Employee Management</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/pages/onboarding.html" class="nav-link active flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="onboarding">
+                        <i class="fas fa-user-plus w-4 text-xs" style="color: #1B738C;"></i>
+                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Onboarding</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/pages/asset.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="asset-management">
+                        <i class="fas fa-laptop w-4 text-xs" style="color: #1B738C;"></i>
+                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Asset Management</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/pages/exit.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="exit">
+                        <i class="fas fa-sign-out-alt w-4 text-xs" style="color: #1B738C;"></i>
+                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Exit Management</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/pages/attandance.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="attendance">
+                        <i class="fas fa-clock w-4 text-xs" style="color: #1B738C;"></i>
+                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Attendance</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/pages/leave.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="leave">
+                        <i class="fas fa-calendar-alt w-4 text-xs" style="color: #1B738C;"></i>
+                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Leave Management</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/pages/expense.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="expense">
+                        <i class="fas fa-wallet w-4 text-xs" style="color: #1B738C;"></i>
+                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Expense Management</span>
+                    </a>
+                </li>
+                <li class="nav-item has-submenu">
+                    <a href="javascript:void(0);" class="nav-link toggle-submenu flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-300 group" data-module="payroll">
+                        <div class="flex items-center gap-2">
+                            <i class="fas fa-rupee-sign w-4 text-xs" style="color: #1B738C;"></i>
+                            <span class="nav-text text-sm font-medium" style="color: #125f74;">Payroll</span>
+                        </div>
+                        <i class="fas fa-chevron-right submenu-arrow text-[9px] transition-transform duration-300" style="color: #1B738C;"></i>
+                    </a>
+                    <ul class="submenu mt-1 space-y-0.5" style="display: none;">
+                        <li><a href="/pages/payroll/employee_payroll.html" class="block px-3 py-1.5 ml-7 rounded-lg text-[13px] transition-all duration-300" style="color: #125f74;">1. Employee Pay</a></li>
+                        <li><a href="/pages/payroll/payslips.html" class="block px-3 py-1.5 ml-7 rounded-lg text-[13px] transition-all duration-300" style="color: #125f74;">2. Employee Pay-Slips</a></li>
+                    </ul>
+                </li>
+                <li class="nav-item">
+                    <a href="/pages/kpi.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="kpi">
+                        <i class="fas fa-chart-line w-4 text-xs" style="color: #1B738C;"></i>
+                        <span class="nav-text text-sm font-medium" style="color: #125f74;">KPI / Performance</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="/pages/career.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="workflow">
+                        <i class="fas fa-tasks w-4 text-xs" style="color: #1B738C;"></i>
+                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Careers</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- ==================== HEADER ==================== -->
+    <header class="main-header">
+        <div class="flex items-center gap-4"></div>
+        <div class="flex items-center gap-4">
+            <div class="relative">
+                <button id="notificationBtn" class="transition-all relative" style="color: #BDE4EE">
+                    <i class="fas fa-bell text-xl"></i>
+                    <span class="absolute -top-1 -right-2 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center" style="background-color: #1B738C">3</span>
+                </button>
+                <div id="notificationMenu" class="dropdown-menu hidden absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border z-50" style="border-color: #62C9EA">
+                    <div class="p-4 border-b" style="border-color: #62C9EA;">
+                        <h4 class="font-semibold" style="color: #1B738C;">Notifications</h4>
+                    </div>
+                    <div class="max-h-96 overflow-y-auto">
+                        <div class="p-3 hover:bg-[#FFD3D5] cursor-pointer transition-all">
+                            <p class="text-sm" style="color: #1B738C">New leave request from Elena</p>
+                            <p class="text-xs mt-1" style="color: #62C9EA">2 hours ago</p>
+                        </div>
+                        <div class="p-3 hover:bg-[#FFD3D5] cursor-pointer transition-all">
+                            <p class="text-sm" style="color: #1B738C;">Payroll for March processed</p>
+                            <p class="text-xs mt-1" style="color: #62C9EA;">Yesterday</p>
+                        </div>
+                    </div>
+                    <div class="p-3 border-t text-center" style="border-color: #62C9EA;">
+                        <a href="#" class="text-sm" style="color: #1B738C;">View all notifications</a>
+                    </div>
+                </div>
+            </div>
             
-            <main class="flex-1 overflow-y-auto p-5 main-content">
-               
-                <!-- Page Header -->
-                <div class="mb-4 fade-in">
-                    <h1 class="text-xl font-bold" style="color: #1B738C;">Onboarding Management</h1>
-                    <p class="text-xs mt-0.5" style="color: #1B738C;">Manage new employee onboarding process and document verification</p>
-                </div>
-                
-                <!-- Tab Navigation -->
-                <div class="tab-nav">
-                    <button class="tab-btn active" data-tab="onboarding-list">Onboarding List</button>
-                    <button class="tab-btn" data-tab="documents">Documents</button>
-                </div>
-                
-                <!-- ==================== TAB 1: ONBOARDING LIST ==================== -->
-                <div id="tab-onboarding-list" class="tab-content active">
-                    <div class="section-card fade-in">
-                        <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
-                            <h3 class="text-md font-semibold" style="color:#1B738C;">Active Onboarding</h3>
-                            <div class="flex gap-2 flex-wrap">
-                                <input type="text" id="searchOnboarding" placeholder="Search employee..." class="w-56 text-sm p-2 border border-[#1B738C]" onkeyup="filterOnboardingList()">
-                                <select id="filterOnboardingStatus" onchange="filterOnboardingList()" class="w-36 text-sm p-2 border border-[#1B738C]">
-                                    <option value="all">All Status</option>
-                                    <option value="pending">Pending</option>
-                                    <option value="in-progress">In Progress</option>
-                                    <option value="completed">Completed</option>
-                                </select>
-                                <button onclick="exportOnboardingList()" class="btn-outline text-sm border border-[#1B738C] text-[#1B738C]"><i class="fas fa-download mr-1 "></i>Export</button>
-                            </div>
-                        </div>
-                        
-                        <div class="overflow-x-auto">
-                            <table class="w-full">
-                                <thead>
-                                    <tr class="border-b" style="border-color:#1B738C;">
-                                        <th class="text-left py-3 text-xs font-medium" style="color:#1B738C;">Employee</th>
-                                        <th class="text-left py-3 text-xs font-medium" style="color:#1B738C;">Department</th>
-                                        <th class="text-left py-3 text-xs font-medium" style="color:#1B738C;">Designation</th>
-                                        <th class="text-left py-3 text-xs font-medium" style="color:#1B738C;">Joining Date</th>
-                                        <!-- <th class="text-left py-3 text-xs font-medium" style="color:#1B738C;">Progress</th> -->
-                                        <th class="text-left py-3 text-xs font-medium" style="color:#1B738C;">Status</th>
-                                        <th class="text-left py-3 text-xs font-medium" style="color:#1B738C;">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="onboardingList">
-                                    <tr class="border-b data-row" style="border-color:#1B738C;">
-                                        <td class="py-3"><div><p class="text-sm font-medium" style="color:#1B738C;">Emily Davis</p><p class="text-xs" style="color:#1B738C;">emily.davis@email.com</p></div></td>
-                                        <td class="py-3 text-sm" style="color:#1B738C;">HR</td>
-                                        <td class="py-3 text-sm" style="color:#1B738C;">HR Executive</td>
-                                        <td class="py-3 text-sm" style="color:#1B738C;">2024-04-15</td>
-                                        <!-- <td class="py-3"><div class="w-32"><div class="progress-bar"><div class="progress-fill" style="width: 60%"></div></div><span class="text-xs" style="color:#92487A;">60%</span></div></td> -->
-                                        <td class="py-3"><span class="status-badge status-in-progress">In Progress</span></td>
-                                        <td class="py-3"><button onclick="viewOnboardingDetails(this)" class="text-[#1B738C] mr-2" title="View Details"><i class="fas fa-eye"></i></button><button onclick="editOnboarding(this)" class="text-[#1B738C] mr-2" title="Edit"><i class="fas fa-edit"></i></button><button onclick="deleteOnboarding(this)" class="text-red-500" title="Delete"><i class="fas fa-trash"></i></button></td>
-                                    </tr>
-                                    <tr class="border-b data-row" style="border-color:#1B738C;">
-                                        <td class="py-3"><div><p class="text-sm font-medium" style="color:#1B738C;">James Wilson</p><p class="text-xs" style="color:#1B738C;">james.wilson@email.com</p></div></td>
-                                        <td class="py-3 text-sm" style="color:#1B738C;">IT</td>
-                                        <td class="py-3 text-sm" style="color:#1B738C;">Senior Developer</td>
-                                        <td class="py-3 text-sm" style="color:#1B738C;">2024-04-10</td>
-                                        <!-- <td class="py-3"><div class="w-32"><div class="progress-bar"><div class="progress-fill" style="width: 100%"></div></div><span class="text-xs" style="color:#1B738C;">100%</span></div></td> -->
-                                        <td class="py-3"><span class="status-badge status-completed">Completed</span></td>
-                                        <td class="py-3"><button onclick="viewOnboardingDetails(this)" class="text-[#1B738C] mr-2" title="View Details"><i class="fas fa-eye"></i></button><button onclick="editOnboarding(this)" class="text-[#1B738C] mr-2" title="Edit"><i class="fas fa-edit"></i></button><button onclick="deleteOnboarding(this)" class="text-red-500" title="Delete"><i class="fas fa-trash"></i></button></td>
-                                    </tr>
-                                    <tr class="border-b data-row" style="border-color:#1B738C;">
-                                        <td class="py-3"><div><p class="text-sm font-medium" style="color:#1B738C;">Lisa Anderson</p><p class="text-xs" style="color:#1B738C;">lisa.anderson@email.com</p></div></td>
-                                        <td class="py-3 text-sm" style="color:#1B738C;">Marketing</td>
-                                        <td class="py-3 text-sm" style="color:#1B738C;">Marketing Manager</td>
-                                        <td class="py-3 text-sm" style="color:#1B738C;">2024-04-18</td>
-                                        <!-- <td class="py-3"><div class="w-32"><div class="progress-bar"><div class="progress-fill" style="width: 30%"></div></div><span class="text-xs" style="color:#1B738C;">30%</span></div></td> -->
-                                        <td class="py-3"><span class="status-badge status-pending">Pending</span></td>
-                                        <td class="py-3"><button onclick="viewOnboardingDetails(this)" class="text-[#1B738C] mr-2" title="View Details"><i class="fas fa-eye"></i></button><button onclick="editOnboarding(this)" class="text-[#1B738C] mr-2" title="Edit"><i class="fas fa-edit"></i></button><button onclick="deleteOnboarding(this)" class="text-red-500" title="Delete"><i class="fas fa-trash"></i></button></td>
-                                    </tr>
-                                    <tr class="border-b data-row" style="border-color:#1B738C;">
-                                        <td class="py-3"><div><p class="text-sm font-medium" style="color:#1B738C;">Sarah Johnson</p><p class="text-xs" style="color:#1B738C;">sarah.johnson@email.com</p></div></td>
-                                        <td class="py-3 text-sm" style="color:#1B738C;">Design</td>
-                                        <td class="py-3 text-sm" style="color:#1B738C;">UI/UX Designer</td>
-                                        <td class="py-3 text-sm" style="color:#1B738C;">2024-04-20</td>
-                                        <!-- <td class="py-3"><div class="w-32"><div class="progress-bar"><div class="progress-fill" style="width: 45%"></div></div><span class="text-xs" style="color:#1B738C;">45%</span></div></td> -->
-                                        <td class="py-3"><span class="status-badge status-in-progress">In Progress</span></td>
-                                        <td class="py-3"><button onclick="viewOnboardingDetails(this)" class="text-[#1B738C] mr-2" title="View Details"><i class="fas fa-eye"></i></button><button onclick="editOnboarding(this)" class="text-[#1B738C] mr-2" title="Edit"><i class="fas fa-edit"></i></button><button onclick="deleteOnboarding(this)" class="text-red-500" title="Delete"><i class="fas fa-trash"></i></button></td>
-                                    </tr>
-                                    <tr class="border-b data-row" style="border-color:#1B738C;">
-                                        <td class="py-3"><div><p class="text-sm font-medium" style="color:#1B738C;">Michael Brown</p><p class="text-xs" style="color:#1B738C;">michael.brown@email.com</p></div></td>
-                                        <td class="py-3 text-sm" style="color:#1B738C;">IT</td>
-                                        <td class="py-3 text-sm" style="color:#1B738C;">System Admin</td>
-                                        <td class="py-3 text-sm" style="color:#1B738C;">2024-04-25</td>
-                                        <!-- <td class="py-3"><div class="w-32"><div class="progress-bar"><div class="progress-fill" style="width: 15%"></div></div><span class="text-xs" style="color:#1B738C;">15%</span></div></td> -->
-                                        <td class="py-3"><span class="status-badge status-pending">Pending</span></td>
-                                        <td class="py-3"><button onclick="viewOnboardingDetails(this)" class="text-[#1B738C] mr-2" title="View Details"><i class="fas fa-eye"></i></button><button onclick="editOnboarding(this)" class="text-[#1B738C] mr-2" title="Edit"><i class="fas fa-edit"></i></button><button onclick="deleteOnboarding(this)" class="text-red-500" title="Delete"><i class="fas fa-trash"></i></button></td>
-                                     </tr>
-                                </tbody>
-                            </table>
-                        </div>
+            <div class="relative">
+                <button id="userBtn" class="flex items-center gap-3 px-3 py-1.5 rounded-lg transition-all hover:bg-[#EBF4F6]">
+                    <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background: #1B738C">
+                        <span id="userInitial" class="text-white text-sm font-medium">SA</span>
                     </div>
-                    
-                    <!-- Onboarding Statistics -->
-                    <div class="section-card fade-in">
-                        <h3 class="text-md font-semibold mb-4" style="color: #1B738C;">Onboarding Statistics</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-                            <div class="p-3 border rounded-lg text-center" style="border-color:#1B738C;">
-                                <i class="fas fa-users text-2xl mb-2" style="color:#1B738C;"></i>
-                                <p class="text-2xl font-bold" style="color:#1B738C;" id="totalOnboarding">5</p>
-                                <p class="text-xs" style="color:#1B738C;">Total Onboarding</p>
-                            </div>
-                            <div class="p-3 border rounded-lg text-center" style="border-color:#1B738C;">
-                                <i class="fas fa-spinner fa-pulse text-2xl mb-2" style="color:#ffc107;"></i>
-                                <p class="text-2xl font-bold" style="color:#1B738C;" id="inProgressCount">3</p>
-                                <p class="text-xs" style="color:#1B738C;">In Progress</p>
-                            </div>
-                            <div class="p-3 border rounded-lg text-center" style="border-color:#1B738C;">
-                                <i class="fas fa-check-circle text-2xl mb-2" style="color:#28a745;"></i>
-                                <p class="text-2xl font-bold" style="color:#1B738C;" id="completedCount">1</p>
-                                <p class="text-xs" style="color:#1B738C;">Completed</p>
-                            </div>
-                            <div class="p-3 border rounded-lg text-center" style="border-color:#1B738C;">
-                                <i class="fas fa-clock text-2xl mb-2" style="color:#17a2b8;"></i>
-                                <p class="text-2xl font-bold" style="color:#1B738C;" id="pendingCount">1</p>
-                                <p class="text-xs" style="color:#1B738C;">Pending</p>
-                            </div>
-                        </div>
+                    <div class="hidden md:block text-left">
+                        <p id="userName" class="text-sm font-semibold" style="color: #1B738C;">Super Admin</p>
+                        <p id="userRole" class="text-xs" style="color: #39acd2;">Administrator</p>
+                    </div>
+                    <i class="fas fa-chevron-down text-xs hidden md:block" style="color: #1B738C;"></i>
+                </button>
+                <div id="userMenu" class="dropdown-menu hidden absolute right-0 mt-2 w-56 bg-white rounded-xl shadow-lg border z-50" style="border-color: #62C9EA;">
+                    <div class="p-3 border-b" style="border-color: #62C9EA;">
+                        <p id="menuUserName" class="text-sm font-semibold" style="color: #1B738C;">Super Admin</p>
+                    </div>
+                    <div class="border-t pt-2" style="border-color: #62C9EA;">
+                        <a href="#" id="logoutBtn" class="flex items-center gap-3 px-4 py-2 mb-2 text-sm transition-all hover:bg-[#EBF4F6]" style="color: #e74c3c;">
+                            <i class="fas fa-sign-out-alt w-4"></i> Logout
+                        </a>
                     </div>
                 </div>
-                
-                <!-- ==================== TAB 2: DOCUMENTS ==================== -->
-                <div id="tab-documents" class="tab-content">
-                    <div class="section-card fade-in">
-                        <div class="flex justify-between items-center mb-4">
-                            <h3 class="text-md font-semibold" style="color: #1B738C;">Required Documents</h3>
-                            <button onclick="refreshDocumentStatus()" class="btn-outline text-sm"><i class="fas fa-sync-alt mr-1"></i>Refresh</button>
-                        </div>
-                        <div id="documentsList">
-                            <div class="doc-item">
-                                <div><i class="fas fa-id-card mr-2" style="color:#1B738C;;"></i><span style="color:#1B738C;">PAN Card</span></div>
-                                <div><button onclick="uploadDocument(this, 'PAN Card')" class="btn-outline text-xs">Upload</button><span class="status-badge status-completed text-xs ml-2" id="doc-pan-status">Uploaded</span></div>
-                            </div>
-                            <div class="doc-item">
-                                <div><i class="fas fa-address-card mr-2" style="color:#1B738C;"></i><span style="color:#1B738C;">Aadhar Card</span></div>
-                                <div><button onclick="uploadDocument(this, 'Aadhar Card')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-aadhar-status">Pending</span></div>
-                            </div>
-                            <div class="doc-item">
-                                <div><i class="fas fa-file-alt mr-2" style="color:#1B738C;"></i><span style="color:#1B738C;">Offer Letter</span></div>
-                                <div><button onclick="uploadDocument(this, 'Offer Letter')" class="btn-outline text-xs">Upload</button><span class="status-badge status-completed text-xs ml-2" id="doc-offer-status">Uploaded</span></div>
-                            </div>
-                            <div class="doc-item">
-                                <div><i class="fas fa-graduation-cap mr-2" style="color:#1B738C;"></i><span style="color:#1B738C;">Degree Certificate</span></div>
-                                <div><button onclick="uploadDocument(this, 'Degree Certificate')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-degree-status">Pending</span></div>
-                            </div>
-                            <div class="doc-item">
-                                <div><i class="fas fa-passport mr-2" style="color:#1B738C;"></i><span style="color:#1B738C;">Passport Size Photo</span></div>
-                                <div><button onclick="uploadDocument(this, 'Passport Size Photo')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-photo-status">Pending</span></div>
-                            </div>
-                            <div class="doc-item">
-                                <div><i class="fas fa-bank mr-2" style="color:#1B738C;"></i><span style="color:#1B738C;">Bank Account Details</span></div>
-                                <div><button onclick="uploadDocument(this, 'Bank Account Details')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-bank-status">Pending</span></div>
-                            </div>
-                            <div class="doc-item">
-                                <div><i class="fas fa-file-signature mr-2" style="color:#1B738C;"></i><span style="color:#1B738C;">Previous Experience Letters</span></div>
-                                <div><button onclick="uploadDocument(this, 'Previous Experience Letters')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-exp-status">Pending</span></div>
-                            </div>
-                            <div class="doc-item">
-                                <div><i class="fas fa-medical-alt mr-2" style="color:#1B738C;"></i><span style="color:#1B738C;">Medical Certificate</span></div>
-                                <div><button onclick="uploadDocument(this, 'Medical Certificate')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-medical-status">Pending</span></div>
-                            </div>
-                            <div class="doc-item">
-                                <div><i class="fas fa-handshake mr-2" style="color:#1B738C;"></i><span style="color:#1B738C;">Signed Contract</span></div>
-                                <div><button onclick="uploadDocument(this, 'Signed Contract')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-contract-status">Pending</span></div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Document Verification Status -->
-                    <div class="section-card fade-in">
-                        <h3 class="text-md font-semibold mb-4" style="color: #1B738C;">Verification Status</h3>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                            <div class="p-3 border rounded-lg" style="border-color:#1B738C;">
-                                <div class="flex justify-between"><span style="color:#1B738C;">Total Documents</span><span class="font-bold" style="color:#1B738C;" id="totalDocs">9</span></div>
-                                <div class="progress-bar mt-2"><div class="progress-fill" id="totalProgressFill" style="width: 22%"></div></div>
-                                <p class="text-xs mt-1" style="color:#1B738C;"><span id="uploadedDocs">2</span> out of 9 uploaded</p>
-                            </div>
-                            <div class="p-3 border rounded-lg" style="border-color:#1B738C;">
-                                <div class="flex justify-between"><span style="color:#1B738C;">Pending Verification</span><span class="font-bold" style="color:#1B738C;" id="pendingDocsCount">7</span></div>
-                                <div class="progress-bar mt-2"><div class="progress-fill" id="pendingProgressFill" style="width: 78%; background:#ffc107;"></div></div>
-                                <p class="text-xs mt-1" style="color:#1B738C;"><span id="pendingDocsCountText">7</span> documents pending</p>
-                            </div>
-                            <div class="p-3 border rounded-lg" style="border-color:#1B738C;">
-                                <div class="flex justify-between"><span style="color:#1B738C;">Verification Rate</span><span class="font-bold" style="color:#1B738C;" id="verificationRate">22%</span></div>
-                                <div class="progress-bar mt-2"><div class="progress-fill" id="verificationFill" style="width: 22%"></div></div>
-                                <p class="text-xs mt-1" style="color:#1B738C;">Documents verified</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Recently Uploaded Documents -->
-                    <div class="section-card fade-in">
-                        <h3 class="text-md font-semibold mb-4" style="color: #1B738C;">Recently Uploaded Documents</h3>
-                        <div class="space-y-2">
-                            <div class="flex justify-between items-center p-2 border-b" style="border-color:#1B738C;">
-                                <div><i class="fas fa-file-pdf mr-2" style="color:#dc3545;"></i><span style="color:#1B738C;">Emily Davis - PAN Card.pdf</span></div>
-                                <span class="text-xs" style="color:#1B738C;">2024-04-15 10:30 AM</span>
-                            </div>
-                            <div class="flex justify-between items-center p-2 border-b" style="border-color:#1B738C;">
-                                <div><i class="fas fa-file-pdf mr-2" style="color:#dc3545;"></i><span style="color:#1B738C;">James Wilson - Offer Letter.pdf</span></div>
-                                <span class="text-xs" style="color:#1B738C;">2024-04-14 02:15 PM</span>
-                            </div>
-                            <div class="flex justify-between items-center p-2">
-                                <div><i class="fas fa-file-image mr-2" style="color:#17a2b8;"></i><span style="color:#1B738C;">Sarah Johnson - Passport Photo.jpg</span></div>
-                                <span class="text-xs" style="color:#1B738C;">2024-04-13 11:45 AM</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-            </main>
-        </div>
-    </div>
-    
-    <!-- Onboarding Details Modal -->
-    <div id="onboardingModal" class="modal">
-        <div class="modal-content">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold" style="color:#1B738C;">Onboarding Details</h3>
-                <button onclick="closeOnboardingModal()" class="text-gray-500 text-xl hover:text-gray-700">&times;</button>
             </div>
-            <div id="onboardingDetailsContent"></div>
         </div>
-    </div>
-    
-    <!-- Document Upload Modal -->
-    <div id="documentModal" class="modal">
-        <div class="modal-content">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-lg font-semibold" style="color:#1B738C;">Upload Document</h3>
-                <button onclick="closeDocumentModal()" class="text-gray-500 text-xl hover:text-gray-700">&times;</button>
+    </header>
+
+    <!-- ==================== MAIN CONTENT ==================== -->
+    <main class="main-content">
+        
+        <div class="mb-4">
+            <h1 class="text-xl font-bold" style="color: var(--primary);">Onboarding Management</h1>
+            <p class="text-xs mt-0.5" style="color: var(--primary);">Manage new employee onboarding process and document verification</p>
+        </div>
+        
+        <div class="tab-nav">
+            <button class="tab-btn active" data-tab="onboarding-list">Onboarding List</button>
+            <button class="tab-btn" data-tab="documents">Documents</button>
+        </div>
+        
+        <!-- TAB 1: ONBOARDING LIST -->
+        <div id="tab-onboarding-list" class="tab-content active">
+            <div class="section-card">
+                <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
+                    <h3 class="text-md font-semibold" style="color: var(--primary);">Active Onboarding</h3>
+                    <div class="flex gap-2 flex-wrap">
+                        <input type="text" id="searchOnboarding" placeholder="Search employee..." class="w-56 text-sm p-2" onkeyup="filterOnboardingList()">
+                        <select id="filterOnboardingStatus" onchange="filterOnboardingList()" class="w-36 text-sm p-2">
+                            <option value="all">All Status</option>
+                            <option value="PENDING">Pending</option>
+                            <option value="IN_PROGRESS">In Progress</option>
+                            <option value="COMPLETED">Completed</option>
+                        </select>
+                        <button onclick="exportOnboardingList()" class="btn-outline text-sm"><i class="fas fa-download mr-1"></i>Export</button>
+                        <button onclick="loadOnboardingList()" class="btn-outline text-sm"><i class="fas fa-sync-alt mr-1"></i>Refresh</button>
+                    </div>
+                </div>
+                
+                <div class="overflow-x-auto">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="border-b" style="border-color: var(--primary);">
+                                <th>Onboarding ID</th>
+                                <th>Employee</th>
+                                <th>Department</th>
+                                <th>Designation</th>
+                                <th>Joining Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                              </tr>
+                        </thead>
+                        <tbody id="onboardingList">
+                            <tr><td colspan="7" class="text-center py-4"><div class="loading-spinner"></div> Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
             </div>
-            <form id="documentUploadForm">
-                <div><label>Document Name</label><input type="text" id="doc_name" readonly class="bg-gray-100 p-2 color"></div>
-                <div class="mt-3"><label>Select Employee</label>
-                    <select id="doc_employee" required>
-                        <option value="">Select Employee</option>
-                        <option>Emily Davis</option>
-                        <option>James Wilson</option>
-                        <option>Lisa Anderson</option>
-                        <option>Sarah Johnson</option>
-                        <option>Michael Brown</option>
-                    </select>
+            
+            <div class="section-card">
+                <h3 class="text-md font-semibold mb-4" style="color: var(--primary);">Onboarding Statistics</h3>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="p-3 border rounded-lg text-center"><p class="text-2xl font-bold" id="totalOnboarding">0</p><p class="text-xs">Total</p></div>
+                    <div class="p-3 border rounded-lg text-center"><p class="text-2xl font-bold" id="inProgressCount">0</p><p class="text-xs">In Progress</p></div>
+                    <div class="p-3 border rounded-lg text-center"><p class="text-2xl font-bold" id="completedCount">0</p><p class="text-xs">Completed</p></div>
+                    <div class="p-3 border rounded-lg text-center"><p class="text-2xl font-bold" id="pendingCount">0</p><p class="text-xs">Pending</p></div>
                 </div>
-                <div class="mt-3"><label>Select File</label><input type="file" id="doc_file" accept=".pdf,.jpg,.png,.jpeg" required></div>
-                <div class="mt-2"><label>Remarks (Optional)</label><textarea id="doc_remarks" rows="2" placeholder="Enter any remarks"></textarea></div>
-                <div class="flex justify-end gap-3 mt-4">
-                    <button type="button" onclick="closeDocumentModal()" class="btn-outline">Cancel</button>
-                    <button type="submit" class="btn-primary">Upload Document</button>
+            </div>
+        </div>
+        
+        <!-- TAB 2: DOCUMENTS -->
+        <div id="tab-documents" class="tab-content">
+            <div class="section-card">
+                <div class="flex justify-between items-center mb-4">
+                    <h3 class="text-md font-semibold" style="color: var(--primary);">Required Documents</h3>
+                    <button onclick="loadDocumentStatus()" class="btn-outline text-sm"><i class="fas fa-sync-alt mr-1"></i>Refresh</button>
                 </div>
-            </form>
+                <div id="documentsList">
+                    <div class="doc-item"><div><i class="fas fa-id-card mr-2"></i>PAN Card</div><div><button onclick="uploadDocument('pan')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-pan-status">Pending</span></div></div>
+                    <div class="doc-item"><div><i class="fas fa-address-card mr-2"></i>Aadhar Card</div><div><button onclick="uploadDocument('aadhaar')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-aadhaar-status">Pending</span></div></div>
+                    <div class="doc-item"><div><i class="fas fa-file-alt mr-2"></i>Offer Letter</div><div><button onclick="uploadDocument('offer')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-offer-status">Pending</span></div></div>
+                    <div class="doc-item"><div><i class="fas fa-graduation-cap mr-2"></i>Degree Certificate</div><div><button onclick="uploadDocument('degree')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-degree-status">Pending</span></div></div>
+                    <div class="doc-item"><div><i class="fas fa-passport mr-2"></i>Passport Photo</div><div><button onclick="uploadDocument('passport')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-passport-status">Pending</span></div></div>
+                    <div class="doc-item"><div><i class="fas fa-bank mr-2"></i>Bank Details</div><div><button onclick="uploadDocument('bank')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-bank-status">Pending</span></div></div>
+                    <div class="doc-item"><div><i class="fas fa-file-signature mr-2"></i>Experience Letters</div><div><button onclick="uploadDocument('experience')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-experience-status">Pending</span></div></div>
+                    <div class="doc-item"><div><i class="fas fa-medical-alt mr-2"></i>Medical Certificate</div><div><button onclick="uploadDocument('medical')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-medical-status">Pending</span></div></div>
+                    <div class="doc-item"><div><i class="fas fa-handshake mr-2"></i>Signed Contract</div><div><button onclick="uploadDocument('contract')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-contract-status">Pending</span></div></div>
+                </div>
+            </div>
+            
+            <div class="section-card">
+                <h3 class="text-md font-semibold mb-4" style="color: var(--primary);">Document Status</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <div class="p-3 border rounded-lg"><div class="flex justify-between"><span>Uploaded</span><span class="font-bold" id="uploadedDocs">0</span></div><div class="progress-bar mt-2"><div class="progress-fill" id="uploadFill" style="width: 0%"></div></div></div>
+                    <div class="p-3 border rounded-lg"><div class="flex justify-between"><span>Completion</span><span class="font-bold" id="completionRate">0%</span></div><div class="progress-bar mt-2"><div class="progress-fill" id="completionFill" style="width: 0%"></div></div></div>
+                    <div class="p-3 border rounded-lg"><div class="flex justify-between"><span>Active</span><span class="font-bold" id="activeCount">0</span></div><div class="progress-bar mt-2"><div class="progress-fill" id="activeFill" style="width: 0%"></div></div></div>
+                </div>
+            </div>
+            
+            <div class="section-card">
+                <h3 class="text-md font-semibold mb-4" style="color: var(--primary);">Recent Uploads</h3>
+                <div id="recentDocumentsList" class="space-y-2"><div class="text-center py-4"><div class="loading-spinner"></div> Loading...</div></div>
+            </div>
+        </div>
+        
+    </main>
+
+    <!-- Modals -->
+    <div id="onboardingModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-4"><h3 class="text-lg font-semibold">Onboarding Details</h3><button onclick="closeOnboardingModal()">&times;</button></div><div id="onboardingDetailsContent"></div></div></div>
+    <div id="documentModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-4"><h3 class="text-lg font-semibold">Upload Document</h3><button onclick="closeDocumentModal()">&times;</button></div><form id="documentUploadForm"><div><label>Document Name</label><input type="text" id="doc_name" readonly class="bg-gray-100"></div><div class="mt-3"><label>Select Onboarding</label><select id="doc_onboarding_id" required><option value="">Select</option></select></div><div class="mt-3"><label>Select File</label><input type="file" id="doc_file" accept=".pdf,.jpg,.png,.jpeg" required></div><div class="flex justify-end gap-3 mt-4"><button type="button" onclick="closeDocumentModal()" class="btn-outline">Cancel</button><button type="submit" class="btn-primary">Upload</button></div></form></div></div>
+    <div id="statusModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-4"><h3 class="text-lg font-semibold">Update Status</h3><button onclick="closeStatusModal()">&times;</button></div><div><select id="update_status" class="w-full"><option value="PENDING">Pending</option><option value="IN_PROGRESS">In Progress</option><option value="COMPLETED">Completed</option><option value="REJECTED">Rejected</option></select><div class="flex justify-end gap-3 mt-4"><button onclick="closeStatusModal()" class="btn-outline">Cancel</button><button onclick="confirmUpdateStatus()" class="btn-primary">Update</button></div></div></div></div>
+
+    <!-- Logout Modal -->
+    <div id="logoutModal" class="logout-modal">
+        <div class="logout-modal-overlay"></div>
+        <div class="logout-modal-content">
+            <div class="text-center">
+                <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center">
+                    <i class="fas fa-sign-out-alt text-2xl text-red-500"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-2" style="color: #1B738C;">Confirm Logout</h3>
+                <p class="text-sm text-gray-500 mb-6">Are you sure you want to logout? You will need to login again to access the dashboard.</p>
+                <div class="flex justify-center gap-3">
+                    <button id="cancelLogoutBtn" class="px-5 py-2 rounded-lg border transition-all duration-300" style="border-color: #62C9EA; color: #1B738C;">Cancel</button>
+                    <button id="confirmLogoutBtn" class="px-5 py-2 rounded-lg text-white transition-all duration-300" style="background-color: #dc3545;">Yes, Logout</button>
+                </div>
+            </div>
         </div>
     </div>
-    
-    <script src="/assets/js/common.js"></script>
-    <script src="/assets/js/sidebar.js"></script>
-    <script src="/assets/js/header.js"></script>
-    
+
     <script>
-        // ==================== TAB NAVIGATION ====================
-        function initTabs() {
-            const tabs = document.querySelectorAll('.tab-btn');
-            const contents = document.querySelectorAll('.tab-content');
-            
-            tabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    const tabId = this.getAttribute('data-tab');
-                    tabs.forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    contents.forEach(content => content.classList.remove('active'));
-                    document.getElementById(`tab-${tabId}`).classList.add('active');
-                    
-                    // Save active tab to localStorage
-                    localStorage.setItem('onboardingActiveTab', tabId);
-                });
-            });
-            
-            // Load saved tab
-            const savedTab = localStorage.getItem('onboardingActiveTab');
-            if (savedTab) {
-                const savedTabBtn = document.querySelector(`.tab-btn[data-tab="${savedTab}"]`);
-                if (savedTabBtn) savedTabBtn.click();
-            }
-        }
+        // ==================== CONFIG ====================
+        const API_BASE_URL = 'http://localhost:8086/api';
+        let allOnboardingData = [];
+        let currentOnboardingId = null;
+        let currentDocType = null;
         
-        // ==================== ONBOARDING LIST FUNCTIONS ====================
-        function filterOnboardingList() {
-            const search = document.getElementById('searchOnboarding').value.toLowerCase();
-            const status = document.getElementById('filterOnboardingStatus').value;
-            const rows = document.querySelectorAll('#onboardingList tr');
-            let inProgress = 0, completed = 0, pending = 0;
-            
-            rows.forEach(row => {
-                let show = true;
-                const name = row.cells[0]?.innerText.toLowerCase();
-                const rowStatus = row.cells[5]?.innerText.toLowerCase();
-                if(search && !name.includes(search)) show = false;
-                if(status !== 'all' && !rowStatus.includes(status)) show = false;
-                row.style.display = show ? '' : 'none';
-                
-                // Count statistics for visible rows
-                if(show) {
-                    if(rowStatus === 'in progress') inProgress++;
-                    else if(rowStatus === 'completed') completed++;
-                    else if(rowStatus === 'pending') pending++;
-                }
-            });
-            
-            // Update statistics
-            document.getElementById('inProgressCount').innerText = inProgress;
-            document.getElementById('completedCount').innerText = completed;
-            document.getElementById('pendingCount').innerText = pending;
-        }
-        
-        function viewOnboardingDetails(btn) {
-            const row = btn.closest('tr');
-            const name = row.cells[0]?.querySelector('p')?.innerText;
-            const email = row.cells[0]?.querySelector('.text-xs')?.innerText;
-            const dept = row.cells[1]?.innerText;
-            const designation = row.cells[2]?.innerText;
-            const date = row.cells[3]?.innerText;
-            const progress = row.cells[4]?.querySelector('.progress-fill')?.style.width || '0%';
-            const status = row.cells[5]?.innerText;
-            
-            const modalContent = `
-                <div class="space-y-4">
-                    <div class="flex items-center gap-3 pb-3 border-b">
-                        <div class="w-12 h-12 rounded-full bg-[#1B738C] flex items-center justify-center">
-                            <i class="fas fa-user text-white text-xl"></i>
-                        </div>
-                        <div>
-                            <h4 class="font-bold text-lg" style="color:#1B738C;">${name}</h4>
-                            <p class="text-sm" style="color:#1B738C;">${email}</p>
-                        </div>
-                    </div>
-                    <div class="grid grid-cols-2 gap-3">
-                        <div><label class="text-xs font-medium" style="color:#1B738C;">Department</label><p class="text-sm" style="color:#1B738C;">${dept}</p></div>
-                        <div><label class="text-xs font-medium" style="color:#1B738C;">Designation</label><p class="text-sm" style="color:#1B738C;">${designation}</p></div>
-                        <div><label class="text-xs font-medium" style="color:#1B738C;">Joining Date</label><p class="text-sm" style="color:#1B738C;">${date}</p></div>
-                        <div><label class="text-xs font-medium" style="color:#1B738C;">Current Status</label><p class="text-sm" style="color:#1B738C;">${status}</p></div>
-                    </div>
-                    <div><label class="text-xs font-medium" style="color:#1B738C;">Overall Progress</label>
-                        <div class="progress-bar mt-1"><div class="progress-fill" style="width: ${progress};"></div></div>
-                        <p class="text-xs mt-1" style="color:#1B738C;">${progress} complete</p>
-                    </div>
-                    <div><label class="text-xs font-medium" style="color:#1B738C;">Documents Status</label>
-                        <ul class="list-disc pl-4 mt-1 space-y-1">
-                            <li class="text-sm" style="color:#1B738C;">PAN Card - <span class="text-green-600">Uploaded</span></li>
-                            <li class="text-sm" style="color:#1B738C;">Aadhar Card - <span class="text-yellow-600">Pending</span></li>
-                            <li class="text-sm" style="color:#1B738C;">Offer Letter - <span class="text-green-600">Uploaded</span></li>
-                            <li class="text-sm" style="color:#1B738C;">Degree Certificate - <span class="text-yellow-600">Pending</span></li>
-                        </ul>
-                    </div>
-                    <div class="flex justify-end pt-3"><button onclick="closeOnboardingModal()" class="btn-primary">Close</button></div>
-                </div>
-            `;
-            document.getElementById('onboardingDetailsContent').innerHTML = modalContent;
-            document.getElementById('onboardingModal').classList.add('active');
-        }
-        
-        function editOnboarding(btn) {
-            const row = btn.closest('tr');
-            const name = row.cells[0]?.querySelector('p')?.innerText;
-            showToast(`Edit onboarding for ${name}`, 'info');
-        }
-        
-        function deleteOnboarding(btn) {
-            if(confirm('Are you sure you want to delete this onboarding record?')) {
-                btn.closest('tr').remove();
-                updateOnboardingStats();
-                showToast('Onboarding record deleted!', 'success');
-            }
-        }
-        
-        function updateOnboardingStats() {
-            const rows = document.querySelectorAll('#onboardingList tr');
-            const total = rows.length;
-            let inProgress = 0, completed = 0, pending = 0;
-            
-            rows.forEach(row => {
-                const status = row.cells[5]?.innerText.toLowerCase();
-                if(status === 'in progress') inProgress++;
-                else if(status === 'completed') completed++;
-                else if(status === 'pending') pending++;
-            });
-            
-            document.getElementById('totalOnboarding').innerText = total;
-            document.getElementById('inProgressCount').innerText = inProgress;
-            document.getElementById('completedCount').innerText = completed;
-            document.getElementById('pendingCount').innerText = pending;
-        }
-        
-        function exportOnboardingList() {
-            const rows = document.querySelectorAll('#onboardingList tr');
-            const data = [];
-            rows.forEach(row => {
-                if (row.style.display !== 'none') {
-                    data.push({
-                        Employee: row.cells[0]?.querySelector('p')?.innerText,
-                        Department: row.cells[1]?.innerText,
-                        Designation: row.cells[2]?.innerText,
-                        JoiningDate: row.cells[3]?.innerText,
-                        Status: row.cells[5]?.innerText
-                    });
-                }
-            });
-            console.log('Exported Onboarding Data:', data);
-            showToast(`Exported ${data.length} onboarding records!`, 'success');
-        }
-        
-        function closeOnboardingModal() {
-            document.getElementById('onboardingModal').classList.remove('active');
-        }
-        
-        // ==================== DOCUMENT FUNCTIONS ====================
-        let currentDocument = null;
-        
-        function uploadDocument(btn, docName) {
-            currentDocument = docName;
-            document.getElementById('doc_name').value = docName;
-            document.getElementById('doc_remarks').value = '';
-            document.getElementById('documentModal').classList.add('active');
-        }
-        
-        document.getElementById('documentUploadForm')?.addEventListener('submit', function(e) {
-            e.preventDefault();
-            const file = document.getElementById('doc_file').files[0];
-            const employee = document.getElementById('doc_employee').value;
-            const remarks = document.getElementById('doc_remarks').value;
-            
-            if (file && employee) {
-                const fileSize = (file.size / 1024).toFixed(2);
-                showToast(`${currentDocument} uploaded successfully for ${employee}! (${fileSize} KB)`, 'success');
-                
-                // Update status
-                const statusSpan = document.getElementById(`doc-${currentDocument.toLowerCase().replace(/ /g, '-')}-status`);
-                if (statusSpan) {
-                    statusSpan.className = 'status-badge status-completed text-xs ml-2';
-                    statusSpan.innerText = 'Uploaded';
-                } else {
-                    // Fallback: find by text
-                    const docItems = document.querySelectorAll('.doc-item');
-                    for (let item of docItems) {
-                        if (item.innerText.includes(currentDocument)) {
-                            const span = item.querySelector('.status-badge');
-                            if (span) {
-                                span.className = 'status-badge status-completed text-xs ml-2';
-                                span.innerText = 'Uploaded';
-                            }
-                            break;
-                        }
-                    }
-                }
-                updateDocumentStats();
-            } else if (!employee) {
-                showToast('Please select an employee!', 'error');
-            } else {
-                showToast('Please select a file to upload!', 'error');
-            }
-            closeDocumentModal();
+        // ==================== SIDEBAR FUNCTIONS ====================
+        document.getElementById('collapseBtn')?.addEventListener('click', function() {
+            document.getElementById('mainSidebar').classList.toggle('collapsed');
         });
         
-        function updateDocumentStats() {
-            const uploadedSpans = document.querySelectorAll('.status-badge.status-completed');
-            const uploadedCount = uploadedSpans.length;
-            const totalDocs = 9;
-            const pendingCount = totalDocs - uploadedCount;
-            const percentage = Math.round((uploadedCount / totalDocs) * 100);
-            
-            document.getElementById('uploadedDocs').innerText = uploadedCount;
-            document.getElementById('pendingDocsCount').innerText = pendingCount;
-            document.getElementById('pendingDocsCountText').innerText = pendingCount;
-            document.getElementById('verificationRate').innerText = `${percentage}%`;
-            document.getElementById('totalProgressFill').style.width = `${percentage}%`;
-            document.getElementById('pendingProgressFill').style.width = `${(pendingCount / totalDocs) * 100}%`;
-            document.getElementById('verificationFill').style.width = `${percentage}%`;
-        }
+        // Submenu toggle
+        document.querySelectorAll('.toggle-submenu').forEach(btn => {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                const parent = this.closest('.has-submenu');
+                parent.classList.toggle('submenu-open');
+                const submenu = parent.querySelector('.submenu');
+                if (submenu) {
+                    if (submenu.style.display === 'none' || !submenu.style.display) {
+                        submenu.style.display = 'block';
+                    } else {
+                        submenu.style.display = 'none';
+                    }
+                }
+            });
+        });
         
-        function refreshDocumentStatus() {
-            updateDocumentStats();
-            showToast('Document status refreshed!', 'info');
-        }
+        // ==================== HEADER FUNCTIONS ====================
+        // Notification dropdown
+        document.getElementById('notificationBtn')?.addEventListener('click', function() {
+            document.getElementById('notificationMenu').classList.toggle('show');
+        });
         
-        function closeDocumentModal() {
-            document.getElementById('documentModal').classList.remove('active');
-            document.getElementById('documentUploadForm').reset();
-        }
+        // User menu dropdown
+        document.getElementById('userBtn')?.addEventListener('click', function() {
+            document.getElementById('userMenu').classList.toggle('show');
+        });
+        
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('#notificationBtn')) {
+                document.getElementById('notificationMenu')?.classList.remove('show');
+            }
+            if (!e.target.closest('#userBtn')) {
+                document.getElementById('userMenu')?.classList.remove('show');
+            }
+        });
+        
+        // Logout
+        document.getElementById('logoutBtn')?.addEventListener('click', function(e) {
+            e.preventDefault();
+            document.getElementById('logoutModal').classList.add('active');
+        });
+        
+        document.getElementById('cancelLogoutBtn')?.addEventListener('click', function() {
+            document.getElementById('logoutModal').classList.remove('active');
+        });
+        
+        document.getElementById('confirmLogoutBtn')?.addEventListener('click', function() {
+            localStorage.removeItem('token');
+            localStorage.removeItem('adminData');
+            window.location.href = '/login.html';
+        });
         
         // ==================== TOAST ====================
         function showToast(message, type) {
@@ -768,24 +713,306 @@
             setTimeout(() => toast.remove(), 3000);
         }
         
-        // ==================== SIDEBAR ACTIVE MENU ====================
-        function setActiveMenu(module) {
-            setTimeout(() => {
-                document.querySelectorAll('.nav-link').forEach(link => {
-                    link.classList.remove('active');
-                    if(link.getAttribute('data-module') === module) link.classList.add('active');
-                });
-            }, 500);
+        // ==================== LOAD ONBOARDING LIST ====================
+        async function loadOnboardingList() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/onboarding/get-all?page=0&size=50`);
+                const result = await response.json();
+                
+                if(result.success && result.data) {
+                    allOnboardingData = result.data;
+                    renderOnboardingList(allOnboardingData);
+                    updateStatistics(allOnboardingData);
+                } else {
+                    document.getElementById('onboardingList').innerHTML = '<tr><td colspan="7" class="text-center py-4">No onboarding records found</td></tr>';
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                document.getElementById('onboardingList').innerHTML = '<tr><td colspan="7" class="text-center py-4 text-red-500">Error connecting to server</td></tr>';
+            }
         }
         
-        // ==================== INITIALIZATION ====================
+        function renderOnboardingList(data) {
+            const tbody = document.getElementById('onboardingList');
+            if(!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4">No records found</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = data.map(item => {
+                let statusClass = 'status-pending', statusText = 'Pending';
+                if(item.status === 'IN_PROGRESS') { statusClass = 'status-in-progress'; statusText = 'In Progress'; }
+                else if(item.status === 'COMPLETED') { statusClass = 'status-completed'; statusText = 'Completed'; }
+                else if(item.status === 'REJECTED') { statusClass = 'status-rejected'; statusText = 'Rejected'; }
+                
+                return `<tr class="border-b data-row">
+                    <td class="py-2 text-sm">${item.onboardingId || 'N/A'}</td>
+                    <td class="py-2"><p class="text-sm font-medium">${item.employeeName || 'N/A'}</p><p class="text-xs">${item.employeePrimeId || 'N/A'}</p></td>
+                    <td class="py-2 text-sm">${item.department || 'N/A'}</td>
+                    <td class="py-2 text-sm">${item.designation || 'N/A'}</td>
+                    <td class="py-2 text-sm">${item.joiningDate || 'N/A'}</td>
+                    <td class="py-2"><span class="status-badge ${statusClass}">${statusText}</span></td>
+                    <td class="py-2">
+                        <button onclick="viewOnboardingDetails(${item.id})" class="text-[#1B738C] mr-2"><i class="fas fa-eye"></i></button>
+                        <button onclick="showUpdateStatusModal(${item.id}, '${item.status}')" class="text-[#1B738C] mr-2"><i class="fas fa-edit"></i></button>
+                        <button onclick="deleteOnboarding(${item.id})" class="text-red-500"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+        
+        function updateStatistics(data) {
+            const total = data.length;
+            let inProgress = 0, completed = 0, pending = 0;
+            data.forEach(item => {
+                if(item.status === 'IN_PROGRESS') inProgress++;
+                else if(item.status === 'COMPLETED') completed++;
+                else if(item.status === 'PENDING') pending++;
+            });
+            document.getElementById('totalOnboarding').innerText = total;
+            document.getElementById('inProgressCount').innerText = inProgress;
+            document.getElementById('completedCount').innerText = completed;
+            document.getElementById('pendingCount').innerText = pending;
+            document.getElementById('activeCount').innerText = inProgress + pending;
+        }
+        
+        function filterOnboardingList() {
+            const search = document.getElementById('searchOnboarding').value.toLowerCase();
+            const status = document.getElementById('filterOnboardingStatus').value;
+            let filtered = allOnboardingData;
+            if(search) filtered = filtered.filter(item => item.employeeName && item.employeeName.toLowerCase().includes(search));
+            if(status !== 'all') filtered = filtered.filter(item => item.status === status);
+            renderOnboardingList(filtered);
+        }
+        
+        // ==================== VIEW DETAILS ====================
+        async function viewOnboardingDetails(id) {
+            try {
+                const response = await fetch(`${API_BASE_URL}/onboarding/get-by-id/${id}`);
+                const result = await response.json();
+                if(result.success && result.data) {
+                    const item = result.data;
+                    document.getElementById('onboardingDetailsContent').innerHTML = `
+                        <div class="space-y-3">
+                            <div><strong>Onboarding ID:</strong> ${item.onboardingId}</div>
+                            <div><strong>Employee:</strong> ${item.employeeName}</div>
+                            <div><strong>Department:</strong> ${item.department}</div>
+                            <div><strong>Designation:</strong> ${item.designation}</div>
+                            <div><strong>Joining Date:</strong> ${item.joiningDate}</div>
+                            <div><strong>Status:</strong> ${item.status}</div>
+                            <div><strong>Assigned HR:</strong> ${item.assignedHR || 'N/A'}</div>
+                            <div><strong>Assigned Manager:</strong> ${item.assignedManager || 'N/A'}</div>
+                            <div><strong>Offered Salary:</strong> ${item.offeredSalary ? '₹' + item.offeredSalary : 'N/A'}</div>
+                        </div>
+                    `;
+                    document.getElementById('onboardingModal').classList.add('active');
+                }
+            } catch(error) { showToast('Error loading details', 'error'); }
+        }
+        
+        // ==================== UPDATE STATUS ====================
+        function showUpdateStatusModal(id, status) {
+            currentOnboardingId = id;
+            document.getElementById('update_status').value = status || 'PENDING';
+            document.getElementById('statusModal').classList.add('active');
+        }
+        
+        async function confirmUpdateStatus() {
+            const newStatus = document.getElementById('update_status').value;
+            try {
+                const response = await fetch(`${API_BASE_URL}/onboarding/update-status/${currentOnboardingId}?status=${newStatus}`, { method: 'PATCH' });
+                const result = await response.json();
+                if(result.success) {
+                    showToast('Status updated!', 'success');
+                    closeStatusModal();
+                    loadOnboardingList();
+                } else { showToast('Update failed', 'error'); }
+            } catch(error) { showToast('Error', 'error'); }
+        }
+        
+        // ==================== DELETE ====================
+        async function deleteOnboarding(id) {
+            if(confirm('Delete this onboarding record?')) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/onboarding/delete/${id}`, { method: 'DELETE' });
+                    const result = await response.json();
+                    if(result.success) {
+                        showToast('Deleted!', 'success');
+                        loadOnboardingList();
+                    }
+                } catch(error) { showToast('Error deleting', 'error'); }
+            }
+        }
+        
+        // ==================== DOCUMENTS ====================
+        async function loadDocumentStatus() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/onboarding/get-all?page=0&size=100`);
+                const result = await response.json();
+                if(result.success && result.data) {
+                    const docTypes = ['pan', 'aadhaar', 'offer', 'degree', 'passport', 'bank', 'experience', 'medical', 'contract'];
+                    let uploaded = 0;
+                    docTypes.forEach(doc => {
+                        const hasDoc = result.data.some(item => {
+                            switch(doc) {
+                                case 'pan': return item.panDocumentUrl;
+                                case 'aadhaar': return item.aadhaarDocumentUrl;
+                                case 'offer': return item.offerLetterUrl;
+                                case 'degree': return item.degreeDocumentUrl;
+                                case 'passport': return item.passportPhotoUrl;
+                                case 'bank': return item.bankDocumentUrl;
+                                case 'experience': return item.experienceDocumentUrl;
+                                case 'medical': return item.medicalCertificateUrl;
+                                case 'contract': return item.signedContractUrl;
+                                default: return false;
+                            }
+                        });
+                        const span = document.getElementById(`doc-${doc}-status`);
+                        if(span) {
+                            if(hasDoc) {
+                                span.className = 'status-badge status-completed text-xs ml-2';
+                                span.innerText = 'Uploaded';
+                                uploaded++;
+                            }
+                        }
+                    });
+                    document.getElementById('uploadedDocs').innerText = uploaded;
+                    const percent = Math.round((uploaded / 9) * 100);
+                    document.getElementById('completionRate').innerText = percent + '%';
+                    document.getElementById('uploadFill').style.width = percent + '%';
+                    document.getElementById('completionFill').style.width = percent + '%';
+                }
+            } catch(error) { console.error('Error:', error); }
+        }
+        
+        async function loadRecentDocuments() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/onboarding/get-all?page=0&size=10`);
+                const result = await response.json();
+                if(result.success && result.data) {
+                    const docs = [];
+                    result.data.forEach(item => {
+                        if(item.panDocumentUrl) docs.push({ name: 'PAN Card', id: item.onboardingId, name2: item.employeeName });
+                        if(item.offerLetterUrl) docs.push({ name: 'Offer Letter', id: item.onboardingId, name2: item.employeeName });
+                        if(item.degreeDocumentUrl) docs.push({ name: 'Degree', id: item.onboardingId, name2: item.employeeName });
+                    });
+                    const container = document.getElementById('recentDocumentsList');
+                    if(docs.length) {
+                        container.innerHTML = docs.slice(0, 5).map(d => `<div class="flex justify-between p-2 border-b"><span>${d.name2} - ${d.name}</span><a href="${API_BASE_URL}/onboarding/${d.id}/document/${d.name.toLowerCase().replace(' ', '-')}" target="_blank" class="text-[#1B738C]">View</a></div>`).join('');
+                    } else { container.innerHTML = '<div class="text-center py-4">No documents uploaded</div>'; }
+                }
+            } catch(error) { console.error('Error:', error); }
+        }
+        
+        function uploadDocument(docType) {
+            currentDocType = docType;
+            let docName = '';
+            switch(docType) {
+                case 'pan': docName = 'PAN Card'; break;
+                case 'aadhaar': docName = 'Aadhar Card'; break;
+                case 'offer': docName = 'Offer Letter'; break;
+                case 'degree': docName = 'Degree Certificate'; break;
+                case 'passport': docName = 'Passport Photo'; break;
+                case 'bank': docName = 'Bank Details'; break;
+                case 'experience': docName = 'Experience Letter'; break;
+                case 'medical': docName = 'Medical Certificate'; break;
+                case 'contract': docName = 'Signed Contract'; break;
+            }
+            document.getElementById('doc_name').value = docName;
+            loadOnboardingOptions();
+            document.getElementById('documentModal').classList.add('active');
+        }
+        
+        async function loadOnboardingOptions() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/onboarding/get-all?page=0&size=100`);
+                const result = await response.json();
+                if(result.success && result.data) {
+                    const select = document.getElementById('doc_onboarding_id');
+                    select.innerHTML = '<option value="">Select Onboarding</option>';
+                    result.data.forEach(item => {
+                        select.innerHTML += `<option value="${item.onboardingId}">${item.employeeName || item.onboardingId}</option>`;
+                    });
+                }
+            } catch(error) { console.error('Error:', error); }
+        }
+        
+        document.getElementById('documentUploadForm')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const onboardingId = document.getElementById('doc_onboarding_id').value;
+            const file = document.getElementById('doc_file').files[0];
+            if(!onboardingId || !file) { showToast('Please fill all fields', 'error'); return; }
+            
+            const formData = new FormData();
+            formData.append('employeePrimeId', onboardingId);
+            switch(currentDocType) {
+                case 'pan': formData.append('panDocument', file); break;
+                case 'aadhaar': formData.append('aadhaarDocument', file); break;
+                case 'degree': formData.append('degreeDocument', file); break;
+                case 'experience': formData.append('experienceDocument', file); break;
+                case 'offer': formData.append('offerLetter', file); break;
+                case 'passport': formData.append('passportPhoto', file); break;
+                case 'bank': formData.append('bankDocument', file); break;
+                case 'medical': formData.append('medicalCertificate', file); break;
+                case 'contract': formData.append('signedContract', file); break;
+            }
+            formData.append('joiningDate', new Date().toISOString().split('T')[0]);
+            formData.append('offeredSalary', 0);
+            formData.append('assignedHR', 'HR Admin');
+            formData.append('assignedManager', 'Manager');
+            
+            try {
+                const response = await fetch(`${API_BASE_URL}/onboarding/create`, { method: 'POST', body: formData });
+                const result = await response.json();
+                if(result.success) {
+                    showToast('Document uploaded!', 'success');
+                    closeDocumentModal();
+                    loadDocumentStatus();
+                    loadRecentDocuments();
+                } else { showToast('Upload failed', 'error'); }
+            } catch(error) { showToast('Error uploading', 'error'); }
+        });
+        
+        // ==================== CLOSE MODALS ====================
+        function closeOnboardingModal() { document.getElementById('onboardingModal').classList.remove('active'); }
+        function closeDocumentModal() { document.getElementById('documentModal').classList.remove('active'); document.getElementById('documentUploadForm').reset(); }
+        function closeStatusModal() { document.getElementById('statusModal').classList.remove('active'); }
+        
+        // ==================== EXPORT ====================
+        function exportOnboardingList() {
+            console.log('Exporting:', allOnboardingData);
+            showToast(`Exported ${allOnboardingData.length} records! Check console`, 'success');
+        }
+        
+        // ==================== TABS ====================
+        function initTabs() {
+            const tabs = document.querySelectorAll('.tab-btn');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    document.getElementById(`tab-${this.dataset.tab}`).classList.add('active');
+                    if(this.dataset.tab === 'documents') { loadDocumentStatus(); loadRecentDocuments(); }
+                });
+            });
+        }
+        
+        // ==================== SET ACTIVE MENU ====================
+        function setActiveMenu() {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if(link.getAttribute('data-module') === 'onboarding') {
+                    link.classList.add('active');
+                }
+            });
+        }
+        
+        // ==================== INIT ====================
         document.addEventListener('DOMContentLoaded', function() {
-            loadSidebar();
-            loadHeader();
-            setActiveMenu('onboarding');
             initTabs();
-            updateDocumentStats();
-            updateOnboardingStats();
+            loadOnboardingList();
+            setActiveMenu();
         });
     </script>
 </body>

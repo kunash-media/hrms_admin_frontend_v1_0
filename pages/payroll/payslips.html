@@ -96,7 +96,7 @@
         select:focus {
             outline: none;
             border-color: #1B738C;
-            box-shadow: 0 0 0 2px #d8f1f8(84, 8, 99, 0.1);
+            box-shadow: 0 0 0 2px rgba(27, 115, 140, 0.1);
         }
 
         label {
@@ -212,94 +212,180 @@
             box-shadow: 0 4px 12px rgba(27, 115, 140, 0.1);
         }
 
-        /* Payslip Print Styles */
+        /* ─── Payslip Slip Styles (Excel sheet structure) ─── */
         .payslip-container {
             max-width: 800px;
             margin: 0 auto;
             background: white;
-            padding: 30px;
-            border-radius: 12px;
+            padding: 24px 28px;
+            font-size: 12.5px;
+            color: #111;
         }
 
-        .payslip-header {
+        .ps-header {
+            border: 2px solid #1B738C;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 14px;
+        }
+
+        .ps-company-row {
+            background: #1B738C;
+            color: white;
             text-align: center;
-            border-bottom: 2px solid #c99ebb;
-            padding-bottom: 20px;
-            margin-bottom: 20px;
+            padding: 10px 16px;
         }
 
-        .payslip-title {
-            font-size: 24px;
-            font-weight: bold;
-            color: #1B738C;
-        }
-
-        .payslip-subtitle {
-            font-size: 12px;
-            color: #666;
-            margin-top: 5px;
-        }
-
-        .payslip-section {
-            margin-bottom: 20px;
-        }
-
-        .payslip-section-title {
+        .ps-company-name {
             font-size: 16px;
-            font-weight: bold;
-            color: #1B738C;
-            border-left: 4px solid #7fcde3;
-            padding-left: 10px;
-            margin-bottom: 15px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
         }
 
-        .payslip-table {
+        .ps-company-addr {
+            font-size: 11px;
+            opacity: 0.88;
+            margin-top: 3px;
+        }
+
+        .ps-month-row {
+            text-align: center;
+            padding: 6px;
+            font-weight: 600;
+            font-size: 12.5px;
+            color: #1B738C;
+            background: #e9f6fb;
+            border-top: 1px solid #62C9EA;
+        }
+
+        .ps-emp-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border: 1px solid #1B738C;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 14px;
+        }
+
+        .ps-emp-cell {
+            display: flex;
+            gap: 8px;
+            padding: 6px 12px;
+            border-bottom: 1px solid #d4edf5;
+        }
+
+        .ps-emp-cell:nth-child(odd) {
+            border-right: 1px solid #d4edf5;
+        }
+
+        .ps-emp-cell:nth-last-child(1),
+        .ps-emp-cell:nth-last-child(2) {
+            border-bottom: none;
+        }
+
+        .ps-emp-label {
+            color: #1B738C;
+            font-weight: 600;
+            min-width: 115px;
+            font-size: 11.5px;
+            flex-shrink: 0;
+        }
+
+        .ps-emp-value {
+            color: #222;
+            font-size: 11.5px;
+        }
+
+        .ps-salary-table {
             width: 100%;
             border-collapse: collapse;
+            border: 1px solid #1B738C;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 14px;
         }
 
-        .payslip-table td,
-        .payslip-table th {
-            padding: 8px;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .payslip-table th {
+        .ps-salary-table thead tr th {
+            background: #1B738C;
+            color: white;
+            padding: 7px 12px;
+            font-size: 12px;
             text-align: left;
             font-weight: 600;
-            color: #1B738C;
         }
 
-        .amount {
+        .ps-salary-table thead tr th.amt-col {
             text-align: right;
         }
 
-        .total-row {
-            font-weight: bold;
+        .ps-salary-table tbody tr td {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-bottom: 1px solid #e4f3f8;
+            vertical-align: middle;
+        }
+
+        .ps-salary-table tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .ps-salary-table tbody tr td.amt-col {
+            text-align: right;
+        }
+
+        .ps-salary-table tbody tr.total-row td {
+            font-weight: 700;
+            background: #e9f6fb;
             border-top: 2px solid #1B738C;
+            border-bottom: none;
         }
 
-        .net-salary {
-            background: #f0fdf4;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            margin-top: 20px;
+        .ps-net-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #1B738C;
+            color: white;
+            border-radius: 6px;
+            padding: 10px 16px;
+            margin-bottom: 10px;
         }
 
-        .net-salary-amount {
-            font-size: 28px;
-            font-weight: bold;
-            color: #28a745;
+        .ps-net-label {
+            font-size: 13px;
+            font-weight: 600;
         }
 
-        .payslip-footer {
+        .ps-net-words {
+            font-size: 11px;
+            opacity: 0.85;
+            margin-top: 3px;
+        }
+
+        .ps-net-amount {
+            font-size: 22px;
+            font-weight: 800;
+        }
+
+        .ps-footer {
             text-align: center;
             font-size: 10px;
+            color: #888;
+            padding-top: 10px;
+            border-top: 1px solid #e0f0f7;
+            margin-top: 6px;
+        }
+
+        /* disabled select */
+        select:disabled {
+            background: #f5f8fa;
             color: #999;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e5e7eb;
+            cursor: not-allowed;
+        }
+
+        /* month input colour */
+        input[type="month"] {
+            color: #1B738C;
         }
 
         .modal {
@@ -342,11 +428,19 @@
             .modal-content {
                 padding: 16px;
             }
+
+            .ps-emp-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .ps-emp-cell:nth-child(odd) {
+                border-right: none;
+            }
         }
     </style>
 </head>
 
-<body >
+<body>
 
     <div class="flex h-screen overflow-hidden">
         <div id="sidebar-container"></div>
@@ -372,33 +466,29 @@
                 <!-- Filters -->
                 <div class="section-card mb-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
-                        <!-- Month -->
+
+                        <!-- Month: dynamic date picker instead of hardcoded options -->
                         <div>
                             <label class="text-xs font-semibold text-[var(--primary)]">Select Month</label>
-                            <select id="payslipMonth" onchange="filterPayslips()" 
+                            <input type="month" id="payslipMonth" onchange="filterPayslips()"
+                                   class="w-full px-4 py-2.5 border border-[#62C9EA] rounded-lg text-sm focus:outline-none">
+                        </div>
+
+                        <!-- Department: API-driven with fallback -->
+                        <div>
+                            <label class="text-xs font-semibold text-[var(--primary)]">Select Department</label>
+                            <select id="payslipDepartment" onchange="onDepartmentChange()"
                                     class="w-full px-4 py-2.5 border border-[#62C9EA] rounded-lg text-sm focus:outline-none">
-                                <option value="January 2024">January 2024</option>
-                                <option value="February 2024">February 2024</option>
-                                <option value="March 2024">March 2024</option>
-                                <option value="April 2024" selected>April 2024</option>
-                                <option value="May 2024">May 2024</option>
-                                <option value="June 2024">June 2024</option>
+                                <option value="">-- Select Department --</option>
                             </select>
                         </div>
 
-                        <!-- Employee -->
+                        <!-- Employee: populated after department selected -->
                         <div>
                             <label class="text-xs font-semibold text-[var(--primary)]">Select Employee</label>
-                            <select id="payslipEmployee" onchange="filterPayslips()" 
+                            <select id="payslipEmployee" onchange="filterPayslips()" disabled
                                     class="w-full px-4 py-2.5 border border-[#62C9EA] rounded-lg text-sm focus:outline-none">
                                 <option value="all">All Employees</option>
-                                <option value="Rajesh Kumar">Rajesh Kumar</option>
-                                <option value="Priya Sharma">Priya Sharma</option>
-                                <option value="Amit Mehta">Amit Mehta</option>
-                                <option value="Neha Gupta">Neha Gupta</option>
-                                <option value="Vikram Singh">Vikram Singh</option>
-                                <option value="Sarah Johnson">Sarah Johnson</option>
-                                <option value="Michael Brown">Michael Brown</option>
                             </select>
                         </div>
 
@@ -410,14 +500,6 @@
                                    class="w-full px-4 py-2.5 border border-[#62C9EA] rounded-lg text-sm focus:outline-none">
                         </div>
 
-                        <!-- Bulk Generate Button -->
-                        <div class="flex items-end">
-                            <button onclick="generateBulkPayslips()" 
-                                    class="btn-primary w-full flex items-center justify-center gap-2 px-6 py-2.5 text-sm font-medium">
-                                <i class="fas fa-download"></i> 
-                                Generate Bulk PDF
-                            </button>
-                        </div>
                     </div>
                 </div>
 
@@ -458,64 +540,421 @@
         </div>
     </div>
 
-    <!-- Scripts -->
+    <!-- Scripts — original references kept intact -->
     <script src="../../assets/js/common.js"></script>
     <script src="../../assets/js/sidebar.js"></script>
     <script src="../../assets/js/header.js"></script>
 
     <script>
-        // Employee salary data
-        const employeeData = {
-            'Rajesh Kumar': {
-                basic: 30000, hra: 15000, allowances: 8000, otherAllow: 5000,
-                pf: 1800, pt: 200, tds: 2500,
-                dept: 'IT', designation: 'Senior Developer', id: 'EMP001',
-                bank: 'HDFC Bank', account: 'XXXX1234', joiningDate: '2020-01-15'
-            },
-            'Priya Sharma': {
-                basic: 28000, hra: 14000, allowances: 7000, otherAllow: 4000,
-                pf: 1600, pt: 200, tds: 2200,
-                dept: 'HR', designation: 'HR Manager', id: 'EMP002',
-                bank: 'ICICI Bank', account: 'XXXX5678', joiningDate: '2019-06-10'
-            },
-            'Amit Mehta': {
-                basic: 35000, hra: 17500, allowances: 10000, otherAllow: 6000,
-                pf: 2100, pt: 200, tds: 3500,
-                dept: 'Sales', designation: 'Sales Manager', id: 'EMP003',
-                bank: 'SBI Bank', account: 'XXXX9012', joiningDate: '2018-03-20'
-            },
-            'Neha Gupta': {
-                basic: 40000, hra: 20000, allowances: 12000, otherAllow: 8000,
-                pf: 2400, pt: 200, tds: 4000,
-                dept: 'Finance', designation: 'Finance Head', id: 'EMP004',
-                bank: 'Axis Bank', account: 'XXXX3456', joiningDate: '2021-01-05'
-            },
-            'Vikram Singh': {
-                basic: 38000, hra: 19000, allowances: 11000, otherAllow: 7000,
-                pf: 2280, pt: 200, tds: 3800,
-                dept: 'Operations', designation: 'Operations Head', id: 'EMP005',
-                bank: 'HDFC Bank', account: 'XXXX7890', joiningDate: '2017-11-12'
-            },
-            'Sarah Johnson': {
-                basic: 25000, hra: 12500, allowances: 5000, otherAllow: 3000,
-                pf: 1500, pt: 200, tds: 1800,
-                dept: 'Design', designation: 'UI/UX Designer', id: 'EMP006',
-                bank: 'ICICI Bank', account: 'XXXX1111', joiningDate: '2022-02-01'
-            },
-            'Michael Brown': {
-                basic: 32000, hra: 16000, allowances: 7000, otherAllow: 5000,
-                pf: 1920, pt: 200, tds: 2800,
-                dept: 'IT', designation: 'System Admin', id: 'EMP007',
-                bank: 'SBI Bank', account: 'XXXX2222', joiningDate: '2021-08-15'
-            }
-        };
 
+        const BASE_URL = 'http://localhost:8086';
+        const FALLBACK_DEPARTMENTS = ['Human Resources', 'IT', 'Sales'];
+
+        // ── 2 dummy entries (matching Excel sheet structure) for UI preview ──
+        const dummyEmployees = [
+            {
+                id: 'EMP/SIEC/001',
+                name: 'Amit Gandhe',
+                emp_code: 'EMP/SIEC/001',
+                designation: 'CEO',
+                department: 'Management',
+                doj: '14-FEB-2023',
+                total_working_days: 30,
+                lwp: 0,
+                days_paid: 30,
+                basic: 100000,
+                da: 15000,
+                hra: 40000,
+                other_allowance: 30620.35,
+                reimbursement: 52000,
+                pf: 1800,
+                pt: 200,
+                esic: 0,
+                tds: 35600
+            },
+            {
+                id: 'EMP/SIEC/002',
+                name: 'Priya Sharma',
+                emp_code: 'EMP/SIEC/002',
+                designation: 'HR Manager',
+                department: 'Human Resources',
+                doj: '10-JUN-2021',
+                total_working_days: 30,
+                lwp: 1,
+                days_paid: 29,
+                basic: 45000,
+                da: 6000,
+                hra: 18000,
+                other_allowance: 8500,
+                reimbursement: 5000,
+                pf: 1800,
+                pt: 200,
+                esic: 0,
+                tds: 4200
+            }
+        ];
+
+        let employeeList    = [];
         let currentPayslipData = null;
 
-        function calculateNetSalary(data) {
-            const totalEarnings = data.basic + data.hra + data.allowances + data.otherAllow;
-            const totalDeductions = data.pf + data.pt + data.tds;
-            return totalEarnings - totalDeductions;
+        // ── Init ────────────────────────────────────────────────────────────
+        document.addEventListener('DOMContentLoaded', () => {
+            loadSidebar();
+            loadHeader();
+
+            // Set month picker to current month (YYYY-MM)
+            const now = new Date();
+            document.getElementById('payslipMonth').value =
+                `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+
+            loadDepartments();
+
+            // Show dummy cards on page load so layout is visible
+            employeeList = dummyEmployees;
+            generatePayslipCards();
+        });
+
+        // ── Load departments from API; fall back to static list ─────────────
+        async function loadDepartments() {
+            let depts = [];
+            try {
+                const res = await fetch(`${BASE_URL}/api/department-list`);
+                if (!res.ok) throw new Error('non-2xx');
+                depts = await res.json();
+                if (!Array.isArray(depts) || depts.length === 0) throw new Error('empty');
+            } catch {
+                depts = FALLBACK_DEPARTMENTS;
+                showToast('Using fallback department list.', 'info');
+            }
+
+            const sel = document.getElementById('payslipDepartment');
+            sel.innerHTML = '<option value="">-- Select Department --</option>';
+            depts.forEach(d => {
+                const label = typeof d === 'object'
+                    ? (d.name || d.department_name || d.dept_name || '')
+                    : d;
+                sel.innerHTML += `<option value="${label}">${label}</option>`;
+            });
+        }
+
+        // ── Department change → fetch employee list ─────────────────────────
+        async function onDepartmentChange() {
+            const dept   = document.getElementById('payslipDepartment').value;
+            const empSel = document.getElementById('payslipEmployee');
+
+            // Reset
+            empSel.innerHTML = '<option value="all">All Employees</option>';
+            empSel.disabled  = true;
+
+            if (!dept) {
+                employeeList = dummyEmployees;
+                generatePayslipCards();
+                return;
+            }
+
+            try {
+                const res = await fetch(
+                    `${BASE_URL}/api/employees/payroll-list?department=${encodeURIComponent(dept)}`
+                );
+                if (!res.ok) throw new Error('non-2xx');
+                const data = await res.json();
+                employeeList = Array.isArray(data) ? data : [];
+            } catch {
+                showToast('Could not load employees. Showing demo data.', 'error');
+                employeeList = dummyEmployees;
+            }
+
+            // Populate employee dropdown
+            employeeList.forEach(emp => {
+                const name = emp.name || emp.employee_name ||
+                    `${emp.first_name ?? ''} ${emp.last_name ?? ''}`.trim();
+                const id   = emp.id ?? name;
+                empSel.innerHTML += `<option value="${id}">${name}</option>`;
+            });
+            empSel.disabled = false;
+
+            generatePayslipCards();
+        }
+
+        // ── Render payslip cards (same flow as original) ────────────────────
+        function generatePayslipCards() {
+            const grid  = document.getElementById('payslipsGrid');
+            const month = getSelectedMonthLabel();
+            grid.innerHTML = '';
+
+            if (!employeeList || employeeList.length === 0) {
+                grid.innerHTML = `
+                    <div class="col-span-full text-center text-gray-400 py-16">
+                        <i class="fas fa-file-invoice-dollar text-4xl mb-3 block opacity-30"></i>
+                        <p class="text-sm">No payslips found.</p>
+                    </div>`;
+                return;
+            }
+
+            employeeList.forEach(emp => {
+                const name  = emp.name || emp.employee_name ||
+                    `${emp.first_name ?? ''} ${emp.last_name ?? ''}`.trim();
+                const id    = String(emp.id ?? name);
+                const desig = emp.designation || emp.position || '—';
+                const dept  = emp.department  || emp.dept     || '—';
+                const net   = computeNet(emp);
+
+                grid.innerHTML += `
+                    <div class="payslip-card" data-name="${name.toLowerCase()}" data-id="${id}"
+                         onclick="viewPayslip('${id}')">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="w-10 h-10 rounded-full bg-[#1B738C]/10 flex items-center justify-center">
+                                    <i class="fas fa-user text-[#1B738C]"></i>
+                                </div>
+                                <h4 class="font-semibold mt-3 text-[var(--primary)]">${name}</h4>
+                                <p class="text-xs text-gray-500">${desig} • ${dept}</p>
+                            </div>
+                            <i class="fas fa-download text-[var(--primary)] text-xl"></i>
+                        </div>
+                        <div class="mt-4 pt-3 border-t border-[#7fcde3] flex justify-between items-end">
+                            <span class="text-xs text-gray-500">${month}</span>
+                            <span class="text-lg font-bold text-green-600">
+                                ${net !== null ? '₹' + net.toLocaleString('en-IN', { maximumFractionDigits: 2 }) : '—'}
+                            </span>
+                        </div>
+                    </div>`;
+            });
+        }
+
+        // ── Compute net pay ─────────────────────────────────────────────────
+        function computeNet(emp) {
+            if (emp.net_pay != null) return parseFloat(emp.net_pay);
+            if (emp.net     != null) return parseFloat(emp.net);
+            const gross  = (parseFloat(emp.basic) || 0) + (parseFloat(emp.da) || 0) +
+                           (parseFloat(emp.hra)   || 0) +
+                           (parseFloat(emp.other_allowance || emp.otherAllow) || 0) +
+                           (parseFloat(emp.reimbursement) || 0);
+            const deduct = (parseFloat(emp.pf) || 0) + (parseFloat(emp.pt) || 0) +
+                           (parseFloat(emp.esic) || 0) + (parseFloat(emp.tds) || 0);
+            return gross > 0 ? gross - deduct : null;
+        }
+
+        // ── View payslip → open modal ───────────────────────────────────────
+        function viewPayslip(empId) {
+            const emp = employeeList.find(e => String(e.id ?? e.name) === empId);
+            if (!emp) { showToast('Employee data not found.', 'error'); return; }
+
+            const name     = emp.name || emp.employee_name ||
+                             `${emp.first_name ?? ''} ${emp.last_name ?? ''}`.trim();
+            const month    = getSelectedMonthLabel();
+            const monthRaw = document.getElementById('payslipMonth').value;
+
+            // Earnings
+            const basic      = parseFloat(emp.basic)                                    || 0;
+            const da         = parseFloat(emp.da)                                        || 0;
+            const hra        = parseFloat(emp.hra)                                       || 0;
+            const otherAllow = parseFloat(emp.other_allowance || emp.otherAllow)         || 0;
+            const reimburse  = parseFloat(emp.reimbursement)                             || 0;
+
+            // Deductions
+            const pf   = parseFloat(emp.pf)   || 0;
+            const pt   = parseFloat(emp.pt)   || 0;
+            const esic = parseFloat(emp.esic) || 0;
+            const tds  = parseFloat(emp.tds)  || 0;
+
+            const grossEarnings   = basic + da + hra + otherAllow + reimburse;
+            const totalDeductions = pf + pt + esic + tds;
+            const netPay = parseFloat(emp.net_pay || emp.net) || (grossEarnings - totalDeductions);
+            const amtWords = numberToWords(Math.round(netPay));
+
+            const totalDays = emp.total_working_days || emp.working_days || 30;
+            const lwp       = emp.lwp || emp.absent || 0;
+            const daysPaid  = emp.days_paid || (totalDays - lwp);
+
+            currentPayslipData = { name, month, monthRaw, netPay };
+
+            const fmt = n => n ? parseFloat(n).toLocaleString('en-IN', { maximumFractionDigits: 2 }) : '—';
+
+            const content = `
+                <div id="payslipToPrint" class="payslip-container">
+
+                    <!-- Company Header (matching Excel) -->
+                    <div class="ps-header">
+                        <div class="ps-company-row">
+                            <div class="ps-company-name">
+                                Sustainable Integrated Environmental Consultant.
+                            </div>
+                            <div class="ps-company-addr">
+                                Office-401, Sanskriti Arcade, Kaspate Wasti, Wakad, Pune - 411057
+                            </div>
+                        </div>
+                        <div class="ps-month-row">PAYSLIP FOR THE MONTH OF ${month.toUpperCase()}</div>
+                    </div>
+
+                    <!-- Employee Details (matches Excel rows 9-12) -->
+                    <div class="ps-emp-grid">
+                        <div class="ps-emp-cell">
+                            <span class="ps-emp-label">Name</span>
+                            <span class="ps-emp-value">${name}</span>
+                        </div>
+                        <div class="ps-emp-cell">
+                            <span class="ps-emp-label">Total Working Days</span>
+                            <span class="ps-emp-value">${totalDays}</span>
+                        </div>
+                        <div class="ps-emp-cell">
+                            <span class="ps-emp-label">Emp. Code</span>
+                            <span class="ps-emp-value">${emp.emp_code || emp.employee_code || emp.id || '—'}</span>
+                        </div>
+                        <div class="ps-emp-cell">
+                            <span class="ps-emp-label">LWP / Absent</span>
+                            <span class="ps-emp-value">${lwp || '—'}</span>
+                        </div>
+                        <div class="ps-emp-cell">
+                            <span class="ps-emp-label">DOJ</span>
+                            <span class="ps-emp-value">${emp.doj || emp.joining_date || emp.joiningDate || '—'}</span>
+                        </div>
+                        <div class="ps-emp-cell">
+                            <span class="ps-emp-label">Days Paid</span>
+                            <span class="ps-emp-value">${daysPaid}</span>
+                        </div>
+                        <div class="ps-emp-cell">
+                            <span class="ps-emp-label">Designation</span>
+                            <span class="ps-emp-value">${emp.designation || emp.position || '—'}</span>
+                        </div>
+                        <div class="ps-emp-cell">
+                            <span class="ps-emp-label">Department</span>
+                            <span class="ps-emp-value">${emp.department || emp.dept || '—'}</span>
+                        </div>
+                    </div>
+
+                    <!-- Earnings & Deductions (matches Excel rows 14-23) -->
+                    <table class="ps-salary-table">
+                        <thead>
+                            <tr>
+                                <th style="width:36%">Earnings</th>
+                                <th class="amt-col" style="width:14%">Amount (₹)</th>
+                                <th style="width:36%">Deductions</th>
+                                <th class="amt-col" style="width:14%">Amount (₹)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Basic</td>
+                                <td class="amt-col">${fmt(basic)}</td>
+                                <td>PF</td>
+                                <td class="amt-col">${fmt(pf)}</td>
+                            </tr>
+                            <tr>
+                                <td>DA</td>
+                                <td class="amt-col">${fmt(da)}</td>
+                                <td>PT</td>
+                                <td class="amt-col">${fmt(pt)}</td>
+                            </tr>
+                            <tr>
+                                <td>HRA</td>
+                                <td class="amt-col">${fmt(hra)}</td>
+                                <td>ESIC</td>
+                                <td class="amt-col">${esic ? fmt(esic) : '—'}</td>
+                            </tr>
+                            <tr>
+                                <td>Other Allowance</td>
+                                <td class="amt-col">${fmt(otherAllow)}</td>
+                                <td>TDS / IT Return</td>
+                                <td class="amt-col">${fmt(tds)}</td>
+                            </tr>
+                            <tr>
+                                <td>Reimbursement</td>
+                                <td class="amt-col">${reimburse ? fmt(reimburse) : '—'}</td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            <tr class="total-row">
+                                <td>Gross Earnings</td>
+                                <td class="amt-col">${fmt(grossEarnings)}</td>
+                                <td>Total Deductions</td>
+                                <td class="amt-col">${fmt(totalDeductions)}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <!-- Net Pay (matches Excel row 25) -->
+                    <div class="ps-net-row">
+                        <div>
+                            <div class="ps-net-label">NET PAY (Take Home)</div>
+                            <div class="ps-net-words">${amtWords} Only</div>
+                        </div>
+                        <div class="ps-net-amount">₹ ${fmt(netPay)}</div>
+                    </div>
+
+                    <div class="ps-footer">
+                        This is a Computer Generated Payslip and does not require Signature.<br>
+                        For any discrepancies, please contact HR department within 7 days.
+                    </div>
+
+                </div>`;
+
+            document.getElementById('payslipContent').innerHTML = content;
+            document.getElementById('payslipModal').classList.add('active');
+        }
+
+        // ── Download PDF (original logic kept) ─────────────────────────────
+        function downloadPayslipPDF() {
+            const element = document.getElementById('payslipToPrint');
+            if (!element) return;
+
+            const safeName  = (currentPayslipData?.name  || 'Employee').replace(/\s+/g, '_');
+            const safeMonth = (currentPayslipData?.monthRaw || '').replace('-', '_');
+
+            const opt = {
+                margin: [0.5, 0.5, 0.5, 0.5],
+                filename: `Salary_Slip_${safeName}_${safeMonth}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            html2pdf().set(opt).from(element).save()
+                .then(() => showToast('Payslip downloaded successfully!', 'success'))
+                .catch(() => showToast('Error generating PDF!', 'error'));
+        }
+
+        // ── Print (original logic kept) ─────────────────────────────────────
+        function printPayslip() {
+            const printContents = document.getElementById('payslipToPrint').innerHTML;
+            const originalContents = document.body.innerHTML;
+            document.body.innerHTML = printContents;
+            window.print();
+            document.body.innerHTML = originalContents;
+            window.location.reload();
+        }
+
+        // ── Filter cards (original logic kept) ─────────────────────────────
+        function filterPayslips() {
+            const search      = document.getElementById('payslipSearch').value.toLowerCase().trim();
+            const selectedEmp = document.getElementById('payslipEmployee').value.toLowerCase();
+            const cards       = document.querySelectorAll('.payslip-card');
+
+            cards.forEach(card => {
+                const name = card.getAttribute('data-name');
+                const id   = card.getAttribute('data-id').toLowerCase();
+                let show   = true;
+
+                if (search && !name.includes(search)) show = false;
+                if (selectedEmp !== 'all' && id !== selectedEmp && name !== selectedEmp) show = false;
+
+                card.style.display = show ? 'block' : 'none';
+            });
+        }
+
+        // ── Close modal (original) ──────────────────────────────────────────
+        function closePayslipModal() {
+            document.getElementById('payslipModal').classList.remove('active');
+        }
+
+        // ── Helpers ─────────────────────────────────────────────────────────
+        function getSelectedMonthLabel() {
+            const val = document.getElementById('payslipMonth').value; // YYYY-MM
+            if (!val) return '—';
+            const [y, m] = val.split('-');
+            const months = ['January', 'February', 'March', 'April', 'May', 'June',
+                            'July', 'August', 'September', 'October', 'November', 'December'];
+            return `${months[parseInt(m, 10) - 1]} ${y}`;
         }
 
         function numberToWords(num) {
@@ -535,179 +974,6 @@
             return convertToWords(num);
         }
 
-        function generatePayslipCards() {
-            const grid = document.getElementById('payslipsGrid');
-            grid.innerHTML = '';
-
-            Object.keys(employeeData).forEach(name => {
-                const data = employeeData[name];
-                const netSalary = calculateNetSalary(data);
-                const month = document.getElementById('payslipMonth').value;
-
-                const cardHTML = `
-                    <div class="payslip-card" data-name="${name}" onclick="viewPayslip('${name}')">
-                        <div class="flex justify-between items-start">
-                            <div>
-                                <div class="w-10 h-10 rounded-full bg-[#1B738C]/10 flex items-center justify-center">
-                                    <i class="fas fa-user text-[#1B738C]"></i>
-                                </div>
-                                <h4 class="font-semibold mt-3 text-[var(--primary)]">${name}</h4>
-                                <p class="text-xs text-gray-500">${data.designation} • ${data.dept}</p>
-                            </div>
-                            <i class="fas fa-download text-[var(--primary)] text-xl"></i>
-                        </div>
-                        <div class="mt-4 pt-3 border-t border-[#7fcde3] flex justify-between items-end">
-                            <span class="text-xs text-gray-500">${month}</span>
-                            <span class="text-lg font-bold text-green-600">₹${netSalary.toLocaleString()}</span>
-                        </div>
-                    </div>
-                `;
-                grid.innerHTML += cardHTML;
-            });
-        }
-
-        function viewPayslip(name) {
-            const data = employeeData[name];
-            if (!data) return;
-
-            const month = document.getElementById('payslipMonth').value;
-            const netSalary = calculateNetSalary(data);
-            const totalEarnings = data.basic + data.hra + data.allowances + data.otherAllow;
-            const totalDeductions = data.pf + data.pt + data.tds;
-            const amountInWords = numberToWords(netSalary);
-
-            currentPayslipData = { name, ...data, month, netSalary, totalEarnings, totalDeductions, amountInWords };
-
-            const content = `
-                <div id="payslipToPrint" class="payslip-container">
-                    <div class="payslip-header">
-                        <div class="payslip-title">HRMS ADMIN</div>
-                        <div class="payslip-subtitle">Corporate Office, Mumbai, India - 400001</div>
-                        <div class="payslip-subtitle">Email: hr@hrms.com | Phone: +91 +++++++++++++</div>
-                        <div class="mt-4">
-                            <span class="font-bold text-lg">SALARY SLIP FOR ${month.toUpperCase()}</span>
-                        </div>
-                    </div>
-                    
-                    <div class="payslip-section">
-                        <div class="payslip-section-title">Employee Details</div>
-                        <table class="payslip-table w-full">
-                            <tr><th>Employee Name</th><td>${name}</td><th>Employee ID</th><td>${data.id}</td></tr>
-                            <tr><th>Designation</th><td>${data.designation}</td><th>Department</th><td>${data.dept}</td></tr>
-                            <tr><th>Joining Date</th><td>${data.joiningDate}</td><th>Payment Date</th><td>${new Date().toLocaleDateString()}</td></tr>
-                            <tr><th>Bank Name</th><td>${data.bank}</td><th>Account Number</th><td>${data.account}</td></tr>
-                        </table>
-                    </div>
-                    
-                    <div class="payslip-section">
-                        <div class="payslip-section-title">Earnings</div>
-                        <table class="payslip-table w-full">
-                            <tr><th>Particulars</th><th class="amount">Amount (₹)</th></tr>
-                            <tr><td>Basic Salary</td><td class="amount">${data.basic.toLocaleString()}</td></tr>
-                            <tr><td>House Rent Allowance (HRA)</td><td class="amount">${data.hra.toLocaleString()}</td></tr>
-                            <tr><td>Conveyance Allowance</td><td class="amount">${data.allowances.toLocaleString()}</td></tr>
-                            <tr><td>Special Allowance</td><td class="amount">${data.otherAllow.toLocaleString()}</td></tr>
-                            <tr class="total-row"><td><strong>Total Earnings</strong></td><td class="amount"><strong>${totalEarnings.toLocaleString()}</strong></td></tr>
-                        </table>
-                    </div>
-                    
-                    <div class="payslip-section">
-                        <div class="payslip-section-title">Deductions</div>
-                        <table class="payslip-table w-full">
-                            <tr><th>Particulars</th><th class="amount">Amount (₹)</th></tr>
-                            <tr><td>Provident Fund (PF)</td><td class="amount">${data.pf.toLocaleString()}</td></tr>
-                            <tr><td>Professional Tax (PT)</td><td class="amount">${data.pt.toLocaleString()}</td></tr>
-                            <tr><td>Tax Deducted at Source (TDS)</td><td class="amount">${data.tds.toLocaleString()}</td></tr>
-                            <tr class="total-row"><td><strong>Total Deductions</strong></td><td class="amount"><strong>${totalDeductions.toLocaleString()}</strong></td></tr>
-                        </table>
-                    </div>
-                    
-                    <div class="net-salary">
-                        <div class="text-sm text-gray-600">Net Salary (Take Home)</div>
-                        <div class="net-salary-amount">₹ ${netSalary.toLocaleString()}</div>
-                        <div class="text-xs mt-2">${amountInWords} Only</div>
-                    </div>
-                    
-                    <div class="payslip-footer">
-                        <p>This is a computer generated salary slip and does not require signature.</p>
-                        <p>For any discrepancies, please contact HR department within 7 days.</p>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('payslipContent').innerHTML = content;
-            document.getElementById('payslipModal').classList.add('active');
-        }
-
-        function downloadPayslipPDF() {
-            const element = document.getElementById('payslipToPrint');
-            if (!element) return;
-
-            const opt = {
-                margin: [0.5, 0.5, 0.5, 0.5],
-                filename: `Salary_Slip_${currentPayslipData?.name || 'Employee'}_${currentPayslipData?.month || ''}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2 },
-                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-            };
-
-            html2pdf().set(opt).from(element).save()
-                .then(() => showToast('Payslip downloaded successfully!', 'success'))
-                .catch(() => showToast('Error generating PDF!', 'error'));
-        }
-
-        function printPayslip() {
-            const printContents = document.getElementById('payslipToPrint').innerHTML;
-            const originalContents = document.body.innerHTML;
-
-            document.body.innerHTML = printContents;
-            window.print();
-            document.body.innerHTML = originalContents;
-            window.location.reload();
-        }
-
-        function generateBulkPayslips() {
-            const employees = Object.keys(employeeData);
-            showToast(`Generating ${employees.length} payslips...`, 'info');
-
-            let completed = 0;
-            employees.forEach((name, index) => {
-                setTimeout(() => {
-                    viewPayslip(name);
-                    setTimeout(() => {
-                        downloadPayslipPDF();
-                        setTimeout(() => {
-                            closePayslipModal();
-                            completed++;
-                            if (completed === employees.length) {
-                                showToast(`${employees.length} payslips generated successfully!`, 'success');
-                            }
-                        }, 800);
-                    }, 600);
-                }, index * 2800);
-            });
-        }
-
-        function filterPayslips() {
-            const search = document.getElementById('payslipSearch').value.toLowerCase().trim();
-            const selectedEmployee = document.getElementById('payslipEmployee').value.toLowerCase();
-            const cards = document.querySelectorAll('.payslip-card');
-
-            cards.forEach(card => {
-                const name = card.getAttribute('data-name').toLowerCase();
-                let show = true;
-
-                if (search && !name.includes(search)) show = false;
-                if (selectedEmployee !== 'all' && name !== selectedEmployee) show = false;
-
-                card.style.display = show ? 'block' : 'none';
-            });
-        }
-
-        function closePayslipModal() {
-            document.getElementById('payslipModal').classList.remove('active');
-        }
-
         function showToast(message, type = 'info') {
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
@@ -716,12 +982,6 @@
             setTimeout(() => toast.remove(), 3000);
         }
 
-        // Initialize
-        document.addEventListener('DOMContentLoaded', () => {
-            loadSidebar();
-            loadHeader();
-            generatePayslipCards();
-        });
     </script>
 </body>
 </html>
