@@ -1,0 +1,2025 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Policy Management | HRMS Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        :root {
+            --primary: #1B738C;
+            --primary-light: #62C9EA;
+            --primary-soft: #BDE4EE;
+            --primary-bg-light: #e9f2f4;
+            --button-hover: #166278;
+            --border-color: #1B738C;
+            --text-dark: #1B738C;
+            --text-light: #5a7c8a;
+        }
+
+        body {
+            background-color: #f0f7f9;
+        }
+
+        .section-card {
+            background: white;
+            border-radius: 14px;
+            border: 1px solid var(--primary-light);
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: 0 2px 8px rgba(27, 115, 140, 0.05);
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            transition: all 0.2s;
+            color: white;
+            padding: 10px 22px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            border: none;
+            font-size: 13px;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--button-hover);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(27, 115, 140, 0.2);
+        }
+
+        .btn-outline {
+            border: 1px solid var(--primary-light);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 9px;
+            background: transparent;
+            cursor: pointer;
+            font-weight: 500;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-bg-light);
+            border-color: var(--primary);
+        }
+
+        .btn-success {
+            background-color: #2b7a3e;
+            transition: all 0.2s;
+            color: white;
+            padding: 10px 22px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            border: none;
+            font-size: 13px;
+        }
+
+        .btn-success:hover {
+            background-color: #1e5a2e;
+        }
+
+        .btn-danger {
+            color: #dc3545;
+            padding: 6px 10px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: 500;
+            border: 1px solid #fde8ea;
+            font-size: 12px;
+            /* background: #fde8ea; */
+            transition: all 0.2s;
+        }
+
+        .btn-danger:hover {
+            background-color: #dc3545;
+            color: white;
+        }
+
+        .btn-info {
+            color: var(--primary);
+            padding: 6px 10px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: 500;
+            border: 1px solid var(--primary-soft);
+            font-size: 12px;
+            /* background: var(--primary-bg-light); */
+            transition: all 0.2s;
+        }
+
+        .btn-info:hover {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .btn-warning {
+            color: #856404;
+            padding: 6px 10px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: 500;
+            border: 1px solid #e5d8a9;
+            font-size: 12px;
+            
+            transition: all 0.2s;
+        }
+
+        .btn-warning:hover {
+            background-color: #f0a500;
+            color: white;
+        }
+
+        input,
+        select,
+        textarea {
+            border: 1px solid var(--primary-soft);
+            border-radius: 9px;
+            padding: 9px 12px;
+            width: 100%;
+            font-size: 13px;
+            transition: 0.2s;
+            color: var(--text-dark);
+            background: white;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(27, 115, 140, 0.1);
+        }
+
+        label {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+            display: block;
+            letter-spacing: 0.3px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        /* Multi-select dropdown */
+        .multi-select-wrapper {
+            position: relative;
+        }
+
+        .multi-select-trigger {
+            border: 1px solid var(--primary-soft);
+            border-radius: 9px;
+            padding: 8px 12px;
+            cursor: pointer;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-height: 40px;
+            transition: 0.2s;
+            user-select: none;
+            font-size: 13px;
+            color: var(--text-dark);
+        }
+
+        .multi-select-trigger:hover,
+        .multi-select-trigger.open {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(27, 115, 140, 0.1);
+        }
+
+        .multi-select-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .multi-select-tag {
+            background: var(--primary);
+            color: white;
+            border-radius: 5px;
+            padding: 2px 8px;
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            white-space: nowrap;
+        }
+
+        .multi-select-tag .remove-tag {
+            cursor: pointer;
+            opacity: 0.8;
+            line-height: 1;
+            font-size: 12px;
+        }
+
+        .multi-select-tag .remove-tag:hover {
+            opacity: 1;
+        }
+
+        .multi-select-placeholder {
+            color: var(--text-light);
+            font-size: 13px;
+        }
+
+        .multi-select-dropdown {
+            position: absolute;
+            top: calc(100% + 6px);
+            left: 0;
+            right: 0;
+            background: white;
+            border: 1px solid var(--primary-light);
+            border-radius: 10px;
+            z-index: 200;
+            box-shadow: 0 8px 24px rgba(27, 115, 140, 0.15);
+            display: none;
+            overflow: hidden;
+        }
+
+        .multi-select-dropdown.open {
+            display: block;
+        }
+
+        .multi-select-search {
+            padding: 8px 10px;
+            border-bottom: 1px solid var(--primary-soft);
+        }
+
+        .multi-select-search input {
+            border: 1px solid var(--primary-soft);
+            border-radius: 7px;
+            padding: 6px 10px;
+            font-size: 12px;
+            width: 100%;
+        }
+
+        .multi-select-options {
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        .multi-select-option {
+            padding: 9px 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: background 0.15s;
+            font-size: 13px;
+            color: var(--text-dark);
+        }
+
+        .multi-select-option:hover {
+            background: var(--primary-bg-light);
+        }
+
+        .multi-select-option.selected {
+            background: #e0f2f8;
+        }
+
+        .multi-select-option input[type="checkbox"] {
+            width: 15px;
+            height: 15px;
+            accent-color: var(--primary);
+            flex-shrink: 0;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .multi-select-footer {
+            padding: 8px 12px;
+            border-top: 1px solid var(--primary-soft);
+            display: flex;
+            gap: 6px;
+            justify-content: flex-end;
+        }
+
+        .select-all-btn,
+        .clear-all-btn {
+            font-size: 11px;
+            font-weight: 600;
+            padding: 4px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+        }
+
+        .select-all-btn {
+            background: var(--primary);
+            color: white;
+        }
+
+        .clear-all-btn {
+            background: var(--primary-bg-light);
+            color: var(--primary);
+        }
+
+        /* Tab nav */
+        .submodule-nav {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 24px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--primary-soft);
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 8px 20px;
+            border-radius: 40px;
+            font-size: 13px;
+            font-weight: 600;
+            transition: all 0.2s;
+            background: transparent;
+            color: var(--primary);
+            cursor: pointer;
+            border: none;
+        }
+
+        .tab-btn:hover {
+            background-color: var(--primary-bg-light);
+        }
+
+        .tab-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Table */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--primary);
+            text-align: left;
+            padding: 11px 10px;
+            background: var(--primary-bg-light);
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+
+        td {
+            padding: 11px 10px;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid var(--primary-soft);
+            transition: background 0.15s;
+        }
+
+        tbody tr:hover {
+            background-color: var(--primary-bg-light);
+        }
+
+        /* Badge */
+        .badge-custom {
+            background: var(--primary-bg-light);
+            padding: 3px 9px;
+            border-radius: 40px;
+            font-size: 11px;
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .badge-active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-category {
+            
+            color: #0c5464;
+            padding: 3px 9px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-dept {
+          
+            color: #5b21b6;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            margin: 1px;
+            display: inline-block;
+        }
+
+        .badge-emptype {
+          
+            color: #856404;
+            padding: 2px 7px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            margin: 1px;
+            display: inline-block;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 16px;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-container {
+            background: white;
+            border-radius: 18px;
+            padding: 28px;
+            width: 100%;
+            max-width: 560px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+        }
+
+        .modal-container-lg {
+            background: white;
+            border-radius: 18px;
+            padding: 28px;
+            width: 100%;
+            max-width: 800px;
+            max-height: 93vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 14px;
+            border-bottom: 2px solid var(--primary-soft);
+        }
+
+        .modal-header h3 {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 1.05rem;
+        }
+
+        .modal-close {
+            cursor: pointer;
+            font-size: 22px;
+            color: var(--primary-light);
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: var(--primary);
+        }
+
+        /* Confirm modal */
+        .confirm-modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .confirm-modal-overlay.active {
+            display: flex;
+        }
+
+        .confirm-modal-container {
+            background: white;
+            border-radius: 18px;
+            padding: 28px;
+            width: 380px;
+            max-width: 95%;
+            text-align: center;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Toast */
+        .toast {
+            position: fixed;
+            bottom: 24px;
+            right: 24px;
+            padding: 12px 20px;
+            border-radius: 40px;
+            color: white;
+            z-index: 3000;
+            animation: slideIn 0.3s ease;
+            font-weight: 500;
+            font-size: 13px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+        }
+
+        .toast.success {
+            background-color: #2b7a3e;
+        }
+
+        .toast.error {
+            background-color: #dc3545;
+        }
+
+        .toast.info {
+            background-color: var(--primary);
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Policy card */
+        .policy-card {
+            border: 1px solid var(--primary-soft);
+            border-radius: 12px;
+            padding: 18px;
+            background: white;
+            transition: all 0.22s;
+            cursor: pointer;
+        }
+
+        .policy-card:hover {
+            border-color: var(--primary-light);
+            box-shadow: 0 6px 20px rgba(27, 115, 140, 0.10);
+            transform: translateY(-2px);
+        }
+
+        .policy-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: var(--primary-soft);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .policy-icon i {
+            color: var(--primary);
+            font-size: 18px;
+        }
+
+        /* File input */
+        .file-input-wrapper {
+            position: relative;
+            border: 2px dashed var(--primary-soft);
+            border-radius: 10px;
+            padding: 18px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--primary-bg-light);
+        }
+
+        .file-input-wrapper:hover {
+            border-color: var(--primary-light);
+        }
+
+        .file-input-wrapper input[type="file"] {
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            cursor: pointer;
+            width: 100%;
+            height: 100%;
+        }
+
+        .file-input-wrapper i {
+            font-size: 26px;
+            color: var(--primary-light);
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .file-input-wrapper p {
+            font-size: 12px;
+            color: var(--text-light);
+            margin: 0;
+        }
+
+        .file-input-wrapper .file-name {
+            font-size: 13px;
+            color: var(--primary);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-light);
+        }
+
+        .empty-state i {
+            font-size: 38px;
+            color: var(--primary-soft);
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .action-btn-group {
+            display: flex;
+            gap: 5px;
+            align-items: center;
+        }
+
+        .stat-mini {
+            background: white;
+            border: 1px solid var(--primary-light);
+            border-radius: 12px;
+            padding: 12px 16px;
+
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            min-height: 82px;
+        }
+
+        /* Audience section in form */
+        .audience-section {
+            background: var(--primary-bg-light);
+            border: 1px solid var(--primary-soft);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 16px;
+        }
+
+        .audience-section-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* Visibility indicator */
+        .visibility-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 4px;
+            margin-top: 4px;
+        }
+
+        /* Employee view filter bar */
+        .emp-filter-bar {
+            background: white;
+            border: 1px solid var(--primary-soft);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 20px;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f0f7f9;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-soft);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-light);
+        }
+
+        @media (max-width: 768px) {
+            .section-card {
+                padding: 16px;
+            }
+
+            .tab-btn {
+                padding: 6px 14px;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ====================== LAYOUT WRAPPER (from Company Management) ====================== -->
+    <div class="flex h-screen overflow-hidden">
+
+        <!-- SIDEBAR -->
+        <div id="sidebar-container"></div>
+
+        <!-- MAIN AREA -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+
+            <!-- HEADER -->
+            <div id="header-container"></div>
+
+            <!-- SCROLLABLE CONTENT -->
+            <main class="flex-1 overflow-y-auto p-5 main-content">
+                <div style="max-width:1400px; margin:0 auto; padding-top: 4rem;">
+
+                    <!-- Page Header -->
+                    <div class="mb-5 flex items-center justify-between flex-wrap gap-3">
+                        <div>
+                            <h1 class="text-xl font-bold" style="color: var(--primary);">
+                                Policy Management
+                            </h1>
+                            <p class="text-xs mt-0.5" style="color: var(--text-light);">Add, manage and publish company
+                                policies — target by Department & Employee Type</p>
+                        </div>
+                        <button onclick="openAddModal()" class="btn-primary">
+                            <i class="fas fa-plus mr-2"></i> Add Policy
+                        </button>
+                    </div>
+
+                   <!-- Stats -->
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+                        <div class="stat-mini">
+                            <p class="text-xs mb-1" style="color:var(--text-light);">TOTAL POLICIES</p>
+                            <p class="text-2xl font-bold" style="color:var(--primary);" id="statTotal">0</p>
+                        </div>
+                        <div class="stat-mini">
+                            <p class="text-xs mb-1" style="color:var(--text-light);">ACTIVE</p>
+                            <p class="text-2xl font-bold" style="color:#2b7a3e;" id="statActive">0</p>
+                        </div>
+                        <div class="stat-mini">
+                            <p class="text-xs mb-1" style="color:var(--text-light);">DEPARTMENTS COVERED</p>
+                            <p class="text-2xl font-bold" style="color:var(--primary);" id="statDepts">0</p>
+                        </div>
+                        <div class="stat-mini">
+                            <p class="text-xs mb-1" style="color:var(--text-light);">INACTIVE</p>
+                            <p class="text-2xl font-bold" style="color:#dc3545;" id="statInactive">0</p>
+                        </div>
+                    </div>
+
+                    <!-- Tab Navigation -->
+                    <div class="submodule-nav">
+                        <button class="tab-btn active" data-tab="tab-list">All Policies</button>
+                        <button class="tab-btn" data-tab="tab-categories">Categories</button>
+                        <button class="tab-btn" data-tab="tab-preview">Employee Preview</button>
+                    </div>
+
+                    <!-- ==================== TAB 1: ALL POLICIES ==================== -->
+                    <div id="tab-list" class="tab-content active">
+                        <div class="section-card">
+                            <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
+                                <h3 class="text-base font-bold" style="color:var(--primary);">Policy List</h3>
+                                <div class="flex gap-2 flex-wrap items-center">
+                                    <input type="text" id="searchPolicy" placeholder="Search policies..."
+                                        style="width:200px; padding:8px 12px; font-size:13px;"
+                                        oninput="renderPoliciesTable()">
+                                    <select id="filterCategory" onchange="renderPoliciesTable()"
+                                        style="width:160px; padding:8px 12px; font-size:13px;">
+                                        <option value="">All Categories</option>
+                                    </select>
+                                    <select id="filterDept" onchange="renderPoliciesTable()"
+                                        style="width:160px; padding:8px 12px; font-size:13px;">
+                                        <option value="">All Departments</option>
+                                    </select>
+                                    <select id="filterEmpType" onchange="renderPoliciesTable()"
+                                        style="width:160px; padding:8px 12px; font-size:13px;">
+                                        <option value="">All Emp. Types</option>
+                                    </select>
+                                    <select id="filterStatus" onchange="renderPoliciesTable()"
+                                        style="width:130px; padding:8px 12px; font-size:13px;">
+                                        <option value="">All Status</option>
+                                        <option value="Active">Active</option>
+                                        <option value="Inactive">Inactive</option>
+                                    </select>
+                                    <button onclick="exportPoliciesCSV()" class="btn-outline" style="padding:8px 12px;">
+                                        <i class="fas fa-download mr-1"></i>Export
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>#</th>
+                                            <th>Policy Title</th>
+                                            <th>Category</th>
+                                            <th>Departments</th>
+                                            <th>Employee Types</th>
+                                            
+                                            <th>Effective Date</th>
+                                            <th>Status</th>
+                                            <th>Doc</th>
+                                            <th style="text-align:center;">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="policiesTableBody"></tbody>
+                                </table>
+                            </div>
+                            <div class="flex justify-between items-center mt-4 pt-3 border-t"
+                                style="border-color:var(--primary-soft);">
+                                <p class="text-xs" style="color:var(--text-light);" id="policyCount">Showing 0 policies
+                                </p>
+                                <div class="flex gap-2" id="policyPagination"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ==================== TAB 2: CATEGORIES ==================== -->
+                    <div id="tab-categories" class="tab-content">
+                        <div class="section-card">
+                            <div class="flex justify-between items-center mb-5 flex-wrap gap-3">
+                                <h3 class="text-base font-bold" style="color:var(--primary);">Policy Categories</h3>
+                                <button onclick="openCategoryModal()" class="btn-primary">
+                                    <i class="fas fa-plus mr-1"></i> Add Category
+                                </button>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="categoriesGrid"></div>
+                        </div>
+                    </div>
+
+                    <!-- ==================== TAB 3: EMPLOYEE PREVIEW ==================== -->
+                    <div id="tab-preview" class="tab-content">
+                        <div class="section-card"
+                            style="background: var(--primary-bg-light); border-style: dashed; padding:14px 18px;">
+                            <div class="flex items-center gap-3">
+                                <i class="fas fa-eye" style="color:var(--primary); font-size:18px;"></i>
+                                <div>
+                                    <p class="font-semibold text-sm" style="color:var(--primary);">Employee View Preview
+                                    </p>
+                                    <p class="text-xs" style="color:var(--text-light);">Simulate what an employee sees —
+                                        filter by Department and Employee Type to test visibility</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="emp-filter-bar">
+                            <p class="text-xs font-bold mb-3"
+                                style="color:var(--primary); text-transform:uppercase; letter-spacing:0.5px;">
+                                <i class="fas fa-user-cog mr-1"></i> Simulate Employee Profile
+                            </p>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div>
+                                    <label>Department</label>
+                                    <select id="previewDeptFilter" onchange="renderPreview()"
+                                        style="padding:8px 12px; font-size:13px;">
+                                        <option value="">— All Departments —</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Employee Type</label>
+                                    <select id="previewEmpTypeFilter" onchange="renderPreview()"
+                                        style="padding:8px 12px; font-size:13px;">
+                                        <option value="">— All Types —</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Policy Category</label>
+                                    <select id="previewCatFilter" onchange="renderPreview()"
+                                        style="padding:8px 12px; font-size:13px;">
+                                        <option value="">— All Categories —</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="previewMatchInfo" class="mt-3 text-xs" style="color:var(--text-light);"></div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="previewGrid"></div>
+                    </div>
+
+                </div><!-- /max-width wrapper -->
+            </main>
+        </div><!-- /main area -->
+    </div><!-- /flex layout -->
+
+    <!-- ====================== ADD / EDIT POLICY MODAL ====================== -->
+    <div id="policyModal" class="modal-overlay">
+        <div class="modal-container-lg">
+            <div class="modal-header">
+                <h3 id="policyModalTitle"><i class="fas fa-file-alt mr-2"></i>Add Policy</h3>
+                <span class="modal-close" onclick="closePolicyModal()">&times;</span>
+            </div>
+
+            <form id="policyForm" onsubmit="submitPolicyForm(event)">
+                <input type="hidden" id="policyId">
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-5">
+                    <div class="form-group md:col-span-2">
+                        <label>Policy Title <span style="color:#dc3545">*</span></label>
+                        <input type="text" id="pTitle" placeholder="e.g., Work From Home Policy" required
+                            style="padding: 4px 8px; font-size: 13px;">
+                    </div>
+                    <div class="form-group" style="margin-bottom:0;">
+                        <label>Category <span style="color:#dc3545">*</span></label>
+                        <select id="pCategory" required style="padding: 4px 8px; font-size: 13px;">
+                            <option value="">— Select Category —</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Effective Date</label>
+                        <input type="date" id="pEffectiveDate" style="padding: 4px 8px; font-size: 13px;">
+                    </div>
+                    <div class="form-group">
+                        <label>Status</label>
+                        <select id="pStatus" style="padding: 4px 8px; font-size: 13px;">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select>
+                    </div>
+                    <div class="form-group md:col-span-2">
+                        <label>Description</label>
+                        <textarea id="pDescription" rows="3" placeholder="Brief description of this policy..."
+                            style="padding: 4px 8px; font-size: 13px;"></textarea>
+                    </div>
+                </div>
+
+                <!-- AUDIENCE TARGETING SECTION -->
+                <div class="audience-section md:col-span-2">
+                    <div class="audience-section-title">
+                        <i class="fas fa-bullseye"></i> Policy Audience — Who should see this policy?
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label>
+                                <i class="fas fa-building mr-1"></i> Applicable Departments
+                                <span
+                                    style="font-size:10px; font-weight:400; color:var(--text-light); margin-left:4px;">(leave
+                                    empty = all departments)</span>
+                            </label>
+                            <div class="multi-select-wrapper" id="deptSelectWrapper">
+                                <div class="multi-select-trigger" id="deptTrigger" onclick="toggleMultiSelect('dept')">
+                                    <div class="multi-select-tags" id="deptTags">
+                                        <span class="multi-select-placeholder" id="deptPlaceholder">All
+                                            Departments</span>
+                                    </div>
+                                    <i class="fas fa-chevron-down"
+                                        style="color:var(--primary-light); font-size:11px; flex-shrink:0; transition:transform 0.2s;"
+                                        id="deptChevron"></i>
+                                </div>
+                                <div class="multi-select-dropdown" id="deptDropdown">
+                                    <div class="multi-select-search">
+                                        <input type="text" placeholder="Search departments..."
+                                            oninput="filterMultiOptions('dept', this.value)"
+                                            onclick="event.stopPropagation()">
+                                    </div>
+                                    <div class="multi-select-options" id="deptOptions"></div>
+                                    <div class="multi-select-footer">
+                                        <button type="button" class="clear-all-btn"
+                                            onclick="clearAllMulti('dept')">Clear All</button>
+                                        <button type="button" class="select-all-btn"
+                                            onclick="selectAllMulti('dept')">Select All</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom:0;">
+                            <label>
+                                <i class="fas fa-id-badge mr-1"></i> Applicable Employee Types
+                                <span
+                                    style="font-size:10px; font-weight:400; color:var(--text-light); margin-left:4px;">(leave
+                                    empty = all types)</span>
+                            </label>
+                            <div class="multi-select-wrapper" id="empTypeSelectWrapper">
+                                <div class="multi-select-trigger" id="empTypeTrigger"
+                                    onclick="toggleMultiSelect('empType')">
+                                    <div class="multi-select-tags" id="empTypeTags">
+                                        <span class="multi-select-placeholder" id="empTypePlaceholder">All Employee
+                                            Types</span>
+                                    </div>
+                                    <i class="fas fa-chevron-down"
+                                        style="color:var(--primary-light); font-size:11px; flex-shrink:0; transition:transform 0.2s;"
+                                        id="empTypeChevron"></i>
+                                </div>
+                                <div class="multi-select-dropdown" id="empTypeDropdown">
+                                    <div class="multi-select-search">
+                                        <input type="text" placeholder="Search types..."
+                                            oninput="filterMultiOptions('empType', this.value)"
+                                            onclick="event.stopPropagation()">
+                                    </div>
+                                    <div class="multi-select-options" id="empTypeOptions"></div>
+                                    <div class="multi-select-footer">
+                                        <button type="button" class="clear-all-btn"
+                                            onclick="clearAllMulti('empType')">Clear All</button>
+                                        <button type="button" class="select-all-btn"
+                                            onclick="selectAllMulti('empType')">Select All</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="audiencePreview" class="mt-3 p-3 rounded-lg"
+                        style="background:white;border:1px solid var(--primary-soft);display:none;">
+                        <p class="text-xs font-bold mb-2" style="color:var(--primary);">
+                            <i class="fas fa-eye mr-1"></i> Visibility Summary
+                        </p>
+                        <div id="audiencePreviewText" class="text-xs" style="color:var(--text-light);"></div>
+                    </div>
+                </div>
+
+                <div class="form-group mt-4">
+                    <label>Policy Document (PDF / Image)</label>
+                    <div class="file-input-wrapper" id="fileDropZone">
+                        <input type="file" id="pFile" accept=".pdf,.jpg,.jpeg,.png" onchange="handleFileSelect(this)">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Click or drag & drop to upload</p>
+                        <p>Supports PDF, JPG, PNG (max 10MB)</p>
+                        <div class="file-name" id="selectedFileName"></div>
+                    </div>
+                    <div id="existingFileInfo" style="display:none; margin-top:8px;" class="flex items-center gap-2">
+                        <i class="fas fa-file-pdf" style="color:var(--primary);"></i>
+                        <span class="text-sm" style="color:var(--primary);" id="existingFileName"></span>
+                    </div>
+                </div>
+
+                <div class="flex justify-end gap-3 mt-4 pt-4" style="border-top:1px solid var(--primary-soft);">
+                    <button type="button" onclick="closePolicyModal()" class="btn-outline">Cancel</button>
+                    <button type="submit" class="btn-success" id="policySubmitBtn">
+                        <i class="fas fa-save mr-1"></i> Save Policy
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ====================== VIEW POLICY MODAL ====================== -->
+    <div id="viewPolicyModal" class="modal-overlay">
+        <div class="modal-container-lg">
+            <div class="modal-header">
+                <h3><i class="fas fa-eye mr-2"></i>Policy Details</h3>
+                <span class="modal-close" onclick="closeViewModal()">&times;</span>
+            </div>
+            <div id="viewPolicyContent"></div>
+            <div class="flex justify-end gap-3 mt-5 pt-4" style="border-top:1px solid var(--primary-soft);">
+                <button onclick="closeViewModal()" class="btn-outline">Close</button>
+                <button id="viewEditBtn" class="btn-primary">
+                    <i class="fas fa-edit mr-1"></i> Edit Policy
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====================== CATEGORY MODAL ====================== -->
+    <div id="categoryModal" class="modal-overlay">
+        <div class="modal-container" style="max-width:420px;">
+            <div class="modal-header">
+                <h3 id="catModalTitle"><i class="fas fa-tags mr-2"></i>Add Category</h3>
+                <span class="modal-close" onclick="closeCategoryModal()">&times;</span>
+            </div>
+            <form id="categoryForm" onsubmit="submitCategoryForm(event)">
+                <input type="hidden" id="catId">
+                <div class="form-group">
+                    <label>Category Name <span style="color:#dc3545">*</span></label>
+                    <input type="text" id="catName" placeholder="e.g., HR Policies" required
+                        style="padding: 4px 8px; font-size: 13px;">
+                </div>
+                <div class="form-group">
+                    <label>Icon (Font Awesome class)</label>
+                    <input type="text" id="catIcon" placeholder="e.g., fa-file-contract"
+                        style="padding: 4px 8px; font-size: 13px;">
+                </div>
+                <div class="form-group">
+                    <label>Description</label>
+                    <textarea id="catDescription" rows="2" placeholder="Brief description..."
+                        style="padding: 4px 8px; font-size: 13px;"></textarea>
+                </div>
+                <div class="flex justify-end gap-3 mt-2">
+                    <button type="button" onclick="closeCategoryModal()" class="btn-outline">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Category</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- ====================== CONFIRM DELETE MODAL ====================== -->
+    <div id="confirmDeleteModal" class="confirm-modal-overlay">
+        <div class="confirm-modal-container">
+            <div
+                style="width:56px;height:56px;background:#fde8ea;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 16px;">
+                <i class="fas fa-trash" style="color:#dc3545;font-size:22px;"></i>
+            </div>
+            <h3 style="color:var(--primary);font-size:1.1rem;font-weight:700;margin-bottom:8px;">Confirm Delete</h3>
+            <p id="confirmDeleteMsg" style="color:var(--text-light);margin-bottom:24px;font-size:14px;">Are you sure?
+            </p>
+            <div style="display:flex;gap:12px;justify-content:center;">
+                <button onclick="closeConfirmModal()" class="btn-outline">Cancel</button>
+                <button id="confirmDeleteBtn"
+                    style="background:#dc3545;color:white;padding:9px 24px;border-radius:10px;border:none;font-weight:600;cursor:pointer;">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/assets/js/common.js"></script>
+    <script src="/assets/js/sidebar.js"></script>
+    <script src="/assets/js/header.js"></script>
+ <script>
+        // ═══════════════════════════════════════
+        //  MASTER DATA
+        // ═══════════════════════════════════════
+        const ALL_DEPARTMENTS = [
+            'Engineering', 'Human Resources', 'Finance', 'Marketing', 'Sales',
+            'Operations', 'Legal', 'Customer Support', 'Product', 'Design',
+            'Administration', 'IT', 'Procurement', 'Logistics', 'R&D'
+        ];
+
+        const ALL_EMP_TYPES = [
+            'Full-Time', 'Part-Time', 'Contract', 'Intern', 'Probation',
+            'Remote', 'Freelancer', 'Consultant', 'Trainee', 'Senior Management'
+        ];
+
+        // ═══════════════════════════════════════
+        //  STATE
+        // ═══════════════════════════════════════
+        let policies = [];
+        let categories = [];
+        let editingPolicyId = null;
+        let editingCatId = null;
+        let selectedFile = null;
+        let currentPage = 0;
+        const PAGE_SIZE = 10;
+
+        // Multi-select state
+        const multiSelectState = {
+            dept: [],
+            empType: []
+        };
+
+        // ═══════════════════════════════════════
+        //  UTILITIES
+        // ═══════════════════════════════════════
+        function showToast(msg, type = 'success') {
+            const t = document.createElement('div');
+            t.className = `toast ${type}`;
+            const icons = { success: 'fa-check-circle', error: 'fa-times-circle', info: 'fa-info-circle' };
+            t.innerHTML = `<i class="fas ${icons[type] || 'fa-info-circle'} mr-2"></i>${msg}`;
+            document.body.appendChild(t);
+            setTimeout(() => t.remove(), 3500);
+        }
+
+        function escHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/[&<>"']/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[m]));
+        }
+
+        function fmtDate(str) {
+            if (!str) return '—';
+            try { return new Date(str).toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' }); }
+            catch { return str; }
+        }
+
+        function genId() { return 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7); }
+
+        // ═══════════════════════════════════════
+        //  MULTI-SELECT COMPONENT
+        // ═══════════════════════════════════════
+        function initMultiSelect(type) {
+            const options = type === 'dept' ? ALL_DEPARTMENTS : ALL_EMP_TYPES;
+            renderMultiOptions(type, options);
+        }
+
+        function renderMultiOptions(type, options, filterText = '') {
+            const container = document.getElementById(type + 'Options');
+            const selected = multiSelectState[type];
+            const filtered = filterText ? options.filter(o => o.toLowerCase().includes(filterText.toLowerCase())) : options;
+
+            container.innerHTML = filtered.length === 0
+                ? `<div style="padding:12px;text-align:center;color:var(--text-light);font-size:13px;">No results</div>`
+                : filtered.map(opt => `
+            <label class="multi-select-option ${selected.includes(opt) ? 'selected' : ''}" onclick="toggleOption('${type}', '${escHtml(opt)}', event)">
+                <input type="checkbox" ${selected.includes(opt) ? 'checked' : ''} onclick="event.stopPropagation()">
+                <span>${escHtml(opt)}</span>
+            </label>`).join('');
+        }
+
+        function filterMultiOptions(type, val) {
+            const options = type === 'dept' ? ALL_DEPARTMENTS : ALL_EMP_TYPES;
+            renderMultiOptions(type, options, val);
+        }
+
+        function toggleOption(type, value, e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const idx = multiSelectState[type].indexOf(value);
+            if (idx > -1) multiSelectState[type].splice(idx, 1);
+            else multiSelectState[type].push(value);
+            updateMultiTrigger(type);
+            const options = type === 'dept' ? ALL_DEPARTMENTS : ALL_EMP_TYPES;
+            renderMultiOptions(type, options);
+            updateAudiencePreview();
+        }
+
+        function selectAllMulti(type) {
+            multiSelectState[type] = [...(type === 'dept' ? ALL_DEPARTMENTS : ALL_EMP_TYPES)];
+            updateMultiTrigger(type);
+            renderMultiOptions(type, type === 'dept' ? ALL_DEPARTMENTS : ALL_EMP_TYPES);
+            updateAudiencePreview();
+        }
+
+        function clearAllMulti(type) {
+            multiSelectState[type] = [];
+            updateMultiTrigger(type);
+            renderMultiOptions(type, type === 'dept' ? ALL_DEPARTMENTS : ALL_EMP_TYPES);
+            updateAudiencePreview();
+        }
+
+        function updateMultiTrigger(type) {
+            const selected = multiSelectState[type];
+            const tagsEl = document.getElementById(type + 'Tags');
+
+            if (selected.length === 0) {
+                tagsEl.innerHTML = `<span class="multi-select-placeholder" id="${type}Placeholder">${type === 'dept' ? 'All Departments' : 'All Employee Types'}</span>`;
+            } else {
+                const maxShow = 3;
+                let html = selected.slice(0, maxShow).map(s =>
+                    `<span class="multi-select-tag">${escHtml(s)}
+                <span class="remove-tag" onclick="event.stopPropagation();toggleOption('${type}','${escHtml(s)}',event)">×</span>
+            </span>`
+                ).join('');
+                if (selected.length > maxShow) html += `<span class="multi-select-tag" style="background:var(--primary-light);">+${selected.length - maxShow} more</span>`;
+                tagsEl.innerHTML = html;
+            }
+        }
+
+        function toggleMultiSelect(type) {
+            const dropdown = document.getElementById(type + 'Dropdown');
+            const trigger = document.getElementById(type + 'Trigger');
+            const chevron = document.getElementById(type + 'Chevron');
+            const isOpen = dropdown.classList.contains('open');
+
+            // Close all
+            ['dept', 'empType'].forEach(t => {
+                document.getElementById(t + 'Dropdown').classList.remove('open');
+                document.getElementById(t + 'Trigger').classList.remove('open');
+                document.getElementById(t + 'Chevron').style.transform = '';
+            });
+
+            if (!isOpen) {
+                dropdown.classList.add('open');
+                trigger.classList.add('open');
+                chevron.style.transform = 'rotate(180deg)';
+            }
+        }
+
+        // Close dropdowns on outside click
+        document.addEventListener('click', (e) => {
+            ['dept', 'empType'].forEach(type => {
+                const wrapper = document.getElementById(type + 'SelectWrapper');
+                if (wrapper && !wrapper.contains(e.target)) {
+                    document.getElementById(type + 'Dropdown').classList.remove('open');
+                    document.getElementById(type + 'Trigger').classList.remove('open');
+                    document.getElementById(type + 'Chevron').style.transform = '';
+                }
+            });
+        });
+
+        function updateAudiencePreview() {
+            const depts = multiSelectState.dept;
+            const types = multiSelectState.empType;
+            const preview = document.getElementById('audiencePreview');
+            const text = document.getElementById('audiencePreviewText');
+
+            if (depts.length === 0 && types.length === 0) {
+                preview.style.display = 'none';
+                return;
+            }
+
+            preview.style.display = 'block';
+            let html = '';
+            if (depts.length > 0) {
+                html += `<span style="color:var(--primary);font-weight:600;">Departments:</span> ${depts.map(d => `<span class="badge-dept">${escHtml(d)}</span>`).join('')}<br>`;
+            }
+            if (types.length > 0) {
+                html += `<span style="color:var(--primary);font-weight:600;">Employee Types:</span> ${types.map(t => `<span class="badge-emptype">${escHtml(t)}</span>`).join('')}`;
+            }
+            text.innerHTML = html;
+        }
+
+        // ═══════════════════════════════════════
+        //  POLICY VISIBILITY CHECK
+        // ═══════════════════════════════════════
+        function isPolicyVisibleTo(policy, department, empType) {
+            const deptMatch = !policy.departments || policy.departments.length === 0 ||
+                !department || policy.departments.includes(department);
+            const typeMatch = !policy.employeeTypes || policy.employeeTypes.length === 0 ||
+                !empType || policy.employeeTypes.includes(empType);
+            return deptMatch && typeMatch;
+        }
+
+        // ═══════════════════════════════════════
+        //  LOCAL STORAGE
+        // ═══════════════════════════════════════
+        const LS_POLICIES = 'hrms_policies_v2';
+        const LS_CATEGORIES = 'hrms_policy_categories_v2';
+
+        function loadData() {
+            categories = JSON.parse(localStorage.getItem(LS_CATEGORIES) || '[]');
+            if (categories.length === 0) {
+                categories = [
+                    { id: 'cat_1', name: 'HR Policies', icon: 'fa-users', description: 'Human Resources related policies' },
+                    { id: 'cat_2', name: 'IT Policies', icon: 'fa-laptop', description: 'Information Technology guidelines' },
+                    { id: 'cat_3', name: 'Finance Policies', icon: 'fa-rupee-sign', description: 'Finance and reimbursement policies' },
+                    { id: 'cat_4', name: 'Leave Policies', icon: 'fa-umbrella-beach', description: 'Leave and attendance related policies' },
+                    { id: 'cat_5', name: 'Code of Conduct', icon: 'fa-gavel', description: 'Workplace conduct and ethics' },
+                ];
+                localStorage.setItem(LS_CATEGORIES, JSON.stringify(categories));
+            }
+
+            policies = JSON.parse(localStorage.getItem(LS_POLICIES) || '[]');
+
+            if (policies.length === 0) {
+                policies = [
+                    {
+                        id: 'p_demo_1', title: 'Work From Home Policy', category: 'HR Policies',
+                        
+                        description: 'Guidelines for remote work and flexible arrangements.',
+                        departments: ['Engineering', 'Product', 'Design'],
+                        employeeTypes: ['Full-Time', 'Senior Management'],
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 'p_demo_2', title: 'Annual Leave Policy', category: 'Leave Policies',
+                      
+                        description: 'Annual leave entitlement and application procedures.',
+                        departments: [],
+                        employeeTypes: ['Full-Time', 'Part-Time'],
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 'p_demo_3', title: 'IT Security Policy', category: 'IT Policies',
+                      
+                        description: 'Data security, password management and device usage guidelines.',
+                        departments: ['IT', 'Engineering'],
+                        employeeTypes: [],
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 'p_demo_4', title: 'Travel Reimbursement Policy', category: 'Finance Policies',
+                      
+                        description: 'Reimbursement process for official travel expenses.',
+                        departments: ['Sales', 'Marketing', 'Operations'],
+                        employeeTypes: ['Full-Time', 'Contract', 'Consultant'],
+                        createdAt: new Date().toISOString()
+                    },
+                    {
+                        id: 'p_demo_5', title: 'Intern Onboarding Guidelines', category: 'HR Policies',
+                    
+                        description: 'Onboarding checklist and guidelines specifically for interns.',
+                        departments: [],
+                        employeeTypes: ['Intern', 'Trainee'],
+                        createdAt: new Date().toISOString()
+                    },
+                ];
+                localStorage.setItem(LS_POLICIES, JSON.stringify(policies));
+            }
+
+            refreshAll();
+        }
+
+        function saveLocalPolicies() { localStorage.setItem(LS_POLICIES, JSON.stringify(policies)); }
+        function saveLocalCategories() { localStorage.setItem(LS_CATEGORIES, JSON.stringify(categories)); }
+
+        // ═══════════════════════════════════════
+        //  STATS
+        // ═══════════════════════════════════════
+        function updateStats() {
+            const active = policies.filter(p => p.status === 'Active').length;
+            const inactive = policies.filter(p => p.status === 'Inactive').length;
+            const allDepts = new Set(policies.flatMap(p => p.departments || []));
+            document.getElementById('statTotal').textContent = policies.length;
+            document.getElementById('statActive').textContent = active;
+            document.getElementById('statDepts').textContent = allDepts.size || '—';
+            document.getElementById('statInactive').textContent = inactive;
+        }
+
+        // ═══════════════════════════════════════
+        //  POPULATE FILTER DROPDOWNS
+        // ═══════════════════════════════════════
+        function populateFilters() {
+            const catSel = document.getElementById('filterCategory');
+            const catFormSel = document.getElementById('pCategory');
+            const prevCat = catSel.value;
+            catSel.innerHTML = '<option value="">All Categories</option>' + categories.map(c => `<option value="${escHtml(c.name)}">${escHtml(c.name)}</option>`).join('');
+            catFormSel.innerHTML = '<option value="">— Select Category —</option>' + categories.map(c => `<option value="${escHtml(c.name)}">${escHtml(c.name)}</option>`).join('');
+            if (prevCat) catSel.value = prevCat;
+
+            const deptSel = document.getElementById('filterDept');
+            const prevDept = deptSel.value;
+            deptSel.innerHTML = '<option value="">All Departments</option>' + ALL_DEPARTMENTS.map(d => `<option value="${escHtml(d)}">${escHtml(d)}</option>`).join('');
+            if (prevDept) deptSel.value = prevDept;
+
+            const empSel = document.getElementById('filterEmpType');
+            const prevEmp = empSel.value;
+            empSel.innerHTML = '<option value="">All Emp. Types</option>' + ALL_EMP_TYPES.map(t => `<option value="${escHtml(t)}">${escHtml(t)}</option>`).join('');
+            if (prevEmp) empSel.value = prevEmp;
+
+            document.getElementById('previewDeptFilter').innerHTML = '<option value="">— All Departments —</option>' + ALL_DEPARTMENTS.map(d => `<option value="${escHtml(d)}">${escHtml(d)}</option>`).join('');
+            document.getElementById('previewEmpTypeFilter').innerHTML = '<option value="">— All Types —</option>' + ALL_EMP_TYPES.map(t => `<option value="${escHtml(t)}">${escHtml(t)}</option>`).join('');
+            document.getElementById('previewCatFilter').innerHTML = '<option value="">— All Categories —</option>' + categories.map(c => `<option value="${escHtml(c.name)}">${escHtml(c.name)}</option>`).join('');
+        }
+
+        // ═══════════════════════════════════════
+        //  POLICIES TABLE
+        // ═══════════════════════════════════════
+        function getFilteredPolicies() {
+            const search = document.getElementById('searchPolicy').value.toLowerCase().trim();
+            const cat = document.getElementById('filterCategory').value;
+            const dept = document.getElementById('filterDept').value;
+            const empType = document.getElementById('filterEmpType').value;
+            const status = document.getElementById('filterStatus').value;
+
+            return policies.filter(p => {
+                const matchSearch = !search || (p.title || '').toLowerCase().includes(search) || (p.category || '').toLowerCase().includes(search);
+                const matchCat = !cat || p.category === cat;
+                const matchStatus = !status || p.status === status;
+                const matchDept = !dept || !p.departments || p.departments.length === 0 || p.departments.includes(dept);
+                const matchEmpType = !empType || !p.employeeTypes || p.employeeTypes.length === 0 || p.employeeTypes.includes(empType);
+                return matchSearch && matchCat && matchStatus && matchDept && matchEmpType;
+            });
+        }
+
+        function renderPoliciesTable() {
+            const filtered = getFilteredPolicies();
+            const tbody = document.getElementById('policiesTableBody');
+            const total = filtered.length;
+            const totalPages = Math.ceil(total / PAGE_SIZE) || 1;
+            if (currentPage >= totalPages) currentPage = 0;
+            const pageData = filtered.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE);
+
+            if (pageData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="10"><div class="empty-state"><i class="fas fa-folder-open"></i><p>No policies found.</p></div></td></tr>`;
+                document.getElementById('policyCount').textContent = 'Showing 0 policies';
+                document.getElementById('policyPagination').innerHTML = '';
+                return;
+            }
+
+            tbody.innerHTML = pageData.map((p, i) => {
+                const idx = currentPage * PAGE_SIZE + i + 1;
+                const depts = (p.departments || []);
+                const etypes = (p.employeeTypes || []);
+                const deptsHtml = depts.length === 0
+                    ? `<span style="font-size:11px;color:var(--text-light);">All</span>`
+                    : depts.slice(0, 2).map(d => `<span class="badge-dept">${escHtml(d)}</span>`).join('') + (depts.length > 2 ? `<span class="badge-dept">+${depts.length - 2}</span>` : '');
+                const etypesHtml = etypes.length === 0
+                    ? `<span style="font-size:11px;color:var(--text-light);">All</span>`
+                    : etypes.slice(0, 2).map(t => `<span class="badge-emptype">${escHtml(t)}</span>`).join('') + (etypes.length > 2 ? `<span class="badge-emptype">+${etypes.length - 2}</span>` : '');
+
+                return `<tr>
+            <td class="font-semibold" style="color:var(--primary);">${idx}</td>
+            <td>
+                <div class="font-medium" style="color:var(--primary);">${escHtml(p.title)}</div>
+                ${p.description ? `<div class="text-xs mt-0.5" style="color:var(--text-light);">${escHtml(p.description.substring(0, 55))}${p.description.length > 55 ? '...' : ''}</div>` : ''}
+            </td>
+            <td><span class="badge-category">${escHtml(p.category || '—')}</span></td>
+            <td><div class="visibility-row">${deptsHtml}</div></td>
+            <td><div class="visibility-row">${etypesHtml}</div></td>
+           
+            <td style="color:var(--text-light); white-space:nowrap;">${fmtDate(p.effectiveDate)}</td>
+            <td><span class="badge-custom ${p.status === 'Active' ? 'badge-active' : 'badge-inactive'}">${escHtml(p.status || 'Active')}</span></td>
+            <td>
+                ${p.fileData || p.fileUrl
+                        ? `<span style="font-size:11px;color:#2b7a3e;font-weight:600;"><i class="fas fa-file-pdf"></i></span>`
+                        : `<span style="font-size:11px;color:var(--text-light);">—</span>`
+                    }
+            </td>
+            <td>
+                <div class="action-btn-group" style="justify-content:center;">
+                    <button onclick="viewPolicy('${p.id}')" class="btn-info" title="View"><i class="fas fa-eye"></i></button>
+                    <button onclick="editPolicy('${p.id}')" class="btn-warning" title="Edit"><i class="fas fa-edit"></i></button>
+                    <button onclick="confirmDeletePolicy('${p.id}','${escHtml(p.title)}')" class="btn-danger" title="Delete"><i class="fas fa-trash"></i></button>
+                </div>
+            </td>
+        </tr>`;
+            }).join('');
+
+            document.getElementById('policyCount').textContent = `Showing ${pageData.length} of ${total} policies`;
+
+            let pagHtml = '';
+            for (let i = 0; i < totalPages; i++) {
+                pagHtml += `<button onclick="goToPage(${i})" class="${i === currentPage ? 'btn-primary' : 'btn-outline'}" style="padding:6px 12px;font-size:12px;border-radius:7px;">${i + 1}</button>`;
+            }
+            document.getElementById('policyPagination').innerHTML = pagHtml;
+        }
+
+        function goToPage(page) { currentPage = page; renderPoliciesTable(); }
+
+        // ═══════════════════════════════════════
+        //  CATEGORIES TAB
+        // ═══════════════════════════════════════
+        function renderCategoriesGrid() {
+            const grid = document.getElementById('categoriesGrid');
+            if (categories.length === 0) {
+                grid.innerHTML = `<div class="empty-state col-span-3"><i class="fas fa-tags"></i><p>No categories yet.</p></div>`;
+                return;
+            }
+            grid.innerHTML = categories.map(c => {
+                const count = policies.filter(p => p.category === c.name).length;
+                return `<div style="border:1px solid var(--primary-soft);border-radius:12px;padding:16px;background:white;">
+            <div class="flex items-start justify-between mb-3">
+                <div class="flex items-center gap-3">
+                    <div class="policy-icon"><i class="fas ${escHtml(c.icon || 'fa-folder')}"></i></div>
+                    <div>
+                        <div class="font-bold" style="color:var(--primary);">${escHtml(c.name)}</div>
+                        <div class="text-xs" style="color:var(--text-light);">${count} policy(s)</div>
+                    </div>
+                </div>
+                <div class="action-btn-group">
+                    <button onclick="editCategory('${c.id}')" class="btn-warning" style="padding:5px 8px;"><i class="fas fa-edit" style="font-size:11px;"></i></button>
+                    <button onclick="confirmDeleteCategory('${c.id}','${escHtml(c.name)}')" class="btn-danger" style="padding:5px 8px;"><i class="fas fa-trash" style="font-size:11px;"></i></button>
+                </div>
+            </div>
+            <p class="text-xs" style="color:var(--text-light);">${escHtml(c.description || '—')}</p>
+        </div>`;
+            }).join('');
+        }
+
+        // ═══════════════════════════════════════
+        //  EMPLOYEE PREVIEW TAB
+        // ═══════════════════════════════════════
+        function renderPreview() {
+            const selDept = document.getElementById('previewDeptFilter').value;
+            const selEmpType = document.getElementById('previewEmpTypeFilter').value;
+            const selCat = document.getElementById('previewCatFilter').value;
+            const grid = document.getElementById('previewGrid');
+            const info = document.getElementById('previewMatchInfo');
+
+            let filtered = policies.filter(p => p.status === 'Active');
+            filtered = filtered.filter(p => isPolicyVisibleTo(p, selDept, selEmpType));
+            if (selCat) filtered = filtered.filter(p => p.category === selCat);
+
+            let infoText = '';
+            if (selDept || selEmpType) {
+                infoText = `<i class="fas fa-info-circle mr-1" style="color:var(--primary);"></i>
+            Showing <strong>${filtered.length}</strong> policies visible to
+            ${selDept ? `<span class="badge-dept">${escHtml(selDept)}</span>` : 'any department'}
+            employees of type
+            ${selEmpType ? `<span class="badge-emptype">${escHtml(selEmpType)}</span>` : 'any type'}.
+            ${!selDept && !selEmpType ? '' : `<span style="color:#856404;font-size:11px;">(Policies with no restrictions are always shown)</span>`}`;
+            } else {
+                infoText = `<i class="fas fa-info-circle mr-1" style="color:var(--text-light);"></i>
+            Select a Department and/or Employee Type to simulate what that employee would see.`;
+            }
+            info.innerHTML = infoText;
+
+            if (filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-3 empty-state"><i class="fas fa-folder-open"></i><p>No policies match this employee profile.</p></div>`;
+                return;
+            }
+
+            grid.innerHTML = filtered.map(p => {
+                const cat = categories.find(c => c.name === p.category);
+                const icon = cat?.icon || 'fa-file-contract';
+                const depts = p.departments || [];
+                const etypes = p.employeeTypes || [];
+
+                return `<div class="policy-card" onclick="viewPolicy('${p.id}')">
+            <div class="flex items-start gap-3 mb-3">
+                <div class="policy-icon"><i class="fas ${icon}"></i></div>
+                <div style="flex:1;min-width:0;">
+                    <div class="font-semibold" style="color:var(--primary);font-size:14px;">${escHtml(p.title)}</div>
+                    <span class="badge-category" style="margin-top:4px;display:inline-block;">${escHtml(p.category || '')}</span>
+                </div>
+            </div>
+            ${p.description ? `<p style="font-size:12px;color:var(--text-light);line-height:1.5;margin-bottom:10px;">${escHtml(p.description.substring(0, 90))}${p.description.length > 90 ? '...' : ''}</p>` : ''}
+            <div style="margin-bottom:10px;">
+                <div style="font-size:10px;font-weight:700;color:var(--text-light);text-transform:uppercase;margin-bottom:4px;letter-spacing:0.3px;">Visible to</div>
+                <div>
+                    ${depts.length === 0
+                        ? `<span style="font-size:11px;color:var(--text-light);">All departments</span>`
+                        : depts.map(d => `<span class="badge-dept">${escHtml(d)}</span>`).join('')
+                    }
+                </div>
+                <div class="mt-1">
+                    ${etypes.length === 0
+                        ? `<span style="font-size:11px;color:var(--text-light);">All employee types</span>`
+                        : etypes.map(t => `<span class="badge-emptype">${escHtml(t)}</span>`).join('')
+                    }
+                </div>
+            </div>
+            <div class="flex items-center justify-between pt-2" style="border-top:1px solid var(--primary-soft);">
+                <span style="font-size:11px;color:var(--text-light);"><i class="fas fa-calendar-alt mr-1"></i>${fmtDate(p.effectiveDate)}</span>
+                ${p.fileData || p.fileUrl
+                        ? `<button onclick="event.stopPropagation();downloadPolicy('${p.id}')" style="background:var(--primary);color:white;border:none;border-radius:7px;padding:4px 12px;font-size:11px;font-weight:600;cursor:pointer;"><i class="fas fa-download mr-1"></i>Download</button>`
+                        : `<span style="font-size:11px;color:var(--text-light);">No file</span>`
+                    }
+            </div>
+        </div>`;
+            }).join('');
+        }
+
+        // ═══════════════════════════════════════
+        //  VIEW POLICY
+        // ═══════════════════════════════════════
+        function viewPolicy(id) {
+            const p = policies.find(x => x.id === id);
+            if (!p) return;
+            const cat = categories.find(c => c.name === p.category);
+            const icon = cat?.icon || 'fa-file-contract';
+            const depts = p.departments || [];
+            const etypes = p.employeeTypes || [];
+
+            document.getElementById('viewPolicyContent').innerHTML = `
+        <div style="background:var(--primary);border-radius:12px;padding:20px;margin-bottom:20px;color:white;">
+            <div class="flex items-center gap-4">
+                <div style="width:50px;height:50px;border-radius:10px;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;">
+                    <i class="fas ${icon}" style="font-size:22px;"></i>
+                </div>
+                <div>
+                    <div style="font-size:18px;font-weight:700;">${escHtml(p.title)}</div>
+                    <div style="font-size:13px;opacity:0.8;margin-top:2px;">${escHtml(p.category || '—')} </div>
+                </div>
+            </div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:16px;">
+            ${vRow('Status', `<span class="badge-custom ${p.status === 'Active' ? 'badge-active' : 'badge-inactive'}">${escHtml(p.status)}</span>`)}
+            ${vRow('Effective Date', fmtDate(p.effectiveDate))}
+            ${vRow('Category', escHtml(p.category || '—'))}
+            
+        </div>
+        <div style="background:var(--primary-bg-light);border:1px solid var(--primary-soft);border-radius:10px;padding:16px;margin-bottom:14px;">
+            <div style="font-size:11px;font-weight:700;color:var(--text-light);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px;">
+                <i class="fas fa-bullseye mr-1"></i> Policy Audience
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:6px;">Departments</div>
+                    <div>
+                        ${depts.length === 0
+                    ? `<span style="font-size:12px;color:var(--text-light);">All Departments</span>`
+                    : depts.map(d => `<span class="badge-dept">${escHtml(d)}</span>`).join('')
+                }
+                    </div>
+                </div>
+                <div>
+                    <div style="font-size:11px;font-weight:700;color:var(--primary);margin-bottom:6px;">Employee Types</div>
+                    <div>
+                        ${etypes.length === 0
+                    ? `<span style="font-size:12px;color:var(--text-light);">All Employee Types</span>`
+                    : etypes.map(t => `<span class="badge-emptype">${escHtml(t)}</span>`).join('')
+                }
+                    </div>
+                </div>
+            </div>
+        </div>
+        ${p.description ? `
+        <div style="background:var(--primary-bg-light);border:1px solid var(--primary-soft);border-radius:10px;padding:14px;margin-bottom:14px;">
+            <div style="font-size:11px;font-weight:700;color:var(--text-light);text-transform:uppercase;margin-bottom:8px;">Description</div>
+            <p style="font-size:13px;color:var(--primary);line-height:1.7;">${escHtml(p.description)}</p>
+        </div>` : ''}
+        <div style="background:var(--primary-bg-light);border:1px solid var(--primary-soft);border-radius:10px;padding:14px;">
+            <div style="font-size:11px;font-weight:700;color:var(--text-light);text-transform:uppercase;margin-bottom:10px;">Document</div>
+            ${p.fileData || p.fileUrl
+                    ? `<div class="flex items-center gap-3">
+                    <i class="fas fa-file-pdf" style="font-size:26px;color:var(--primary);"></i>
+                    <div>
+                        <div style="font-size:13px;font-weight:600;color:var(--primary);">${escHtml(p.fileName || 'Policy Document')}</div>
+                        <button onclick="downloadPolicy('${p.id}')" style="font-size:12px;color:var(--primary);font-weight:600;background:none;border:none;cursor:pointer;padding:0;margin-top:4px;">
+                            <i class="fas fa-download mr-1"></i>Download
+                        </button>
+                    </div>
+                </div>`
+                    : `<p style="font-size:13px;color:var(--text-light);">No document uploaded.</p>`
+                }
+        </div>`;
+
+            document.getElementById('viewEditBtn').onclick = () => { closeViewModal(); editPolicy(id); };
+            document.getElementById('viewPolicyModal').classList.add('active');
+        }
+
+        function vRow(label, value) {
+            return `<div style="background:var(--primary-bg-light);border:1px solid var(--primary-soft);border-radius:8px;padding:12px;">
+        <div style="font-size:10px;color:var(--text-light);font-weight:700;text-transform:uppercase;letter-spacing:0.4px;margin-bottom:4px;">${label}</div>
+        <div style="font-size:13px;color:var(--primary);font-weight:600;">${value}</div>
+    </div>`;
+        }
+
+        function closeViewModal() { document.getElementById('viewPolicyModal').classList.remove('active'); }
+
+        // ═══════════════════════════════════════
+        //  ADD / EDIT POLICY MODAL
+        // ═══════════════════════════════════════
+        function openAddModal() {
+            editingPolicyId = null;
+            selectedFile = null;
+            document.getElementById('policyForm').reset();
+            document.getElementById('selectedFileName').textContent = '';
+            document.getElementById('existingFileInfo').style.display = 'none';
+            document.getElementById('audiencePreview').style.display = 'none';
+            document.getElementById('policyModalTitle').innerHTML = '<i class="fas fa-file-alt mr-2"></i>Add Policy';
+            document.getElementById('policySubmitBtn').innerHTML = '<i class="fas fa-save mr-1"></i>Save Policy';
+
+            multiSelectState.dept = [];
+            multiSelectState.empType = [];
+            updateMultiTrigger('dept');
+            updateMultiTrigger('empType');
+            initMultiSelect('dept');
+            initMultiSelect('empType');
+
+            populateFilters();
+            document.getElementById('policyModal').classList.add('active');
+        }
+
+        function editPolicy(id) {
+            const p = policies.find(x => x.id === id);
+            if (!p) return;
+            editingPolicyId = id;
+            selectedFile = null;
+
+            document.getElementById('policyModalTitle').innerHTML = '<i class="fas fa-edit mr-2"></i>Edit Policy';
+            document.getElementById('policySubmitBtn').innerHTML = '<i class="fas fa-save mr-1"></i>Update Policy';
+            populateFilters();
+
+            document.getElementById('policyId').value = p.id;
+            document.getElementById('pTitle').value = p.title || '';
+            document.getElementById('pCategory').value = p.category || '';
+
+            document.getElementById('pEffectiveDate').value = p.effectiveDate || '';
+            document.getElementById('pStatus').value = p.status || 'Active';
+            document.getElementById('pDescription').value = p.description || '';
+            document.getElementById('selectedFileName').textContent = '';
+
+            multiSelectState.dept = [...(p.departments || [])];
+            multiSelectState.empType = [...(p.employeeTypes || [])];
+            updateMultiTrigger('dept');
+            updateMultiTrigger('empType');
+            initMultiSelect('dept');
+            initMultiSelect('empType');
+            updateAudiencePreview();
+
+            if (p.fileName) {
+                document.getElementById('existingFileInfo').style.display = 'flex';
+                document.getElementById('existingFileName').textContent = p.fileName;
+            } else {
+                document.getElementById('existingFileInfo').style.display = 'none';
+            }
+
+            document.getElementById('policyModal').classList.add('active');
+        }
+
+        function closePolicyModal() {
+            document.getElementById('policyModal').classList.remove('active');
+            editingPolicyId = null; selectedFile = null;
+        }
+
+        function handleFileSelect(input) {
+            if (input.files && input.files[0]) {
+                selectedFile = input.files[0];
+                document.getElementById('selectedFileName').textContent = selectedFile.name;
+            }
+        }
+
+        async function submitPolicyForm(e) {
+            e.preventDefault();
+            const btn = document.getElementById('policySubmitBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Saving...';
+
+            const policyData = {
+                id: editingPolicyId || genId(),
+                title: document.getElementById('pTitle').value.trim(),
+                category: document.getElementById('pCategory').value,
+                
+                effectiveDate: document.getElementById('pEffectiveDate').value,
+                status: document.getElementById('pStatus').value,
+                description: document.getElementById('pDescription').value.trim(),
+                departments: [...multiSelectState.dept],
+                employeeTypes: [...multiSelectState.empType],
+                createdAt: editingPolicyId ? (policies.find(p => p.id === editingPolicyId)?.createdAt || new Date().toISOString()) : new Date().toISOString(),
+                updatedAt: new Date().toISOString(),
+            };
+
+            if (selectedFile) {
+                policyData.fileName = selectedFile.name;
+                policyData.fileData = await fileToBase64(selectedFile);
+                policyData.fileUrl = null;
+            } else if (editingPolicyId) {
+                const ex = policies.find(p => p.id === editingPolicyId);
+                policyData.fileName = ex?.fileName || null;
+                policyData.fileData = ex?.fileData || null;
+                policyData.fileUrl = ex?.fileUrl || null;
+            }
+
+            if (editingPolicyId) {
+                const idx = policies.findIndex(p => p.id === editingPolicyId);
+                if (idx !== -1) policies[idx] = policyData;
+            } else {
+                policies.unshift(policyData);
+            }
+
+            saveLocalPolicies();
+            refreshAll();
+            closePolicyModal();
+            showToast(editingPolicyId ? 'Policy updated successfully!' : 'Policy added successfully!', 'success');
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-save mr-1"></i>Save Policy';
+        }
+
+        function fileToBase64(file) {
+            return new Promise((res, rej) => {
+                const r = new FileReader();
+                r.onload = e => res(e.target.result);
+                r.onerror = rej;
+                r.readAsDataURL(file);
+            });
+        }
+
+        // ═══════════════════════════════════════
+        //  FILE DOWNLOAD
+        // ═══════════════════════════════════════
+        function downloadPolicy(id) {
+            const p = policies.find(x => x.id === id);
+            if (!p) return;
+            if (p.fileData) {
+                const a = document.createElement('a');
+                a.href = p.fileData; a.download = p.fileName || `${p.title}.pdf`; a.click();
+            } else if (p.fileUrl) {
+                window.open(p.fileUrl, '_blank');
+            } else {
+                showToast('No document available', 'info');
+            }
+        }
+
+        // ═══════════════════════════════════════
+        //  DELETE POLICY
+        // ═══════════════════════════════════════
+        function confirmDeletePolicy(id, title) {
+            document.getElementById('confirmDeleteMsg').innerHTML = `Delete policy <strong>"${escHtml(title)}"</strong>?`;
+            document.getElementById('confirmDeleteModal').classList.add('active');
+            const btn = document.getElementById('confirmDeleteBtn');
+            const nb = btn.cloneNode(true);
+            btn.parentNode.replaceChild(nb, btn);
+            nb.addEventListener('click', () => {
+                document.getElementById('confirmDeleteModal').classList.remove('active');
+                policies = policies.filter(p => p.id !== id);
+                saveLocalPolicies(); refreshAll();
+                showToast('Policy deleted!', 'success');
+            });
+        }
+
+        // ═══════════════════════════════════════
+        //  CATEGORIES CRUD
+        // ═══════════════════════════════════════
+        function openCategoryModal(catId = null) {
+            editingCatId = catId;
+            document.getElementById('categoryForm').reset();
+            if (catId) {
+                const c = categories.find(x => x.id === catId);
+                if (c) { document.getElementById('catId').value = c.id; document.getElementById('catName').value = c.name || ''; document.getElementById('catIcon').value = c.icon || ''; document.getElementById('catDescription').value = c.description || ''; }
+                document.getElementById('catModalTitle').innerHTML = '<i class="fas fa-edit mr-2"></i>Edit Category';
+            } else {
+                document.getElementById('catModalTitle').innerHTML = '<i class="fas fa-tags mr-2"></i>Add Category';
+            }
+            document.getElementById('categoryModal').classList.add('active');
+        }
+        function closeCategoryModal() { document.getElementById('categoryModal').classList.remove('active'); editingCatId = null; }
+        function editCategory(id) { openCategoryModal(id); }
+
+        function submitCategoryForm(e) {
+            e.preventDefault();
+            const cd = { id: editingCatId || genId(), name: document.getElementById('catName').value.trim(), icon: document.getElementById('catIcon').value.trim() || 'fa-folder', description: document.getElementById('catDescription').value.trim() };
+            if (editingCatId) { const idx = categories.findIndex(c => c.id === editingCatId); if (idx !== -1) categories[idx] = cd; }
+            else categories.push(cd);
+            saveLocalCategories(); refreshAll(); closeCategoryModal();
+            showToast(editingCatId ? 'Category updated!' : 'Category added!', 'success');
+        }
+
+        function confirmDeleteCategory(id, name) {
+            const count = policies.filter(p => p.category === name).length;
+            document.getElementById('confirmDeleteMsg').innerHTML = `Delete category <strong>"${escHtml(name)}"</strong>?${count > 0 ? ` <br><span style="color:#dc3545;font-size:12px;">${count} policies use this category.</span>` : ''}`;
+            document.getElementById('confirmDeleteModal').classList.add('active');
+            const btn = document.getElementById('confirmDeleteBtn');
+            const nb = btn.cloneNode(true);
+            btn.parentNode.replaceChild(nb, btn);
+            nb.addEventListener('click', () => {
+                document.getElementById('confirmDeleteModal').classList.remove('active');
+                categories = categories.filter(c => c.id !== id);
+                saveLocalCategories(); refreshAll();
+                showToast('Category deleted!', 'success');
+            });
+        }
+
+        // ═══════════════════════════════════════
+        //  EXPORT CSV
+        // ═══════════════════════════════════════
+        function exportPoliciesCSV() {
+            const filtered = getFilteredPolicies();
+            if (!filtered.length) { showToast('No data to export', 'info'); return; }
+            const headers = ['Title', 'Category', 'Departments', 'Employee Types',  'Effective Date', 'Status', 'Description'];
+            const rows = filtered.map(p => [p.title, p.category, (p.departments || []).join(';'), (p.employeeTypes || []).join(';'),  p.effectiveDate, p.status, p.description]);
+            const csv = [headers, ...rows].map(r => r.map(c => `"${(c || '').toString().replace(/"/g, '""')}"`).join(',')).join('\n');
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(new Blob([csv], { type: 'text/csv' }));
+            a.download = `policies_${new Date().toISOString().slice(0, 10)}.csv`; a.click();
+            showToast(`Exported ${filtered.length} policies!`, 'success');
+        }
+
+        // ═══════════════════════════════════════
+        //  REFRESH
+        // ═══════════════════════════════════════
+        function refreshAll() {
+            updateStats();
+            populateFilters();
+            renderPoliciesTable();
+            renderCategoriesGrid();
+            renderPreview();
+        }
+
+        function closeConfirmModal() { document.getElementById('confirmDeleteModal').classList.remove('active'); }
+
+        // ═══════════════════════════════════════
+        //  TABS
+        // ═══════════════════════════════════════
+        function initTabs() {
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function () {
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    this.classList.add('active');
+                    document.getElementById(this.dataset.tab).classList.add('active');
+                });
+            });
+        }
+
+        ['policyModal', 'viewPolicyModal', 'categoryModal'].forEach(id => {
+            document.getElementById(id)?.addEventListener('click', function (e) { if (e.target === this) this.classList.remove('active'); });
+        });
+        document.getElementById('confirmDeleteModal')?.addEventListener('click', function (e) { if (e.target === this) closeConfirmModal(); });
+        document.addEventListener('keydown', e => {
+            if (e.key === 'Escape') {
+                ['policyModal', 'viewPolicyModal', 'categoryModal', 'confirmDeleteModal'].forEach(id => document.getElementById(id)?.classList.remove('active'));
+                ['dept', 'empType'].forEach(type => { document.getElementById(type + 'Dropdown').classList.remove('open'); document.getElementById(type + 'Trigger').classList.remove('open'); });
+            }
+        });
+
+        // ═══════════════════════════════════════
+        //  INIT
+        // ═══════════════════════════════════════
+        document.addEventListener('DOMContentLoaded', () => {
+            // Load sidebar and header (same as Company Management)
+            if (typeof loadSidebar === 'function') loadSidebar();
+            if (typeof loadHeader === 'function') loadHeader();
+            setTimeout(() => {
+                if (typeof setActiveMenu === 'function') setActiveMenu('policy');
+            }, 500);
+
+            initTabs();
+            loadData();
+        });
+    </script>
+</body>
+
+</html>

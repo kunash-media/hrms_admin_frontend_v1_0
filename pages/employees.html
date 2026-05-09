@@ -162,8 +162,8 @@
         select,
         textarea {
             border: 1px solid var(--primary-soft);
-            border-radius: 12px;
-            padding: 10px 14px;
+            border-radius: 16px;
+            padding: 4px 14px;
             width: 100%;
             font-size: 13px;
             transition: 0.2s;
@@ -916,7 +916,7 @@
         .form-group textarea {
             width: 100%;
             padding: 10px 12px;
-            border-radius: 6px;
+            border-radius: 16px;
             border: 1px solid var(--primary-soft);
             font-size: 13px;
             color: var(--text-dark);
@@ -1456,8 +1456,7 @@
                                     <button type="reset" class="btn-outline">Reset</button>
                                     <button type="button" id="nextBtn" class="btn-primary" onclick="nextStep()">Next <i
                                             class="fas fa-arrow-right ml-1"></i></button>
-                                    <button type="submit" id="saveBtn" class="btn-success" style="display:none;"><i
-                                            class="fas fa-save mr-1"></i>Save Employee</button>
+                                    <button type="submit" id="saveBtn" class="btn-success" style="display:none;">Save Employee</button>
                                 </div>
                             </div>
                         </form>
@@ -2549,7 +2548,7 @@ const employeePayload = { firstName, middleName: document.getElementById('fMN').
             saveBtn.disabled = true; saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
 
             let result, resData;
-            try { result = await fetch(`${API_BASE}/create-employee`, { method: 'POST', body: formData }); resData = await result.json(); } catch (err) { saveBtn.disabled = false; saveBtn.innerHTML = '<i class="fas fa-save mr-1"></i>Save Employee'; showToast('Network error.', 'error'); return; }
+            try { result = await fetch(`${API_BASE}/create-employee`, { method: 'POST', body: formData }); resData = await result.json(); } catch (err) { saveBtn.disabled = false; saveBtn.innerHTML = 'Save Employee'; showToast('Network error.', 'error'); return; }
 
             saveBtn.disabled = false; saveBtn.innerHTML = '<i class="fas fa-save mr-1"></i>Save Employee';
             if (result.ok && resData.success) {
