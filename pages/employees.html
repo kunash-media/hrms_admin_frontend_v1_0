@@ -954,10 +954,20 @@
             <main class="flex-1 overflow-y-auto p-5 main-content">
 
                 <!-- Page Header -->
-                <div class="mb-5">
-                    <h1 class="text-xl font-bold" style="color: var(--primary);">Employee Management</h1>
-                    <p class="text-sm mt-1" style="color: var(--text-light);">Manage all employee information,
-                        documents, and history</p>
+                <div class="mb-5 flex items-center justify-between flex-wrap gap-3">
+                    <div>
+                        <h1 class="text-xl font-bold" style="color: var(--primary);">Employee Management</h1>
+                        <p class="text-sm mt-1" style="color: var(--text-light);">Manage all employee information,
+                            documents, and history</p>
+                    </div>
+                    <!-- PATCH 1: Quick register button — lightweight 5-field onboarding -->
+                    <button
+                        id="quickAddMemberBtn"
+                        onclick="openQuickAddModal()"
+                        class="btn-primary"
+                        style="display:inline-flex;align-items:center;gap:8px;white-space:nowrap;">
+                        <i class="fas fa-user-plus"></i> Add Member
+                    </button>
                 </div>
 
                 <div id="errorContainer" class="error-message"></div>
@@ -1637,6 +1647,203 @@
                     </div>
                 </div>
             </main>
+
+            <!-- ==================== PATCH 2: QUICK ADD MEMBER MODAL ==================== -->
+            <!-- Lightweight 5-field employee registration overlay.
+                Uses existing .modal-overlay / .modal-container pattern from company.html.
+                On success: shows credential card with Copy-to-Clipboard.
+                On close/re-open: fully resets to registration form (no stale state). -->
+            <div id="quickAddMemberModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="quickAddModalTitle">
+                <div class="modal-container" style="width:480px;max-width:95%;">
+
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                        <h3 id="quickAddModalTitle">
+                            <i class="fas fa-user-plus mr-2" style="font-size:16px;"></i>Add Member
+                        </h3>
+                        <span class="modal-close" onclick="closeQuickAddModal()" title="Close">&times;</span>
+                    </div>
+
+                    <!-- ── PHASE A: Registration Form ── -->
+                    <div id="quickAddFormPhase">
+                        <p style="font-size:12px;color:var(--text-light);margin-bottom:18px;">
+                            Quick-register an employee with essential details. The employee can complete their full profile later.
+                        </p>
+
+                        <!-- Inline error banner (hidden by default) -->
+                        <div id="quickAddErrorBanner"
+                            style="display:none;background:#f8d7da;border:1px solid #f5c6cb;color:#721c24;
+                                padding:10px 14px;border-radius:10px;font-size:12px;margin-bottom:14px;">
+                        </div>
+
+                        <form id="quickAddMemberForm" autocomplete="off" onsubmit="submitQuickAddMember(event)">
+
+                            <div class="grid-2" style="margin-bottom:14px;">
+                                <div class="form-group">
+                                    <label>First Name <span class="req">*</span></label>
+                                    <input type="text" id="qFN" placeholder="e.g. Sundar" maxlength="50"
+                                        autocomplete="given-name">
+                                </div>
+                                <div class="form-group">
+                                    <label>Last Name <span class="req">*</span></label>
+                                    <input type="text" id="qLN" placeholder="e.g. Pichai" maxlength="50"
+                                        autocomplete="family-name">
+                                </div>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom:14px;">
+                                <label>Department <span class="req">*</span></label>
+                                <input type="text" id="qDept" placeholder="e.g. Engineering, HR, Finance"
+                                    maxlength="100" autocomplete="off">
+                            </div>
+
+                            <div class="form-group" style="margin-bottom:14px;">
+                                <label>Designation <span class="req">*</span></label>
+                                <input type="text" id="qDesig" placeholder="e.g. Senior Developer, HR Manager"
+                                    maxlength="100" autocomplete="off">
+                            </div>
+
+                            <div class="form-group" style="margin-bottom:6px;">
+                                <label>Password <span class="req">*</span></label>
+                                <div style="position:relative;">
+                                    <input type="password" id="qPass" placeholder="Min. 6 characters"
+                                        maxlength="64" autocomplete="new-password"
+                                        style="padding-right:44px;">
+                                    <!-- Toggle password visibility button -->
+                                    <button type="button"
+                                        onclick="toggleQuickPassVisibility()"
+                                        id="qPassToggleBtn"
+                                        title="Show/hide password"
+                                        style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
+                                            background:none;border:none;cursor:pointer;color:var(--text-light);
+                                            padding:4px;font-size:13px;width:auto;">
+                                        <i id="qPassToggleIcon" class="fas fa-eye"></i>
+                                    </button>
+                                </div>
+                                <div class="fhint">This will be the employee's login password.</div>
+                            </div>
+
+                            <!-- Form Actions -->
+                            <div style="display:flex;justify-content:flex-end;gap:10px;
+                                        margin-top:22px;padding-top:16px;border-top:2px solid var(--primary-soft);">
+                                <button type="button" class="btn-outline" onclick="closeQuickAddModal()">
+                                    Cancel
+                                </button>
+                                <button type="submit" id="quickAddSubmitBtn" class="btn-primary">
+                                    <i class="fas fa-save mr-1"></i>Register Employee
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- ── PHASE B: Success Credential Card (hidden until API success) ── -->
+                    <div id="quickAddSuccessPhase" style="display:none;">
+
+                        <!-- Success banner -->
+                        <div style="display:flex;align-items:center;gap:12px;
+                                    background:rgba(43,122,62,0.1);border:1px solid rgba(43,122,62,0.3);
+                                    border-radius:12px;padding:14px 16px;margin-bottom:20px;">
+                            <div style="width:38px;height:38px;border-radius:50%;background:#2b7a3e;
+                                        display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                                <i class="fas fa-check" style="color:white;font-size:16px;"></i>
+                            </div>
+                            <div>
+                                <div style="font-size:13px;font-weight:700;color:#155724;">Employee Registered!</div>
+                                <div id="qSuccessSubtitle" style="font-size:12px;color:#2b7a3e;margin-top:2px;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Credential Card -->
+                        <div style="background:var(--primary-bg-light);border:1px solid var(--primary-soft);
+                                    border-radius:14px;padding:18px;margin-bottom:18px;">
+                            <div style="font-size:12px;font-weight:700;color:var(--primary);
+                                        margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+                                <i class="fas fa-key"></i> Login Credentials
+                                <span style="font-size:11px;font-weight:400;color:var(--text-light);margin-left:4px;">
+                                    — share securely with the employee
+                                </span>
+                            </div>
+
+                            <!-- Employee ID row -->
+                            <div style="display:flex;justify-content:space-between;align-items:center;
+                                        background:white;border:1px solid var(--primary-soft);border-radius:10px;
+                                        padding:10px 14px;margin-bottom:10px;">
+                                <div>
+                                    <div style="font-size:11px;color:var(--text-light);margin-bottom:2px;">
+                                        <i class="fas fa-id-badge mr-1"></i>Employee ID
+                                    </div>
+                                    <div id="qResultEmployeeId"
+                                        style="font-family:monospace;font-size:15px;font-weight:700;
+                                                color:var(--primary);letter-spacing:0.5px;"></div>
+                                </div>
+                                <button onclick="copyToClipboard('qResultEmployeeId', 'empIdCopyBtn')"
+                                        id="empIdCopyBtn"
+                                        class="btn-outline btn-sm"
+                                        style="white-space:nowrap;min-width:72px;">
+                                    <i class="fas fa-copy mr-1"></i>Copy
+                                </button>
+                            </div>
+
+                            <!-- Password row -->
+                            <div style="display:flex;justify-content:space-between;align-items:center;
+                                        background:white;border:1px solid var(--primary-soft);border-radius:10px;
+                                        padding:10px 14px;margin-bottom:10px;">
+                                <div>
+                                    <div style="font-size:11px;color:var(--text-light);margin-bottom:2px;">
+                                        <i class="fas fa-lock mr-1"></i>Password
+                                    </div>
+                                    <div id="qResultPassword"
+                                        style="font-family:monospace;font-size:15px;font-weight:700;
+                                                color:var(--primary);letter-spacing:0.5px;"></div>
+                                </div>
+                                <button onclick="copyToClipboard('qResultPassword', 'passCopyBtn')"
+                                        id="passCopyBtn"
+                                        class="btn-outline btn-sm"
+                                        style="white-space:nowrap;min-width:72px;">
+                                    <i class="fas fa-copy mr-1"></i>Copy
+                                </button>
+                            </div>
+
+                            <!-- Copy both at once -->
+                            <button onclick="copyBothCredentials()"
+                                    id="copyBothBtn"
+                                    class="btn-primary"
+                                    style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px;">
+                                <i class="fas fa-clipboard"></i> Copy Both Credentials
+                            </button>
+                        </div>
+
+                        <!-- Employee summary info -->
+                        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;">
+                            <div style="background:white;border:1px solid var(--primary-soft);border-radius:8px;padding:10px 12px;">
+                                <div style="font-size:10px;color:var(--text-light);">Department</div>
+                                <div id="qResultDept" style="font-size:12px;font-weight:600;color:var(--primary);margin-top:2px;"></div>
+                            </div>
+                            <div style="background:white;border:1px solid var(--primary-soft);border-radius:8px;padding:10px 12px;">
+                                <div style="font-size:10px;color:var(--text-light);">Designation</div>
+                                <div id="qResultDesig" style="font-size:12px;font-weight:600;color:var(--primary);margin-top:2px;"></div>
+                            </div>
+                        </div>
+
+                        <!-- Action buttons -->
+                        <div style="display:flex;justify-content:space-between;align-items:center;
+                                    padding-top:14px;border-top:2px solid var(--primary-soft);gap:10px;flex-wrap:wrap;">
+                            <button onclick="registerAnotherMember()"
+                                    class="btn-outline"
+                                    style="display:flex;align-items:center;gap:6px;">
+                                <i class="fas fa-user-plus"></i> Add Another
+                            </button>
+                            <button onclick="closeQuickAddModal()"
+                                    class="btn-primary"
+                                    style="display:flex;align-items:center;gap:6px;">
+                                <i class="fas fa-check"></i> Done
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            <!-- ==================== END PATCH 2 ==================== -->
         </div>
     </div>
 
@@ -2932,6 +3139,368 @@ const employeePayload = { firstName, middleName: document.getElementById('fMN').
                 }
             });
         }
+
+
+        // ==================== PATCH 3: QUICK ADD MEMBER — JS ====================
+// Production-grade implementation:
+//  - Debounced submit prevention (disables btn, re-enables on all exit paths)
+//  - Inline error surfacing (no toast-only errors for form issues)
+//  - Clipboard API with execCommand fallback for older browsers/mobile
+//  - Full state reset on re-open ("Add Another" or re-clicking btn)
+//  - Backdrop click closes modal only from registration phase
+//    (prevents accidental loss of credentials on success phase)
+//  - Stores entered password in closure-scoped variable — never re-fetched
+//    from DOM after success render (avoids stale input reference)
+// =========================================================================
+
+// Closure-scoped state for this feature — isolated from rest of page globals
+const quickAddState = {
+    submitting: false,      // prevents double-submit
+    enteredPassword: ''     // stored at submit time, shown in success card
+};
+
+// ── Open modal ──────────────────────────────────────────────────────────────
+function openQuickAddModal() {
+    resetQuickAddModal();
+    document.getElementById('quickAddMemberModal').classList.add('active');
+    // Focus first input on next tick (after display:flex kicks in)
+    setTimeout(() => document.getElementById('qFN')?.focus(), 50);
+}
+
+// ── Close modal ─────────────────────────────────────────────────────────────
+function closeQuickAddModal() {
+    document.getElementById('quickAddMemberModal').classList.remove('active');
+    // Delay reset so the closing animation doesn't flicker back to form
+    setTimeout(resetQuickAddModal, 200);
+}
+
+// ── Full state reset (called on open, close, "Add Another") ─────────────────
+function resetQuickAddModal() {
+    // Reset form fields
+    const form = document.getElementById('quickAddMemberForm');
+    if (form) form.reset();
+
+    // Clear error banner
+    const errBanner = document.getElementById('quickAddErrorBanner');
+    if (errBanner) { errBanner.style.display = 'none'; errBanner.textContent = ''; }
+
+    // Reset password toggle to hidden
+    const passField = document.getElementById('qPass');
+    const passIcon  = document.getElementById('qPassToggleIcon');
+    if (passField) passField.type = 'password';
+    if (passIcon)  { passIcon.className = 'fas fa-eye'; }
+
+    // Re-enable submit button (covers case where network error left it disabled)
+    const submitBtn = document.getElementById('quickAddSubmitBtn');
+    if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-save mr-1"></i>Register Employee';
+    }
+
+    // Reset clipboard buttons
+    resetCopyBtn('empIdCopyBtn');
+    resetCopyBtn('passCopyBtn');
+    resetCopyBtn('copyBothBtn');
+
+    // Reset copy-both button label
+    const copyBoth = document.getElementById('copyBothBtn');
+    if (copyBoth) {
+        copyBoth.innerHTML = '<i class="fas fa-clipboard"></i> Copy Both Credentials';
+    }
+
+    // Show form, hide success card
+    const formPhase    = document.getElementById('quickAddFormPhase');
+    const successPhase = document.getElementById('quickAddSuccessPhase');
+    if (formPhase)    formPhase.style.display    = 'block';
+    if (successPhase) successPhase.style.display = 'none';
+
+    // Reset submitting flag and stored password
+    quickAddState.submitting     = false;
+    quickAddState.enteredPassword = '';
+}
+
+// ── Toggle password visibility ───────────────────────────────────────────────
+function toggleQuickPassVisibility() {
+    const field = document.getElementById('qPass');
+    const icon  = document.getElementById('qPassToggleIcon');
+    if (!field || !icon) return;
+    const isHidden = field.type === 'password';
+    field.type     = isHidden ? 'text' : 'password';
+    icon.className = isHidden ? 'fas fa-eye-slash' : 'fas fa-eye';
+}
+
+// ── Inline error display ─────────────────────────────────────────────────────
+function showQuickAddError(msg) {
+    const banner = document.getElementById('quickAddErrorBanner');
+    if (!banner) return;
+    banner.innerHTML = `<i class="fas fa-exclamation-circle mr-2"></i>${msg}`;
+    banner.style.display = 'block';
+    banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+function hideQuickAddError() {
+    const banner = document.getElementById('quickAddErrorBanner');
+    if (banner) { banner.style.display = 'none'; banner.textContent = ''; }
+}
+
+// ── Form submit handler ──────────────────────────────────────────────────────
+async function submitQuickAddMember(event) {
+    event.preventDefault();
+
+    // Guard: prevent concurrent submits
+    if (quickAddState.submitting) return;
+
+    hideQuickAddError();
+
+    // ── Collect & validate ────────────────────────────────────────────────────
+    const firstName   = (document.getElementById('qFN')?.value   || '').trim();
+    const lastName    = (document.getElementById('qLN')?.value    || '').trim();
+    const department  = (document.getElementById('qDept')?.value  || '').trim();
+    const designation = (document.getElementById('qDesig')?.value || '').trim();
+    const password    = (document.getElementById('qPass')?.value  || '').trim();
+
+    if (!firstName)   { showQuickAddError('First name is required.'); document.getElementById('qFN')?.focus(); return; }
+    if (!lastName)    { showQuickAddError('Last name is required.'); document.getElementById('qLN')?.focus(); return; }
+    if (!department)  { showQuickAddError('Department is required.'); document.getElementById('qDept')?.focus(); return; }
+    if (!designation) { showQuickAddError('Designation is required.'); document.getElementById('qDesig')?.focus(); return; }
+    if (!password)    { showQuickAddError('Password is required.'); document.getElementById('qPass')?.focus(); return; }
+    if (password.length < 6) { showQuickAddError('Password must be at least 6 characters.'); document.getElementById('qPass')?.focus(); return; }
+
+    // Store password before DOM gets touched
+    quickAddState.enteredPassword = password;
+
+    // ── Lock UI ───────────────────────────────────────────────────────────────
+    quickAddState.submitting = true;
+    const submitBtn = document.getElementById('quickAddSubmitBtn');
+    if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Registering...';
+    }
+
+    // ── API call ──────────────────────────────────────────────────────────────
+    try {
+        const response = await fetch(`${API_BASE}/register`, {
+            method : 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body   : JSON.stringify({ firstName, lastName, password, department, designation })
+        });
+
+        // Handle non-JSON responses gracefully (e.g. 502/503 HTML error pages)
+        let resData;
+        const contentType = response.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+            resData = await response.json();
+        } else {
+            const rawText = await response.text();
+            console.error('Non-JSON response from /register:', rawText);
+            throw new Error(`Server returned HTTP ${response.status}. Please try again.`);
+        }
+
+        if (response.ok && resData.success !== false) {
+            // ── Success path ──────────────────────────────────────────────────
+            const emp = resData.data || resData; // handle both {success,data:{...}} and flat responses
+
+            renderQuickAddSuccess({
+                employeeId  : emp.employeeId   || '—',
+                firstName   : emp.firstName    || firstName,
+                lastName    : emp.lastName     || lastName,
+                department  : emp.department   || department,
+                designation : emp.designation  || designation,
+                password    : quickAddState.enteredPassword
+            });
+
+            // Refresh the main employees table in background (non-blocking)
+            fetchAndRenderEmployees().catch(err => console.warn('Background refresh failed:', err));
+
+        } else {
+            // ── API-level error (e.g. duplicate employee, validation) ──────────
+            const errMsg = resData.message || 'Registration failed. Please check the details and try again.';
+            showQuickAddError(errMsg);
+
+            // Re-enable submit
+            quickAddState.submitting = false;
+            if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-save mr-1"></i>Register Employee';
+            }
+        }
+
+    } catch (err) {
+        // ── Network / parse error ─────────────────────────────────────────────
+        console.error('Quick add member error:', err);
+        showQuickAddError(err.message || 'Network error. Please check your connection and try again.');
+
+        quickAddState.submitting = false;
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-save mr-1"></i>Register Employee';
+        }
+    }
+}
+
+// ── Render success credential card ───────────────────────────────────────────
+function renderQuickAddSuccess({ employeeId, firstName, lastName, department, designation, password }) {
+    // Populate fields
+    document.getElementById('qSuccessSubtitle').textContent =
+        `${firstName} ${lastName} has been registered successfully.`;
+    document.getElementById('qResultEmployeeId').textContent = employeeId;
+    document.getElementById('qResultPassword').textContent   = password;
+    document.getElementById('qResultDept').textContent       = department;
+    document.getElementById('qResultDesig').textContent      = designation;
+
+    // Swap phases
+    document.getElementById('quickAddFormPhase').style.display    = 'none';
+    document.getElementById('quickAddSuccessPhase').style.display = 'block';
+
+    // Update modal title
+    document.getElementById('quickAddModalTitle').innerHTML =
+        '<i class="fas fa-check-circle mr-2" style="color:#2b7a3e;font-size:16px;"></i>Registration Complete';
+}
+
+// ── "Add Another" button handler ─────────────────────────────────────────────
+function registerAnotherMember() {
+    quickAddState.submitting      = false;
+    quickAddState.enteredPassword = '';
+
+    // Reset form and fields manually (form.reset() won't help since form is in other phase)
+    ['qFN', 'qLN', 'qDept', 'qDesig', 'qPass'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = '';
+    });
+
+    // Reset password visibility
+    const passField = document.getElementById('qPass');
+    const passIcon  = document.getElementById('qPassToggleIcon');
+    if (passField) passField.type = 'password';
+    if (passIcon)  passIcon.className = 'fas fa-eye';
+
+    // Reset submit btn
+    const submitBtn = document.getElementById('quickAddSubmitBtn');
+    if (submitBtn) {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-save mr-1"></i>Register Employee';
+    }
+
+    // Reset clipboard buttons
+    resetCopyBtn('empIdCopyBtn');
+    resetCopyBtn('passCopyBtn');
+    resetCopyBtn('copyBothBtn');
+    const copyBoth = document.getElementById('copyBothBtn');
+    if (copyBoth) copyBoth.innerHTML = '<i class="fas fa-clipboard"></i> Copy Both Credentials';
+
+    // Clear error banner
+    hideQuickAddError();
+
+    // Reset modal title
+    document.getElementById('quickAddModalTitle').innerHTML =
+        '<i class="fas fa-user-plus mr-2" style="font-size:16px;"></i>Add Member';
+
+    // Swap phases back
+    document.getElementById('quickAddSuccessPhase').style.display = 'none';
+    document.getElementById('quickAddFormPhase').style.display    = 'block';
+
+    // Focus first field
+    setTimeout(() => document.getElementById('qFN')?.focus(), 50);
+}
+
+// ── Copy to Clipboard (with execCommand fallback) ────────────────────────────
+async function copyToClipboard(elementId, btnId) {
+    const text = document.getElementById(elementId)?.textContent?.trim();
+    const btn  = document.getElementById(btnId);
+    if (!text || !btn) return;
+
+    try {
+        if (navigator.clipboard && window.isSecureContext) {
+            // Modern Clipboard API (HTTPS or localhost)
+            await navigator.clipboard.writeText(text);
+        } else {
+            // Fallback: create temp input, select, execCommand
+            const tempInput = document.createElement('input');
+            tempInput.value = text;
+            tempInput.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0;';
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            tempInput.setSelectionRange(0, 99999); // mobile support
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+        }
+
+        // Visual feedback
+        const originalHTML = btn.innerHTML;
+        btn.innerHTML = '<i class="fas fa-check mr-1" style="color:#2b7a3e;"></i>Copied!';
+        btn.style.borderColor = '#2b7a3e';
+        btn.style.color = '#2b7a3e';
+
+        setTimeout(() => {
+            btn.innerHTML = originalHTML;
+            btn.style.borderColor = '';
+            btn.style.color = '';
+        }, 2000);
+
+    } catch (err) {
+        console.error('Clipboard copy failed:', err);
+        showToast('Could not copy to clipboard. Please copy manually.', 'error');
+    }
+}
+
+// ── Copy both credentials together ───────────────────────────────────────────
+async function copyBothCredentials() {
+    const empId = document.getElementById('qResultEmployeeId')?.textContent?.trim() || '';
+    const pass  = document.getElementById('qResultPassword')?.textContent?.trim()   || '';
+    const text  = `Employee ID: ${empId}\nPassword: ${pass}`;
+    const btn   = document.getElementById('copyBothBtn');
+
+    try {
+        if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(text);
+        } else {
+            const tempInput = document.createElement('textarea');
+            tempInput.value = text;
+            tempInput.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0;';
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand('copy');
+            document.body.removeChild(tempInput);
+        }
+
+        if (btn) {
+            const original = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check mr-1"></i>Both Copied!';
+            setTimeout(() => { btn.innerHTML = original; }, 2000);
+        }
+        showToast('Both credentials copied to clipboard!', 'success');
+
+    } catch (err) {
+        console.error('Copy both failed:', err);
+        showToast('Could not copy. Please copy each field manually.', 'error');
+    }
+}
+
+// ── Reset a copy button to its original state ────────────────────────────────
+function resetCopyBtn(btnId) {
+    const btn = document.getElementById(btnId);
+    if (!btn) return;
+    btn.style.borderColor = '';
+    btn.style.color = '';
+    // Restore correct label per button
+    if (btnId === 'empIdCopyBtn' || btnId === 'passCopyBtn') {
+        btn.innerHTML = '<i class="fas fa-copy mr-1"></i>Copy';
+    }
+}
+
+// ── Backdrop click: close only from form phase (not success phase) ────────────
+// Prevents accidental loss of credentials when user clicks outside
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('quickAddMemberModal');
+    if (!modal) return;
+    modal.addEventListener('click', function (e) {
+        if (e.target !== modal) return; // only direct backdrop clicks
+        const successPhase = document.getElementById('quickAddSuccessPhase');
+        // If success phase is visible, don't close on backdrop (protect credentials)
+        if (successPhase && successPhase.style.display !== 'none') return;
+        closeQuickAddModal();
+    });
+});
+// ==================== END PATCH 3 ====================
     </script>
 </body>
 
