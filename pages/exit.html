@@ -1,17 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Exit Management | HRMS Admin</title>
-    
+
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
     <style>
-        * { font-family: 'Inter', sans-serif; }
+        * {
+            font-family: 'Inter', sans-serif;
+        }
 
         :root {
             --primary: #1B738C;
@@ -24,7 +29,9 @@
             --text-light: #5a7c8a;
         }
 
-        body { background-color: #EBF4F6; }
+        body {
+            background-color: #EBF4F6;
+        }
 
         .section-card {
             background: white;
@@ -42,6 +49,7 @@
             padding: 14px 18px;
             transition: all 0.3s ease;
         }
+
         .stat-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 20px -5px #a6dff1;
@@ -59,6 +67,7 @@
             border: none;
             font-size: 14px;
         }
+
         .btn-primary:hover {
             background-color: var(--button-hover);
             transform: translateY(-1px);
@@ -76,6 +85,7 @@
             font-size: 14px;
             transition: all 0.3s ease;
         }
+
         .btn-outline:hover {
             background-color: var(--primary-bg-light);
             border-color: var(--primary);
@@ -92,7 +102,10 @@
             font-weight: 600;
             transition: all 0.2s;
         }
-        .btn-success:hover { background-color: #1e5a2e; }
+
+        .btn-success:hover {
+            background-color: #1e5a2e;
+        }
 
         .btn-danger {
             background-color: #dc3545;
@@ -104,7 +117,10 @@
             border: none;
             font-weight: 500;
         }
-        .btn-danger:hover { background-color: #c82333; }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+        }
 
         .btn-sm-outline {
             border: 1px solid var(--primary-light);
@@ -117,9 +133,14 @@
             font-weight: 500;
             transition: all 0.2s;
         }
-        .btn-sm-outline:hover { background-color: var(--primary-bg-light); }
 
-        input, select, textarea {
+        .btn-sm-outline:hover {
+            background-color: var(--primary-bg-light);
+        }
+
+        input,
+        select,
+        textarea {
             border: 1px solid var(--primary-soft);
             border-radius: 12px;
             padding: 10px 14px;
@@ -128,7 +149,10 @@
             transition: 0.2s;
             color: var(--text-dark);
         }
-        input:focus, select:focus, textarea:focus {
+
+        input:focus,
+        select:focus,
+        textarea:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(27, 115, 140, 0.1);
@@ -162,17 +186,24 @@
             cursor: pointer;
             border: none;
         }
+
         .tab-btn:hover {
             background-color: var(--primary-bg-light);
             color: var(--button-hover);
         }
+
         .tab-btn.active {
             background-color: var(--primary);
             color: white;
         }
 
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
 
         .badge-custom {
             background: var(--primary-bg-light);
@@ -183,23 +214,86 @@
             font-weight: 600;
         }
 
-        .status-pending { background: rgba(255, 193, 7, 0.15); color: #856404; padding: 3px 10px; border-radius: 40px; font-size: 11px; font-weight: 600; }
-        .status-approved { background: rgba(43, 122, 62, 0.15); color: #1e5a2e; padding: 3px 10px; border-radius: 40px; font-size: 11px; font-weight: 600; }
-        .status-completed { background: rgba(27, 115, 140, 0.15); color: #1B738C; padding: 3px 10px; border-radius: 40px; font-size: 11px; font-weight: 600; }
-        .status-notice-period { background: rgba(98, 201, 234, 0.2); color: #166278; padding: 3px 10px; border-radius: 40px; font-size: 11px; font-weight: 600; }
-        .status-rejected { background: rgba(220, 53, 69, 0.15); color: #721c24; padding: 3px 10px; border-radius: 40px; font-size: 11px; font-weight: 600; }
+        .status-pending {
+            background: rgba(255, 193, 7, 0.15);
+            color: #856404;
+            padding: 3px 10px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-approved {
+            background: rgba(43, 122, 62, 0.15);
+            color: #1e5a2e;
+            padding: 3px 10px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-completed {
+            background: rgba(27, 115, 140, 0.15);
+            color: #1B738C;
+            padding: 3px 10px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-notice-period {
+            background: rgba(98, 201, 234, 0.2);
+            color: #166278;
+            padding: 3px 10px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-rejected {
+            background: rgba(220, 53, 69, 0.15);
+            color: #721c24;
+            padding: 3px 10px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-hr-processing {
+            background: rgba(98, 201, 234, 0.2);
+            color: #166278;
+            padding: 3px 10px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .status-clearance-pending {
+            background: rgba(255, 193, 7, 0.2);
+            color: #856404;
+            padding: 3px 10px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+        }
 
         .modal {
             display: none;
             position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
             z-index: 1000;
             justify-content: center;
             align-items: center;
         }
-        .modal.active { display: flex; }
+
+        .modal.active {
+            display: flex;
+        }
+
         .modal-content {
             background: white;
             border-radius: 24px;
@@ -208,8 +302,9 @@
             max-height: 85vh;
             overflow-y: auto;
             padding: 28px;
-            box-shadow: 0 20px 35px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 35px rgba(0, 0, 0, 0.2);
         }
+
         .modal-header {
             display: flex;
             justify-content: space-between;
@@ -218,11 +313,13 @@
             padding-bottom: 12px;
             border-bottom: 2px solid var(--primary-soft);
         }
+
         .modal-header h3 {
             font-weight: 700;
             color: var(--primary);
             font-size: 1.2rem;
         }
+
         .modal-close {
             cursor: pointer;
             font-size: 24px;
@@ -230,23 +327,32 @@
             transition: 0.2s;
             line-height: 1;
         }
-        .modal-close:hover { color: var(--primary); }
+
+        .modal-close:hover {
+            color: var(--primary);
+        }
 
         .detail-row {
             display: flex;
             padding: 10px 0;
             border-bottom: 1px solid var(--primary-soft);
         }
+
         .detail-label {
             width: 40%;
             font-weight: 600;
             color: var(--primary);
             font-size: 13px;
         }
+
         .detail-value {
             width: 60%;
             color: var(--text-dark);
             font-size: 13px;
+            word-wrap: break-word;
+            word-break: break-word;
+            white-space: normal;
+            line-height: 1.5;
         }
 
         .clearance-task {
@@ -257,10 +363,19 @@
             border-bottom: 1px solid var(--primary-soft);
             transition: background 0.2s;
         }
-        .clearance-task:last-child { border-bottom: none; }
-        .clearance-task:hover { background: var(--primary-bg-light); border-radius: 8px; }
+
+        .clearance-task:last-child {
+            border-bottom: none;
+        }
+
+        .clearance-task:hover {
+            background: var(--primary-bg-light);
+            border-radius: 8px;
+        }
+
         .task-checkbox {
-            width: 18px; height: 18px;
+            width: 18px;
+            height: 18px;
             cursor: pointer;
             accent-color: var(--primary);
         }
@@ -271,6 +386,7 @@
             border-radius: 10px;
             overflow: hidden;
         }
+
         .progress-fill {
             height: 100%;
             border-radius: 10px;
@@ -278,9 +394,31 @@
             transition: width 0.5s ease;
         }
 
-        table { width: 100%; border-collapse: collapse; }
-        .data-row:hover { background-color: var(--primary-bg-light); cursor: pointer; }
-        th { font-size: 12px; font-weight: 600; color: var(--text-light); text-align: left; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            table-layout: fixed;
+        }
+
+        .data-row:hover {
+            background-color: var(--primary-bg-light);
+            cursor: pointer;
+        }
+
+        th {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-light);
+            text-align: left;
+            padding: 12px 8px;
+        }
+
+        td {
+            padding: 12px 8px;
+            word-wrap: break-word;
+            word-break: break-word;
+            white-space: normal;
+        }
 
         .toast {
             position: fixed;
@@ -293,24 +431,58 @@
             animation: slideIn 0.3s ease;
             font-weight: 500;
             font-size: 14px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
         }
-        .toast.success { background-color: #2b7a3e; }
-        .toast.error { background-color: #dc3545; }
-        .toast.info { background-color: var(--primary); }
-        .toast.warning { background-color: #e0a800; color: #333; }
+
+        .toast.success {
+            background-color: #2b7a3e;
+        }
+
+        .toast.error {
+            background-color: #dc3545;
+        }
+
+        .toast.info {
+            background-color: var(--primary);
+        }
+
+        .toast.warning {
+            background-color: #e0a800;
+            color: #333;
+        }
 
         @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
         }
 
-        .main-content { margin-top: 64px; }
+        .main-content {
+            margin-top: 64px;
+        }
 
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: #EBF4F6; }
-        ::-webkit-scrollbar-thumb { background: var(--primary-soft); border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: var(--primary-light); }
+        ::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #EBF4F6;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-soft);
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary-light);
+        }
 
         .form-row {
             display: grid;
@@ -319,1336 +491,1500 @@
             margin-bottom: 16px;
         }
 
+        /* Specific column widths for better readability */
+        #resignationsList td:first-child { width: 100px; }
+        #resignationsList td:nth-child(2) { width: 150px; }
+        #resignationsList td:nth-child(3) { width: 120px; }
+        #resignationsList td:nth-child(4) { width: 110px; }
+        #resignationsList td:nth-child(5) { width: 110px; }
+        #resignationsList td:nth-child(6) { width: 100px; }
+        #resignationsList td:nth-child(7) { width: auto; }
+
         @media (max-width: 768px) {
-            .section-card { padding: 16px; }
-            .tab-btn { padding: 6px 14px; font-size: 12px; }
-            .form-row { grid-template-columns: 1fr; }
-            .detail-row { flex-direction: column; }
-            .detail-label { width: 100%; margin-bottom: 5px; }
-            .detail-value { width: 100%; }
+            .section-card {
+                padding: 16px;
+            }
+
+            .tab-btn {
+                padding: 6px 14px;
+                font-size: 12px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .detail-row {
+                flex-direction: column;
+            }
+
+            .detail-label {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+
+            .detail-value {
+                width: 100%;
+            }
         }
     </style>
 </head>
+
 <body>
 
-<div class="flex h-screen overflow-hidden">
-    <div id="sidebar-container"></div>
-    
-    <div class="flex-1 flex flex-col overflow-hidden">
-        <div id="header-container"></div>
-        
-        <main class="flex-1 overflow-y-auto p-5 main-content">
-            
-            <div class="mb-5">
-                <h1 class="text-xl font-bold" style="color: var(--primary);">Exit Management</h1>
-                <p class="text-sm mt-0.5" style="color: var(--text-light);">Manage employee resignations, clearance tasks, and final settlements</p>
-            </div>
-            
-            <div class="tab-nav">
-                <button class="tab-btn active" data-tab="resignations">Resignations</button>
-                <button class="tab-btn" data-tab="clearance">Clearance Tasks</button>
-                <button class="tab-btn" data-tab="settlements">Final Settlements</button>
-                <button class="tab-btn" data-tab="exit-interview">Exit Interviews</button>
-            </div>
-            
-            <!-- TAB 1: RESIGNATIONS -->
-            <div id="tab-resignations" class="tab-content active">
-                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
-                    <div class="stat-card">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: var(--primary-soft);">
-                                <i class="fas fa-user-clock text-sm" style="color: var(--primary);"></i>
-                            </div>
-                            <span class="badge-custom">Active</span>
-                        </div>
-                        <p class="text-[11px] mb-0.5" style="color: var(--text-light);">ACTIVE RESIGNATIONS</p>
-                        <p class="text-2xl font-bold" style="color: var(--primary);" id="activeResignations">0</p>
-                        <p class="text-[10px] mt-1" style="color: var(--text-light);">In notice period</p>
-                    </div>
-                    <div class="stat-card">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: var(--primary-soft);">
-                                <i class="fas fa-check-circle text-sm" style="color: var(--primary);"></i>
-                            </div>
-                            <span class="badge-custom">Year</span>
-                        </div>
-                        <p class="text-[11px] mb-0.5" style="color: var(--text-light);">COMPLETED EXITS</p>
-                        <p class="text-2xl font-bold" style="color: var(--primary);" id="completedExits">0</p>
-                        <p class="text-[10px] mt-1" style="color: #2b7a3e;">This year</p>
-                    </div>
-                    <div class="stat-card">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: var(--primary-soft);">
-                                <i class="fas fa-hourglass-half text-sm" style="color: var(--primary);"></i>
-                            </div>
-                        </div>
-                        <p class="text-[11px] mb-0.5" style="color: var(--text-light);">PENDING APPROVALS</p>
-                        <p class="text-2xl font-bold" style="color: var(--primary);" id="pendingApprovals">0</p>
-                        <p class="text-[10px] mt-1" style="color: #856404;">Awaiting action</p>
-                    </div>
-                    <div class="stat-card">
-                        <div class="flex items-center justify-between mb-2">
-                            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: var(--primary-soft);">
-                                <i class="fas fa-chart-line text-sm" style="color: var(--primary);"></i>
-                            </div>
-                        </div>
-                        <p class="text-[11px] mb-0.5" style="color: var(--text-light);">ATTRITION RATE</p>
-                        <p class="text-2xl font-bold" style="color: var(--primary);" id="attritionRate">0%</p>
-                        <div class="mt-2 h-1.5 rounded-full" style="background: var(--primary-soft);">
-                            <div class="h-full rounded-full" id="attritionBar" style="width:0%; background: var(--primary);"></div>
-                        </div>
-                    </div>
+    <div class="flex h-screen overflow-hidden">
+        <div id="sidebar-container"></div>
+
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <div id="header-container"></div>
+
+            <main class="flex-1 overflow-y-auto p-5 main-content">
+
+                <div class="mb-5">
+                    <h1 class="text-xl font-bold" style="color: var(--primary);">Exit Management</h1>
+                    <p class="text-sm mt-0.5" style="color: var(--text-light);">Manage employee resignations, clearance
+                        tasks, and final settlements</p>
                 </div>
 
-                <div class="section-card">
-                    <div class="flex justify-between items-center mb-5 flex-wrap gap-3">
-                        <h3 class="text-base font-bold" style="color: var(--primary);">Active Resignations</h3>
-                        <div class="flex gap-2 flex-wrap items-center">
-                            <select id="resignationStatusFilter" onchange="filterResignations()" style="padding: 8px 12px; border-radius: 12px; font-size: 13px; width: auto;">
-                                <option value="all">All Status</option>
-                                <option value="Pending">Pending</option>
-                                <option value="Approved">Approved</option>
-                                <option value="Notice Period">Notice Period</option>
-                                <option value="Completed">Completed</option>
-                            </select>
-                            <input type="text" id="resignationSearch" placeholder="Search employee..." onkeyup="filterResignations()" style="padding: 8px 14px; border-radius: 12px; font-size: 13px; width: 180px;">
-                            <button onclick="exportResignations()" class="btn-outline" style="padding: 8px 16px; font-size: 13px;">
-                                <i class="fas fa-download mr-1"></i>Export
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="overflow-x-auto">
-                        <table class="w-full">
-                            <thead>
-                                <tr class="border-b" style="border-color: var(--primary-soft);">
-                                    <th class="py-3 pr-4">Exit ID</th>
-                                    <th class="py-3 pr-4">Employee</th>
-                                    <th class="py-3 pr-4">Department</th>
-                                    <th class="py-3 pr-4">Resignation Date</th>
-                                    <th class="py-3 pr-4">Last Working Day</th>
-                                    <th class="py-3 pr-4">Status</th>
-                                    <th class="py-3">Action</th>
-                                </tr>
-                            </thead>
-                            <tbody id="resignationsList">
-                                <tr><td colspan="7" class="text-center py-4 text-gray-400">Loading resignations...</td></tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- TAB 2: CLEARANCE TASKS -->
-            <div id="tab-clearance" class="tab-content">
-                <div class="section-card">
-                    <div class="flex justify-between items-center mb-5 flex-wrap gap-3">
-                        <h3 class="text-base font-bold" style="color: var(--primary);">Clearance Tasks by Department</h3>
-                        <select id="clearanceEmployee" onchange="loadClearanceTasksByEmployee()" style="padding: 8px 14px; border-radius: 12px; font-size: 13px; width: auto; min-width: 220px;">
-                            <option value="">Select Employee</option>
-                        </select>
-                    </div>
-                    
-                    <div id="clearanceTasksContainer" class="border rounded-xl overflow-hidden" style="border-color: var(--primary-soft);">
-                        <div class="clearance-task">
-                            <div class="flex items-center gap-3">
-                                <input type="checkbox" class="task-checkbox" data-clearance="IT" onchange="updateClearanceTask(this)">
-                                <div>
-                                    <p class="text-sm font-medium" style="color: var(--primary);">IT Asset Return</p>
-                                    <p class="text-xs" style="color: var(--text-light);">Laptop, Monitor, Accessories</p>
-                                </div>
-                            </div>
-                            <span class="badge-custom">IT Department</span>
-                        </div>
-                        <div class="clearance-task">
-                            <div class="flex items-center gap-3">
-                                <input type="checkbox" class="task-checkbox" data-clearance="HR" onchange="updateClearanceTask(this)">
-                                <div>
-                                    <p class="text-sm font-medium" style="color: var(--primary);">HR Clearance</p>
-                                    <p class="text-xs" style="color: var(--text-light);">Exit interview, Formalities</p>
-                                </div>
-                            </div>
-                            <span class="badge-custom">HR Department</span>
-                        </div>
-                        <div class="clearance-task">
-                            <div class="flex items-center gap-3">
-                                <input type="checkbox" class="task-checkbox" data-clearance="FINANCE" onchange="updateClearanceTask(this)">
-                                <div>
-                                    <p class="text-sm font-medium" style="color: var(--primary);">Finance Clearance</p>
-                                    <p class="text-xs" style="color: var(--text-light);">No dues certificate</p>
-                                </div>
-                            </div>
-                            <span class="badge-custom">Finance Department</span>
-                        </div>
-                        <div class="clearance-task">
-                            <div class="flex items-center gap-3">
-                                <input type="checkbox" class="task-checkbox" data-clearance="ADMIN" onchange="updateClearanceTask(this)">
-                                <div>
-                                    <p class="text-sm font-medium" style="color: var(--primary);">Admin Clearance</p>
-                                    <p class="text-xs" style="color: var(--text-light);">ID card, Asset return</p>
-                                </div>
-                            </div>
-                            <span class="badge-custom">Admin Department</span>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-5 pt-4 border-t" style="border-color: var(--primary-soft);">
-                        <div class="flex justify-between items-center mb-2">
-                            <span class="text-sm font-semibold" style="color: var(--primary);">Clearance Progress</span>
-                            <span id="clearanceProgressPercent" class="text-sm font-bold" style="color: var(--primary);">0%</span>
-                        </div>
-                        <div class="progress-bar">
-                            <div class="progress-fill" id="clearanceProgressFill" style="width: 0%;"></div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- TAB 3: FINAL SETTLEMENTS -->
-            <div id="tab-settlements" class="tab-content">
-                <div class="section-card">
-                    <div class="flex justify-between items-center mb-5 flex-wrap gap-3">
-                        <h3 class="text-base font-bold" style="color: var(--primary);">Final Settlement Calculator</h3>
-                        <select id="settlementEmployee" onchange="loadSettlementData()" style="padding: 8px 14px; border-radius: 12px; font-size: 13px; width: auto; min-width: 220px;">
-                            <option value="">Select Employee</option>
-                        </select>
-                    </div>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                        <div class="p-4 rounded-xl border" style="border-color: var(--primary-soft); background: var(--primary-bg-light);">
-                            <h4 class="font-bold mb-4 text-sm" style="color: var(--primary);">
-                                <i class="fas fa-plus-circle mr-2 text-green-600"></i>Earnings
-                            </h4>
-                            <div class="space-y-2">
-                                <div class="flex justify-between items-center py-2 border-b" style="border-color: var(--primary-soft);">
-                                    <span class="text-sm" style="color: var(--text-light);">Basic Salary</span>
-                                    <input type="number" id="basicSalary" class="w-32 text-right text-sm border rounded p-1" value="0" onchange="calculateSettlement()">
-                                </div>
-                                <div class="flex justify-between items-center py-2 border-b" style="border-color: var(--primary-soft);">
-                                    <span class="text-sm" style="color: var(--text-light);">Leave Encashment</span>
-                                    <input type="number" id="leaveEncashment" class="w-32 text-right text-sm border rounded p-1" value="0" onchange="calculateSettlement()">
-                                </div>
-                                <div class="flex justify-between items-center py-2 border-b" style="border-color: var(--primary-soft);">
-                                    <span class="text-sm" style="color: var(--text-light);">Bonus / Incentives</span>
-                                    <input type="number" id="bonus" class="w-32 text-right text-sm border rounded p-1" value="0" onchange="calculateSettlement()">
-                                </div>
-                                <div class="flex justify-between items-center py-2 border-b" style="border-color: var(--primary-soft);">
-                                    <span class="text-sm" style="color: var(--text-light);">Other Allowances</span>
-                                    <input type="number" id="allowances" class="w-32 text-right text-sm border rounded p-1" value="0" onchange="calculateSettlement()">
-                                </div>
-                                <div class="flex justify-between items-center pt-2 font-bold">
-                                    <span class="text-sm" style="color: var(--primary);">Total Earnings</span>
-                                    <span id="settlement_total_earnings" style="color: #2b7a3e;">₹0</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="p-4 rounded-xl border" style="border-color: var(--primary-soft); background: var(--primary-bg-light);">
-                            <h4 class="font-bold mb-4 text-sm" style="color: var(--primary);">
-                                <i class="fas fa-minus-circle mr-2 text-red-500"></i>Deductions
-                            </h4>
-                            <div class="space-y-2">
-                                <div class="flex justify-between items-center py-2 border-b" style="border-color: var(--primary-soft);">
-                                    <span class="text-sm" style="color: var(--text-light);">Salary Advance</span>
-                                    <input type="number" id="salaryAdvance" class="w-32 text-right text-sm border rounded p-1" value="0" onchange="calculateSettlement()">
-                                </div>
-                                <div class="flex justify-between items-center py-2 border-b" style="border-color: var(--primary-soft);">
-                                    <span class="text-sm" style="color: var(--text-light);">Loan Recovery</span>
-                                    <input type="number" id="loanRecovery" class="w-32 text-right text-sm border rounded p-1" value="0" onchange="calculateSettlement()">
-                                </div>
-                                <div class="flex justify-between items-center py-2 border-b" style="border-color: var(--primary-soft);">
-                                    <span class="text-sm" style="color: var(--text-light);">Asset Damage</span>
-                                    <input type="number" id="assetDamage" class="w-32 text-right text-sm border rounded p-1" value="0" onchange="calculateSettlement()">
-                                </div>
-                                <div class="flex justify-between items-center py-2 border-b" style="border-color: var(--primary-soft);">
-                                    <span class="text-sm" style="color: var(--text-light);">Other Deductions</span>
-                                    <input type="number" id="otherDeductions" class="w-32 text-right text-sm border rounded p-1" value="0" onchange="calculateSettlement()">
-                                </div>
-                                <div class="flex justify-between items-center pt-2 font-bold">
-                                    <span class="text-sm" style="color: var(--primary);">Total Deductions</span>
-                                    <span id="settlement_total_deductions" style="color: #dc3545;">₹0</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="mt-5 p-5 rounded-xl text-center" style="background: var(--primary-bg-light); border: 1px solid var(--primary-soft);">
-                        <p class="text-sm font-semibold" style="color: var(--text-light);">Net Payable Amount</p>
-                        <p class="text-3xl font-bold mt-1" style="color: #2b7a3e;" id="netPayableAmount">₹0</p>
-                        <p class="text-xs mt-1" style="color: var(--text-light);" id="amountInWords"></p>
-                        <div class="flex justify-center gap-3 mt-4">
-                            <button onclick="processSettlement()" class="btn-primary">
-                                <i class="fas fa-check-circle mr-2"></i>Process Settlement
-                            </button>
-                            <button onclick="generateSettlementLetter()" class="btn-outline">
-                                <i class="fas fa-file-pdf mr-2"></i>Generate Letter
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <!-- TAB 4: EXIT INTERVIEWS -->
-            <div id="tab-exit-interview" class="tab-content">
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
-                    <div class="stat-card text-center">
-                        <div class="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2" style="background: var(--primary-soft);">
-                            <i class="fas fa-check text-sm" style="color: var(--primary);"></i>
-                        </div>
-                        <p class="text-[11px]" style="color: var(--text-light);">COMPLETED INTERVIEWS</p>
-                        <p class="text-2xl font-bold" style="color: var(--primary);" id="completedInterviews">0</p>
-                    </div>
-                    <div class="stat-card text-center">
-                        <div class="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2" style="background: var(--primary-soft);">
-                            <i class="fas fa-clock text-sm" style="color: var(--primary);"></i>
-                        </div>
-                        <p class="text-[11px]" style="color: var(--text-light);">PENDING INTERVIEWS</p>
-                        <p class="text-2xl font-bold" style="color: var(--primary);" id="pendingInterviews">0</p>
-                    </div>
-                    <div class="stat-card text-center">
-                        <div class="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2" style="background: var(--primary-soft);">
-                            <i class="fas fa-star text-sm" style="color: var(--primary);"></i>
-                        </div>
-                        <p class="text-[11px]" style="color: var(--text-light);">AVERAGE RATING</p>
-                        <p class="text-2xl font-bold" style="color: var(--primary);" id="avgRating">0 ★</p>
-                    </div>
+                <div class="tab-nav">
+                    <button class="tab-btn active" data-tab="resignations">Resignations</button>
+                    <button class="tab-btn" data-tab="clearance">Clearance Tasks</button>
+                    <button class="tab-btn" data-tab="settlements">Final Settlements</button>
+                    <button class="tab-btn" data-tab="exit-interview">Exit Interviews</button>
                 </div>
 
-                <div class="section-card">
-                    <div class="flex justify-between items-center mb-5 flex-wrap gap-3">
-                        <h3 class="text-base font-bold" style="color: var(--primary);">Exit Interview Form</h3>
-                        <select id="interviewEmployee" onchange="loadInterviewData()" style="padding: 8px 14px; border-radius: 12px; font-size: 13px; width: auto; min-width: 220px;">
-                            <option value="">Select Employee</option>
-                        </select>
+                <!-- TAB 1: RESIGNATIONS -->
+                <div id="tab-resignations" class="tab-content active">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-5">
+                        <div class="stat-card">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="w-8 h-8 rounded-lg flex items-center justify-center"
+                                    style="background-color: var(--primary-soft);">
+                                    <i class="fas fa-user-clock text-sm" style="color: var(--primary);"></i>
+                                </div>
+                                <span class="badge-custom">Active</span>
+                            </div>
+                            <p class="text-[11px] mb-0.5" style="color: var(--text-light);">ACTIVE RESIGNATIONS</p>
+                            <p class="text-2xl font-bold" style="color: var(--primary);" id="activeResignations">0</p>
+                            <p class="text-[10px] mt-1" style="color: var(--text-light);">In notice period</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="w-8 h-8 rounded-lg flex items-center justify-center"
+                                    style="background-color: var(--primary-soft);">
+                                    <i class="fas fa-check-circle text-sm" style="color: var(--primary);"></i>
+                                </div>
+                                <span class="badge-custom">Year</span>
+                            </div>
+                            <p class="text-[11px] mb-0.5" style="color: var(--text-light);">COMPLETED EXITS</p>
+                            <p class="text-2xl font-bold" style="color: var(--primary);" id="completedExits">0</p>
+                            <p class="text-[10px] mt-1" style="color: #2b7a3e;">This year</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="w-8 h-8 rounded-lg flex items-center justify-center"
+                                    style="background-color: var(--primary-soft);">
+                                    <i class="fas fa-hourglass-half text-sm" style="color: var(--primary);"></i>
+                                </div>
+                            </div>
+                            <p class="text-[11px] mb-0.5" style="color: var(--text-light);">PENDING APPROVALS</p>
+                            <p class="text-2xl font-bold" style="color: var(--primary);" id="pendingApprovals">0</p>
+                            <p class="text-[10px] mt-1" style="color: #856404;">Awaiting action</p>
+                        </div>
+                        <div class="stat-card">
+                            <div class="flex items-center justify-between mb-2">
+                                <div class="w-8 h-8 rounded-lg flex items-center justify-center"
+                                    style="background-color: var(--primary-soft);">
+                                    <i class="fas fa-chart-line text-sm" style="color: var(--primary);"></i>
+                                </div>
+                            </div>
+                            <p class="text-[11px] mb-0.5" style="color: var(--text-light);">ATTRITION RATE</p>
+                            <p class="text-2xl font-bold" style="color: var(--primary);" id="attritionRate">0%</p>
+                            <div class="mt-2 h-1.5 rounded-full" style="background: var(--primary-soft);">
+                                <div class="h-full rounded-full" id="attritionBar"
+                                    style="width:0%; background: var(--primary);"></div>
+                            </div>
+                        </div>
                     </div>
-                    
-                    <form id="exitInterviewForm">
-                        <div class="form-row">
-                            <div>
-                                <label>Primary reason for leaving?</label>
-                                <textarea id="interview_reason" rows="3" placeholder="Please explain your reason..."></textarea>
-                            </div>
-                        </div>
-                        <div class="mb-4">
-                            <label>Overall experience rating</label>
-                            <div class="flex flex-wrap gap-4 mt-2 p-4 rounded-xl" style="background: var(--primary-bg-light); border: 1px solid var(--primary-soft);">
-                                <label class="flex items-center gap-2 cursor-pointer font-normal" style="color: var(--primary);">
-                                    <input type="radio" name="rating" value="5" style="width:16px; height:16px;"> ★★★★★ Excellent
-                                </label>
-                                <label class="flex items-center gap-2 cursor-pointer font-normal" style="color: var(--primary);">
-                                    <input type="radio" name="rating" value="4" style="width:16px; height:16px;"> ★★★★☆ Good
-                                </label>
-                                <label class="flex items-center gap-2 cursor-pointer font-normal" style="color: var(--primary);">
-                                    <input type="radio" name="rating" value="3" style="width:16px; height:16px;"> ★★★☆☆ Average
-                                </label>
-                                <label class="flex items-center gap-2 cursor-pointer font-normal" style="color: var(--primary);">
-                                    <input type="radio" name="rating" value="2" style="width:16px; height:16px;"> ★★☆☆☆ Poor
-                                </label>
-                                <label class="flex items-center gap-2 cursor-pointer font-normal" style="color: var(--primary);">
-                                    <input type="radio" name="rating" value="1" style="width:16px; height:16px;"> ★☆☆☆☆ Very Poor
-                                </label>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div>
-                                <label>What did you like most?</label>
-                                <textarea id="interview_likes" rows="2" placeholder="What did you enjoy working here?"></textarea>
-                            </div>
-                            <div>
-                                <label>What could be improved?</label>
-                                <textarea id="interview_improvements" rows="2" placeholder="Suggestions for improvement..."></textarea>
-                            </div>
-                        </div>
-                        <div class="form-row">
-                            <div>
-                                <label>Recommend this company to others?</label>
-                                <select id="interview_recommend">
-                                    <option>Yes</option>
-                                    <option>No</option>
-                                    <option>Maybe</option>
+
+                    <div class="section-card">
+                        <div class="flex justify-between items-center mb-5 flex-wrap gap-3">
+                            <h3 class="text-base font-bold" style="color: var(--primary);">Active Resignations</h3>
+                            <div class="flex gap-2 flex-wrap items-center">
+                                <select id="resignationStatusFilter" onchange="filterResignations()"
+                                    style="padding: 8px 12px; border-radius: 12px; font-size: 13px; width: auto;">
+                                    <option value="all">All Status</option>
+                                    <option value="PENDING">Pending</option>
+                                    <option value="APPROVED">Approved</option>
+                                    <option value="HR_PROCESSING">HR Processing</option>
+                                    <option value="CLEARANCE_PENDING">Clearance Pending</option>
+                                    <option value="COMPLETED">Completed</option>
+                                    <option value="REJECTED">Rejected</option>
                                 </select>
-                            </div>
-                            <div>
-                                <label>Consider rejoining in the future?</label>
-                                <select id="interview_rejoin">
-                                    <option>Yes</option>
-                                    <option>No</option>
-                                    <option>Maybe</option>
-                                </select>
+                                <input type="text" id="resignationSearch" placeholder="Search employee..."
+                                    onkeyup="filterResignations()"
+                                    style="padding: 8px 14px; border-radius: 12px; font-size: 13px; width: 180px;">
+                                <button onclick="resetResignationFilters()" class="btn-outline"
+                                    style="padding: 8px 16px; font-size: 13px;">
+                                    <i class="fas fa-rotate-left mr-1"></i>Reset
+                                </button>
+                                <button onclick="exportResignations()" class="btn-outline"
+                                    style="padding: 8px 16px; font-size: 13px;">
+                                    <i class="fas fa-download mr-1"></i>Export
+                                </button>
                             </div>
                         </div>
-                        <div class="flex justify-end mt-4">
-                            <button type="submit" class="btn-primary">
-                                <i class="fas fa-save mr-2"></i>Save Interview
-                            </button>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="border-b" style="border-color: var(--primary-soft);">
+                                        <th class="py-3 pr-4">Exit ID</th>
+                                        <th class="py-3 pr-4">Employee</th>
+                                        <th class="py-3 pr-4">Department</th>
+                                        <th class="py-3 pr-4">Resignation Date</th>
+                                        <th class="py-3 pr-4">Last Working Day</th>
+                                        <th class="py-3 pr-4">Status</th>
+                                        <th class="py-3">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="resignationsList">
+                                    <tr>
+                                        <td colspan="7" class="text-center py-4 text-gray-400">Loading resignations...
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
                         </div>
-                    </form>
+                    </div>
                 </div>
+
+                <!-- TAB 2: CLEARANCE TASKS -->
+                <div id="tab-clearance" class="tab-content">
+                    <div class="section-card">
+                        <div class="flex justify-between items-center mb-5 flex-wrap gap-3">
+                            <h3 class="text-base font-bold" style="color: var(--primary);">Clearance Tasks by Department
+                            </h3>
+                            <div class="flex gap-2 flex-wrap items-center">
+                                <select id="clearanceEmployee" onchange="loadClearanceTasksByEmployee()"
+                                    style="padding: 8px 14px; border-radius: 12px; font-size: 13px; width: auto; min-width: 220px;">
+                                    <option value="">Select Employee</option>
+                                </select>
+                                <button onclick="resetClearanceFilters()" class="btn-outline"
+                                    style="padding: 8px 16px; font-size: 13px;">
+                                    <i class="fas fa-rotate-left mr-1"></i>Reset
+                                </button>
+                                <button onclick="exportClearance()" class="btn-outline"
+                                    style="padding: 8px 16px; font-size: 13px;">
+                                    <i class="fas fa-download mr-1"></i>Export
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="clearanceTasksContainer" class="border rounded-xl overflow-hidden"
+                            style="border-color: var(--primary-soft);">
+                            <div class="clearance-task">
+                                <div class="flex items-center gap-3">
+                                    <input type="checkbox" class="task-checkbox" data-clearance="IT"
+                                        onchange="updateClearanceTask(this)">
+                                    <div>
+                                        <p class="text-sm font-medium" style="color: var(--primary);">IT Asset Return
+                                        </p>
+                                        <p class="text-xs" style="color: var(--text-light);">Laptop, Monitor,
+                                            Accessories</p>
+                                    </div>
+                                </div>
+                                <span class="badge-custom">IT Department</span>
+                            </div>
+                            <div class="clearance-task">
+                                <div class="flex items-center gap-3">
+                                    <input type="checkbox" class="task-checkbox" data-clearance="HR"
+                                        onchange="updateClearanceTask(this)">
+                                    <div>
+                                        <p class="text-sm font-medium" style="color: var(--primary);">HR Clearance</p>
+                                        <p class="text-xs" style="color: var(--text-light);">Exit interview, Formalities
+                                        </p>
+                                    </div>
+                                </div>
+                                <span class="badge-custom">HR Department</span>
+                            </div>
+                            <div class="clearance-task">
+                                <div class="flex items-center gap-3">
+                                    <input type="checkbox" class="task-checkbox" data-clearance="FINANCE"
+                                        onchange="updateClearanceTask(this)">
+                                    <div>
+                                        <p class="text-sm font-medium" style="color: var(--primary);">Finance Clearance
+                                        </p>
+                                        <p class="text-xs" style="color: var(--text-light);">No dues certificate</p>
+                                    </div>
+                                </div>
+                                <span class="badge-custom">Finance Department</span>
+                            </div>
+                            <div class="clearance-task">
+                                <div class="flex items-center gap-3">
+                                    <input type="checkbox" class="task-checkbox" data-clearance="ADMIN"
+                                        onchange="updateClearanceTask(this)">
+                                    <div>
+                                        <p class="text-sm font-medium" style="color: var(--primary);">Admin Clearance
+                                        </p>
+                                        <p class="text-xs" style="color: var(--text-light);">ID card, Asset return</p>
+                                    </div>
+                                </div>
+                                <span class="badge-custom">Admin Department</span>
+                            </div>
+                        </div>
+
+                        <div class="mt-5 pt-4 border-t" style="border-color: var(--primary-soft);">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="text-sm font-semibold" style="color: var(--primary);">Clearance
+                                    Progress</span>
+                                <span id="clearanceProgressPercent" class="text-sm font-bold"
+                                    style="color: var(--primary);">0%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="clearanceProgressFill" style="width: 0%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 3: FINAL SETTLEMENTS -->
+                <div id="tab-settlements" class="tab-content">
+                    <div class="section-card">
+                        <div class="flex justify-between items-center mb-5 flex-wrap gap-3">
+                            <h3 class="text-base font-bold" style="color: var(--primary);">Final Settlement Calculator
+                            </h3>
+                            <div class="flex gap-2 flex-wrap items-center">
+                                <select id="settlementEmployee" onchange="loadSettlementData()"
+                                    style="padding: 8px 14px; border-radius: 12px; font-size: 13px; width: auto; min-width: 220px;">
+                                    <option value="">Select Employee</option>
+                                </select>
+                                <button onclick="resetSettlementFilters()" class="btn-outline"
+                                    style="padding: 8px 16px; font-size: 13px;">
+                                    <i class="fas fa-rotate-left mr-1"></i>Reset
+                                </button>
+                                <button onclick="exportSettlement()" class="btn-outline"
+                                    style="padding: 8px 16px; font-size: 13px;">
+                                    <i class="fas fa-download mr-1"></i>Export
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                            <div class="p-4 rounded-xl border"
+                                style="border-color: var(--primary-soft); background: var(--primary-bg-light);">
+                                <h4 class="font-bold mb-4 text-sm" style="color: var(--primary);">
+                                    <i class="fas fa-plus-circle mr-2 text-green-600"></i>Earnings
+                                </h4>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between items-center py-2 border-b"
+                                        style="border-color: var(--primary-soft);">
+                                        <span class="text-sm" style="color: var(--text-light);">Basic Salary</span>
+                                        <input type="number" id="basicSalary"
+                                            class="w-32 text-right text-sm border rounded p-1" value="0"
+                                            onchange="calculateSettlement()">
+                                    </div>
+                                    <div class="flex justify-between items-center py-2 border-b"
+                                        style="border-color: var(--primary-soft);">
+                                        <span class="text-sm" style="color: var(--text-light);">Leave Encashment</span>
+                                        <input type="number" id="leaveEncashment"
+                                            class="w-32 text-right text-sm border rounded p-1" value="0"
+                                            onchange="calculateSettlement()">
+                                    </div>
+                                    <div class="flex justify-between items-center py-2 border-b"
+                                        style="border-color: var(--primary-soft);">
+                                        <span class="text-sm" style="color: var(--text-light);">Bonus /
+                                            Incentives</span>
+                                        <input type="number" id="bonus"
+                                            class="w-32 text-right text-sm border rounded p-1" value="0"
+                                            onchange="calculateSettlement()">
+                                    </div>
+                                    <div class="flex justify-between items-center py-2 border-b"
+                                        style="border-color: var(--primary-soft);">
+                                        <span class="text-sm" style="color: var(--text-light);">Other Allowances</span>
+                                        <input type="number" id="allowances"
+                                            class="w-32 text-right text-sm border rounded p-1" value="0"
+                                            onchange="calculateSettlement()">
+                                    </div>
+                                    <div class="flex justify-between items-center pt-2 font-bold">
+                                        <span class="text-sm" style="color: var(--primary);">Total Earnings</span>
+                                        <span id="settlement_total_earnings" style="color: #2b7a3e;">₹0</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="p-4 rounded-xl border"
+                                style="border-color: var(--primary-soft); background: var(--primary-bg-light);">
+                                <h4 class="font-bold mb-4 text-sm" style="color: var(--primary);">
+                                    <i class="fas fa-minus-circle mr-2 text-red-500"></i>Deductions
+                                </h4>
+                                <div class="space-y-2">
+                                    <div class="flex justify-between items-center py-2 border-b"
+                                        style="border-color: var(--primary-soft);">
+                                        <span class="text-sm" style="color: var(--text-light);">Salary Advance</span>
+                                        <input type="number" id="salaryAdvance"
+                                            class="w-32 text-right text-sm border rounded p-1" value="0"
+                                            onchange="calculateSettlement()">
+                                    </div>
+                                    <div class="flex justify-between items-center py-2 border-b"
+                                        style="border-color: var(--primary-soft);">
+                                        <span class="text-sm" style="color: var(--text-light);">Loan Recovery</span>
+                                        <input type="number" id="loanRecovery"
+                                            class="w-32 text-right text-sm border rounded p-1" value="0"
+                                            onchange="calculateSettlement()">
+                                    </div>
+                                    <div class="flex justify-between items-center py-2 border-b"
+                                        style="border-color: var(--primary-soft);">
+                                        <span class="text-sm" style="color: var(--text-light);">Asset Damage</span>
+                                        <input type="number" id="assetDamage"
+                                            class="w-32 text-right text-sm border rounded p-1" value="0"
+                                            onchange="calculateSettlement()">
+                                    </div>
+                                    <div class="flex justify-between items-center py-2 border-b"
+                                        style="border-color: var(--primary-soft);">
+                                        <span class="text-sm" style="color: var(--text-light);">Other Deductions</span>
+                                        <input type="number" id="otherDeductions"
+                                            class="w-32 text-right text-sm border rounded p-1" value="0"
+                                            onchange="calculateSettlement()">
+                                    </div>
+                                    <div class="flex justify-between items-center pt-2 font-bold">
+                                        <span class="text-sm" style="color: var(--primary);">Total Deductions</span>
+                                        <span id="settlement_total_deductions" style="color: #dc3545;">₹0</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="mt-5 p-5 rounded-xl text-center"
+                            style="background: var(--primary-bg-light); border: 1px solid var(--primary-soft);">
+                            <p class="text-sm font-semibold" style="color: var(--text-light);">Net Payable Amount</p>
+                            <p class="text-3xl font-bold mt-1" style="color: #2b7a3e;" id="netPayableAmount">₹0</p>
+                            <p class="text-xs mt-1" style="color: var(--text-light);" id="amountInWords"></p>
+                            <div class="flex justify-center gap-3 mt-4">
+                                <button onclick="processSettlement()" class="btn-primary">
+                                    <i class="fas fa-check-circle mr-2"></i>Process Settlement
+                                </button>
+                                <button onclick="generateSettlementLetter()" class="btn-outline">
+                                    <i class="fas fa-file-pdf mr-2"></i>Generate Letter
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- TAB 4: EXIT INTERVIEWS -->
+                <div id="tab-exit-interview" class="tab-content">
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-5">
+                        <div class="stat-card text-center">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2"
+                                style="background: var(--primary-soft);">
+                                <i class="fas fa-check text-sm" style="color: var(--primary);"></i>
+                            </div>
+                            <p class="text-[11px]" style="color: var(--text-light);">COMPLETED INTERVIEWS</p>
+                            <p class="text-2xl font-bold" style="color: var(--primary);" id="completedInterviews">0</p>
+                        </div>
+                        <div class="stat-card text-center">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2"
+                                style="background: var(--primary-soft);">
+                                <i class="fas fa-clock text-sm" style="color: var(--primary);"></i>
+                            </div>
+                            <p class="text-[11px]" style="color: var(--text-light);">PENDING INTERVIEWS</p>
+                            <p class="text-2xl font-bold" style="color: var(--primary);" id="pendingInterviews">0</p>
+                        </div>
+                        <div class="stat-card text-center">
+                            <div class="w-10 h-10 rounded-full flex items-center justify-center mx-auto mb-2"
+                                style="background: var(--primary-soft);">
+                                <i class="fas fa-star text-sm" style="color: var(--primary);"></i>
+                            </div>
+                            <p class="text-[11px]" style="color: var(--text-light);">AVERAGE RATING</p>
+                            <p class="text-2xl font-bold" style="color: var(--primary);" id="avgRating">0 ★</p>
+                        </div>
+                    </div>
+
+                    <div class="section-card">
+                        <div class="flex justify-between items-center mb-5 flex-wrap gap-3">
+                            <h3 class="text-base font-bold" style="color: var(--primary);">Exit Interview Form</h3>
+                            <div class="flex gap-2 flex-wrap items-center">
+                                <select id="interviewEmployee" onchange="loadInterviewData()"
+                                    style="padding: 8px 14px; border-radius: 12px; font-size: 13px; width: auto; min-width: 220px;">
+                                    <option value="">Select Employee</option>
+                                </select>
+                                <button onclick="resetInterviewFilters()" class="btn-outline"
+                                    style="padding: 8px 16px; font-size: 13px;">
+                                    <i class="fas fa-rotate-left mr-1"></i>Reset
+                                </button>
+                                <button onclick="exportExitInterview()" class="btn-outline"
+                                    style="padding: 8px 16px; font-size: 13px;">
+                                    <i class="fas fa-download mr-1"></i>Export
+                                </button>
+                            </div>
+                        </div>
+
+                        <form id="exitInterviewForm">
+                            <div class="form-row">
+                                <div>
+                                    <label>Primary reason for leaving?</label>
+                                    <textarea id="interview_reason" rows="3"
+                                        placeholder="Please explain your reason..."></textarea>
+                                </div>
+                            </div>
+                            <div class="mb-4">
+                                <label>Overall experience rating</label>
+                                <div class="flex flex-wrap gap-4 mt-2 p-4 rounded-xl"
+                                    style="background: var(--primary-bg-light); border: 1px solid var(--primary-soft);">
+                                    <label class="flex items-center gap-2 cursor-pointer font-normal"
+                                        style="color: var(--primary);">
+                                        <input type="radio" name="rating" value="5" style="width:16px; height:16px;">
+                                        ★★★★★ Excellent
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer font-normal"
+                                        style="color: var(--primary);">
+                                        <input type="radio" name="rating" value="4" style="width:16px; height:16px;">
+                                        ★★★★☆ Good
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer font-normal"
+                                        style="color: var(--primary);">
+                                        <input type="radio" name="rating" value="3" style="width:16px; height:16px;">
+                                        ★★★☆☆ Average
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer font-normal"
+                                        style="color: var(--primary);">
+                                        <input type="radio" name="rating" value="2" style="width:16px; height:16px;">
+                                        ★★☆☆☆ Poor
+                                    </label>
+                                    <label class="flex items-center gap-2 cursor-pointer font-normal"
+                                        style="color: var(--primary);">
+                                        <input type="radio" name="rating" value="1" style="width:16px; height:16px;">
+                                        ★☆☆☆☆ Very Poor
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-row">
+
+                                <div>
+                                    <label>What could be improved?</label>
+                                    <textarea id="interview_improvements" rows="2"
+                                        placeholder="Suggestions for improvement..."></textarea>
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div>
+                                    <label>Recommend this company to others?</label>
+                                    <select id="interview_recommend">
+                                        <option>Yes</option>
+                                        <option>No</option>
+                                        <option>Maybe</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label>Consider rejoining in the future?</label>
+                                    <select id="interview_rejoin">
+                                        <option>Yes</option>
+                                        <option>No</option>
+                                        <option>Maybe</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="flex justify-end mt-4">
+                                <button type="submit" class="btn-primary">
+                                    <i class="fas fa-save mr-2"></i>Save Interview
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- View Details Modal -->
+    <div id="viewDetailsModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-info-circle mr-2"></i>Resignation Details</h3>
+                <span class="modal-close" onclick="closeViewModal()">&times;</span>
             </div>
-            
-        </main>
-    </div>
-</div>
-
-<!-- View Details Modal -->
-<div id="viewDetailsModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3><i class="fas fa-info-circle mr-2"></i>Resignation Details</h3>
-            <span class="modal-close" onclick="closeViewModal()">&times;</span>
-        </div>
-        <div id="viewDetailsContent">
-            <div class="text-center py-4 text-gray-400">Loading details...</div>
-        </div>
-        <div class="flex justify-end mt-4">
-            <button onclick="closeViewModal()" class="btn-outline">Close</button>
-        </div>
-    </div>
-</div>
-
-<!-- Delete Confirmation Modal -->
-<div id="deleteModal" class="modal">
-    <div class="modal-content text-center">
-        <div class="modal-header">
-            <h3>Confirm Delete</h3>
-            <span class="modal-close" onclick="closeDeleteModal()">&times;</span>
-        </div>
-        <div class="py-4">
-            <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3" style="background: rgba(220,53,69,0.1);">
-                <i class="fas fa-exclamation-triangle text-2xl text-red-500"></i>
+            <div id="viewDetailsContent">
+                <div class="text-center py-4 text-gray-400">Loading details...</div>
             </div>
-            <p class="text-sm font-medium mb-2" style="color: var(--primary);">Are you sure you want to delete this resignation record?</p>
-            <p class="text-xs" style="color: var(--text-light);" id="deleteItemId"></p>
-        </div>
-        <div class="flex justify-center gap-3 mt-4">
-            <button onclick="closeDeleteModal()" class="btn-outline px-8">Cancel</button>
-            <button onclick="confirmDelete()" class="btn-danger px-8">Delete</button>
+            <div class="flex justify-end mt-4">
+                <button onclick="closeViewModal()" class="btn-outline">Close</button>
+            </div>
         </div>
     </div>
-</div>
 
-<script src="/assets/js/common.js"></script>
-<script src="/assets/js/sidebar.js"></script>
-<script src="/assets/js/header.js"></script>
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content text-center">
+            <div class="modal-header">
+                <h3>Confirm Delete</h3>
+                <span class="modal-close" onclick="closeDeleteModal()">&times;</span>
+            </div>
+            <div class="py-4">
+                <div class="w-14 h-14 rounded-full flex items-center justify-center mx-auto mb-3"
+                    style="background: rgba(220,53,69,0.1);">
+                    <i class="fas fa-exclamation-triangle text-2xl text-red-500"></i>
+                </div>
+                <p class="text-sm font-medium mb-2" style="color: var(--primary);">Are you sure you want to delete this
+                    resignation record?</p>
+                <p class="text-xs" style="color: var(--text-light);" id="deleteItemId"></p>
+            </div>
+            <div class="flex justify-center gap-3 mt-4">
+                <button onclick="closeDeleteModal()" class="btn-outline px-8">Cancel</button>
+                <button onclick="confirmDelete()" class="btn-danger px-8">Delete</button>
+            </div>
+        </div>
+    </div>
 
-<script>
-    const API_BASE = 'http://localhost:8086/api/exit';
-    let currentExitId = null;
-    let deleteTargetRow = null;
-    let deleteTargetId = null;
-    let deleteTargetExitId = null;
+    <script src="/assets/js/common.js"></script>
+    <script src="/assets/js/sidebar.js"></script>
+    <script src="/assets/js/header.js"></script>
 
-    function initTabs() {
-        const tabs = document.querySelectorAll('.tab-btn');
-        const contents = document.querySelectorAll('.tab-content');
-        tabs.forEach(tab => {
-            tab.addEventListener('click', function () {
-                const tabId = this.getAttribute('data-tab');
-                tabs.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                contents.forEach(c => c.classList.remove('active'));
-                document.getElementById(`tab-${tabId}`).classList.add('active');
-                localStorage.setItem('exitActiveTab', tabId);
+    <script>
+        const API_BASE = 'http://localhost:8086/api/exit';
+        let currentExitId = null;
+        let deleteTargetRow = null;
+        let deleteTargetId = null;
+        let deleteTargetExitId = null;
+
+        function initTabs() {
+            const tabs = document.querySelectorAll('.tab-btn');
+            const contents = document.querySelectorAll('.tab-content');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function () {
+                    const tabId = this.getAttribute('data-tab');
+                    tabs.forEach(t => t.classList.remove('active'));
+                    this.classList.add('active');
+                    contents.forEach(c => c.classList.remove('active'));
+                    document.getElementById(`tab-${tabId}`).classList.add('active');
+                    localStorage.setItem('exitActiveTab', tabId);
+                });
             });
-        });
-        const savedTab = localStorage.getItem('exitActiveTab');
-        if (savedTab) {
-            const savedBtn = document.querySelector(`.tab-btn[data-tab="${savedTab}"]`);
-            if (savedBtn) savedBtn.click();
-        }
-    }
-
-    async function loadResignations() {
-        console.log('🔄 Loading resignations from backend...');
-        try {
-            const response = await fetch(`${API_BASE}/resignations/all?page=0&size=50`);
-            console.log('📡 Response status:', response.status);
-            
-            const result = await response.json();
-            console.log('📦 Full response:', result);
-            
-            if (result.success && result.list) {
-                console.log('✅ Found resignations in result.list:', result.list.length);
-                console.log('📋 First resignation data:', result.list[0]);
-                renderResignations(result.list);
-            } else if (result.success && result.data && result.data.content) {
-                console.log('✅ Found resignations in result.data.content:', result.data.content.length);
-                renderResignations(result.data.content);
-            } else if (result.success && result.data && Array.isArray(result.data)) {
-                console.log('✅ Found resignations in result.data:', result.data.length);
-                renderResignations(result.data);
-            } else {
-                console.warn('⚠️ No resignations found in response');
-                document.getElementById('resignationsList').innerHTML = '<tr><td colspan="7" class="text-center py-4">No resignations found</td></tr>';
+            const savedTab = localStorage.getItem('exitActiveTab');
+            if (savedTab) {
+                const savedBtn = document.querySelector(`.tab-btn[data-tab="${savedTab}"]`);
+                if (savedBtn) savedBtn.click();
             }
-            
-            loadDashboardStats();
-            loadEmployeesForDropdown();
-        } catch (error) {
-            console.error('❌ Error loading resignations:', error);
-            document.getElementById('resignationsList').innerHTML = '<tr><td colspan="7" class="text-center py-4 text-red-500">Error loading data: ' + error.message + '</td></tr>';
         }
-    }
 
-function renderResignations(resignations) {
-    const tbody = document.getElementById('resignationsList');
-    if (!resignations || resignations.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4">No resignations found</td></tr>';
-        return;
-    }
-    
-    console.log('🎨 Rendering resignations:', resignations);
-    
-    tbody.innerHTML = resignations.map(res => {
-        console.log('🔍 Resignation:', {
-            id: res.id,
-            exitId: res.exitId,
-            status: res.status,
-            employeeName: res.employeeName
-        });
-        
-        let statusClass = '';
-        let statusText = res.status || 'PENDING';
-        if (statusText === 'PENDING') { 
-            statusClass = 'status-pending'; 
-            statusText = 'Pending'; 
-        }
-        else if (statusText === 'APPROVED') { 
-            statusClass = 'status-approved'; 
-            statusText = 'Approved'; 
-        }
-        else if (statusText === 'HR_PROCESSING') { 
-            statusClass = 'status-notice-period'; 
-            statusText = 'HR Processing'; 
-        }
-        else if (statusText === 'CLEARANCE_PENDING') { 
-            statusClass = 'status-notice-period'; 
-            statusText = 'Clearance Pending'; 
-        }
-        else if (statusText === 'COMPLETED') { 
-            statusClass = 'status-approved'; 
-            statusText = 'Approved'; 
-        }
-        else if (statusText === 'REJECTED') { 
-            statusClass = 'status-rejected'; 
-            statusText = 'Rejected'; 
-        }
-        
-        const empName = res.employeeName || 'N/A';
-        const exitIdForApi = res.exitId;
-        const longId = res.id;
-        const displayId = res.exitId || res.id || 'N/A';
-        const resignationDate = res.resignationDate || 'N/A';
-        const lastWorkingDay = res.lastWorkingDay || 'N/A';
-        
-        const showApprove = res.status === 'PENDING';
-        const showReject = res.status === 'PENDING';
-        const showStartHR = res.status === 'APPROVED';
-        const showCompleteHR = res.status === 'HR_PROCESSING';
-        const showStartClearance = res.status === 'CLEARANCE_PENDING';
-        
-        return `<tr class="border-b data-row" style="border-color: var(--primary-soft);" data-resignation-id="${exitIdForApi}">
-            <td class="py-3 pr-4 text-sm font-semibold" style="color: var(--primary);">${displayId}</td>
-            <td class="py-3 pr-4 text-sm font-medium" style="color: var(--primary);">${empName}</td>
-            <td class="py-3 pr-4 text-sm" style="color: var(--text-light);">${res.department || 'N/A'}</td>
-            <td class="py-3 pr-4 text-sm" style="color: var(--text-light);">${resignationDate}</td>
-            <td class="py-3 pr-4 text-sm" style="color: var(--text-light);">${lastWorkingDay}</td>
-            <td class="py-3 pr-4"><span class="${statusClass}">${statusText}</span></td>
-            <td class="py-3">
-                ${showApprove ? `<button onclick="approveResignation('${exitIdForApi}')" class="btn-success mr-2" style="background:#2b7a3e;color:white;padding:5px 12px;border-radius:6px;border:none;font-size:11px;margin-bottom:3px;">Approve</button>` : ''}
-                ${showReject ? `<button onclick="rejectResignation('${exitIdForApi}')" class="btn-danger mr-2" style="background:#dc3545;color:white;padding:5px 12px;border-radius:6px;border:none;font-size:11px;margin-bottom:3px;">Reject</button>` : ''}
-                ${showStartHR ? `<button onclick="startHRProcessing('${exitIdForApi}', ${longId})" class="btn-info mr-2" style="background:#17a2b8;color:white;padding:5px 12px;border-radius:6px;border:none;font-size:11px;margin-bottom:3px;">Start HR</button>` : ''}
-                ${showCompleteHR ? `<button onclick="completeHRProcessing('${exitIdForApi}', ${longId})" class="btn-warning mr-2" style="background:#ffc107;color:#333;padding:5px 12px;border-radius:6px;border:none;font-size:11px;margin-bottom:3px;">Complete HR</button>` : ''}
-                ${showStartClearance ? `<button onclick="startClearance('${exitIdForApi}', ${longId})" class="btn-info mr-2" style="background:#6c757d;color:white;padding:5px 12px;border-radius:6px;border:none;font-size:11px;margin-bottom:3px;">Start Clearance</button>` : ''}
-                <button onclick="viewDetailsModal(${longId})" style="color: var(--primary);background:transparent;border:none;cursor:pointer;padding:5px;margin:0 3px;"><i class="fas fa-eye"></i></button>
-                <button onclick="openDeleteModal('${displayId}', ${longId})" style="color:#dc3545;background:transparent;border:none;cursor:pointer;padding:5px;"><i class="fas fa-trash"></i></button>
-            </td>
-        </tr>`;
-    }).join('');
-}
-    function closeViewModal() { 
-        document.getElementById('viewDetailsModal').classList.remove('active'); 
-    }
-
-async function loadEmployeesForDropdown() {
-    try {
-        const response = await fetch('http://localhost:8086/api/employees/get-all-employees?page=0&size=100');
-        const result = await response.json();
-        
-        let employees = [];
-        if (result.success && result.data && result.data.content) employees = result.data.content;
-        else if (result.success && result.data && Array.isArray(result.data)) employees = result.data;
-        else if (result.content) employees = result.content;
-        else if (Array.isArray(result)) employees = result;
-        
-        const clearanceSelect = document.getElementById('clearanceEmployee');
-        const settlementSelect = document.getElementById('settlementEmployee');
-        const interviewSelect = document.getElementById('interviewEmployee');
-        
-        let options = '<option value="">-- Select Employee --</option>';
-        
-        employees.forEach(emp => {
-            const empId = emp.employeePrimeId || emp.id;
-            const empName = emp.fullName || `${emp.firstName || ''} ${emp.lastName || ''}`.trim() || emp.firstName;
-            const empCode = emp.employeeId || `EMP${empId}`;
-            const dept = emp.department || 'No Dept';
-            
-            if (empName && empName !== '') {
-                options += `<option value="${empId}" data-exit-id="${empId}" data-name="${empName}">${empName} - ${empCode} (${dept})</option>`;
-            }
-        });
-        
-        clearanceSelect.innerHTML = options;
-        settlementSelect.innerHTML = options;
-        interviewSelect.innerHTML = options;
-        
-        console.log('Dropdown populated with', employees.length, 'employees');
-    } catch (error) {
-        console.error('Error loading employees:', error);
-        showToast('Error loading employees list', 'error');
-    }
-}
-
-    async function approveResignation(exitId) {
-        console.log('✅ Approve button clicked for exitId:', exitId);
-        console.log('📝 Type of exitId:', typeof exitId);
-        
-        if (!exitId) {
-            showToast('Invalid resignation ID', 'error');
-            return;
-        }
-        
-        if (!confirm('Are you sure you want to approve this resignation?')) {
-            console.log('❌ Approval cancelled by user');
-            return;
-        }
-        
-        const approveData = { 
-            approvedBy: localStorage.getItem('hrms_username') || 'HR Manager',
-            remarks: 'Resignation approved. Notice period starts from ' + new Date().toLocaleDateString()
-        };
-        
-        const apiUrl = `${API_BASE}/resignations/approve/${exitId}`;
-        console.log('📤 Sending approval request:', {
-            url: apiUrl,
-            method: 'PUT',
-            data: approveData
-        });
-        
-        try {
-            const response = await fetch(apiUrl, {
-                method: 'PUT',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/json'
-                },
-                body: JSON.stringify(approveData)
-            });
-            
-            console.log('📡 Approval response status:', response.status);
-            const result = await response.json();
-            console.log('📦 Approval response data:', result);
-            
-            if (response.ok && result.success) {
-                showToast('✅ Resignation approved! Employee is now in notice period.', 'success');
-                console.log('✅ Approval successful, reloading data...');
-                setTimeout(() => {
-                    loadResignations();
-                    loadDashboardStats();
-                }, 500);
-            } else {
-                console.error('❌ Approval failed:', result.message);
-                showToast(result.message || 'Approval failed', 'error');
-            }
-        } catch (error) {
-            console.error('❌ Error in approveResignation:', error);
-            showToast('Error approving resignation: ' + error.message, 'error');
-        }
-    }
-
-    async function rejectResignation(exitId) {
-        console.log('❌ Reject button clicked for exitId:', exitId);
-        
-        if (!exitId) {
-            showToast('Invalid resignation ID', 'error');
-            return;
-        }
-        
-        const reason = prompt('Please provide reason for rejection:', 'Not meeting notice period requirements');
-        if (!reason) {
-            console.log('Rejection cancelled - no reason provided');
-            return;
-        }
-        
-        const rejectData = { 
-            rejectedReason: reason,
-            remarks: reason
-        };
-        
-        console.log('📤 Sending rejection request:', {
-            url: `${API_BASE}/resignations/reject/${exitId}`,
-            data: rejectData
-        });
-        
-        try {
-            const response = await fetch(`${API_BASE}/resignations/reject/${exitId}`, {
-                method: 'PUT',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(rejectData)
-            });
-            
-            console.log('📡 Rejection response status:', response.status);
-            const result = await response.json();
-            console.log('📦 Rejection response data:', result);
-            
-            if (response.ok && result.success) {
-                showToast('❌ Resignation rejected!', 'warning');
-                setTimeout(() => {
-                    loadResignations();
-                    loadDashboardStats();
-                }, 500);
-            } else {
-                showToast(result.message || 'Rejection failed', 'error');
-            }
-        } catch (error) {
-            console.error('Error in rejectResignation:', error);
-            showToast('Error rejecting resignation', 'error');
-        }
-    }
-
-    async function loadDashboardStats() {
-        try {
-            const response = await fetch(`${API_BASE}/dashboard/stats`);
-            const result = await response.json();
-            if (result.success && result.data) {
-                document.getElementById('activeResignations').innerText = result.data.activeResignations || 0;
-                document.getElementById('completedExits').innerText = result.data.completedExits || 0;
-                document.getElementById('pendingApprovals').innerText = result.data.pendingApprovals || 0;
-                const attritionRate = result.data.attritionRate || 0;
-                document.getElementById('attritionRate').innerText = attritionRate + '%';
-                document.getElementById('attritionBar').style.width = attritionRate + '%';
-            }
-        } catch (error) { 
-            console.error('Error loading stats:', error); 
-        }
-    }
-
-    function filterResignations() {
-        const search = document.getElementById('resignationSearch').value.toLowerCase();
-        const status = document.getElementById('resignationStatusFilter').value;
-        const rows = document.querySelectorAll('#resignationsList tr');
-        rows.forEach(row => {
-            if (row.cells.length < 6) return;
-            let show = true;
-            const name = row.cells[1]?.innerText.toLowerCase();
-            const rowStatus = row.cells[5]?.innerText;
-            if (search && name && !name.includes(search)) show = false;
-            if (status !== 'all' && rowStatus && !rowStatus.includes(status)) show = false;
-            row.style.display = show ? '' : 'none';
-        });
-    }
-
-    function exportResignations() { 
-        showToast('Resignations exported successfully!', 'success'); 
-    }
-
-    function openDeleteModal(displayId, dbId) {
-        console.log('🗑️ Delete clicked - Display ID:', displayId, 'DB ID:', dbId);
-        deleteTargetId = dbId;
-        deleteTargetExitId = displayId;
-        document.getElementById('deleteItemId').innerHTML = `Exit ID: <strong>${displayId}</strong>`;
-        document.getElementById('deleteModal').classList.add('active');
-    }
-
-    function closeDeleteModal() {
-        document.getElementById('deleteModal').classList.remove('active');
-        deleteTargetRow = null;
-        deleteTargetId = null;
-        deleteTargetExitId = null;
-    }
-
-    async function confirmDelete() {
-        console.log('🗑️ Confirming delete for ID:', deleteTargetId);
-        
-        if (deleteTargetId) {
+        async function loadResignations() {
+            console.log('🔄 Loading resignations from backend...');
             try {
-                const response = await fetch(`${API_BASE}/resignations/delete/${deleteTargetId}`, { 
-                    method: 'DELETE' 
+                const response = await fetch(`${API_BASE}/resignations/all?page=0&size=50`);
+                console.log('📡 Response status:', response.status);
+
+                const result = await response.json();
+                console.log('📦 Full response:', result);
+
+                if (result.success && result.list) {
+                    console.log('✅ Found resignations in result.list:', result.list.length);
+                    renderResignations(result.list);
+                } else if (result.success && result.data && result.data.content) {
+                    console.log('✅ Found resignations in result.data.content:', result.data.content.length);
+                    renderResignations(result.data.content);
+                } else if (result.success && result.data && Array.isArray(result.data)) {
+                    console.log('✅ Found resignations in result.data:', result.data.length);
+                    renderResignations(result.data);
+                } else {
+                    console.warn('⚠️ No resignations found in response');
+                    document.getElementById('resignationsList').innerHTML = '<tr><td colspan="7" class="text-center py-4">No resignations found</div></td></div>';
+                }
+
+                loadDashboardStats();
+                loadEmployeesForDropdown();
+            } catch (error) {
+                console.error('❌ Error loading resignations:', error);
+                document.getElementById('resignationsList').innerHTML = '<tr><td colspan="7" class="text-center py-4 text-red-500">Error loading data: ' + error.message + '</div></td></div>';
+            }
+        }
+
+        // ========== RESET FILTER FUNCTIONS ==========
+
+        function resetResignationFilters() {
+            document.getElementById('resignationStatusFilter').value = 'all';
+            document.getElementById('resignationSearch').value = '';
+            filterResignations();
+            showToast('Resignation filters reset', 'info');
+        }
+
+        function resetClearanceFilters() {
+            const clearanceSelect = document.getElementById('clearanceEmployee');
+            if (clearanceSelect) clearanceSelect.value = '';
+            document.querySelectorAll('#clearanceTasksContainer .task-checkbox').forEach(cb => cb.checked = false);
+            updateClearanceProgress();
+            currentExitId = null;
+            showToast('Clearance filters reset', 'info');
+        }
+
+        function resetSettlementFilters() {
+            const settlementSelect = document.getElementById('settlementEmployee');
+            if (settlementSelect) settlementSelect.value = '';
+            document.getElementById('basicSalary').value = 0;
+            document.getElementById('leaveEncashment').value = 0;
+            document.getElementById('bonus').value = 0;
+            document.getElementById('allowances').value = 0;
+            document.getElementById('salaryAdvance').value = 0;
+            document.getElementById('loanRecovery').value = 0;
+            document.getElementById('assetDamage').value = 0;
+            document.getElementById('otherDeductions').value = 0;
+            calculateSettlement();
+            currentExitId = null;
+            showToast('Settlement filters reset', 'info');
+        }
+
+function resetInterviewFilters() {
+    const interviewSelect = document.getElementById('interviewEmployee');
+    if (interviewSelect) interviewSelect.value = '';
+    document.getElementById('interview_reason').value = '';
+    document.querySelectorAll('input[name="rating"]').forEach(radio => radio.checked = false);
+    document.getElementById('interview_improvements').value = '';  // This clears the field
+    document.getElementById('interview_recommend').value = 'Yes';
+    document.getElementById('interview_rejoin').value = 'Yes';
+    currentExitId = null;
+    showToast('Exit interview filters reset', 'info');
+}
+
+        function renderResignations(resignations) {
+            const tbody = document.getElementById('resignationsList');
+            if (!resignations || resignations.length === 0) {
+                tbody.innerHTML = '<td><td colspan="7" class="text-center py-4">No resignations found</div></td></div>';
+                return;
+            }
+
+            tbody.innerHTML = resignations.map(res => {
+                let statusClass = '';
+                let statusText = res.status || 'PENDING';
+                if (statusText === 'PENDING') { statusClass = 'status-pending'; statusText = 'Pending'; }
+                else if (statusText === 'APPROVED') { statusClass = 'status-approved'; statusText = 'Approved'; }
+                else if (statusText === 'HR_PROCESSING') { statusClass = 'status-hr-processing'; statusText = 'HR Processing'; }
+                else if (statusText === 'CLEARANCE_PENDING') { statusClass = 'status-clearance-pending'; statusText = 'Clearance Pending'; }
+                else if (statusText === 'COMPLETED') { statusClass = 'status-completed'; statusText = 'Completed'; }
+                else if (statusText === 'REJECTED') { statusClass = 'status-rejected'; statusText = 'Rejected'; }
+
+                const empName = res.employeeName || 'N/A';
+                const exitIdForApi = res.exitId;
+                const longId = res.id;
+                const displayId = res.exitId || res.id || 'N/A';
+                const resignationDate = res.resignationDate || 'N/A';
+                const lastWorkingDay = res.lastWorkingDay || 'N/A';
+
+                const showApprove = res.status === 'PENDING';
+                const showReject = res.status === 'PENDING';
+                const showStartHR = res.status === 'APPROVED';
+                const showCompleteHR = res.status === 'HR_PROCESSING';
+                const showStartClearance = res.status === 'CLEARANCE_PENDING';
+
+                return `<tr class="border-b data-row" style="border-color: var(--primary-soft);" data-resignation-id="${exitIdForApi}">
+                    <td class="py-3 pr-4 text-sm font-semibold" style="color: var(--primary);">${displayId}</td>
+                    <td class="py-3 pr-4 text-sm font-medium" style="color: var(--primary);">${empName}</td>
+                    <td class="py-3 pr-4 text-sm" style="color: var(--text-light);">${res.department || 'N/A'}</td>
+                    <td class="py-3 pr-4 text-sm" style="color: var(--text-light);">${resignationDate}</td>
+                    <td class="py-3 pr-4 text-sm" style="color: var(--text-light);">${lastWorkingDay}</td>
+                    <td class="py-3 pr-4"><span class="${statusClass}">${statusText}</span></td>
+                    <td class="py-3">
+                        ${showApprove ? `<button onclick="approveResignation('${exitIdForApi}')" class="btn-success mr-2" style="background:#2b7a3e;color:white;padding:5px 12px;border-radius:6px;border:none;font-size:11px;margin-bottom:3px;">Approve</button>` : ''}
+                        ${showReject ? `<button onclick="rejectResignation('${exitIdForApi}')" class="btn-danger mr-2" style="background:#dc3545;color:white;padding:5px 12px;border-radius:6px;border:none;font-size:11px;margin-bottom:3px;">Reject</button>` : ''}
+                        ${showStartHR ? `<button onclick="startHRProcessing(${longId})" class="btn-info mr-2" style="background:#17a2b8;color:white;padding:5px 12px;border-radius:6px;border:none;font-size:11px;margin-bottom:3px;">Start HR</button>` : ''}
+                        ${showCompleteHR ? `<button onclick="completeHRProcessing(${longId})" class="btn-warning mr-2" style="background:#ffc107;color:#333;padding:5px 12px;border-radius:6px;border:none;font-size:11px;margin-bottom:3px;">Complete HR</button>` : ''}
+                        ${showStartClearance ? `<button onclick="startClearance(${longId})" class="btn-info mr-2" style="background:#6c757d;color:white;padding:5px 12px;border-radius:6px;border:none;font-size:11px;margin-bottom:3px;">Start Clearance</button>` : ''}
+                        <button onclick="viewDetails(${longId})" style="color: var(--primary);background:transparent;border:none;cursor:pointer;padding:5px;margin:0 3px;"><i class="fas fa-eye"></i></button>
+                        <button onclick="openDeleteModal('${displayId}', ${longId})" style="color:#dc3545;background:transparent;border:none;cursor:pointer;padding:5px;"><i class="fas fa-trash"></i></button>
+                    </td>
+                </tr>`;
+            }).join('');
+        }
+
+        function closeViewModal() {
+            document.getElementById('viewDetailsModal').classList.remove('active');
+        }
+
+        async function viewDetails(id) {
+            if (!id) {
+                showToast('Invalid ID', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/resignations/${id}`);
+                if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    const data = result.data;
+                    const exitId = data.id;
+
+                    // Fetch clearance status
+                    let clearanceData = {};
+                    try {
+                        const clearanceRes = await fetch(`${API_BASE}/clearance/status/${exitId}`);
+                        const clearanceResult = await clearanceRes.json();
+                        if (clearanceResult.success && clearanceResult.data) clearanceData = clearanceResult.data;
+                    } catch (err) { console.warn('Could not fetch clearance data:', err); }
+
+                    // Fetch settlement details
+                    let settlementData = null;
+                    try {
+                        const settlementRes = await fetch(`${API_BASE}/settlement/details/${exitId}`);
+                        const settlementResult = await settlementRes.json();
+                        if (settlementResult.success && settlementResult.data) settlementData = settlementResult.data;
+                    } catch (err) { console.warn('Could not fetch settlement data:', err); }
+
+                    // Fetch exit interview
+                    let interviewData = null;
+                    try {
+                        const interviewRes = await fetch(`${API_BASE}/interview/get/${exitId}`);
+                        const interviewResult = await interviewRes.json();
+                        if (interviewResult.success && interviewResult.data) interviewData = interviewResult.data;
+                    } catch (err) { console.warn('Could not fetch interview data:', err); }
+
+                    const content = document.getElementById('viewDetailsContent');
+                    const formatDate = (dateStr) => {
+                        if (!dateStr) return 'N/A';
+                        const date = new Date(dateStr);
+                        return date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+                    };
+
+                    const getStatusBadgeClass = (status) => {
+                        switch (status) {
+                            case 'PENDING': return 'status-pending';
+                            case 'APPROVED': return 'status-approved';
+                            case 'HR_PROCESSING': return 'status-hr-processing';
+                            case 'CLEARANCE_PENDING': return 'status-clearance-pending';
+                            case 'COMPLETED': return 'status-completed';
+                            case 'REJECTED': return 'status-rejected';
+                            default: return 'status-pending';
+                        }
+                    };
+
+                    const totalClearance = 4;
+                    let completedClearance = 0;
+                    if (clearanceData.itClearance) completedClearance++;
+                    if (clearanceData.hrClearance) completedClearance++;
+                    if (clearanceData.financeClearance) completedClearance++;
+                    if (clearanceData.adminClearance) completedClearance++;
+                    const clearancePercent = Math.round((completedClearance / totalClearance) * 100);
+
+                    content.innerHTML = `
+                        <div style="background: var(--primary-bg-light); border-radius: 12px; padding: 16px; margin-bottom: 12px;">
+                            <h4 style="color: var(--primary); font-size: 14px; margin-bottom: 12px; font-weight: 700;">📋 Basic Information</h4>
+                            <div class="detail-row"><div class="detail-label">Exit ID:</div><div class="detail-value"><strong>${data.exitId || data.id || 'N/A'}</strong></div></div>
+                            <div class="detail-row"><div class="detail-label">Employee Name:</div><div class="detail-value">${data.employeeName || 'N/A'}</div></div>
+                            <div class="detail-row"><div class="detail-label">Employee ID:</div><div class="detail-value">${data.employeeId || 'N/A'}</div></div>
+                            <div class="detail-row"><div class="detail-label">Department:</div><div class="detail-value">${data.department || 'N/A'}</div></div>
+                            <div class="detail-row"><div class="detail-label">Designation:</div><div class="detail-value">${data.designation || 'N/A'}</div></div>
+                            <div class="detail-row"><div class="detail-label">Resignation Date:</div><div class="detail-value">${formatDate(data.resignationDate)}</div></div>
+                            <div class="detail-row"><div class="detail-label">Last Working Day:</div><div class="detail-value">${formatDate(data.lastWorkingDay)}</div></div>
+                            <div class="detail-row"><div class="detail-label">Reason for Leaving:</div><div class="detail-value">${data.reasonForLeaving || 'N/A'}</div></div>
+                            <div class="detail-row"><div class="detail-label">Status:</div><div class="detail-value"><span class="${getStatusBadgeClass(data.status)}" style="padding: 4px 12px; border-radius: 20px;">${data.status || 'PENDING'}</span></div></div>
+                            <div class="detail-row"><div class="detail-label">Remarks:</div><div class="detail-value" style="word-wrap: break-word; white-space: normal;">${data.remarks || 'N/A'}</div></div>
+                            ${data.approvedBy ? `<div class="detail-row"><div class="detail-label">Approved By:</div><div class="detail-value">${data.approvedBy}</div></div>` : ''}
+                            ${data.approvedDate ? `<div class="detail-row"><div class="detail-label">Approved Date:</div><div class="detail-value">${formatDate(data.approvedDate)}</div></div>` : ''}
+                        </div>
+                        <div style="background: var(--primary-bg-light); border-radius: 12px; padding: 16px; margin-bottom: 12px;">
+                            <h4 style="color: var(--primary); font-size: 14px; margin-bottom: 12px; font-weight: 700;">✅ Clearance Status</h4>
+                            <div class="detail-row"><div class="detail-label">IT Asset Return:</div><div class="detail-value">${clearanceData.itClearance ? '✅ Completed' : '❌ Pending'}</div></div>
+                            <div class="detail-row"><div class="detail-label">HR Clearance:</div><div class="detail-value">${clearanceData.hrClearance ? '✅ Completed' : '❌ Pending'}</div></div>
+                            <div class="detail-row"><div class="detail-label">Finance Clearance:</div><div class="detail-value">${clearanceData.financeClearance ? '✅ Completed' : '❌ Pending'}</div></div>
+                            <div class="detail-row"><div class="detail-label">Admin Clearance:</div><div class="detail-value">${clearanceData.adminClearance ? '✅ Completed' : '❌ Pending'}</div></div>
+                            <div class="detail-row"><div class="detail-label">Overall Progress:</div><div class="detail-value"><div style="display: flex; align-items: center; gap: 10px;"><div class="progress-bar" style="flex: 1;"><div class="progress-fill" style="width: ${clearancePercent}%;"></div></div><span style="font-size: 12px;">${clearancePercent}%</span></div></div></div>
+                        </div>
+                        <div style="background: var(--primary-bg-light); border-radius: 12px; padding: 16px; margin-bottom: 12px;">
+                            <h4 style="color: var(--primary); font-size: 14px; margin-bottom: 12px; font-weight: 700;">💰 Final Settlement</h4>
+                            ${settlementData ? `
+                                <div class="detail-row"><div class="detail-label">Basic Salary:</div><div class="detail-value">₹${(settlementData.basicSalary || 0).toLocaleString()}</div></div>
+                                <div class="detail-row"><div class="detail-label">Leave Encashment:</div><div class="detail-value">₹${(settlementData.leaveEncashment || 0).toLocaleString()}</div></div>
+                                <div class="detail-row"><div class="detail-label">Bonus/Incentives:</div><div class="detail-value">₹${(settlementData.bonus || 0).toLocaleString()}</div></div>
+                                <div class="detail-row"><div class="detail-label">Other Allowances:</div><div class="detail-value">₹${(settlementData.allowances || 0).toLocaleString()}</div></div>
+                                <div class="detail-row"><div class="detail-label">Total Earnings:</div><div class="detail-value" style="color: #2b7a3e; font-weight: 700;">₹${((settlementData.basicSalary || 0) + (settlementData.leaveEncashment || 0) + (settlementData.bonus || 0) + (settlementData.allowances || 0)).toLocaleString()}</div></div>
+                                <div class="detail-row"><div class="detail-label">Salary Advance:</div><div class="detail-value">₹${(settlementData.salaryAdvance || 0).toLocaleString()}</div></div>
+                                <div class="detail-row"><div class="detail-label">Loan Recovery:</div><div class="detail-value">₹${(settlementData.loanRecovery || 0).toLocaleString()}</div></div>
+                                <div class="detail-row"><div class="detail-label">Asset Damage:</div><div class="detail-value">₹${(settlementData.assetDamage || 0).toLocaleString()}</div></div>
+                                <div class="detail-row"><div class="detail-label">Other Deductions:</div><div class="detail-value">₹${(settlementData.otherDeductions || 0).toLocaleString()}</div></div>
+                                <div class="detail-row"><div class="detail-label">Total Deductions:</div><div class="detail-value" style="color: #dc3545; font-weight: 700;">₹${((settlementData.salaryAdvance || 0) + (settlementData.loanRecovery || 0) + (settlementData.assetDamage || 0) + (settlementData.otherDeductions || 0)).toLocaleString()}</div></div>
+                                <div class="detail-row"><div class="detail-label">Net Payable:</div><div class="detail-value" style="color: #2b7a3e; font-size: 16px; font-weight: 700;">₹${(settlementData.netPayable || 0).toLocaleString()}</div></div>
+                            ` : `<div class="text-center py-3" style="color: var(--text-light);"><i class="fas fa-info-circle"></i> No settlement data available yet</div>`}
+                        </div>
+<div style="background: var(--primary-bg-light); border-radius: 12px; padding: 16px; margin-bottom: 12px;">
+    <h4 style="color: var(--primary); font-size: 14px; margin-bottom: 12px; font-weight: 700;">🎤 Exit Interview</h4>
+    ${interviewData ? `
+        <div class="detail-row">
+            <div class="detail-label">Reason for Leaving:</div>
+            <div class="detail-value" style="word-wrap: break-word; white-space: normal;">${interviewData.reasonForLeaving || 'N/A'}</div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-label">Overall Rating:</div>
+            <div class="detail-value">${interviewData.rating ? '★'.repeat(interviewData.rating) + '☆'.repeat(5 - interviewData.rating) + ' (' + interviewData.rating + '/5)' : 'N/A'}</div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-label">What Needs Improvement:</div>
+            <div class="detail-value" style="word-wrap: break-word; white-space: normal;">${interviewData.whatNeedsImprovement || 'N/A'}</div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-label">Recommend to Others:</div>
+            <div class="detail-value">${interviewData.recommendToOthers || 'N/A'}</div>
+        </div>
+        <div class="detail-row">
+            <div class="detail-label">Consider Rejoining:</div>
+            <div class="detail-value">${interviewData.considerRejoining || 'N/A'}</div>
+        </div>
+    ` : `<div class="text-center py-3" style="color: var(--text-light);"><i class="fas fa-info-circle"></i> No exit interview data available yet</div>`}
+</div>
+                    `;
+                    document.getElementById('viewDetailsModal').classList.add('active');
+                } else {
+                    showToast(result.message || 'Failed to load resignation details', 'error');
+                }
+            } catch (error) {
+                console.error('Error in viewDetails:', error);
+                showToast('Error loading resignation details: ' + error.message, 'error');
+                document.getElementById('viewDetailsContent').innerHTML = `<div class="text-center py-4 text-red-500"><i class="fas fa-exclamation-circle fa-2x mb-2"></i><p>Failed to load details. Please try again.</p><p class="text-xs mt-2">Error: ${error.message}</p></div>`;
+                document.getElementById('viewDetailsModal').classList.add('active');
+            }
+        }
+
+        async function loadEmployeesForDropdown() {
+            try {
+                const response = await fetch('http://localhost:8086/api/employees/get-all-employees?page=0&size=100');
+                const result = await response.json();
+
+                let employees = [];
+                if (result.success && result.data && result.data.content) employees = result.data.content;
+                else if (result.success && result.data && Array.isArray(result.data)) employees = result.data;
+                else if (result.content) employees = result.content;
+                else if (Array.isArray(result)) employees = result;
+
+                const clearanceSelect = document.getElementById('clearanceEmployee');
+                const settlementSelect = document.getElementById('settlementEmployee');
+                const interviewSelect = document.getElementById('interviewEmployee');
+
+                let options = '<option value="">-- Select Employee --</option>';
+                employees.forEach(emp => {
+                    const empId = emp.employeePrimeId || emp.id;
+                    const empName = emp.fullName || `${emp.firstName || ''} ${emp.lastName || ''}`.trim() || emp.firstName;
+                    const empCode = emp.employeeId || `EMP${empId}`;
+                    const dept = emp.department || 'No Dept';
+                    if (empName && empName !== '') {
+                        options += `<option value="${empId}" data-exit-id="${empId}" data-name="${empName}">${empName} - ${empCode} (${dept})</option>`;
+                    }
+                });
+
+                clearanceSelect.innerHTML = options;
+                settlementSelect.innerHTML = options;
+                interviewSelect.innerHTML = options;
+                console.log('Dropdown populated with', employees.length, 'employees');
+            } catch (error) {
+                console.error('Error loading employees:', error);
+                showToast('Error loading employees list', 'error');
+            }
+        }
+
+        async function approveResignation(exitId) {
+            if (!exitId) { showToast('Invalid resignation ID', 'error'); return; }
+            if (!confirm('Are you sure you want to approve this resignation?')) return;
+
+            const approveData = {
+                approvedBy: localStorage.getItem('hrms_username') || 'HR Manager',
+                remarks: 'Resignation approved. Notice period starts from ' + new Date().toLocaleDateString()
+            };
+
+            try {
+                const response = await fetch(`${API_BASE}/resignations/approve/${exitId}`, {
+                    method: 'PUT', headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                    body: JSON.stringify(approveData)
                 });
                 const result = await response.json();
-                console.log('📦 Delete response:', result);
-                
-                if (result.success) {
-                    showToast(`✅ Resignation deleted successfully!`, 'success');
-                    setTimeout(() => {
-                        loadResignations();
-                        loadDashboardStats();
-                    }, 500);
-                } else { 
-                    showToast(result.message || 'Delete failed', 'error'); 
+                if (response.ok && result.success) {
+                    showToast('✅ Resignation approved! Employee is now in notice period.', 'success');
+                    setTimeout(() => { loadResignations(); loadDashboardStats(); }, 500);
+                } else {
+                    showToast(result.message || 'Approval failed', 'error');
                 }
-            } catch (error) { 
-                console.error('Error deleting:', error);
-                showToast('Error deleting', 'error'); 
+            } catch (error) {
+                showToast('Error approving resignation: ' + error.message, 'error');
             }
         }
-        closeDeleteModal();
-    }
 
-async function loadClearanceTasksByEmployee() {
-    const select = document.getElementById('clearanceEmployee');
-    const empId = select.value;
-    
-    if (!empId) {
-        console.log('No employee selected');
-        showToast('Please select an employee first', 'warning');
-        return;
-    }
-    
-    console.log('Loading clearance for employee ID:', empId);
-    showToast('Loading clearance data...', 'info');
-    
-    try {
-        // Alternative: First get all resignations and find by employee
-        const allResignationsResponse = await fetch(`${API_BASE}/resignations/all?page=0&size=100`);
-        const allResult = await allResignationsResponse.json();
-        
-        console.log('All resignations response:', allResult);
-        
-        let resignations = [];
-        if (allResult.success && allResult.list) {
-            resignations = allResult.list;
-        } else if (allResult.success && allResult.data && allResult.data.content) {
-            resignations = allResult.data.content;
-        } else if (allResult.success && allResult.data && Array.isArray(allResult.data)) {
-            resignations = allResult.data;
-        }
-        
-        // Find resignation for this employee
-        const employeeResignation = resignations.find(res => {
-            // Match by employeeId
-            const resEmpId = res.employeeId || res.employee?.employeePrimeId;
-            return String(resEmpId) === String(empId);
-        });
-        
-        console.log('Found resignation for employee:', employeeResignation);
-        
-        if (employeeResignation && employeeResignation.id) {
-            currentExitId = employeeResignation.id;
-            console.log('Using exit ID:', currentExitId);
-            
-            // Load clearance status
-            const response = await fetch(`${API_BASE}/clearance/status/${currentExitId}`);
-            const result = await response.json();
-            console.log('Clearance status response:', result);
-            
-            if (result.success && result.data) {
-                document.querySelectorAll('#clearanceTasksContainer .task-checkbox').forEach(cb => {
-                    const type = cb.getAttribute('data-clearance');
-                    if (type === 'IT') cb.checked = result.data.itClearance || false;
-                    if (type === 'HR') cb.checked = result.data.hrClearance || false;
-                    if (type === 'FINANCE') cb.checked = result.data.financeClearance || false;
-                    if (type === 'ADMIN') cb.checked = result.data.adminClearance || false;
+        async function rejectResignation(exitId) {
+            if (!exitId) { showToast('Invalid resignation ID', 'error'); return; }
+            const reason = prompt('Please provide reason for rejection:', 'Not meeting notice period requirements');
+            if (!reason) return;
+
+            const rejectData = { rejectedReason: reason, remarks: reason };
+            try {
+                const response = await fetch(`${API_BASE}/resignations/reject/${exitId}`, {
+                    method: 'PUT', headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(rejectData)
                 });
-                updateClearanceProgress();
-                showToast('Clearance data loaded', 'success');
-            } else {
-                // Reset checkboxes
-                document.querySelectorAll('#clearanceTasksContainer .task-checkbox').forEach(cb => {
-                    cb.checked = false;
-                });
-                updateClearanceProgress();
-                showToast('No clearance data found - starting fresh', 'info');
+                const result = await response.json();
+                if (response.ok && result.success) {
+                    showToast('❌ Resignation rejected!', 'warning');
+                    setTimeout(() => { loadResignations(); loadDashboardStats(); }, 500);
+                } else {
+                    showToast(result.message || 'Rejection failed', 'error');
+                }
+            } catch (error) {
+                showToast('Error rejecting resignation', 'error');
             }
-        } else {
-            console.log('No active resignation found for this employee');
-            showToast('No active resignation found for selected employee', 'warning');
-            currentExitId = null;
-            document.querySelectorAll('#clearanceTasksContainer .task-checkbox').forEach(cb => {
-                cb.checked = false;
+        }
+
+        async function loadDashboardStats() {
+            try {
+                const response = await fetch(`${API_BASE}/dashboard/stats`);
+                const result = await response.json();
+                if (result.success && result.data) {
+                    document.getElementById('activeResignations').innerText = result.data.activeResignations || 0;
+                    document.getElementById('completedExits').innerText = result.data.completedExits || 0;
+                    document.getElementById('pendingApprovals').innerText = result.data.pendingApprovals || 0;
+                    const attritionRate = result.data.attritionRate || 0;
+                    document.getElementById('attritionRate').innerText = attritionRate + '%';
+                    document.getElementById('attritionBar').style.width = attritionRate + '%';
+                }
+            } catch (error) { console.error('Error loading stats:', error); }
+        }
+
+        function filterResignations() {
+            const search = document.getElementById('resignationSearch').value.toLowerCase();
+            const status = document.getElementById('resignationStatusFilter').value;
+            const rows = document.querySelectorAll('#resignationsList tr');
+            rows.forEach(row => {
+                if (row.cells.length < 6) return;
+                let show = true;
+                const name = row.cells[1]?.innerText.toLowerCase();
+                const rowStatus = row.cells[5]?.innerText;
+                if (search && name && !name.includes(search)) show = false;
+                if (status !== 'all') {
+                    let statusMatch = false;
+                    if (status === 'PENDING' && rowStatus === 'Pending') statusMatch = true;
+                    else if (status === 'APPROVED' && rowStatus === 'Approved') statusMatch = true;
+                    else if (status === 'HR_PROCESSING' && rowStatus === 'HR Processing') statusMatch = true;
+                    else if (status === 'CLEARANCE_PENDING' && rowStatus === 'Clearance Pending') statusMatch = true;
+                    else if (status === 'COMPLETED' && rowStatus === 'Completed') statusMatch = true;
+                    else if (status === 'REJECTED' && rowStatus === 'Rejected') statusMatch = true;
+                    if (!statusMatch) show = false;
+                }
+                row.style.display = show ? '' : 'none';
             });
-            updateClearanceProgress();
         }
-    } catch (error) {
-        console.error('Error loading clearance:', error);
-        showToast('Error loading clearance data: ' + error.message, 'error');
-        currentExitId = null;
-    }
-}
-async function updateClearanceTask(checkbox) {
-    console.log('Checkbox clicked, currentExitId:', currentExitId);
-    
-    if (!currentExitId) {
-        console.log('No exit ID found - please select employee first');
-        showToast('Please select an employee from the dropdown first', 'error');
-        checkbox.checked = !checkbox.checked; // Revert the change
-        return;
-    }
-    
-    const clearanceType = checkbox.getAttribute('data-clearance');
-    const cleared = checkbox.checked;
-    
-    console.log(`Updating clearance: ${clearanceType} to ${cleared} for exitId: ${currentExitId}`);
-    
-    try {
-        const response = await fetch(`${API_BASE}/clearance/update/${currentExitId}?clearanceType=${clearanceType}&cleared=${cleared}&clearedBy=Admin`, { 
-            method: 'PATCH' 
-        });
-        
-        const result = await response.json();
-        console.log('Clearance update response:', result);
-        
-        if (result.success) { 
-            updateClearanceProgress(); 
-            showToast(`${clearanceType} clearance updated successfully`, 'success');
-            
-            // Reload clearance status to ensure consistency
-            await loadClearanceTasksByEmployee();
-        } else {
-            console.error('Update failed:', result.message);
-            showToast(result.message || 'Error updating clearance', 'error');
-            checkbox.checked = !cleared; // Revert on error
-        }
-    } catch (error) { 
-        console.error('Error updating clearance:', error);
-        showToast('Error updating clearance: ' + error.message, 'error'); 
-        checkbox.checked = !cleared; // Revert on error
-    }
-}
 
-    function updateClearanceProgress() {
-        const checkboxes = document.querySelectorAll('#clearanceTasksContainer .task-checkbox');
-        const total = checkboxes.length;
-        const completed = Array.from(checkboxes).filter(cb => cb.checked).length;
-        const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
-        document.getElementById('clearanceProgressPercent').innerText = `${pct}%`;
-        document.getElementById('clearanceProgressFill').style.width = `${pct}%`;
-    }
+        function exportResignations() {
+            const visibleRows = Array.from(document.querySelectorAll('#resignationsList tr')).filter(row => row.style.display !== 'none' && row.cells.length >= 6);
+            if (visibleRows.length === 0) { showToast('No data to export', 'warning'); return; }
 
-    async function loadSettlementData() {
-    const select = document.getElementById('settlementEmployee');
-    const empId = select.value;
-    
-    if (!empId) {
-        console.log('No employee selected');
-        showToast('Please select an employee first', 'warning');
-        return;
-    }
-    
-    console.log('Loading settlement for employee ID:', empId);
-    showToast('Loading settlement data...', 'info');
-    
-    try {
-        // First get all resignations and find by employee
-        const allResignationsResponse = await fetch(`${API_BASE}/resignations/all?page=0&size=100`);
-        const allResult = await allResignationsResponse.json();
-        
-        console.log('All resignations response:', allResult);
-        
-        let resignations = [];
-        if (allResult.success && allResult.list) {
-            resignations = allResult.list;
-        } else if (allResult.success && allResult.data && allResult.data.content) {
-            resignations = allResult.data.content;
-        } else if (allResult.success && allResult.data && Array.isArray(allResult.data)) {
-            resignations = allResult.data;
+            const headers = ['Exit ID', 'Employee Name', 'Department', 'Resignation Date', 'Last Working Day', 'Status', 'Remarks'];
+            const rows = visibleRows.map(row => [
+                row.cells[0]?.innerText.trim() || '', row.cells[1]?.innerText.trim() || '', row.cells[2]?.innerText.trim() || '',
+                row.cells[3]?.innerText.trim() || '', row.cells[4]?.innerText.trim() || '', row.cells[5]?.innerText.trim() || '', ''
+            ]);
+            const csvContent = [headers, ...rows].map(row => row.map(cell => `"${cell.replace(/"/g, '""')}"`).join(',')).join('\n');
+            const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.download = `resignations_export_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.csv`;
+            link.href = url;
+            link.click();
+            URL.revokeObjectURL(url);
+            showToast(`✅ Exported ${visibleRows.length} resignation records successfully!`, 'success');
         }
-        
-        // Find resignation for this employee
-        const employeeResignation = resignations.find(res => {
-            const resEmpId = res.employeeId || res.employee?.employeePrimeId;
-            return String(resEmpId) === String(empId);
-        });
-        
-        console.log('Found resignation for settlement:', employeeResignation);
-        
-        if (employeeResignation && employeeResignation.id) {
-            currentExitId = employeeResignation.id;
-            console.log('Using exit ID for settlement:', currentExitId);
-            
-            // Load settlement details using the exit ID
-            const response = await fetch(`${API_BASE}/settlement/details/${currentExitId}`);
-            const result = await response.json();
-            console.log('Settlement details response:', result);
-            
-            if (result.success && result.data) {
-                document.getElementById('basicSalary').value = result.data.basicSalary || 0;
-                document.getElementById('leaveEncashment').value = result.data.leaveEncashment || 0;
-                document.getElementById('bonus').value = result.data.bonus || 0;
-                document.getElementById('allowances').value = result.data.allowances || 0;
-                document.getElementById('salaryAdvance').value = result.data.salaryAdvance || 0;
-                document.getElementById('loanRecovery').value = result.data.loanRecovery || 0;
-                document.getElementById('assetDamage').value = result.data.assetDamage || 0;
-                document.getElementById('otherDeductions').value = result.data.otherDeductions || 0;
-                calculateSettlement();
-                showToast('Settlement data loaded', 'success');
-            } else {
-                // No existing settlement data, reset form
-                document.getElementById('basicSalary').value = 0;
-                document.getElementById('leaveEncashment').value = 0;
-                document.getElementById('bonus').value = 0;
-                document.getElementById('allowances').value = 0;
-                document.getElementById('salaryAdvance').value = 0;
-                document.getElementById('loanRecovery').value = 0;
-                document.getElementById('assetDamage').value = 0;
-                document.getElementById('otherDeductions').value = 0;
-                calculateSettlement();
-                showToast('No existing settlement data - enter values and calculate', 'info');
+
+        function exportClearance() {
+            const employeeSelect = document.getElementById('clearanceEmployee');
+            const selectedEmployee = employeeSelect.options[employeeSelect.selectedIndex]?.text || 'All';
+            const clearanceData = {
+                'IT Asset Return': document.querySelector('[data-clearance="IT"]')?.checked ? 'Completed' : 'Pending',
+                'HR Clearance': document.querySelector('[data-clearance="HR"]')?.checked ? 'Completed' : 'Pending',
+                'Finance Clearance': document.querySelector('[data-clearance="FINANCE"]')?.checked ? 'Completed' : 'Pending',
+                'Admin Clearance': document.querySelector('[data-clearance="ADMIN"]')?.checked ? 'Completed' : 'Pending'
+            };
+            const headers = ['Clearance Task', 'Status', 'Employee', 'Export Date'];
+            const rows = Object.entries(clearanceData).map(([task, status]) => [task, status, selectedEmployee, new Date().toLocaleString()]);
+            const csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n');
+            const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.download = `clearance_export_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.csv`;
+            link.href = url;
+            link.click();
+            URL.revokeObjectURL(url);
+            showToast('✅ Clearance data exported successfully!', 'success');
+        }
+
+        function exportSettlement() {
+            const employeeSelect = document.getElementById('settlementEmployee');
+            const selectedEmployee = employeeSelect.options[employeeSelect.selectedIndex]?.text.split(' - ')[0] || 'All';
+            const basicSalary = document.getElementById('basicSalary').value || 0;
+            const leaveEncashment = document.getElementById('leaveEncashment').value || 0;
+            const bonus = document.getElementById('bonus').value || 0;
+            const allowances = document.getElementById('allowances').value || 0;
+            const salaryAdvance = document.getElementById('salaryAdvance').value || 0;
+            const loanRecovery = document.getElementById('loanRecovery').value || 0;
+            const assetDamage = document.getElementById('assetDamage').value || 0;
+            const otherDeductions = document.getElementById('otherDeductions').value || 0;
+
+            const totalEarnings = parseFloat(basicSalary) + parseFloat(leaveEncashment) + parseFloat(bonus) + parseFloat(allowances);
+            const totalDeductions = parseFloat(salaryAdvance) + parseFloat(loanRecovery) + parseFloat(assetDamage) + parseFloat(otherDeductions);
+            const netPayable = totalEarnings - totalDeductions;
+
+            const headers = ['Component', 'Amount (₹)', 'Employee', 'Export Date'];
+            const rows = [
+                ['Basic Salary', basicSalary, selectedEmployee, new Date().toLocaleString()],
+                ['Leave Encashment', leaveEncashment, selectedEmployee, new Date().toLocaleString()],
+                ['Bonus / Incentives', bonus, selectedEmployee, new Date().toLocaleString()],
+                ['Other Allowances', allowances, selectedEmployee, new Date().toLocaleString()],
+                ['Total Earnings', totalEarnings, selectedEmployee, new Date().toLocaleString()],
+                ['Salary Advance', salaryAdvance, selectedEmployee, new Date().toLocaleString()],
+                ['Loan Recovery', loanRecovery, selectedEmployee, new Date().toLocaleString()],
+                ['Asset Damage', assetDamage, selectedEmployee, new Date().toLocaleString()],
+                ['Other Deductions', otherDeductions, selectedEmployee, new Date().toLocaleString()],
+                ['Total Deductions', totalDeductions, selectedEmployee, new Date().toLocaleString()],
+                ['Net Payable', netPayable, selectedEmployee, new Date().toLocaleString()]
+            ];
+            const csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n');
+            const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.download = `settlement_export_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.csv`;
+            link.href = url;
+            link.click();
+            URL.revokeObjectURL(url);
+            showToast('✅ Settlement data exported successfully!', 'success');
+        }
+
+        function exportExitInterview() {
+            const employeeSelect = document.getElementById('interviewEmployee');
+            const selectedEmployee = employeeSelect.options[employeeSelect.selectedIndex]?.text.split(' - ')[0] || 'All';
+            const reason = document.getElementById('interview_reason').value || '';
+            const rating = document.querySelector('input[name="rating"]:checked')?.value || 'Not rated';
+            const improvements = document.getElementById('interview_improvements').value || '';
+            const recommend = document.getElementById('interview_recommend').value || '';
+            const rejoin = document.getElementById('interview_rejoin').value || '';
+
+            const headers = ['Question', 'Response', 'Employee', 'Export Date'];
+            const rows = [
+                ['Primary Reason for Leaving', reason, selectedEmployee, new Date().toLocaleString()],
+                ['Overall Experience Rating', `${rating} ★`, selectedEmployee, new Date().toLocaleString()],
+                ['What Liked Most', likes, selectedEmployee, new Date().toLocaleString()],
+                ['What Could Be Improved', improvements, selectedEmployee, new Date().toLocaleString()],
+                ['Recommend to Others', recommend, selectedEmployee, new Date().toLocaleString()],
+                ['Consider Rejoining', rejoin, selectedEmployee, new Date().toLocaleString()]
+            ];
+            const csvContent = [headers, ...rows].map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(',')).join('\n');
+            const blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.download = `exit_interview_export_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}.csv`;
+            link.href = url;
+            link.click();
+            URL.revokeObjectURL(url);
+            showToast('✅ Exit interview data exported successfully!', 'success');
+        }
+
+        function openDeleteModal(displayId, dbId) {
+            deleteTargetId = dbId;
+            deleteTargetExitId = displayId;
+            document.getElementById('deleteItemId').innerHTML = `Exit ID: <strong>${displayId}</strong>`;
+            document.getElementById('deleteModal').classList.add('active');
+        }
+
+        function closeDeleteModal() {
+            document.getElementById('deleteModal').classList.remove('active');
+            deleteTargetId = null;
+            deleteTargetExitId = null;
+        }
+
+        async function confirmDelete() {
+            if (deleteTargetId) {
+                try {
+                    const response = await fetch(`${API_BASE}/resignations/delete/${deleteTargetId}`, { method: 'DELETE' });
+                    const result = await response.json();
+                    if (result.success) {
+                        showToast(`✅ Resignation deleted successfully!`, 'success');
+                        setTimeout(() => { loadResignations(); loadDashboardStats(); }, 500);
+                    } else { showToast(result.message || 'Delete failed', 'error'); }
+                } catch (error) { showToast('Error deleting', 'error'); }
             }
-        } else {
-            console.log('No active resignation found for this employee');
-            showToast('No active resignation found for selected employee', 'warning');
-            currentExitId = null;
+            closeDeleteModal();
         }
-    } catch (error) {
-        console.error('Error loading settlement:', error);
-        showToast('Error loading settlement data: ' + error.message, 'error');
-        currentExitId = null;
-    }
-}
 
-// START HR PROCESSING - FIXED with Long ID
-async function startHRProcessing(exitId, longId) {
-    console.log('🚀 Starting HR Processing for exitId:', exitId, 'Long ID:', longId);
-    
-    // Use longId (number) for API call, not the string exitId
-    const idToUse = longId || exitId;
-    
-    if (!confirm('Start HR Processing for this employee? This will update status to HR_PROCESSING')) {
-        return;
-    }
-    
-    try {
-        const response = await fetch(`${API_BASE}/resignations/hr-processing/start/${idToUse}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' }
-        });
-        
-        const result = await response.json();
-        console.log('HR Processing start response:', result);
-        
-        if (response.ok && result.success) {
-            showToast('✅ HR Processing started! Status updated.', 'success');
-            loadResignations();
-            loadDashboardStats();
-        } else {
-            showToast(result.message || 'Failed to start HR processing', 'error');
+        async function loadClearanceTasksByEmployee() {
+            const select = document.getElementById('clearanceEmployee');
+            const empId = select.value;
+            if (!empId) { showToast('Please select an employee first', 'warning'); return; }
+
+            try {
+                const allResignationsResponse = await fetch(`${API_BASE}/resignations/all?page=0&size=100`);
+                const allResult = await allResignationsResponse.json();
+                let resignations = [];
+                if (allResult.success && allResult.list) resignations = allResult.list;
+                else if (allResult.success && allResult.data && allResult.data.content) resignations = allResult.data.content;
+                else if (allResult.success && allResult.data && Array.isArray(allResult.data)) resignations = allResult.data;
+
+                const employeeResignation = resignations.find(res => String(res.employeeId || res.employee?.employeePrimeId) === String(empId));
+                if (employeeResignation && employeeResignation.id) {
+                    currentExitId = employeeResignation.id;
+                    const response = await fetch(`${API_BASE}/clearance/status/${currentExitId}`);
+                    const result = await response.json();
+                    if (result.success && result.data) {
+                        document.querySelectorAll('#clearanceTasksContainer .task-checkbox').forEach(cb => {
+                            const type = cb.getAttribute('data-clearance');
+                            if (type === 'IT') cb.checked = result.data.itClearance || false;
+                            if (type === 'HR') cb.checked = result.data.hrClearance || false;
+                            if (type === 'FINANCE') cb.checked = result.data.financeClearance || false;
+                            if (type === 'ADMIN') cb.checked = result.data.adminClearance || false;
+                        });
+                        updateClearanceProgress();
+                        showToast('Clearance data loaded', 'success');
+                    } else {
+                        document.querySelectorAll('#clearanceTasksContainer .task-checkbox').forEach(cb => cb.checked = false);
+                        updateClearanceProgress();
+                        showToast('No clearance data found - starting fresh', 'info');
+                    }
+                } else {
+                    showToast('No active resignation found for selected employee', 'warning');
+                    currentExitId = null;
+                    document.querySelectorAll('#clearanceTasksContainer .task-checkbox').forEach(cb => cb.checked = false);
+                    updateClearanceProgress();
+                }
+            } catch (error) {
+                showToast('Error loading clearance data: ' + error.message, 'error');
+                currentExitId = null;
+            }
         }
-    } catch (error) {
-        console.error('Error starting HR processing:', error);
-        showToast('Error starting HR processing', 'error');
-    }
-}
 
-// COMPLETE HR PROCESSING - FIXED with Long ID
-async function completeHRProcessing(exitId, longId) {
-    console.log('✅ Completing HR Processing for exitId:', exitId, 'Long ID:', longId);
-    
-    const idToUse = longId || exitId;
-    
-    if (!confirm('Complete HR Processing? This will move to clearance pending stage.')) {
-        return;
-    }
-    
-    try {
-        const response = await fetch(`${API_BASE}/resignations/hr-processing/complete/${idToUse}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' }
-        });
-        
-        const result = await response.json();
-        console.log('HR Processing complete response:', result);
-        
-        if (response.ok && result.success) {
-            showToast('✅ HR Processing completed! Now clearance pending.', 'success');
-            loadResignations();
-            loadDashboardStats();
-        } else {
-            showToast(result.message || 'Failed to complete HR processing', 'error');
+        async function updateClearanceTask(checkbox) {
+            if (!currentExitId) {
+                showToast('Please select an employee from the dropdown first', 'error');
+                checkbox.checked = !checkbox.checked;
+                return;
+            }
+            const clearanceType = checkbox.getAttribute('data-clearance');
+            const cleared = checkbox.checked;
+            try {
+                const response = await fetch(`${API_BASE}/clearance/update/${currentExitId}?clearanceType=${clearanceType}&cleared=${cleared}&clearedBy=Admin`, { method: 'PATCH' });
+                const result = await response.json();
+                if (result.success) {
+                    updateClearanceProgress();
+                    showToast(`${clearanceType} clearance updated successfully`, 'success');
+                    await loadClearanceTasksByEmployee();
+                } else {
+                    checkbox.checked = !cleared;
+                    showToast(result.message || 'Error updating clearance', 'error');
+                }
+            } catch (error) {
+                checkbox.checked = !cleared;
+                showToast('Error updating clearance: ' + error.message, 'error');
+            }
         }
-    } catch (error) {
-        console.error('Error completing HR processing:', error);
-        showToast('Error completing HR processing', 'error');
-    }
-}
 
-// START CLEARANCE (Optional)
-// START CLEARANCE - FIXED with Long ID
-async function startClearance(exitId, longId) {
-    console.log('🔍 Starting Clearance for exitId:', exitId, 'Long ID:', longId);
-    
-    const idToUse = longId || exitId;
-    
-    if (!confirm('Start clearance process? This will mark as clearance pending.')) {
-        return;
-    }
-    
-    try {
-        const response = await fetch(`${API_BASE}/resignations/clearance/start/${idToUse}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' }
-        });
-        
-        const result = await response.json();
-        console.log('Clearance start response:', result);
-        
-        if (response.ok && result.success) {
-            showToast('✅ Clearance process started!', 'success');
-            loadResignations();
-            loadDashboardStats();
-        } else {
-            showToast(result.message || 'Failed to start clearance', 'error');
+        function updateClearanceProgress() {
+            const checkboxes = document.querySelectorAll('#clearanceTasksContainer .task-checkbox');
+            const total = checkboxes.length;
+            const completed = Array.from(checkboxes).filter(cb => cb.checked).length;
+            const pct = total > 0 ? Math.round((completed / total) * 100) : 0;
+            document.getElementById('clearanceProgressPercent').innerText = `${pct}%`;
+            document.getElementById('clearanceProgressFill').style.width = `${pct}%`;
         }
-    } catch (error) {
-        console.error('Error starting clearance:', error);
-        showToast('Error starting clearance', 'error');
-    }
-}
 
-    function calculateSettlement() {
-        const basic = parseFloat(document.getElementById('basicSalary').value) || 0;
-        const leave = parseFloat(document.getElementById('leaveEncashment').value) || 0;
-        const bonus = parseFloat(document.getElementById('bonus').value) || 0;
-        const allowances = parseFloat(document.getElementById('allowances').value) || 0;
-        const advance = parseFloat(document.getElementById('salaryAdvance').value) || 0;
-        const loan = parseFloat(document.getElementById('loanRecovery').value) || 0;
-        const damage = parseFloat(document.getElementById('assetDamage').value) || 0;
-        const other = parseFloat(document.getElementById('otherDeductions').value) || 0;
-        const totalEarnings = basic + leave + bonus + allowances;
-        const totalDeductions = advance + loan + damage + other;
-        const netPayable = totalEarnings - totalDeductions;
-        document.getElementById('settlement_total_earnings').innerText = `₹${totalEarnings.toLocaleString()}`;
-        document.getElementById('settlement_total_deductions').innerText = `₹${totalDeductions.toLocaleString()}`;
-        document.getElementById('netPayableAmount').innerText = `₹${netPayable.toLocaleString()}`;
-        document.getElementById('amountInWords').innerText = `${numberToWords(Math.abs(netPayable))} Only`;
-    }
+        async function loadSettlementData() {
+            const select = document.getElementById('settlementEmployee');
+            const empId = select.value;
+            if (!empId) { showToast('Please select an employee first', 'warning'); return; }
 
-   async function processSettlement() {
-    if (!currentExitId) {
-        showToast('Please select an employee first', 'error');
-        return;
-    }
-    
-    console.log('Processing settlement for exit ID:', currentExitId);
-    
-    const settlementData = {
-        basicSalary: parseFloat(document.getElementById('basicSalary').value) || 0,
-        leaveEncashment: parseFloat(document.getElementById('leaveEncashment').value) || 0,
-        bonus: parseFloat(document.getElementById('bonus').value) || 0,
-        allowances: parseFloat(document.getElementById('allowances').value) || 0,
-        salaryAdvance: parseFloat(document.getElementById('salaryAdvance').value) || 0,
-        loanRecovery: parseFloat(document.getElementById('loanRecovery').value) || 0,
-        assetDamage: parseFloat(document.getElementById('assetDamage').value) || 0,
-        otherDeductions: parseFloat(document.getElementById('otherDeductions').value) || 0
-    };
-    
-    console.log('Settlement data:', settlementData);
-    
-    try {
-        // First calculate and save
-        const calculateResponse = await fetch(`${API_BASE}/settlement/calculate/${currentExitId}`, { 
-            method: 'POST', 
-            headers: { 'Content-Type': 'application/json' }, 
-            body: JSON.stringify(settlementData) 
-        });
-        
-        const calculateResult = await calculateResponse.json();
-        console.log('Calculate response:', calculateResult);
-        
-        if (calculateResult.success) {
-            // Then process settlement
-            const processResponse = await fetch(`${API_BASE}/settlement/process/${currentExitId}?processedBy=Finance%20Manager`, { 
-                method: 'POST' 
+            try {
+                const allResignationsResponse = await fetch(`${API_BASE}/resignations/all?page=0&size=100`);
+                const allResult = await allResignationsResponse.json();
+                let resignations = [];
+                if (allResult.success && allResult.list) resignations = allResult.list;
+                else if (allResult.success && allResult.data && allResult.data.content) resignations = allResult.data.content;
+                else if (allResult.success && allResult.data && Array.isArray(allResult.data)) resignations = allResult.data;
+
+                const employeeResignation = resignations.find(res => String(res.employeeId || res.employee?.employeePrimeId) === String(empId));
+                if (employeeResignation && employeeResignation.id) {
+                    currentExitId = employeeResignation.id;
+                    const response = await fetch(`${API_BASE}/settlement/details/${currentExitId}`);
+                    const result = await response.json();
+                    if (result.success && result.data) {
+                        document.getElementById('basicSalary').value = result.data.basicSalary || 0;
+                        document.getElementById('leaveEncashment').value = result.data.leaveEncashment || 0;
+                        document.getElementById('bonus').value = result.data.bonus || 0;
+                        document.getElementById('allowances').value = result.data.allowances || 0;
+                        document.getElementById('salaryAdvance').value = result.data.salaryAdvance || 0;
+                        document.getElementById('loanRecovery').value = result.data.loanRecovery || 0;
+                        document.getElementById('assetDamage').value = result.data.assetDamage || 0;
+                        document.getElementById('otherDeductions').value = result.data.otherDeductions || 0;
+                        calculateSettlement();
+                        showToast('Settlement data loaded', 'success');
+                    } else {
+                        document.getElementById('basicSalary').value = 0;
+                        document.getElementById('leaveEncashment').value = 0;
+                        document.getElementById('bonus').value = 0;
+                        document.getElementById('allowances').value = 0;
+                        document.getElementById('salaryAdvance').value = 0;
+                        document.getElementById('loanRecovery').value = 0;
+                        document.getElementById('assetDamage').value = 0;
+                        document.getElementById('otherDeductions').value = 0;
+                        calculateSettlement();
+                        showToast('No existing settlement data - enter values and calculate', 'info');
+                    }
+                } else {
+                    showToast('No active resignation found for selected employee', 'warning');
+                    currentExitId = null;
+                }
+            } catch (error) {
+                showToast('Error loading settlement data: ' + error.message, 'error');
+                currentExitId = null;
+            }
+        }
+
+        async function startHRProcessing(id) {
+            if (!confirm('Start HR Processing for this employee?')) return;
+            try {
+                const response = await fetch(`${API_BASE}/resignations/hr-processing/start/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' } });
+                const result = await response.json();
+                if (response.ok && result.success) {
+                    showToast('✅ HR Processing started! Status updated.', 'success');
+                    loadResignations(); loadDashboardStats();
+                } else { showToast(result.message || 'Failed to start HR processing', 'error'); }
+            } catch (error) { showToast('Error starting HR processing', 'error'); }
+        }
+
+        async function completeHRProcessing(id) {
+            if (!confirm('Complete HR Processing?')) return;
+            try {
+                const response = await fetch(`${API_BASE}/resignations/hr-processing/complete/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' } });
+                const result = await response.json();
+                if (response.ok && result.success) {
+                    showToast('✅ HR Processing completed! Now clearance pending.', 'success');
+                    loadResignations(); loadDashboardStats();
+                } else { showToast(result.message || 'Failed to complete HR processing', 'error'); }
+            } catch (error) { showToast('Error completing HR processing', 'error'); }
+        }
+
+        async function startClearance(id) {
+            if (!confirm('Start clearance process?')) return;
+            try {
+                const response = await fetch(`${API_BASE}/resignations/clearance/start/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json' } });
+                const result = await response.json();
+                if (response.ok && result.success) {
+                    showToast('✅ Clearance process started!', 'success');
+                    loadResignations(); loadDashboardStats();
+                } else { showToast(result.message || 'Failed to start clearance', 'error'); }
+            } catch (error) { showToast('Error starting clearance', 'error'); }
+        }
+
+        function calculateSettlement() {
+            const basic = parseFloat(document.getElementById('basicSalary').value) || 0;
+            const leave = parseFloat(document.getElementById('leaveEncashment').value) || 0;
+            const bonus = parseFloat(document.getElementById('bonus').value) || 0;
+            const allowances = parseFloat(document.getElementById('allowances').value) || 0;
+            const advance = parseFloat(document.getElementById('salaryAdvance').value) || 0;
+            const loan = parseFloat(document.getElementById('loanRecovery').value) || 0;
+            const damage = parseFloat(document.getElementById('assetDamage').value) || 0;
+            const other = parseFloat(document.getElementById('otherDeductions').value) || 0;
+            const totalEarnings = basic + leave + bonus + allowances;
+            const totalDeductions = advance + loan + damage + other;
+            const netPayable = totalEarnings - totalDeductions;
+            document.getElementById('settlement_total_earnings').innerText = `₹${totalEarnings.toLocaleString()}`;
+            document.getElementById('settlement_total_deductions').innerText = `₹${totalDeductions.toLocaleString()}`;
+            document.getElementById('netPayableAmount').innerText = `₹${netPayable.toLocaleString()}`;
+            document.getElementById('amountInWords').innerText = `${numberToWords(Math.abs(netPayable))} Only`;
+        }
+
+        async function processSettlement() {
+            if (!currentExitId) { showToast('Please select an employee first', 'error'); return; }
+            const settlementData = {
+                basicSalary: parseFloat(document.getElementById('basicSalary').value) || 0,
+                leaveEncashment: parseFloat(document.getElementById('leaveEncashment').value) || 0,
+                bonus: parseFloat(document.getElementById('bonus').value) || 0,
+                allowances: parseFloat(document.getElementById('allowances').value) || 0,
+                salaryAdvance: parseFloat(document.getElementById('salaryAdvance').value) || 0,
+                loanRecovery: parseFloat(document.getElementById('loanRecovery').value) || 0,
+                assetDamage: parseFloat(document.getElementById('assetDamage').value) || 0,
+                otherDeductions: parseFloat(document.getElementById('otherDeductions').value) || 0
+            };
+            try {
+                const calculateResponse = await fetch(`${API_BASE}/settlement/calculate/${currentExitId}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(settlementData) });
+                const calculateResult = await calculateResponse.json();
+                if (calculateResult.success) {
+                    const processResponse = await fetch(`${API_BASE}/settlement/process/${currentExitId}?processedBy=Finance%20Manager`, { method: 'POST' });
+                    const processResult = await processResponse.json();
+                    if (processResult.success) {
+                        showToast('✅ Settlement processed successfully!', 'success');
+                        loadResignations(); loadDashboardStats();
+                    } else { showToast(processResult.message || 'Processing failed', 'error'); }
+                } else { showToast(calculateResult.message || 'Calculation failed', 'error'); }
+            } catch (error) { showToast('Error processing settlement: ' + error.message, 'error'); }
+        }
+
+        function generateSettlementLetter() {
+            if (!currentExitId) { showToast('Please select an employee first', 'error'); return; }
+
+            const netPayable = document.getElementById('netPayableAmount').innerText;
+            const employeeName = document.getElementById('settlementEmployee').selectedOptions[0]?.text.split(' - ')[0] || 'Employee';
+            const employeeCode = document.getElementById('settlementEmployee').value || 'N/A';
+            const settlementDate = new Date().toLocaleDateString('en-IN', { day: '2-digit', month: 'long', year: 'numeric' });
+
+            const basicSalary = document.getElementById('basicSalary').value || 0;
+            const leaveEncashment = document.getElementById('leaveEncashment').value || 0;
+            const bonus = document.getElementById('bonus').value || 0;
+            const allowances = document.getElementById('allowances').value || 0;
+            const salaryAdvance = document.getElementById('salaryAdvance').value || 0;
+            const loanRecovery = document.getElementById('loanRecovery').value || 0;
+            const assetDamage = document.getElementById('assetDamage').value || 0;
+            const otherDeductions = document.getElementById('otherDeductions').value || 0;
+
+            const totalEarnings = parseFloat(basicSalary) + parseFloat(leaveEncashment) + parseFloat(bonus) + parseFloat(allowances);
+            const totalDeductions = parseFloat(salaryAdvance) + parseFloat(loanRecovery) + parseFloat(assetDamage) + parseFloat(otherDeductions);
+
+            const element = document.createElement('div');
+            element.innerHTML = `
+                <div style="font-family: 'Inter', Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 40px; background: white;">
+                    <div style="text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #1B738C;">
+                        <div style="font-size: 24px; font-weight: 700; color: #1B738C;">HRMS Solutions Pvt. Ltd.</div>
+                        <div style="font-size: 12px; color: #5a7c8a;">123 Business Park, Andheri East, Mumbai - 400093</div>
+                    </div>
+                    <div style="font-size: 18px; font-weight: 700; color: #1B738C; text-align: center; margin: 20px 0;">FINAL SETTLEMENT LETTER</div>
+                    <div style="text-align: right; margin-bottom: 30px; font-size: 12px;">Date: ${settlementDate}</div>
+                    <div style="margin-bottom: 25px;"><strong>To,</strong><br>${employeeName}<br>Employee ID: ${employeeCode}</div>
+                    <div style="margin: 20px 0; padding: 8px 12px; background: #e9f2f4; border-left: 4px solid #1B738C;"><strong>Subject:</strong> Final Settlement Statement for Exit ID: ${currentExitId}</div>
+                    <p>Dear ${employeeName},</p>
+                    <p>This is to confirm that your final settlement has been processed.</p>
+                    <table style="width:100%; border-collapse: collapse; margin: 15px 0;">
+                        <tr style="background: #1B738C; color: white;"><th style="padding: 8px; text-align: left;">Component</th><th style="padding: 8px; text-align: right;">Amount (₹)</th></tr>
+                        <tr><td style="padding: 6px; border-bottom: 1px solid #BDE4EE;">Basic Salary</td><td style="padding: 6px; text-align: right; border-bottom: 1px solid #BDE4EE;">${parseFloat(basicSalary).toLocaleString()}</td></tr>
+                        <tr><td style="padding: 6px; border-bottom: 1px solid #BDE4EE;">Leave Encashment</td><td style="padding: 6px; text-align: right; border-bottom: 1px solid #BDE4EE;">${parseFloat(leaveEncashment).toLocaleString()}</td></tr>
+                        <tr><td style="padding: 6px; border-bottom: 1px solid #BDE4EE;">Bonus/Incentives</td><td style="padding: 6px; text-align: right; border-bottom: 1px solid #BDE4EE;">${parseFloat(bonus).toLocaleString()}</td></tr>
+                        <tr><td style="padding: 6px; border-bottom: 1px solid #BDE4EE;">Other Allowances</td><td style="padding: 6px; text-align: right; border-bottom: 1px solid #BDE4EE;">${parseFloat(allowances).toLocaleString()}</td></tr>
+                        <tr style="background: #e9f2f4; font-weight: bold;"><td style="padding: 8px;">Total Earnings</td><td style="padding: 8px; text-align: right;">₹${totalEarnings.toLocaleString()}</td></tr>
+                        <tr><td style="padding: 6px; border-bottom: 1px solid #BDE4EE;">Salary Advance</td><td style="padding: 6px; text-align: right; border-bottom: 1px solid #BDE4EE;">${parseFloat(salaryAdvance).toLocaleString()}</td></tr>
+                        <tr><td style="padding: 6px; border-bottom: 1px solid #BDE4EE;">Loan Recovery</td><td style="padding: 6px; text-align: right; border-bottom: 1px solid #BDE4EE;">${parseFloat(loanRecovery).toLocaleString()}</td></tr>
+                        <tr><td style="padding: 6px; border-bottom: 1px solid #BDE4EE;">Asset Damage</td><td style="padding: 6px; text-align: right; border-bottom: 1px solid #BDE4EE;">${parseFloat(assetDamage).toLocaleString()}</td></tr>
+                        <tr><td style="padding: 6px; border-bottom: 1px solid #BDE4EE;">Other Deductions</td><td style="padding: 6px; text-align: right; border-bottom: 1px solid #BDE4EE;">${parseFloat(otherDeductions).toLocaleString()}</td></tr>
+                        <tr style="background: #e9f2f4; font-weight: bold;"><td style="padding: 8px;">Total Deductions</td><td style="padding: 8px; text-align: right;">₹${totalDeductions.toLocaleString()}</td></tr>
+                    </table>
+                    <div class="net-payable" style="text-align: center; margin: 20px 0; padding: 15px; background: #e8f5e9; border: 1px solid #2b7a3e; border-radius: 8px;">
+                        <div style="font-size: 16px; font-weight: 600;">Net Payable Amount</div>
+                        <div style="font-size: 24px; font-weight: 700; color: #2b7a3e;">${netPayable}</div>
+                    </div>
+                    <p>We thank you for your contribution to the company and wish you all the best.</p>
+                    <div style="margin-top: 40px; display: flex; justify-content: space-between;">
+                        <div style="text-align: center; width: 200px;"><div style="margin-top: 40px; border-top: 1px solid #1B738C; padding-top: 8px;"></div>Employee Signature</div>
+                        <div style="text-align: center; width: 200px;"><div style="margin-top: 40px; border-top: 1px solid #1B738C; padding-top: 8px;"></div>Authorized Signatory</div>
+                    </div>
+                    <div style="margin-top: 20px; text-align: center; font-size: 11px; color: #5a7c8a;">This is a system generated document.</div>
+                </div>
+            `;
+            document.body.appendChild(element);
+            html2pdf().set({
+                margin: [0.5, 0.5, 0.5, 0.5],
+                filename: `Settlement_Letter_${employeeName}_${currentExitId}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, letterRendering: true },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            }).from(element).save().then(() => {
+                document.body.removeChild(element);
+                showToast('✅ Settlement letter downloaded as PDF!', 'success');
+            }).catch(err => {
+                console.error('PDF generation error:', err);
+                document.body.removeChild(element);
+                showToast('Error generating PDF', 'error');
             });
-            const processResult = await processResponse.json();
-            console.log('Process response:', processResult);
-            
-            if (processResult.success) { 
-                showToast('✅ Settlement processed successfully!', 'success'); 
-                loadResignations();
-                loadDashboardStats();
-            } else { 
-                showToast(processResult.message || 'Processing failed', 'error'); 
-            }
-        } else { 
-            showToast(calculateResult.message || 'Calculation failed', 'error'); 
         }
-    } catch (error) { 
-        console.error('Error processing settlement:', error);
-        showToast('Error processing settlement: ' + error.message, 'error'); 
-    }
-}
 
-   function generateSettlementLetter() {
-    if (!currentExitId) {
-        showToast('Please select an employee first', 'error');
-        return;
-    }
-    
-    const netPayable = document.getElementById('netPayableAmount').innerText;
-    const employeeName = document.getElementById('settlementEmployee').selectedOptions[0]?.text.split(' - ')[0] || 'Employee';
-    
-    // Create a simple settlement letter
-    const letterContent = `
-        ============================================
-              FINAL SETTLEMENT LETTER
-        ============================================
-        
-        Date: ${new Date().toLocaleDateString()}
-        
-        To,
-        ${employeeName}
-        
-        Subject: Final Settlement Statement
-        
-        Dear ${employeeName},
-        
-        This is to confirm that your final settlement has been processed.
-        
-        Net Payable Amount: ${netPayable}
-        
-        Settlement ID: ${currentExitId}
-        
-        Thank you for your contribution to the company.
-        
-        ============================================
-        Authorized Signatory
-        HR Manager
-        ============================================
-    `;
-    
-    console.log('Settlement letter generated:', letterContent);
-    
-    // Download as text file
-    const blob = new Blob([letterContent], { type: 'text/plain' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `Settlement_Letter_${currentExitId}.txt`;
-    a.click();
-    URL.revokeObjectURL(url);
-    
-    showToast('Settlement letter generated!', 'success');
-}
 async function loadInterviewData() {
     const select = document.getElementById('interviewEmployee');
     const empId = select.value;
-    
-    if (!empId) {
-        showToast('Please select an employee first', 'warning');
-        return;
-    }
-    
-    currentExitId = empId; // Temporary - will be updated
-    
+    if (!empId) { showToast('Please select an employee first', 'warning'); return; }
+
     try {
-        // First get all resignations and find by employee
         const allResignationsResponse = await fetch(`${API_BASE}/resignations/all?page=0&size=100`);
         const allResult = await allResignationsResponse.json();
-        
         let resignations = [];
-        if (allResult.success && allResult.list) {
-            resignations = allResult.list;
-        } else if (allResult.success && allResult.data && allResult.data.content) {
-            resignations = allResult.data.content;
-        } else if (allResult.success && allResult.data && Array.isArray(allResult.data)) {
-            resignations = allResult.data;
-        }
-        
-        const employeeResignation = resignations.find(res => {
-            const resEmpId = res.employeeId || res.employee?.employeePrimeId;
-            return String(resEmpId) === String(empId);
-        });
-        
+        if (allResult.success && allResult.list) resignations = allResult.list;
+        else if (allResult.success && allResult.data && allResult.data.content) resignations = allResult.data.content;
+        else if (allResult.success && allResult.data && Array.isArray(allResult.data)) resignations = allResult.data;
+
+        const employeeResignation = resignations.find(res => String(res.employeeId || res.employee?.employeePrimeId) === String(empId));
         if (employeeResignation && employeeResignation.id) {
             currentExitId = employeeResignation.id;
-            console.log('Using exit ID for interview:', currentExitId);
-            
             const response = await fetch(`${API_BASE}/interview/get/${currentExitId}`);
             const result = await response.json();
-            
             if (result.success && result.data) {
                 document.getElementById('interview_reason').value = result.data.reasonForLeaving || '';
-                const rating = result.data.rating;
-                if (rating) document.querySelector(`input[name="rating"][value="${rating}"]`).checked = true;
-                document.getElementById('interview_likes').value = result.data.whatLikedMost || '';
+                if (result.data.rating) document.querySelector(`input[name="rating"][value="${result.data.rating}"]`).checked = true;
+                // ✅ FIXED: Fetch the correct field "whatNeedsImprovement" for "What could be improved?"
                 document.getElementById('interview_improvements').value = result.data.whatNeedsImprovement || '';
                 document.getElementById('interview_recommend').value = result.data.recommendToOthers || 'Yes';
                 document.getElementById('interview_rejoin').value = result.data.considerRejoining || 'Yes';
                 showToast('Interview data loaded', 'success');
-            } else {
-                showToast('No existing interview data', 'info');
+            } else { 
+                showToast('No existing interview data', 'info'); 
             }
-        } else {
-            showToast('No active resignation found', 'warning');
-            currentExitId = null;
+        } else { 
+            showToast('No active resignation found', 'warning'); 
+            currentExitId = null; 
         }
-    } catch (error) {
-        console.error('Error loading interview:', error);
-        showToast('Error loading interview data', 'error');
+    } catch (error) { 
+        showToast('Error loading interview data', 'error'); 
     }
 }
 
-    function numberToWords(num) {
-        if (num === 0) return 'Zero';
-        const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
-        const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
-        if (num < 20) return ones[num];
-        if (num < 100) return tens[Math.floor(num / 10)] + (num % 10 ? ' ' + ones[num % 10] : '');
-        if (num < 1000) return ones[Math.floor(num / 100)] + ' Hundred' + (num % 100 ? ' ' + numberToWords(num % 100) : '');
-        if (num < 100000) return numberToWords(Math.floor(num / 1000)) + ' Thousand' + (num % 1000 ? ' ' + numberToWords(num % 1000) : '');
-        if (num < 10000000) return numberToWords(Math.floor(num / 100000)) + ' Lakh' + (num % 100000 ? ' ' + numberToWords(num % 100000) : '');
-        return numberToWords(Math.floor(num / 10000000)) + ' Crore' + (num % 10000000 ? ' ' + numberToWords(num % 10000000) : '');
-    }
+        document.getElementById('exitInterviewForm')?.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            if (!currentExitId) { showToast('Please select an employee first', 'error'); return; }
+            const rating = document.querySelector('input[name="rating"]:checked')?.value;
+            const interviewData = {
+                reasonForLeaving: document.getElementById('interview_reason').value,
+                rating: rating ? parseInt(rating) : null,
+                whatNeedsImprovement: document.getElementById('interview_improvements').value,
+                recommendToOthers: document.getElementById('interview_recommend').value,
+                considerRejoining: document.getElementById('interview_rejoin').value
+            };
+            try {
+                const response = await fetch(`${API_BASE}/interview/save/${currentExitId}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(interviewData) });
+                const result = await response.json();
+                if (result.success) { showToast('Exit interview saved!', 'success'); } else { showToast(result.message || 'Save failed', 'error'); }
+            } catch (error) { showToast('Error saving interview', 'error'); }
+        });
 
-    function showToast(message, type = 'success') {
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        const icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-times-circle' : 'fa-info-circle';
-        toast.innerHTML = `<i class="fas ${icon} mr-2"></i>${message}`;
-        
-        if (type === 'success') {
-            toast.style.background = '#2b7a3e';
-        } else if (type === 'error') {
-            toast.style.background = '#dc3545';
-        } else if (type === 'warning') {
-            toast.style.background = '#e0a800';
-            toast.style.color = '#333';
-        } else {
-            toast.style.background = '#1B738C';
+        function numberToWords(num) {
+            if (num === 0) return 'Zero';
+            const ones = ['', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten', 'Eleven', 'Twelve', 'Thirteen', 'Fourteen', 'Fifteen', 'Sixteen', 'Seventeen', 'Eighteen', 'Nineteen'];
+            const tens = ['', '', 'Twenty', 'Thirty', 'Forty', 'Fifty', 'Sixty', 'Seventy', 'Eighty', 'Ninety'];
+            if (num < 20) return ones[num];
+            if (num < 100) return tens[Math.floor(num / 10)] + (num % 10 ? ' ' + ones[num % 10] : '');
+            if (num < 1000) return ones[Math.floor(num / 100)] + ' Hundred' + (num % 100 ? ' ' + numberToWords(num % 100) : '');
+            if (num < 100000) return numberToWords(Math.floor(num / 1000)) + ' Thousand' + (num % 1000 ? ' ' + numberToWords(num % 1000) : '');
+            if (num < 10000000) return numberToWords(Math.floor(num / 100000)) + ' Lakh' + (num % 100000 ? ' ' + numberToWords(num % 100000) : '');
+            return numberToWords(Math.floor(num / 10000000)) + ' Crore' + (num % 10000000 ? ' ' + numberToWords(num % 10000000) : '');
         }
-        
-        toast.style.position = 'fixed';
-        toast.style.bottom = '24px';
-        toast.style.right = '24px';
-        toast.style.padding = '12px 24px';
-        toast.style.borderRadius = '40px';
-        toast.style.color = 'white';
-        toast.style.zIndex = '1100';
-        toast.style.animation = 'slideIn 0.3s ease';
-        toast.style.fontWeight = '500';
-        toast.style.fontSize = '14px';
-        toast.style.boxShadow = '0 4px 15px rgba(0,0,0,0.15)';
-        
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3500);
-    }
 
-    function setActiveMenu(module) {
-        setTimeout(() => {
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.classList.remove('active');
-                if (link.getAttribute('data-module') === module) link.classList.add('active');
-            });
-        }, 500);
-    }
+        function showToast(message, type = 'success') {
+            const toast = document.createElement('div');
+            toast.className = `toast ${type}`;
+            const icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-times-circle' : 'fa-info-circle';
+            toast.innerHTML = `<i class="fas ${icon} mr-2"></i>${message}`;
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3500);
+        }
 
-    document.addEventListener('DOMContentLoaded', function () {
-        if (typeof loadSidebar === 'function') loadSidebar();
-        if (typeof loadHeader === 'function') loadHeader();
-        setActiveMenu('exit');
-        initTabs();
-        loadResignations();
-    });
-</script>
+        function setActiveMenu(module) {
+            setTimeout(() => {
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('data-module') === module) link.classList.add('active');
+                });
+            }, 500);
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            if (typeof loadSidebar === 'function') loadSidebar();
+            if (typeof loadHeader === 'function') loadHeader();
+            setActiveMenu('exit');
+            initTabs();
+            loadResignations();
+        });
+    </script>
 </body>
+
 </html>

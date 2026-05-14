@@ -159,11 +159,31 @@
             border-radius: 8px;
             padding: 8px 12px;
             width: 100%;
+            font-size: 13px;
+            box-sizing: border-box;
         }
         input:focus, select:focus, textarea:focus {
             outline: none;
             border-color: var(--primary);
             box-shadow: 0 0 0 2px rgba(27, 115, 140, 0.1);
+        }
+
+        input[type="checkbox"] {
+            width: auto;
+            padding: 0;
+            border: none;
+            border-radius: 0;
+            box-shadow: none;
+            cursor: pointer;
+            width: 16px;
+            height: 16px;
+            accent-color: var(--primary);
+            flex-shrink: 0;
+        }
+
+        input[type="file"] {
+            padding: 6px 10px;
+            font-size: 12px;
         }
         
         label {
@@ -237,14 +257,6 @@
             padding: 24px;
         }
         
-        .doc-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px;
-            border-bottom: 1px solid #e5e7eb;
-        }
-        
         .progress-bar {
             height: 8px;
             background: #e5e7eb;
@@ -299,12 +311,12 @@
         
         .dropdown-menu { display: none; }
         .dropdown-menu.show { display: block; }
-        
+
         .detail-section {
             background: var(--primary-bg-light);
             border-radius: 12px;
             padding: 16px;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             border: 1px solid var(--primary-soft);
         }
         
@@ -312,41 +324,147 @@
             color: var(--primary);
             font-size: 14px;
             font-weight: 700;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             padding-bottom: 8px;
             border-bottom: 2px solid var(--primary-soft);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .detail-section h5 {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 14px 0 10px 0;
+            padding-left: 8px;
+            border-left: 3px solid var(--primary);
         }
         
         .grid-detail {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             gap: 12px;
         }
         
         .grid-detail-item {
             display: flex;
             flex-direction: column;
+            gap: 4px;
         }
         
         .grid-detail-item label {
             font-size: 11px;
             font-weight: 600;
             color: var(--primary);
-            margin-bottom: 2px;
+            margin-bottom: 0;
+        }
+
+        .grid-detail-item input,
+        .grid-detail-item select {
+            height: 36px;
+            font-size: 13px;
+            padding: 6px 10px;
+            border-radius: 8px;
+            width: 100%;
+            box-sizing: border-box;
         }
         
         .dynamic-row {
-            display: flex;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr auto;
             gap: 8px;
             margin-bottom: 8px;
             align-items: center;
         }
-        .dynamic-row input { flex: 1; padding: 6px 10px; font-size: 12px; }
-        
-        .readonly-field {
-            background-color: #f3f4f6;
-            cursor: not-allowed;
+        .dynamic-row input {
+            height: 34px;
+            font-size: 12px;
+            padding: 6px 10px;
+            width: 100%;
+            box-sizing: border-box;
         }
+        .dynamic-row button {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: rgba(220,53,69,0.1);
+            border-radius: 6px;
+            cursor: pointer;
+            color: #dc3545;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        .dynamic-row button:hover { background: rgba(220,53,69,0.2); }
+
+        .pwd-checkbox-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            background: white;
+            border: 1px solid var(--primary-soft);
+            border-radius: 8px;
+            margin-bottom: 12px;
+            width: fit-content;
+            cursor: pointer;
+        }
+        .pwd-checkbox-row span {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            user-select: none;
+        }
+
+        .readonly-field {
+            background-color: #f0f4f5 !important;
+            cursor: not-allowed;
+            color: #5a7c8a;
+        }
+
+        .doc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+        .doc-grid-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 10px;
+            background: white;
+            border: 1px solid var(--primary-soft);
+            border-radius: 8px;
+            font-size: 12px;
+        }
+
+        .doc-upload-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+        .doc-upload-row select {
+            width: auto;
+            min-width: 180px;
+            height: 36px;
+            font-size: 13px;
+            padding: 6px 10px;
+        }
+
+        .upload-progress {
+            display: none;
+            align-items: center;
+            gap: 8px;
+            font-size: 12px;
+            color: var(--primary);
+            margin-top: 8px;
+        }
+        .upload-progress.active { display: flex; }
         
         .logout-modal {
             position: fixed;
@@ -392,12 +510,14 @@
             .main-content { margin-left: 0; }
             .tab-btn { padding: 6px 12px; font-size: 12px; }
             .grid-detail { grid-template-columns: 1fr; }
+            .dynamic-row { grid-template-columns: 1fr 1fr; }
+            .dynamic-row input:nth-child(3) { grid-column: span 2; }
         }
     </style>
 </head>
 <body>
 
-    <!-- ==================== SIDEBAR (ORIGINAL) ==================== -->
+    <!-- ==================== SIDEBAR ==================== -->
     <aside class="main-sidebar" id="mainSidebar">
         <div class="h-14 flex items-center justify-between px-4 border-b flex-shrink-0" style="border-bottom-color: #3098b5;">
             <div class="sidebar-logo gap-2">
@@ -410,66 +530,18 @@
 
         <nav class="flex-1 overflow-y-auto py-4 sidebar-nav">
             <ul class="space-y-0.5 px-2">
-                <li class="nav-item">
-                    <a href="/dashboard.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="dashboard">
-                        <i class="fas fa-tachometer-alt w-4 text-xs" style="color: #1B738C;"></i>
-                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Dashboard</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/pages/company-mgmt/company.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="company">
-                        <i class="fas fa-building w-4 text-xs" style="color: #1B738C;"></i>
-                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Company Management</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/pages/employees.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="employees">
-                        <i class="fas fa-users w-4 text-xs" style="color: #1B738C;"></i>
-                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Employee Management</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/pages/onboarding.html" class="nav-link active flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="onboarding">
-                        <i class="fas fa-user-plus w-4 text-xs" style="color: #1B738C;"></i>
-                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Onboarding</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/pages/asset.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="asset-management">
-                        <i class="fas fa-laptop w-4 text-xs" style="color: #1B738C;"></i>
-                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Asset Management</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/pages/exit.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="exit">
-                        <i class="fas fa-sign-out-alt w-4 text-xs" style="color: #1B738C;"></i>
-                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Exit Management</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/pages/attandance.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="attendance">
-                        <i class="fas fa-clock w-4 text-xs" style="color: #1B738C;"></i>
-                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Attendance</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/pages/leave.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="leave">
-                        <i class="fas fa-calendar-alt w-4 text-xs" style="color: #1B738C;"></i>
-                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Leave Management</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/pages/expense.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="expense">
-                        <i class="fas fa-wallet w-4 text-xs" style="color: #1B738C;"></i>
-                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Expense Management</span>
-                    </a>
-                </li>
+                <li class="nav-item"><a href="/dashboard.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="dashboard"><i class="fas fa-tachometer-alt w-4 text-xs" style="color: #1B738C;"></i><span class="nav-text text-sm font-medium" style="color: #125f74;">Dashboard</span></a></li>
+                <li class="nav-item"><a href="/pages/company-mgmt/company.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="company"><i class="fas fa-building w-4 text-xs" style="color: #1B738C;"></i><span class="nav-text text-sm font-medium" style="color: #125f74;">Company Management</span></a></li>
+                <li class="nav-item"><a href="/pages/employees.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="employees"><i class="fas fa-users w-4 text-xs" style="color: #1B738C;"></i><span class="nav-text text-sm font-medium" style="color: #125f74;">Employee Management</span></a></li>
+                <li class="nav-item"><a href="/pages/onboarding.html" class="nav-link active flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="onboarding"><i class="fas fa-user-plus w-4 text-xs" style="color: #1B738C;"></i><span class="nav-text text-sm font-medium" style="color: #125f74;">Onboarding</span></a></li>
+                <li class="nav-item"><a href="/pages/asset.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="asset-management"><i class="fas fa-laptop w-4 text-xs" style="color: #1B738C;"></i><span class="nav-text text-sm font-medium" style="color: #125f74;">Asset Management</span></a></li>
+                <li class="nav-item"><a href="/pages/exit.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="exit"><i class="fas fa-sign-out-alt w-4 text-xs" style="color: #1B738C;"></i><span class="nav-text text-sm font-medium" style="color: #125f74;">Exit Management</span></a></li>
+                <li class="nav-item"><a href="/pages/attandance.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="attendance"><i class="fas fa-clock w-4 text-xs" style="color: #1B738C;"></i><span class="nav-text text-sm font-medium" style="color: #125f74;">Attendance</span></a></li>
+                <li class="nav-item"><a href="/pages/leave.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="leave"><i class="fas fa-calendar-alt w-4 text-xs" style="color: #1B738C;"></i><span class="nav-text text-sm font-medium" style="color: #125f74;">Leave Management</span></a></li>
+                <li class="nav-item"><a href="/pages/expense.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="expense"><i class="fas fa-wallet w-4 text-xs" style="color: #1B738C;"></i><span class="nav-text text-sm font-medium" style="color: #125f74;">Expense Management</span></a></li>
                 <li class="nav-item has-submenu">
                     <a href="javascript:void(0);" class="nav-link toggle-submenu flex items-center justify-between px-3 py-2 rounded-lg transition-all duration-300 group" data-module="payroll">
-                        <div class="flex items-center gap-2">
-                            <i class="fas fa-rupee-sign w-4 text-xs" style="color: #1B738C;"></i>
-                            <span class="nav-text text-sm font-medium" style="color: #125f74;">Payroll</span>
-                        </div>
+                        <div class="flex items-center gap-2"><i class="fas fa-rupee-sign w-4 text-xs" style="color: #1B738C;"></i><span class="nav-text text-sm font-medium" style="color: #125f74;">Payroll</span></div>
                         <i class="fas fa-chevron-right submenu-arrow text-[9px] transition-transform duration-300" style="color: #1B738C;"></i>
                     </a>
                     <ul class="submenu mt-1 space-y-0.5" style="display: none;">
@@ -477,23 +549,13 @@
                         <li><a href="/pages/payroll/payslips.html" class="block px-3 py-1.5 ml-7 rounded-lg text-[13px] transition-all duration-300" style="color: #125f74;">2. Employee Pay-Slips</a></li>
                     </ul>
                 </li>
-                <!-- <li class="nav-item">
-                    <a href="/pages/kpi.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="kpi">
-                        <i class="fas fa-chart-line w-4 text-xs" style="color: #1B738C;"></i>
-                        <span class="nav-text text-sm font-medium" style="color: #125f74;">KPI / Performance</span>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="/pages/career.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="workflow">
-                        <i class="fas fa-tasks w-4 text-xs" style="color: #1B738C;"></i>
-                        <span class="nav-text text-sm font-medium" style="color: #125f74;">Careers</span>
-                    </a>
-                </li> -->
+                <li class="nav-item"><a href="/pages/kpi.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="kpi"><i class="fas fa-chart-line w-4 text-xs" style="color: #1B738C;"></i><span class="nav-text text-sm font-medium" style="color: #125f74;">KPI / Performance</span></a></li>
+                <li class="nav-item"><a href="/pages/career.html" class="nav-link flex items-center gap-2 px-3 py-2 rounded-lg transition-all duration-300 group" data-module="workflow"><i class="fas fa-tasks w-4 text-xs" style="color: #1B738C;"></i><span class="nav-text text-sm font-medium" style="color: #125f74;">Careers</span></a></li>
             </ul>
         </nav>
     </aside>
 
-    <!-- ==================== HEADER (ORIGINAL) ==================== -->
+    <!-- ==================== HEADER ==================== -->
     <header class="main-header">
         <div class="flex items-center gap-4"></div>
         <div class="flex items-center gap-4">
@@ -511,7 +573,6 @@
                     <div class="p-3 border-t text-center" style="border-color: #62C9EA;"><a href="#" class="text-sm" style="color: #1B738C;">View all notifications</a></div>
                 </div>
             </div>
-            
             <div class="relative">
                 <button id="userBtn" class="flex items-center gap-3 px-3 py-1.5 rounded-lg transition-all hover:bg-[#EBF4F6]">
                     <div class="w-8 h-8 rounded-full flex items-center justify-center" style="background: #1B738C"><span id="userInitial" class="text-white text-sm font-medium">SA</span></div>
@@ -528,25 +589,19 @@
 
     <!-- ==================== MAIN CONTENT ==================== -->
     <main class="main-content">
-        
         <div class="mb-4">
             <h1 class="text-xl font-bold" style="color: var(--primary);">Onboarding Management</h1>
             <p class="text-xs mt-0.5" style="color: var(--primary);">Manage new employee onboarding process and document verification</p>
         </div>
-        
-        <div class="tab-nav">
-            <button class="tab-btn active" data-tab="onboarding-list">Onboarding List</button>
-            <button class="tab-btn" data-tab="documents">Documents</button>
-        </div>
-        
-        <!-- TAB 1: ONBOARDING LIST -->
+
+        <!-- ONBOARDING LIST -->
         <div id="tab-onboarding-list" class="tab-content active">
             <div class="section-card">
                 <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
                     <h3 class="text-md font-semibold" style="color: var(--primary);">Active Onboarding</h3>
                     <div class="flex gap-2 flex-wrap">
-                        <input type="text" id="searchOnboarding" placeholder="Search employee..." class="w-56 text-sm p-2" onkeyup="filterOnboardingList()">
-                        <select id="filterOnboardingStatus" onchange="filterOnboardingList()" class="w-36 text-sm p-2">
+                        <input type="text" id="searchOnboarding" placeholder="Search employee..." style="width:224px;" onkeyup="filterOnboardingList()">
+                        <select id="filterOnboardingStatus" onchange="filterOnboardingList()" style="width:144px;">
                             <option value="all">All Status</option>
                             <option value="PENDING">Pending</option>
                             <option value="IN_PROGRESS">In Progress</option>
@@ -554,12 +609,12 @@
                         </select>
                         <button onclick="exportOnboardingList()" class="btn-outline text-sm"><i class="fas fa-download mr-1"></i>Export</button>
                         <button onclick="loadOnboardingList()" class="btn-outline text-sm"><i class="fas fa-sync-alt mr-1"></i>Refresh</button>
+                        <button id="syncOnboardingBtn" onclick="manualSync()" class="btn-primary text-sm"><i class="fas fa-sync-alt mr-1"></i>Sync Employees</button>
                     </div>
                 </div>
-                
                 <div class="overflow-x-auto">
                     <table class="w-full">
-                        <thead><tr class="border-b" style="border-color: var(--primary);"><th>Onboarding ID</th><th>Employee</th><th>Department</th><th>Designation</th><th>Joining Date</th><th>Status</th><th>Action</th></tr></thead>
+                        <thead><tr class="border-b" style="border-color: var(--primary);"><th>Onboarding ID</th><th>Employee</th><th>Department</th><th>Designation</th><th>Joining Date</th><th>Status</th><th>Action</th> </tr></thead>
                         <tbody id="onboardingList"><tr><td colspan="7" class="text-center py-4"><div class="loading-spinner"></div> Loading...</td></tr></tbody>
                     </table>
                 </div>
@@ -575,166 +630,122 @@
                 </div>
             </div>
         </div>
-        
-        <!-- TAB 2: DOCUMENTS (ORIGINAL) -->
-        <div id="tab-documents" class="tab-content">
-            <div class="section-card">
-                <div class="flex justify-between items-center mb-4"><h3 class="text-md font-semibold" style="color: var(--primary);">Required Documents</h3><button onclick="loadDocumentStatus()" class="btn-outline text-sm"><i class="fas fa-sync-alt mr-1"></i>Refresh</button></div>
-                <div id="documentsList">
-                    <div class="doc-item"><div><i class="fas fa-id-card mr-2"></i>PAN Card</div><div><button onclick="uploadDocument('pan')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-pan-status">Pending</span></div></div>
-                    <div class="doc-item"><div><i class="fas fa-address-card mr-2"></i>Aadhar Card</div><div><button onclick="uploadDocument('aadhaar')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-aadhaar-status">Pending</span></div></div>
-                    <div class="doc-item"><div><i class="fas fa-file-alt mr-2"></i>Offer Letter</div><div><button onclick="uploadDocument('offer')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-offer-status">Pending</span></div></div>
-                    <div class="doc-item"><div><i class="fas fa-graduation-cap mr-2"></i>Degree Certificate</div><div><button onclick="uploadDocument('degree')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-degree-status">Pending</span></div></div>
-                    <div class="doc-item"><div><i class="fas fa-passport mr-2"></i>Passport Photo</div><div><button onclick="uploadDocument('passport')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-passport-status">Pending</span></div></div>
-                    <div class="doc-item"><div><i class="fas fa-bank mr-2"></i>Bank Details</div><div><button onclick="uploadDocument('bank')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-bank-status">Pending</span></div></div>
-                    <div class="doc-item"><div><i class="fas fa-file-signature mr-2"></i>Experience Letters</div><div><button onclick="uploadDocument('experience')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-experience-status">Pending</span></div></div>
-                    <div class="doc-item"><div><i class="fas fa-medical-alt mr-2"></i>Medical Certificate</div><div><button onclick="uploadDocument('medical')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-medical-status">Pending</span></div></div>
-                    <div class="doc-item"><div><i class="fas fa-handshake mr-2"></i>Signed Contract</div><div><button onclick="uploadDocument('contract')" class="btn-outline text-xs">Upload</button><span class="status-badge status-pending text-xs ml-2" id="doc-contract-status">Pending</span></div></div>
-                </div>
-            </div>
-            
-            <div class="section-card">
-                <h3 class="text-md font-semibold mb-4" style="color: var(--primary);">Document Status</h3>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div class="p-3 border rounded-lg"><div class="flex justify-between"><span>Uploaded</span><span class="font-bold" id="uploadedDocs">0</span></div><div class="progress-bar mt-2"><div class="progress-fill" id="uploadFill" style="width: 0%"></div></div></div>
-                    <div class="p-3 border rounded-lg"><div class="flex justify-between"><span>Completion</span><span class="font-bold" id="completionRate">0%</span></div><div class="progress-bar mt-2"><div class="progress-fill" id="completionFill" style="width: 0%"></div></div></div>
-                    <div class="p-3 border rounded-lg"><div class="flex justify-between"><span>Active</span><span class="font-bold" id="activeCount">0</span></div><div class="progress-bar mt-2"><div class="progress-fill" id="activeFill" style="width: 0%"></div></div></div>
-                </div>
-            </div>
-            
-            <div class="section-card">
-                <h3 class="text-md font-semibold mb-4" style="color: var(--primary);">Recent Uploads</h3>
-                <div id="recentDocumentsList" class="space-y-2"><div class="text-center py-4"><div class="loading-spinner"></div> Loading...</div></div>
-            </div>
-        </div>
-        
     </main>
 
-    <!-- VIEW MODAL (ORIGINAL) -->
-    <div id="onboardingModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-4"><h3 class="text-lg font-semibold">Onboarding Details</h3><button onclick="closeOnboardingModal()">&times;</button></div><div id="onboardingDetailsContent"></div></div></div>
+    <!-- VIEW MODAL -->
+    <div id="onboardingModal" class="modal">
+        <div class="modal-content">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold" style="color:var(--primary);">Onboarding Details</h3>
+                <button onclick="closeOnboardingModal()" style="background:none;border:none;font-size:24px;color:var(--primary);cursor:pointer;">&times;</button>
+            </div>
+            <div id="onboardingDetailsContent"></div>
+        </div>
+    </div>
     
-    <!-- EDIT MODAL (NEW - WITH ALL FIELDS) -->
+    <!-- EDIT MODAL -->
     <div id="editOnboardingModal" class="modal">
-        <div class="modal-content" style="max-width: 1000px; max-height: 85vh; overflow-y: auto;">
-            <div class="flex justify-between items-center mb-4 border-b pb-3" style="border-color: var(--primary-soft);">
-                <h3 class="text-lg font-bold" style="color: var(--primary);">Edit Onboarding Details</h3>
-                <button onclick="closeEditOnboardingModal()" class="text-2xl" style="color: var(--primary);">&times;</button>
+        <div class="modal-content" style="max-width:1000px;">
+            <div class="flex justify-between items-center mb-4 pb-3" style="border-bottom: 2px solid var(--primary-soft);">
+                <h3 class="text-lg font-bold" style="color: var(--primary);"><i class="fas fa-edit mr-2"></i>Edit Onboarding Details</h3>
+                <button onclick="closeEditOnboardingModal()" style="background:none;border:none;font-size:24px;color:var(--primary);cursor:pointer;">&times;</button>
             </div>
             <div id="editOnboardingContent"></div>
-            <div class="flex justify-end gap-3 pt-3 border-t mt-4" style="border-color: var(--primary-soft);">
+            <div class="flex justify-end gap-3 pt-3 mt-4" style="border-top: 1px solid var(--primary-soft);">
                 <button onclick="closeEditOnboardingModal()" class="btn-outline">Cancel</button>
-                <button id="saveEditOnboardingBtn" class="btn-primary"><i class="fas fa-save mr-1"></i> Save Changes</button>
+                <button id="saveEditOnboardingBtn" class="btn-primary"><i class="fas fa-save mr-1"></i>Save Changes</button>
             </div>
         </div>
     </div>
 
-    <!-- DOCUMENT MODAL (ORIGINAL) -->
-    <div id="documentModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-4"><h3 class="text-lg font-semibold">Upload Document</h3><button onclick="closeDocumentModal()">&times;</button></div><form id="documentUploadForm"><div><label>Document Name</label><input type="text" id="doc_name" readonly class="bg-gray-100"></div><div class="mt-3"><label>Select Onboarding</label><select id="doc_onboarding_id" required><option value="">Select</option></select></div><div class="mt-3"><label>Select File</label><input type="file" id="doc_file" accept=".pdf,.jpg,.png,.jpeg" required></div><div class="flex justify-end gap-3 mt-4"><button type="button" onclick="closeDocumentModal()" class="btn-outline">Cancel</button><button type="submit" class="btn-primary">Upload</button></div></form></div></div>
-    
-    <!-- STATUS MODAL (ORIGINAL) -->
-    <div id="statusModal" class="modal"><div class="modal-content"><div class="flex justify-between items-center mb-4"><h3 class="text-lg font-semibold">Update Status</h3><button onclick="closeStatusModal()">&times;</button></div><div><select id="update_status" class="w-full"><option value="PENDING">Pending</option><option value="IN_PROGRESS">In Progress</option><option value="COMPLETED">Completed</option><option value="REJECTED">Rejected</option></select><div class="flex justify-end gap-3 mt-4"><button onclick="closeStatusModal()" class="btn-outline">Cancel</button><button onclick="confirmUpdateStatus()" class="btn-primary">Update</button></div></div></div></div>
+    <!-- STATUS MODAL -->
+    <div id="statusModal" class="modal">
+        <div class="modal-content" style="max-width:380px;">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-semibold" style="color:var(--primary);">Update Status</h3>
+                <button onclick="closeStatusModal()" style="background:none;border:none;font-size:24px;color:var(--primary);cursor:pointer;">&times;</button>
+            </div>
+            <div>
+                <select id="update_status" class="w-full">
+                    <option value="PENDING">Pending</option>
+                    <option value="IN_PROGRESS">In Progress</option>
+                    <option value="COMPLETED">Completed</option>
+                    <option value="REJECTED">Rejected</option>
+                </select>
+                <div class="flex justify-end gap-3 mt-4">
+                    <button onclick="closeStatusModal()" class="btn-outline">Cancel</button>
+                    <button onclick="confirmUpdateStatus()" class="btn-primary">Update</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <!-- LOGOUT MODAL (ORIGINAL) -->
+    <!-- LOGOUT MODAL -->
     <div id="logoutModal" class="logout-modal">
         <div class="logout-modal-overlay"></div>
         <div class="logout-modal-content">
             <div class="text-center">
                 <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-red-100 flex items-center justify-center"><i class="fas fa-sign-out-alt text-2xl text-red-500"></i></div>
                 <h3 class="text-xl font-semibold mb-2" style="color: #1B738C;">Confirm Logout</h3>
-                <p class="text-sm text-gray-500 mb-6">Are you sure you want to logout? You will need to login again to access the dashboard.</p>
-                <div class="flex justify-center gap-3"><button id="cancelLogoutBtn" class="px-5 py-2 rounded-lg border transition-all duration-300" style="border-color: #62C9EA; color: #1B738C;">Cancel</button><button id="confirmLogoutBtn" class="px-5 py-2 rounded-lg text-white transition-all duration-300" style="background-color: #dc3545;">Yes, Logout</button></div>
+                <p class="text-sm text-gray-500 mb-6">Are you sure you want to logout?</p>
+                <div class="flex justify-center gap-3">
+                    <button id="cancelLogoutBtn" class="px-5 py-2 rounded-lg border transition-all duration-300" style="border-color: #62C9EA; color: #1B738C;">Cancel</button>
+                    <button id="confirmLogoutBtn" class="px-5 py-2 rounded-lg text-white transition-all duration-300" style="background-color: #dc3545;">Yes, Logout</button>
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // ==================== CONFIG ====================
         const API_BASE_URL = 'http://localhost:8086/api';
+        const FALLBACK_IMAGE = 'http://localhost:5500/assets/images/doc.png';
         let allOnboardingData = [];
         let currentOnboardingId = null;
-        let currentDocType = null;
         let isSyncing = false;
         let currentEditOnboardingId = null;
-        
-        // ==================== SIDEBAR FUNCTIONS (ORIGINAL) ====================
+
+        // ── Sidebar & Header wiring ──────────────────────────────────
         document.getElementById('collapseBtn')?.addEventListener('click', function() {
             document.getElementById('mainSidebar').classList.toggle('collapsed');
         });
-        
         document.querySelectorAll('.toggle-submenu').forEach(btn => {
             btn.addEventListener('click', function(e) {
                 e.preventDefault();
                 const parent = this.closest('.has-submenu');
                 parent.classList.toggle('submenu-open');
                 const submenu = parent.querySelector('.submenu');
-                if (submenu) {
-                    if (submenu.style.display === 'none' || !submenu.style.display) {
-                        submenu.style.display = 'block';
-                    } else {
-                        submenu.style.display = 'none';
-                    }
-                }
+                if (submenu) submenu.style.display = (submenu.style.display === 'none' || !submenu.style.display) ? 'block' : 'none';
             });
         });
-        
-        // ==================== HEADER FUNCTIONS (ORIGINAL) ====================
-        document.getElementById('notificationBtn')?.addEventListener('click', function() {
-            document.getElementById('notificationMenu').classList.toggle('show');
-        });
-        
-        document.getElementById('userBtn')?.addEventListener('click', function() {
-            document.getElementById('userMenu').classList.toggle('show');
-        });
-        
+        document.getElementById('notificationBtn')?.addEventListener('click', function() { document.getElementById('notificationMenu').classList.toggle('show'); });
+        document.getElementById('userBtn')?.addEventListener('click', function() { document.getElementById('userMenu').classList.toggle('show'); });
         document.addEventListener('click', function(e) {
-            if (!e.target.closest('#notificationBtn')) {
-                document.getElementById('notificationMenu')?.classList.remove('show');
-            }
-            if (!e.target.closest('#userBtn')) {
-                document.getElementById('userMenu')?.classList.remove('show');
-            }
+            if (!e.target.closest('#notificationBtn')) document.getElementById('notificationMenu')?.classList.remove('show');
+            if (!e.target.closest('#userBtn')) document.getElementById('userMenu')?.classList.remove('show');
         });
-        
-        document.getElementById('logoutBtn')?.addEventListener('click', function(e) {
-            e.preventDefault();
-            document.getElementById('logoutModal').classList.add('active');
-        });
-        
-        document.getElementById('cancelLogoutBtn')?.addEventListener('click', function() {
-            document.getElementById('logoutModal').classList.remove('active');
-        });
-        
-        document.getElementById('confirmLogoutBtn')?.addEventListener('click', function() {
-            localStorage.removeItem('token');
-            localStorage.removeItem('adminData');
-            window.location.href = '/login.html';
-        });
-        
-        // ==================== TOAST ====================
+        document.getElementById('logoutBtn')?.addEventListener('click', function(e) { e.preventDefault(); document.getElementById('logoutModal').classList.add('active'); });
+        document.getElementById('cancelLogoutBtn')?.addEventListener('click', function() { document.getElementById('logoutModal').classList.remove('active'); });
+        document.getElementById('confirmLogoutBtn')?.addEventListener('click', function() { localStorage.clear(); window.location.href = '/login.html'; });
+
+        // ── Toast ────────────────────────────────────────────────────
         function showToast(message, type) {
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
-            toast.innerHTML = message;
+            toast.textContent = message;
             document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            setTimeout(() => toast.remove(), 3500);
         }
-        
-        // ==================== LOAD ALL EMPLOYEES ====================
+
+        // ── Load all employees from employee service ──────────────────
         async function loadAllEmployees() {
             try {
-                const response = await fetch(`http://localhost:8086/api/employees/all-employees`);
-                if (response.ok) {
-                    const employees = await response.json();
-                    return employees;
-                }
+                const response = await fetch(`${API_BASE_URL}/employees/all-employees`);
+                if (response.ok) return await response.json();
                 return [];
-            } catch (error) {
-                console.error('Error loading employees:', error);
-                return [];
-            }
+            } catch { return []; }
         }
-        
-        // ==================== CREATE ONBOARDING FOR EMPLOYEE ====================
+
+        // ── Create onboarding record for one employee ─────────────────
         async function createOnboardingForEmployee(employee) {
             try {
                 const formData = new FormData();
@@ -744,747 +755,1027 @@
                 formData.append('assignedHR', employee.hrBusinessPartner || 'HR Admin');
                 formData.append('assignedManager', employee.reportingManager || 'Manager');
                 formData.append('remarks', `Auto-created from employee: ${employee.employeeId}`);
-                
-                const response = await fetch(`${API_BASE_URL}/onboarding/create`, {
-                    method: 'POST',
-                    body: formData
-                });
+                const response = await fetch(`${API_BASE_URL}/onboarding/create`, { method: 'POST', body: formData });
                 const result = await response.json();
-                if (result.success) {
-                    console.log(`Onboarding created for employee: ${employee.employeeId}`);
-                    return result.data;
-                }
-                return null;
-            } catch (error) {
-                console.error('Error creating onboarding:', error);
-                return null;
-            }
+                return result.success ? result.data : null;
+            } catch { return null; }
         }
-        
-        // ==================== SYNC ONBOARDING WITH EMPLOYEES ====================
+
         async function syncOnboardingWithEmployees() {
             if (isSyncing) return;
             isSyncing = true;
-            
             try {
-                const employees = await loadAllEmployees();
-                if (!employees || employees.length === 0) {
-                    console.log('No employees found to sync');
-                    return;
-                }
-                
-                const onboardingResponse = await fetch(`${API_BASE_URL}/onboarding/get-all?page=0&size=100`);
-                const onboardingResult = await onboardingResponse.json();
-                let existingOnboardings = [];
-                if (onboardingResult.success && onboardingResult.data) {
-                    existingOnboardings = onboardingResult.data;
-                }
-                
-                const existingEmployeeIds = new Set();
-                existingOnboardings.forEach(ob => {
-                    if (ob.employeePrimeId) {
-                        existingEmployeeIds.add(String(ob.employeePrimeId));
-                    }
+                const cleanupResponse = await fetch(`${API_BASE_URL}/onboarding/cleanup-stale`, { 
+                    method: 'DELETE' 
                 });
                 
-                const employeesWithoutOnboarding = employees.filter(emp => {
-                    return !existingEmployeeIds.has(String(emp.employeePrimeId));
-                });
-                
-                if (employeesWithoutOnboarding.length > 0) {
-                    console.log(`Creating onboarding for ${employeesWithoutOnboarding.length} employees...`);
-                    showToast(`Creating onboarding for ${employeesWithoutOnboarding.length} new employees...`, 'info');
-                    
-                    for (const emp of employeesWithoutOnboarding) {
-                        await createOnboardingForEmployee(emp);
-                        await new Promise(resolve => setTimeout(resolve, 100));
-                    }
-                    
-                    showToast(`Onboarding created for ${employeesWithoutOnboarding.length} new employees!`, 'success');
-                    await loadOnboardingList();
-                } else {
-                    console.log('All employees already have onboarding records');
+                if (cleanupResponse.ok) {
+                    console.log("Stale records cleaned up");
                 }
+                
+                const [employees, onboardingResult] = await Promise.all([
+                    loadAllEmployees(),
+                    fetch(`${API_BASE_URL}/onboarding/get-all?page=0&size=500`).then(r => r.json())
+                ]);
+
+                let existingOnboardings = (onboardingResult.success && onboardingResult.data) ? onboardingResult.data : [];
+                const validEmployeeIds = new Set(employees.map(e => String(e.employeePrimeId)));
+                existingOnboardings = existingOnboardings.filter(ob =>
+                    ob.employeePrimeId && validEmployeeIds.has(String(ob.employeePrimeId))
+                );
+
+                if (employees.length > 0) {
+                    const existingEmployeeIds = new Set(existingOnboardings.map(ob => String(ob.employeePrimeId)).filter(Boolean));
+                    const employeesWithoutOnboarding = employees.filter(emp =>
+                        !existingEmployeeIds.has(String(emp.employeePrimeId))
+                    );
+                    if (employeesWithoutOnboarding.length > 0) {
+                        showToast(`Creating onboarding for ${employeesWithoutOnboarding.length} new employee(s)…`, 'info');
+                        for (const emp of employeesWithoutOnboarding) {
+                            await createOnboardingForEmployee(emp);
+                            await new Promise(r => setTimeout(r, 100));
+                        }
+                        showToast(`Onboarding created for ${employeesWithoutOnboarding.length} employee(s)!`, 'success');
+                    }
+                }
+
+                await loadOnboardingList();
             } catch (error) {
-                console.error('Error syncing onboarding:', error);
+                console.error('Sync error:', error);
+                showToast('Sync completed with some errors', 'error');
             } finally {
                 isSyncing = false;
             }
         }
-        
-        // ==================== LOAD ONBOARDING LIST ====================
+
+        async function manualSync() {
+            showToast('Syncing employees…', 'info');
+            await syncOnboardingWithEmployees();
+        }
+
+        // ── Load & render onboarding list ─────────────────────────────
         async function loadOnboardingList() {
             const tbody = document.getElementById('onboardingList');
-            tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4"><div class="loading-spinner"></div> Loading...</td</tr>`;
-            
+            tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4"><div class="loading-spinner"></div> Loading…</td></tr>`;
             try {
-                const response = await fetch(`${API_BASE_URL}/onboarding/get-all?page=0&size=50`);
+                const response = await fetch(`${API_BASE_URL}/onboarding/get-all?page=0&size=200`);
                 const result = await response.json();
-                
-                if(result.success && result.data) {
+                if (result.success && result.data) {
                     allOnboardingData = result.data;
-                    
-                    if (allOnboardingData.length === 0) {
-                        await syncOnboardingWithEmployees();
-                        const syncResponse = await fetch(`${API_BASE_URL}/onboarding/get-all?page=0&size=50`);
-                        const syncResult = await syncResponse.json();
-                        if (syncResult.success && syncResult.data) {
-                            allOnboardingData = syncResult.data;
-                        }
-                    }
-                    
                     renderOnboardingList(allOnboardingData);
                     updateStatistics(allOnboardingData);
                 } else {
-                    await syncOnboardingWithEmployees();
-                    tbody.innerHTML = '</table><td colspan="7" class="text-center py-4">No onboarding records found</td</tr>';
+                    allOnboardingData = [];
+                    tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4">No onboarding records found</td></tr>';
+                    updateStatistics([]);
                 }
-            } catch (error) {
-                console.error('Error:', error);
-                tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-red-500">Error connecting to server</td</tr>';
+            } catch {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4 text-red-500">Error connecting to server</td></tr>';
             }
         }
-        
+
         function renderOnboardingList(data) {
             const tbody = document.getElementById('onboardingList');
-            if(!data || data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4">No records found</td</tr>';
+            if (!data || data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="text-center py-4">No records found</td></tr>';
                 return;
             }
-            
             tbody.innerHTML = data.map(item => {
                 let statusClass = 'status-pending', statusText = 'Pending';
-                if(item.status === 'IN_PROGRESS') { statusClass = 'status-in-progress'; statusText = 'In Progress'; }
-                else if(item.status === 'COMPLETED') { statusClass = 'status-completed'; statusText = 'Completed'; }
-                else if(item.status === 'REJECTED') { statusClass = 'status-rejected'; statusText = 'Rejected'; }
-                
-                const employeeName = item.employeeName || 'N/A';
-                const department = item.department || 'N/A';
-                const designation = item.designation || 'N/A';
-                const joiningDate = item.joiningDate || 'N/A';
-                
+                if (item.status === 'IN_PROGRESS')  { statusClass = 'status-in-progress'; statusText = 'In Progress'; }
+                else if (item.status === 'COMPLETED') { statusClass = 'status-completed';  statusText = 'Completed'; }
+                else if (item.status === 'REJECTED')  { statusClass = 'status-rejected';   statusText = 'Rejected'; }
                 return `<tr class="border-b data-row">
                     <td class="py-2 text-sm">${item.onboardingId || 'N/A'}</td>
-                    <td class="py-2"><p class="text-sm font-medium">${employeeName}</p><p class="text-xs">${item.employeePrimeId || 'N/A'}</p></td>
-                    <td class="py-2 text-sm">${department}</td>
-                    <td class="py-2 text-sm">${designation}</td>
-                    <td class="py-2 text-sm">${joiningDate}</td>
+                    <td class="py-2"><p class="text-sm font-medium">${item.employeeName || 'N/A'}</p><p class="text-xs text-gray-400">${item.employeePrimeId || 'N/A'}</p></td>
+                    <td class="py-2 text-sm">${item.department || 'N/A'}</td>
+                    <td class="py-2 text-sm">${item.designation || 'N/A'}</td>
+                    <td class="py-2 text-sm">${item.joiningDate || 'N/A'}</td>
                     <td class="py-2"><span class="status-badge ${statusClass}">${statusText}</span></td>
-                    <td class="py-2">
-                        <button onclick="viewOnboardingDetails(${item.id})" class="text-[#1B738C] mr-2"><i class="fas fa-eye"></i></button>
-                        <button onclick="openEditOnboardingModal(${item.id})" class="text-[#1B738C] mr-2"><i class="fas fa-edit"></i></button>
-                        <button onclick="showUpdateStatusModal(${item.id}, '${item.status}')" class="text-[#1B738C] mr-2"><i class="fas fa-tasks"></i></button>
-                        <button onclick="deleteOnboarding(${item.id})" class="text-red-500"><i class="fas fa-trash"></i></button>
+                    <td class="py-2 whitespace-nowrap">
+                        <button onclick="viewOnboardingDetails(${item.id})" class="text-[#1B738C] mr-2" title="View"><i class="fas fa-eye"></i></button>
+                        <button onclick="openEditOnboardingModal(${item.id})" class="text-[#1B738C] mr-2" title="Edit"><i class="fas fa-edit"></i></button>
+                        <button onclick="showUpdateStatusModal(${item.id}, '${item.status}')" class="text-[#1B738C] mr-2" title="Update Status"><i class="fas fa-tasks"></i></button>
+                        <button onclick="deleteOnboarding(${item.id})" class="text-red-500" title="Delete"><i class="fas fa-trash"></i></button>
                     </td>
-                  </tr>`;
+                </tr>`;
             }).join('');
         }
-        
+
         function updateStatistics(data) {
-            const total = data.length;
             let inProgress = 0, completed = 0, pending = 0;
             data.forEach(item => {
-                if(item.status === 'IN_PROGRESS') inProgress++;
-                else if(item.status === 'COMPLETED') completed++;
-                else if(item.status === 'PENDING' || !item.status) pending++;
+                if (item.status === 'IN_PROGRESS') inProgress++;
+                else if (item.status === 'COMPLETED') completed++;
+                else pending++;
             });
-            document.getElementById('totalOnboarding').innerText = total;
-            document.getElementById('inProgressCount').innerText = inProgress;
-            document.getElementById('completedCount').innerText = completed;
-            document.getElementById('pendingCount').innerText = pending;
-            document.getElementById('activeCount').innerText = inProgress + pending;
+            document.getElementById('totalOnboarding').textContent  = data.length;
+            document.getElementById('inProgressCount').textContent = inProgress;
+            document.getElementById('completedCount').textContent   = completed;
+            document.getElementById('pendingCount').textContent     = pending;
         }
-        
+
         function filterOnboardingList() {
             const search = document.getElementById('searchOnboarding').value.toLowerCase();
             const status = document.getElementById('filterOnboardingStatus').value;
             let filtered = allOnboardingData;
-            if(search) filtered = filtered.filter(item => item.employeeName && item.employeeName.toLowerCase().includes(search));
-            if(status !== 'all') filtered = filtered.filter(item => item.status === status);
+            if (search) filtered = filtered.filter(i => i.employeeName?.toLowerCase().includes(search));
+            if (status !== 'all') filtered = filtered.filter(i => i.status === status);
             renderOnboardingList(filtered);
         }
-        
-        // ==================== VIEW DETAILS (ORIGINAL) ====================
-        async function viewOnboardingDetails(id) {
-            try {
-                const response = await fetch(`${API_BASE_URL}/onboarding/get-by-id/${id}`);
-                const result = await response.json();
-                if(result.success && result.data) {
-                    const item = result.data;
-                    document.getElementById('onboardingDetailsContent').innerHTML = `
-                        <div class="space-y-3">
-                            <div><strong>Onboarding ID:</strong> ${item.onboardingId}</div>
-                            <div><strong>Employee Name:</strong> ${item.employeeName || 'N/A'}</div>
-                            <div><strong>Employee ID:</strong> ${item.employeePrimeId || 'N/A'}</div>
-                            <div><strong>Department:</strong> ${item.department || 'N/A'}</div>
-                            <div><strong>Designation:</strong> ${item.designation || 'N/A'}</div>
-                            <div><strong>Joining Date:</strong> ${item.joiningDate || 'N/A'}</div>
-                            <div><strong>Status:</strong> ${item.status || 'PENDING'}</div>
-                            <div><strong>Progress:</strong> ${item.progressPercentage || 0}%</div>
-                            <div><strong>Assigned HR:</strong> ${item.assignedHR || 'N/A'}</div>
-                            <div><strong>Assigned Manager:</strong> ${item.assignedManager || 'N/A'}</div>
-                            <div><strong>Offered Salary:</strong> ${item.offeredSalary ? '₹' + Number(item.offeredSalary).toLocaleString('en-IN') : 'N/A'}</div>
-                            ${item.offerLetterStatus ? `<div><strong>Offer Letter Status:</strong> ${item.offerLetterStatus}</div>` : ''}
-                            ${item.remarks ? `<div><strong>Remarks:</strong> ${item.remarks}</div>` : ''}
-                        </div>
-                    `;
-                    document.getElementById('onboardingModal').classList.add('active');
+
+async function viewOnboardingDetails(id) {
+    try {
+        const response = await fetch(`${API_BASE_URL}/onboarding/get-by-id/${id}`);
+        const result = await response.json();
+        if (result.success && result.data) {
+            const item = result.data;
+            
+            // Get employee_prime_id from onboarding record
+            const employeePrimeId = item.employeePrimeId;
+            
+            if (!employeePrimeId) {
+                console.error('No employeePrimeId found');
+                showToast('Employee ID not found', 'error');
+                return;
+            }
+            
+            // Fetch employee data to get document status
+            const empResponse = await fetch(`${API_BASE_URL}/employees/get-employee-by-employeePrimeId/${employeePrimeId}`);
+            const empResult = await empResponse.json();
+            
+            let hasAadhaar = false, hasPan = false, hasDegree = false, hasExperience = false;
+            let employeeId = null;
+            
+            if (empResult.success && empResult.data) {
+                const employee = empResult.data;
+                employeeId = employee.employeeId;
+                // Check if documents exist (checking URL or if data exists)
+                hasAadhaar = employee.aadhaarDocumentUrl && employee.aadhaarDocumentUrl !== 'null' && employee.aadhaarDocumentUrl !== '';
+                hasPan = employee.panDocumentUrl && employee.panDocumentUrl !== 'null' && employee.panDocumentUrl !== '';
+                hasDegree = employee.degreeDocumentUrl && employee.degreeDocumentUrl !== 'null' && employee.degreeDocumentUrl !== '';
+                hasExperience = employee.experienceDocumentUrl && employee.experienceDocumentUrl !== 'null' && employee.experienceDocumentUrl !== '';
+                
+                // Also check from your SQL data - employees table has images for some records
+                // The aadhaar_document_image column in employees table has data for EMP001,003,004,010
+            }
+            
+            // Build document HTML using employees API endpoints
+            const docItems = [
+                { label: 'Aadhaar Card', docType: 'aadhaar', hasDoc: hasAadhaar, url: employeeId ? `${API_BASE_URL}/employees/${employeeId}/aadhaar-image` : 'http://localhost:5500/assets/images/doc.png' },
+                { label: 'PAN Card', docType: 'pan', hasDoc: hasPan, url: employeeId ? `${API_BASE_URL}/employees/${employeeId}/pan-image` : null },
+                { label: 'Degree Certificate', docType: 'degree', hasDoc: hasDegree, url: employeeId ? `${API_BASE_URL}/employees/${employeeId}/degree-image` : null },
+                { label: 'Experience Letter', docType: 'experience', hasDoc: hasExperience, url: employeeId ? `${API_BASE_URL}/employees/${employeeId}/experience-image` : null },
+            ];
+            
+            const docHtml = docItems.map(d => {
+                if (d.hasDoc && d.url) {
+                    return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--primary-bg-light);border-radius:8px;margin-bottom:8px;">
+                        <span><i class="fas fa-check-circle" style="color:#28a745;"></i> <strong>${d.label}</strong></span>
+                        <a href="${d.url}" target="_blank" class="btn-outline" style="padding:4px 12px;font-size:11px;text-decoration:none;">View Document</a>
+                    </div>`;
                 }
-            } catch(error) { showToast('Error loading details', 'error'); }
+                return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#f8f9fa;border-radius:8px;margin-bottom:8px;color:#6c757d;">
+                    <span><i class="fas fa-times-circle" style="color:#dc3545;"></i> <strong>${d.label}</strong></span>
+                    <span style="font-size:11px;">Not uploaded</span>
+                </div>`;
+            }).join('');
+            
+            document.getElementById('onboardingDetailsContent').innerHTML = `
+                <div class="space-y-2 text-sm">
+                    <div><strong>Onboarding ID:</strong> ${item.onboardingId || 'N/A'}</div>
+                    <div><strong>Employee Name:</strong> ${escapeHtml(item.employeeName || 'N/A')}</div>
+                    <div><strong>Employee ID:</strong> ${escapeHtml(employeeId || 'N/A')}</div>
+                    <div><strong>Department:</strong> ${escapeHtml(item.department || 'N/A')}</div>
+                    <div><strong>Designation:</strong> ${escapeHtml(item.designation || 'N/A')}</div>
+                    <div><strong>Joining Date:</strong> ${item.joiningDate || 'N/A'}</div>
+                    <div><strong>Status:</strong> ${item.status || 'PENDING'}</div>
+                    <div><strong>Progress:</strong> ${item.progressPercentage || 0}%</div>
+                    <div><strong>Assigned HR:</strong> ${escapeHtml(item.assignedHR || 'N/A')}</div>
+                    <div><strong>Assigned Manager:</strong> ${escapeHtml(item.assignedManager || 'N/A')}</div>
+                    <div><strong>Offered Salary:</strong> ${item.offeredSalary ? '₹' + Number(item.offeredSalary).toLocaleString('en-IN') : 'N/A'}</div>
+                    ${item.remarks ? `<div><strong>Remarks:</strong> ${escapeHtml(item.remarks)}</div>` : ''}
+                </div>
+                <div style="margin-top:20px;">
+                    <h4 style="color:var(--primary);margin-bottom:12px;font-size:14px;"><i class="fas fa-folder-open mr-2"></i>Uploaded Documents</h4>
+                    ${docHtml}
+                </div>`;
+            document.getElementById('onboardingModal').classList.add('active');
         }
-        
+    } catch (error) {
+        console.error('Error loading details:', error);
+        showToast('Error loading details', 'error');
+    }
+}
+
         function closeOnboardingModal() { document.getElementById('onboardingModal').classList.remove('active'); }
+
+// Update the buildDocGrid function
+function buildDocGrid(item) {
+    // Use employeePrimeId instead of employeeId
+    const employeePrimeId = item.employeePrimeId;
+    
+    if (!employeePrimeId) {
+        console.error('No employeePrimeId found in item:', item);
+        return `<div style="color:#dc3545;font-size:12px;">Employee ID not available - Please refresh and try again</div>`;
+    }
+    
+    // The employee API expects employeePrimeId, not employeeId
+    // So we'll use the employee API endpoint with the prime ID
+    const docs = [
+        { label: 'Aadhaar Card', docType: 'aadhaar', url: `${API_BASE_URL}/employees/get-employee-by-employeePrimeId/${employeePrimeId}` },
+        { label: 'PAN Card', docType: 'pan', url: `${API_BASE_URL}/employees/get-employee-by-employeePrimeId/${employeePrimeId}` },
+        { label: 'Degree Certificate', docType: 'degree', url: `${API_BASE_URL}/employees/get-employee-by-employeePrimeId/${employeePrimeId}` },
+        { label: 'Experience Letter', docType: 'experience', url: `${API_BASE_URL}/employees/get-employee-by-employeePrimeId/${employeePrimeId}` },
+    ];
+
+    // Show document links that fetch from employee API
+    return docs.map(d => {
+        return `<div class="doc-grid-item" style="display:flex;justify-content:space-between;align-items:center;padding:8px 12px;background:var(--primary-bg-light);border-radius:8px;margin-bottom:6px;">
+            <span><i class="fas fa-file-alt" style="color:var(--primary);"></i> ${d.label}</span>
+            <a href="#" onclick="viewEmployeeDocument(${employeePrimeId}, '${d.docType}'); return false;" class="btn-outline" style="padding:4px 12px;font-size:11px;text-decoration:none;">
+                <i class="fas fa-eye mr-1"></i>View
+            </a>
+        </div>`;
+    }).join('');
+}
+
+// Add this new function to handle viewing employee documents
+async function viewEmployeeDocument(employeePrimeId, docType) {
+    try {
+        // First fetch employee data to get the employeeId
+        const empResponse = await fetch(`${API_BASE_URL}/employees/get-employee-by-employeePrimeId/${employeePrimeId}`);
+        const empResult = await empResponse.json();
         
-        // ==================== OPEN EDIT ONBOARDING MODAL (NEW) ====================
-        async function openEditOnboardingModal(id) {
-            currentEditOnboardingId = id;
+        if (!empResult.success || !empResult.data) {
+            showToast('Employee not found', 'error');
+            return;
+        }
+        
+        const employee = empResult.data;
+        const employeeId = employee.employeeId;
+        
+        if (!employeeId) {
+            showToast('Employee ID not found', 'error');
+            return;
+        }
+        
+        // Map document types to their image endpoints
+        const docEndpoints = {
+            'aadhaar': `${API_BASE_URL}/employees/${employeeId}/aadhaar-image`,
+            'pan': `${API_BASE_URL}/employees/${employeeId}/pan-image`,
+            'degree': `${API_BASE_URL}/employees/${employeeId}/degree-image`,
+            'experience': `${API_BASE_URL}/employees/${employeeId}/experience-image`
+        };
+        
+        const docUrl = docEndpoints[docType];
+        
+        if (!docUrl) {
+            showToast('Invalid document type', 'error');
+            return;
+        }
+        
+        // Open the document in a new tab
+        window.open(docUrl, '_blank');
+        
+    } catch (error) {
+        console.error('Error viewing document:', error);
+        showToast('Error loading document', 'error');
+    }
+}
+
+async function openEditOnboardingModal(id) {
+    currentEditOnboardingId = id;
+    document.getElementById('editOnboardingContent').innerHTML = `<div class="text-center py-8"><div class="loading-spinner"></div> Loading onboarding data...</div>`;
+    document.getElementById('editOnboardingModal').classList.add('active');
+
+    try {
+        // Fetch onboarding data
+        const response = await fetch(`${API_BASE_URL}/onboarding/get-by-id/${id}`);
+        const result = await response.json();
+        
+        if (!result.success || !result.data) {
+            throw new Error(result.message || 'No data found');
+        }
+        
+        const onboardingData = result.data;
+        
+        // 🔥 FETCH EMPLOYEE DATA USING employeePrimeId
+        let employeeData = null;
+        let employeeId = null;
+        
+        if (onboardingData.employeePrimeId) {
             try {
-                const response = await fetch(`${API_BASE_URL}/onboarding/get-by-id/${id}`);
-                const result = await response.json();
-                if(result.success && result.data) {
-                    const item = result.data;
-                    
-                    let eduRows = '', famRows = '', expRows = '';
-                    try {
-                        const edu = item.education ? JSON.parse(item.education) : [];
-                        eduRows = edu.map(e => `<div class="dynamic-row"><input type="text" value="${e.degree || ''}" placeholder="Degree"><input type="text" value="${e.institution || ''}" placeholder="Institution"><input type="text" value="${e.year || ''}" placeholder="Year"><button type="button" onclick="this.parentElement.remove()" style="color:#dc3545"><i class="fas fa-trash"></i></button></div>`).join('');
-                    } catch(e) {}
-                    
-                    try {
-                        const fam = item.family ? JSON.parse(item.family) : [];
-                        famRows = fam.map(f => `<div class="dynamic-row"><input type="text" value="${f.name || ''}" placeholder="Name"><input type="text" value="${f.relationship || ''}" placeholder="Relationship"><input type="text" value="${f.occupation || ''}" placeholder="Occupation"><button type="button" onclick="this.parentElement.remove()" style="color:#dc3545"><i class="fas fa-trash"></i></button></div>`).join('');
-                    } catch(e) {}
-                    
-                    try {
-                        const exp = item.workExperience ? JSON.parse(item.workExperience) : [];
-                        expRows = exp.map(x => `<div class="dynamic-row"><input type="text" value="${x.company || ''}" placeholder="Company"><input type="text" value="${x.designation || ''}" placeholder="Designation"><input type="text" value="${x.years || ''}" placeholder="Years"><button type="button" onclick="this.parentElement.remove()" style="color:#dc3545"><i class="fas fa-trash"></i></button></div>`).join('');
-                    } catch(e) {}
-                    
-                    document.getElementById('editOnboardingContent').innerHTML = `
-                        <div class="detail-section">
-                            <h4><i class="fas fa-user-circle mr-2"></i>Section A: Employee Information (Read-Only)</h4>
-                            <div class="grid-detail">
-                                <div class="grid-detail-item"><label>Employee ID</label><input type="text" value="${item.employeePrimeId || '-'}" readonly class="readonly-field"></div>
-                                <div class="grid-detail-item"><label>First Name</label><input type="text" value="${item.employeeName ? item.employeeName.split(' ')[0] : '-'}" readonly class="readonly-field"></div>
-                                <div class="grid-detail-item"><label>Last Name</label><input type="text" value="${item.employeeName ? item.employeeName.split(' ')[1] || '' : '-'}" readonly class="readonly-field"></div>
-                                <div class="grid-detail-item"><label>Work Email</label><input type="email" value="${item.workEmail || '-'}" readonly class="readonly-field"></div>
-                                <div class="grid-detail-item"><label>Department</label><input type="text" value="${item.department || '-'}" readonly class="readonly-field"></div>
-                                <div class="grid-detail-item"><label>Designation</label><input type="text" value="${item.designation || '-'}" readonly class="readonly-field"></div>
-                                <div class="grid-detail-item"><label>Joining Date</label><input type="text" value="${item.joiningDate || '-'}" readonly class="readonly-field"></div>
-                                <div class="grid-detail-item"><label>Reporting Manager</label><input type="text" value="${item.reportingManager || '-'}" readonly class="readonly-field"></div>
-                            </div>
-                        </div>
-                        
-                        <div class="detail-section">
-                            <h4><i class="fas fa-check-circle mr-2"></i>Section B: Verification Details (Editable)</h4>
-                            <div class="grid-detail">
-                                <div class="grid-detail-item"><label>Personal Email</label><input type="email" id="edit_personalEmail" value="${item.personalEmail || ''}"></div>
-                                <div class="grid-detail-item"><label>Mobile Number</label><input type="text" id="edit_mobileNumber" value="${item.mobileNumber || ''}"></div>
-                                <div class="grid-detail-item"><label>Alternate Number</label><input type="text" id="edit_alternateNumber" value="${item.alternateNumber || ''}"></div>
-                                <div class="grid-detail-item"><label>Marital Status</label><select id="edit_maritalStatus"><option value="">Select</option><option ${item.maritalStatus === 'Single' ? 'selected' : ''}>Single</option><option ${item.maritalStatus === 'Married' ? 'selected' : ''}>Married</option><option ${item.maritalStatus === 'Divorced' ? 'selected' : ''}>Divorced</option><option ${item.maritalStatus === 'Widowed' ? 'selected' : ''}>Widowed</option></select></div>
-                                <div class="grid-detail-item"><label>Blood Group</label><select id="edit_bloodGroup"><option value="">Select</option><option>A+</option><option>A-</option><option>B+</option><option>B-</option><option>O+</option><option>O-</option><option>AB+</option><option>AB-</option></select></div>
-                                <div class="grid-detail-item"><label>LinkedIn Profile</label><input type="text" id="edit_linkedinProfile" value="${item.linkedinProfile || ''}"></div>
-                            </div>
-                            
-                            <h5 class="font-semibold text-sm mt-3 mb-2">Current Address</h5>
-                            <div class="grid-detail">
-                                <div class="grid-detail-item"><label>Street</label><input type="text" id="edit_currentStreet" value="${item.currentStreet || ''}"></div>
-                                <div class="grid-detail-item"><label>City</label><input type="text" id="edit_currentCity" value="${item.currentCity || ''}"></div>
-                                <div class="grid-detail-item"><label>State</label><input type="text" id="edit_currentState" value="${item.currentState || ''}"></div>
-                                <div class="grid-detail-item"><label>PIN Code</label><input type="text" id="edit_currentPincode" value="${item.currentPincode || ''}"></div>
-                                <div class="grid-detail-item"><label>Country</label><input type="text" id="edit_currentCountry" value="${item.currentCountry || 'India'}"></div>
-                            </div>
-                            
-                            <h5 class="font-semibold text-sm mt-3 mb-2">Permanent Address</h5>
-                            <div class="grid-detail">
-                                <div class="grid-detail-item"><label>Street</label><input type="text" id="edit_permanentStreet" value="${item.permanentStreet || ''}"></div>
-                                <div class="grid-detail-item"><label>City</label><input type="text" id="edit_permanentCity" value="${item.permanentCity || ''}"></div>
-                                <div class="grid-detail-item"><label>State</label><input type="text" id="edit_permanentState" value="${item.permanentState || ''}"></div>
-                                <div class="grid-detail-item"><label>PIN Code</label><input type="text" id="edit_permanentPincode" value="${item.permanentPincode || ''}"></div>
-                                <div class="grid-detail-item"><label>Country</label><input type="text" id="edit_permanentCountry" value="${item.permanentCountry || 'India'}"></div>
-                            </div>
-                        </div>
-                        
-                        <div class="detail-section">
-                            <h4><i class="fas fa-plus-circle mr-2"></i>Section C: Additional Information (Editable)</h4>
-                            <div class="grid-detail">
-                                <div class="grid-detail-item"><label>Father's/Spouse Name</label><input type="text" id="edit_fatherSpouseName" value="${item.fatherSpouseName || ''}"></div>
-                                <div class="grid-detail-item"><label>Emergency Name</label><input type="text" id="edit_emergencyName" value="${item.emergencyName || ''}"></div>
-                                <div class="grid-detail-item"><label>Emergency Relationship</label><select id="edit_emergencyRelationship"><option value="">Select</option><option ${item.emergencyRelationship === 'Spouse' ? 'selected' : ''}>Spouse</option><option ${item.emergencyRelationship === 'Father' ? 'selected' : ''}>Father</option><option ${item.emergencyRelationship === 'Mother' ? 'selected' : ''}>Mother</option><option ${item.emergencyRelationship === 'Sibling' ? 'selected' : ''}>Sibling</option></select></div>
-                                <div class="grid-detail-item"><label>Emergency Phone</label><input type="text" id="edit_emergencyPhone" value="${item.emergencyPhone || ''}"></div>
-                                <div class="grid-detail-item"><label>Bank Name</label><input type="text" id="edit_bankName" value="${item.bankName || ''}"></div>
-                                <div class="grid-detail-item"><label>Account Number</label><input type="text" id="edit_accountNumber" value="${item.accountNumber || ''}"></div>
-                                <div class="grid-detail-item"><label>IFSC Code</label><input type="text" id="edit_ifscCode" value="${item.ifscCode || ''}"></div>
-                            </div>
-                            
-                            <div class="mt-3">
-                                <label class="flex items-center gap-2"><input type="checkbox" id="edit_isPhysicallyChallenged" ${item.isPhysicallyChallenged ? 'checked' : ''}> <span>Physically Challenged (PwD)</span></label>
-                                <div id="edit_pwdFields" style="display: ${item.isPhysicallyChallenged ? 'block' : 'none'};" class="grid-detail mt-2">
-                                    <div class="grid-detail-item"><label>Disability Type</label><select id="edit_disabilityType"><option value="">Select</option><option ${item.disabilityType === 'Locomotor Disability' ? 'selected' : ''}>Locomotor Disability</option><option ${item.disabilityType === 'Visual Impairment' ? 'selected' : ''}>Visual Impairment</option><option ${item.disabilityType === 'Hearing Impairment' ? 'selected' : ''}>Hearing Impairment</option></select></div>
-                                    <div class="grid-detail-item"><label>Disability Percentage</label><input type="number" id="edit_disabilityPercentage" value="${item.disabilityPercentage || ''}"></div>
-                                    <div class="grid-detail-item"><label>Certificate Number</label><input type="text" id="edit_certificateNumber" value="${item.certificateNumber || ''}"></div>
-                                </div>
-                            </div>
-                            
-                            <div class="mt-3">
-                                <label class="font-semibold text-sm">Education Details</label>
-                                <div id="editEducationContainer">${eduRows || '<div class="text-sm text-gray-400">No education records</div>'}</div>
-                                <button type="button" onclick="addEditEducationRow()" class="btn-outline text-xs mt-2"><i class="fas fa-plus mr-1"></i>Add Education</button>
-                            </div>
-                            
-                            <div class="mt-3">
-                                <label class="font-semibold text-sm">Work Experience</label>
-                                <div id="editExpContainer">${expRows || '<div class="text-sm text-gray-400">No work experience records</div>'}</div>
-                                <button type="button" onclick="addEditExpRow()" class="btn-outline text-xs mt-2"><i class="fas fa-plus mr-1"></i>Add Experience</button>
-                            </div>
-                            
-                            <div class="mt-3">
-                                <label class="font-semibold text-sm">Family Details</label>
-                                <div id="editFamilyContainer">${famRows || '<div class="text-sm text-gray-400">No family records</div>'}</div>
-                                <button type="button" onclick="addEditFamilyRow()" class="btn-outline text-xs mt-2"><i class="fas fa-plus mr-1"></i>Add Family Member</button>
-                            </div>
-                        </div>
-                        
-                        <div class="detail-section">
-                            <h4><i class="fas fa-folder-open mr-2"></i>Section D: Documents</h4>
-                            <div class="grid grid-cols-2 md:grid-cols-3 gap-2 text-sm">
-                                ${docLink('Profile Photo', item.profilePhotoUrl, 'profile')}
-                                ${docLink('Aadhaar Card', item.aadhaarDocumentUrl, 'aadhaar')}
-                                ${docLink('PAN Card', item.panDocumentUrl, 'pan')}
-                                ${docLink('Degree Certificate', item.degreeDocumentUrl, 'degree')}
-                                ${docLink('Experience Letter', item.experienceDocumentUrl, 'experience')}
-                                ${docLink('Offer Letter', item.offerLetterUrl, 'offer')}
-                            </div>
-                            <div class="mt-3">
-                                <input type="file" id="edit_documentUpload" class="hidden" onchange="uploadDocumentToOnboarding(this)">
-                                <select id="edit_docTypeSelect" class="w-48 text-sm p-1 mr-2">
-                                    <option value="profile">Profile Photo</option>
-                                    <option value="aadhaar">Aadhaar Card</option>
-                                    <option value="pan">PAN Card</option>
-                                    <option value="degree">Degree Certificate</option>
-                                    <option value="experience">Experience Letter</option>
-                                    <option value="offer">Offer Letter</option>
-                                </select>
-                                <button onclick="document.getElementById('edit_documentUpload').click()" class="btn-outline text-sm"><i class="fas fa-upload"></i> Upload Document</button>
-                            </div>
-                        </div>
-                    `;
-                    
-                    document.getElementById('editOnboardingModal').classList.add('active');
-                    
-                    document.getElementById('edit_isPhysicallyChallenged')?.addEventListener('change', function(e) {
-                        document.getElementById('edit_pwdFields').style.display = e.target.checked ? 'block' : 'none';
-                    });
-                    
-                    document.getElementById('saveEditOnboardingBtn').onclick = () => saveEditOnboardingDetails();
+                const empResponse = await fetch(`${API_BASE_URL}/employees/get-employee-by-employeePrimeId/${onboardingData.employeePrimeId}`);
+                const empResult = await empResponse.json();
+                if (empResult.success && empResult.data) {
+                    employeeData = empResult.data;
+                    employeeId = employeeData.employeeId;
+                    console.log('Fetched employee data:', employeeData);
                 }
-            } catch(error) { 
-                showToast('Error loading details', 'error');
-                console.error(error);
+            } catch (empErr) {
+                console.error('Error fetching employee:', empErr);
             }
         }
         
-        function docLink(label, url, type) {
-            if(url) {
-                return `<div><i class="fas fa-check-circle text-green-500 mr-1"></i> ${label}: <a href="${url}" target="_blank" class="text-blue-500 underline">View</a></div>`;
-            }
-            return `<div><i class="fas fa-times-circle text-red-400 mr-1"></i> ${label}: <span class="text-gray-400">Not uploaded</span></div>`;
-        }
+        // ✅ MERGE DATA: Employee data takes priority for certain fields
+        // For read-only fields (Section A): Use employee data
+        // For editable fields (Section B & C): Use onboarding data if exists, otherwise employee data
         
-        function addEditEducationRow() {
-            const container = document.getElementById('editEducationContainer');
-            if(container.innerHTML.includes('No education records')) container.innerHTML = '';
+        const mergedData = {
+            // Section A - Employee Information (Read-only, from employee table)
+            employeePrimeId: onboardingData.employeePrimeId,
+            employeeId: employeeId,
+            firstName: employeeData?.firstName || '',
+            lastName: employeeData?.lastName || '',
+            fullName: employeeData?.fullName || `${employeeData?.firstName || ''} ${employeeData?.lastName || ''}`,
+            workEmail: employeeData?.workEmail || '',
+            department: employeeData?.department || '',
+            designation: employeeData?.designation || '',
+            joiningDate: onboardingData.joiningDate || employeeData?.joiningDate || '',
+            reportingManager: employeeData?.reportingManager || '',
+            
+            // Section B - Verification Details (Editable, from onboarding table with fallback to employee)
+            personalEmail: onboardingData.personalEmail || employeeData?.personalEmail || '',
+            mobileNumber: onboardingData.mobileNumber || employeeData?.mobileNumber || '',
+            alternateNumber: onboardingData.alternateNumber || employeeData?.alternateNumber || '',
+            maritalStatus: onboardingData.maritalStatus || employeeData?.maritalStatus || '',
+            bloodGroup: onboardingData.bloodGroup || employeeData?.bloodGroup || '',
+            linkedinProfile: onboardingData.linkedinProfile || employeeData?.linkedinProfile || '',
+            
+            // Address (Editable, from onboarding with fallback to employee)
+            currentStreet: onboardingData.currentStreet || employeeData?.currentStreet || '',
+            currentCity: onboardingData.currentCity || employeeData?.currentCity || '',
+            currentState: onboardingData.currentState || employeeData?.currentState || '',
+            currentPincode: onboardingData.currentPincode || employeeData?.currentPincode || '',
+            currentCountry: onboardingData.currentCountry || employeeData?.currentCountry || 'India',
+            permanentStreet: onboardingData.permanentStreet || employeeData?.permanentStreet || '',
+            permanentCity: onboardingData.permanentCity || employeeData?.permanentCity || '',
+            permanentState: onboardingData.permanentState || employeeData?.permanentState || '',
+            permanentPincode: onboardingData.permanentPincode || employeeData?.permanentPincode || '',
+            permanentCountry: onboardingData.permanentCountry || employeeData?.permanentCountry || 'India',
+            
+            // Section C - Additional Information (Editable)
+            fatherSpouseName: onboardingData.fatherSpouseName || employeeData?.fatherSpouseName || '',
+            emergencyName: onboardingData.emergencyName || employeeData?.emergencyName || '',
+            emergencyRelationship: onboardingData.emergencyRelationship || employeeData?.emergencyRelationship || '',
+            emergencyPhone: onboardingData.emergencyPhone || employeeData?.emergencyPhone || '',
+            bankName: onboardingData.bankName || employeeData?.bankName || '',
+            accountNumber: onboardingData.accountNumber || employeeData?.accountNumber || '',
+            ifscCode: onboardingData.ifscCode || employeeData?.ifscCode || '',
+            offeredSalary: onboardingData.offeredSalary || employeeData?.basicSalary || '',
+            assignedHR: onboardingData.assignedHR || '',
+            assignedManager: onboardingData.assignedManager || '',
+            remarks: onboardingData.remarks || '',
+            
+            // PWD Details
+            isPhysicallyChallenged: onboardingData.isPhysicallyChallenged || employeeData?.isPhysicallyChallenged || false,
+            disabilityType: onboardingData.disabilityType || employeeData?.disabilityType || '',
+            disabilityPercentage: onboardingData.disabilityPercentage || employeeData?.disabilityPercentage || '',
+            certificateNumber: onboardingData.certificateNumber || employeeData?.certificateNumber || '',
+            
+            // JSON fields (Education, Experience, Family)
+            education: onboardingData.education || employeeData?.education || null,
+            workExperience: onboardingData.workExperience || employeeData?.workExperience || null,
+            family: onboardingData.family || employeeData?.family || null,
+            
+            // Document URLs (for viewing)
+            aadhaarDocumentUrl: employeeData?.aadhaarDocumentUrl || null,
+            panDocumentUrl: employeeData?.panDocumentUrl || null,
+            degreeDocumentUrl: employeeData?.degreeDocumentUrl || null,
+            experienceDocumentUrl: employeeData?.experienceDocumentUrl || null,
+            
+            // Onboarding specific fields
+            onboardingId: onboardingData.onboardingId,
+            status: onboardingData.status,
+            progressPercentage: onboardingData.progressPercentage || 0,
+            offerLetterStatus: onboardingData.offerLetterStatus || 'PENDING'
+        };
+        
+        // Parse JSON fields for display
+        let eduRows = '', famRows = '', expRows = '';
+        
+        try {
+            if (mergedData.education) {
+                const edu = typeof mergedData.education === 'string' ? JSON.parse(mergedData.education) : mergedData.education;
+                if (Array.isArray(edu) && edu.length > 0) {
+                    eduRows = edu.map(e => `<div class="dynamic-row">
+                        <input type="text" value="${escapeHtml(e.degree||'')}" placeholder="Degree">
+                        <input type="text" value="${escapeHtml(e.institution||'')}" placeholder="Institution">
+                        <input type="text" value="${escapeHtml(e.year||'')}" placeholder="Year">
+                        <button type="button" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>
+                    </div>`).join('');
+                }
+            }
+        } catch(e) { console.log("Education parse error:", e); }
+        
+        try {
+            if (mergedData.family) {
+                const fam = typeof mergedData.family === 'string' ? JSON.parse(mergedData.family) : mergedData.family;
+                if (Array.isArray(fam) && fam.length > 0) {
+                    famRows = fam.map(f => `<div class="dynamic-row">
+                        <input type="text" value="${escapeHtml(f.name||'')}" placeholder="Name">
+                        <input type="text" value="${escapeHtml(f.relationship||'')}" placeholder="Relationship">
+                        <input type="text" value="${escapeHtml(f.occupation||'')}" placeholder="Occupation">
+                        <button type="button" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>
+                    </div>`).join('');
+                }
+            }
+        } catch(e) { console.log("Family parse error:", e); }
+        
+        try {
+            if (mergedData.workExperience) {
+                const exp = typeof mergedData.workExperience === 'string' ? JSON.parse(mergedData.workExperience) : mergedData.workExperience;
+                if (Array.isArray(exp) && exp.length > 0) {
+                    expRows = exp.map(x => `<div class="dynamic-row">
+                        <input type="text" value="${escapeHtml(x.company||'')}" placeholder="Company">
+                        <input type="text" value="${escapeHtml(x.designation||'')}" placeholder="Designation">
+                        <input type="text" value="${escapeHtml(x.years||'')}" placeholder="Years">
+                        <button type="button" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>
+                    </div>`).join('');
+                }
+            }
+        } catch(e) { console.log("Experience parse error:", e); }
+
+        const bldOptions = ['A+','A-','B+','B-','O+','O-','AB+','AB-'].map(b => `<option ${mergedData.bloodGroup === b ? 'selected' : ''}>${b}</option>`).join('');
+        const marOptions = ['Single','Married','Divorced','Widowed'].map(m => `<option ${mergedData.maritalStatus === m ? 'selected' : ''}>${m}</option>`).join('');
+        const relOptions = ['Spouse','Father','Mother','Sibling'].map(r => `<option ${mergedData.emergencyRelationship === r ? 'selected' : ''}>${r}</option>`).join('');
+        const disOptions = ['Locomotor Disability','Visual Impairment','Hearing Impairment'].map(d => `<option ${mergedData.disabilityType === d ? 'selected' : ''}>${d}</option>`).join('');
+
+        const formHtml = `
+            <div class="detail-section">
+                <h4><i class="fas fa-user-circle"></i>Section A: Employee Information <span style="font-size:11px;font-weight:400;color:#5a7c8a;">(Read-Only - from Employee Record)</span></h4>
+                <div class="grid-detail">
+                    <div class="grid-detail-item"><label>Employee ID</label><input type="text" value="${escapeHtml(mergedData.employeeId||'-')}" readonly class="readonly-field"></div>
+                    <div class="grid-detail-item"><label>First Name</label><input type="text" value="${escapeHtml(mergedData.firstName)}" readonly class="readonly-field"></div>
+                    <div class="grid-detail-item"><label>Last Name</label><input type="text" value="${escapeHtml(mergedData.lastName)}" readonly class="readonly-field"></div>
+                    <div class="grid-detail-item"><label>Work Email</label><input type="email" value="${escapeHtml(mergedData.workEmail||'-')}" readonly class="readonly-field"></div>
+                    <div class="grid-detail-item"><label>Department</label><input type="text" value="${escapeHtml(mergedData.department||'-')}" readonly class="readonly-field"></div>
+                    <div class="grid-detail-item"><label>Designation</label><input type="text" value="${escapeHtml(mergedData.designation||'-')}" readonly class="readonly-field"></div>
+                    <div class="grid-detail-item"><label>Joining Date</label><input type="date" value="${mergedData.joiningDate || ''}" id="edit_joiningDate" class="readonly-field" readonly></div>
+                    <div class="grid-detail-item"><label>Reporting Manager</label><input type="text" value="${escapeHtml(mergedData.reportingManager||'-')}" readonly class="readonly-field"></div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h4><i class="fas fa-check-circle"></i>Section B: Verification Details <span style="font-size:11px;font-weight:400;color:#5a7c8a;">(Editable - Saved to Onboarding)</span></h4>
+                <div class="grid-detail">
+                    <div class="grid-detail-item"><label>Personal Email</label><input type="email" id="edit_personalEmail" value="${escapeHtml(mergedData.personalEmail||'')}"></div>
+                    <div class="grid-detail-item"><label>Mobile Number</label><input type="text" id="edit_mobileNumber" value="${escapeHtml(mergedData.mobileNumber||'')}"></div>
+                    <div class="grid-detail-item"><label>Alternate Number</label><input type="text" id="edit_alternateNumber" value="${escapeHtml(mergedData.alternateNumber||'')}"></div>
+                    <div class="grid-detail-item"><label>Marital Status</label><select id="edit_maritalStatus"><option value="">Select</option>${marOptions}</select></div>
+                    <div class="grid-detail-item"><label>Blood Group</label><select id="edit_bloodGroup"><option value="">Select</option>${bldOptions}</select></div>
+                    <div class="grid-detail-item"><label>LinkedIn Profile</label><input type="text" id="edit_linkedinProfile" value="${escapeHtml(mergedData.linkedinProfile||'')}"></div>
+                </div>
+
+                <h5>Current Address</h5>
+                <div class="grid-detail">
+                    <div class="grid-detail-item"><label>Street</label><input type="text" id="edit_currentStreet" value="${escapeHtml(mergedData.currentStreet||'')}"></div>
+                    <div class="grid-detail-item"><label>City</label><input type="text" id="edit_currentCity" value="${escapeHtml(mergedData.currentCity||'')}"></div>
+                    <div class="grid-detail-item"><label>State</label><input type="text" id="edit_currentState" value="${escapeHtml(mergedData.currentState||'')}"></div>
+                    <div class="grid-detail-item"><label>PIN Code</label><input type="text" id="edit_currentPincode" value="${escapeHtml(mergedData.currentPincode||'')}"></div>
+                    <div class="grid-detail-item"><label>Country</label><input type="text" id="edit_currentCountry" value="${escapeHtml(mergedData.currentCountry||'India')}"></div>
+                </div>
+
+                <h5>Permanent Address</h5>
+                <div class="grid-detail">
+                    <div class="grid-detail-item"><label>Street</label><input type="text" id="edit_permanentStreet" value="${escapeHtml(mergedData.permanentStreet||'')}"></div>
+                    <div class="grid-detail-item"><label>City</label><input type="text" id="edit_permanentCity" value="${escapeHtml(mergedData.permanentCity||'')}"></div>
+                    <div class="grid-detail-item"><label>State</label><input type="text" id="edit_permanentState" value="${escapeHtml(mergedData.permanentState||'')}"></div>
+                    <div class="grid-detail-item"><label>PIN Code</label><input type="text" id="edit_permanentPincode" value="${escapeHtml(mergedData.permanentPincode||'')}"></div>
+                    <div class="grid-detail-item"><label>Country</label><input type="text" id="edit_permanentCountry" value="${escapeHtml(mergedData.permanentCountry||'India')}"></div>
+                </div>
+            </div>
+
+            <div class="detail-section">
+                <h4><i class="fas fa-plus-circle"></i>Section C: Additional Information <span style="font-size:11px;font-weight:400;color:#5a7c8a;">(Editable - Saved to Onboarding)</span></h4>
+                <div class="grid-detail">
+                    <div class="grid-detail-item"><label>Father's / Spouse Name</label><input type="text" id="edit_fatherSpouseName" value="${escapeHtml(mergedData.fatherSpouseName||'')}"></div>
+                    <div class="grid-detail-item"><label>Emergency Contact Name</label><input type="text" id="edit_emergencyName" value="${escapeHtml(mergedData.emergencyName||'')}"></div>
+                    <div class="grid-detail-item"><label>Emergency Relationship</label><select id="edit_emergencyRelationship"><option value="">Select</option>${relOptions}</select></div>
+                    <div class="grid-detail-item"><label>Emergency Phone</label><input type="text" id="edit_emergencyPhone" value="${escapeHtml(mergedData.emergencyPhone||'')}"></div>
+                    <div class="grid-detail-item"><label>Bank Name</label><input type="text" id="edit_bankName" value="${escapeHtml(mergedData.bankName||'')}"></div>
+                    <div class="grid-detail-item"><label>Account Number</label><input type="text" id="edit_accountNumber" value="${escapeHtml(mergedData.accountNumber||'')}"></div>
+                    <div class="grid-detail-item"><label>IFSC Code</label><input type="text" id="edit_ifscCode" value="${escapeHtml(mergedData.ifscCode||'')}"></div>
+                </div>
+                <div class="grid-detail">
+                    <div class="grid-detail-item"><label>Offered Salary</label><input type="number" id="edit_offeredSalary" value="${mergedData.offeredSalary || ''}"></div>
+                    <div class="grid-detail-item"><label>Assigned HR</label><input type="text" id="edit_assignedHR" value="${escapeHtml(mergedData.assignedHR || '')}"></div>
+                    <div class="grid-detail-item"><label>Assigned Manager</label><input type="text" id="edit_assignedManager" value="${escapeHtml(mergedData.assignedManager || '')}"></div>
+                    <div class="grid-detail-item"><label>Remarks</label><textarea id="edit_remarks" rows="2">${escapeHtml(mergedData.remarks || '')}</textarea></div>
+                </div>
+
+                <div style="margin-top:16px; margin-bottom:4px;">
+                    <label class="pwd-checkbox-row" for="edit_isPhysicallyChallenged" style="display:inline-flex;width:auto;margin-bottom:0;font-size:13px;font-weight:600;cursor:pointer;">
+                        <input type="checkbox" id="edit_isPhysicallyChallenged" ${mergedData.isPhysicallyChallenged ? 'checked' : ''}>
+                        <span>Physically Challenged (PwD)</span>
+                    </label>
+                </div>
+                <div id="edit_pwdFields" style="display:${mergedData.isPhysicallyChallenged ? 'block' : 'none'};margin-top:10px;">
+                    <div class="grid-detail">
+                        <div class="grid-detail-item"><label>Disability Type</label><select id="edit_disabilityType"><option value="">Select</option>${disOptions}</select></div>
+                        <div class="grid-detail-item"><label>Disability %</label><input type="number" id="edit_disabilityPercentage" value="${escapeHtml(mergedData.disabilityPercentage||'')}"></div>
+                        <div class="grid-detail-item"><label>Certificate Number</label><input type="text" id="edit_certificateNumber" value="${escapeHtml(mergedData.certificateNumber||'')}"></div>
+                    </div>
+                </div>
+
+                <h5>Education Details</h5>
+                <div id="editEducationContainer">
+                    ${eduRows || '<p style="font-size:12px;color:#9ca3af;margin-bottom:8px;">No education records added yet.</p>'}
+                </div>
+                <button type="button" onclick="addEditRow('editEducationContainer',['Degree','Institution','Year'])" class="btn-outline text-xs" style="margin-top:6px;"><i class="fas fa-plus mr-1"></i>Add Education</button>
+
+                <h5>Work Experience</h5>
+                <div id="editExpContainer">
+                    ${expRows || '<p style="font-size:12px;color:#9ca3af;margin-bottom:8px;">No work experience records added yet.</p>'}
+                </div>
+                <button type="button" onclick="addEditRow('editExpContainer',['Company','Designation','Years'])" class="btn-outline text-xs" style="margin-top:6px;"><i class="fas fa-plus mr-1"></i>Add Experience</button>
+
+                <h5>Family Details</h5>
+                <div id="editFamilyContainer">
+                    ${famRows || '<p style="font-size:12px;color:#9ca3af;margin-bottom:8px;">No family records added yet.</p>'}
+                </div>
+                <button type="button" onclick="addEditRow('editFamilyContainer',['Name','Relationship','Occupation'])" class="btn-outline text-xs" style="margin-top:6px;"><i class="fas fa-plus mr-1"></i>Add Family Member</button>
+            </div>
+
+            <div class="detail-section">
+                <h4><i class="fas fa-folder-open"></i>Section D: Documents <span style="font-size:11px;font-weight:400;color:#5a7c8a;">(from Employee Record)</span></h4>
+                <div class="doc-grid" id="editDocGrid">
+                    ${buildDocGridWithEmployeeId(mergedData, employeeId)}
+                </div>
+                <div class="doc-upload-row">
+                    <select id="edit_docTypeSelect">
+                        <option value="aadhaarDocument">Aadhaar Card</option>
+                        <option value="panDocument">PAN Card</option>
+                        <option value="degreeDocument">Degree Certificate</option>
+                        <option value="experienceDocument">Experience Letter</option>
+                    </select>
+                    <input type="file" id="edit_documentUpload" style="display:none;" accept=".pdf,.jpg,.jpeg,.png" onchange="uploadDocumentToOnboarding(this)">
+                    <button type="button" onclick="document.getElementById('edit_documentUpload').click()" class="btn-outline text-sm">
+                        <i class="fas fa-upload mr-1"></i>Upload Document
+                    </button>
+                    <div class="upload-progress" id="uploadProgress">
+                        <div class="loading-spinner"></div> Uploading…
+                    </div>
+                </div>
+            </div>
+        `;
+
+        document.getElementById('editOnboardingContent').innerHTML = formHtml;
+
+        // Set dropdown values
+        if (mergedData.maritalStatus) document.getElementById('edit_maritalStatus').value = mergedData.maritalStatus;
+        if (mergedData.bloodGroup) document.getElementById('edit_bloodGroup').value = mergedData.bloodGroup;
+        if (mergedData.emergencyRelationship) document.getElementById('edit_emergencyRelationship').value = mergedData.emergencyRelationship;
+        if (mergedData.disabilityType) document.getElementById('edit_disabilityType').value = mergedData.disabilityType;
+
+        // Add event listener for PwD checkbox
+        document.getElementById('edit_isPhysicallyChallenged')?.addEventListener('change', function() {
+            document.getElementById('edit_pwdFields').style.display = this.checked ? 'block' : 'none';
+        });
+
+        // Bind save button
+        const saveBtn = document.getElementById('saveEditOnboardingBtn');
+        const newSaveBtn = saveBtn.cloneNode(true);
+        saveBtn.parentNode.replaceChild(newSaveBtn, saveBtn);
+        newSaveBtn.addEventListener('click', () => saveEditOnboardingDetails(currentEditOnboardingId));
+
+    } catch (err) {
+        console.error('Error loading edit form:', err);
+        showToast('Error loading onboarding details: ' + err.message, 'error');
+        document.getElementById('editOnboardingContent').innerHTML = '<p class="text-center text-red-500 py-4">Failed to load onboarding details. Please try again.</p>';
+    }
+}
+
+// Updated buildDocGrid function
+function buildDocGridWithEmployeeId(mergedData, employeeId) {
+    if (!employeeId) {
+        return `<div style="color:#dc3545;font-size:12px;padding:10px;text-align:center;">Employee ID not available. Please ensure employee data is loaded.</div>`;
+    }
+    
+    const docs = [
+        { label: 'Aadhaar Card', docType: 'aadhaar', hasDoc: !!mergedData.aadhaarDocumentUrl, url: `${API_BASE_URL}/employees/${employeeId}/aadhaar-image` },
+        { label: 'PAN Card', docType: 'pan', hasDoc: !!mergedData.panDocumentUrl, url: `${API_BASE_URL}/employees/${employeeId}/pan-image` },
+        { label: 'Degree Certificate', docType: 'degree', hasDoc: !!mergedData.degreeDocumentUrl, url: `${API_BASE_URL}/employees/${employeeId}/degree-image` },
+        { label: 'Experience Letter', docType: 'experience', hasDoc: !!mergedData.experienceDocumentUrl, url: `${API_BASE_URL}/employees/${employeeId}/experience-image` },
+    ];
+
+    return docs.map(d => {
+        const statusIcon = d.hasDoc ? 
+            '<i class="fas fa-check-circle" style="color:#28a745;"></i>' : 
+            '<i class="fas fa-times-circle" style="color:#dc3545;"></i>';
+        const statusText = d.hasDoc ? 'View Document' : 'Not Uploaded';
+        
+        return `<div style="display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:var(--primary-bg-light);border-radius:8px;margin-bottom:8px;">
+            <span>${statusIcon} <strong>${d.label}</strong></span>
+            ${d.hasDoc ? 
+                `<a href="${d.url}" target="_blank" class="btn-outline" style="padding:4px 12px;font-size:11px;text-decoration:none;" onclick="event.stopPropagation();">
+                    <i class="fas fa-eye mr-1"></i>${statusText}
+                </a>` :
+                `<span style="font-size:11px;color:#6c757d;">${statusText}</span>`
+            }
+        </div>`;
+    }).join('');
+}
+
+        // Helper function to escape HTML
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+                return c;
+            });
+        }
+
+        function addEditRow(containerId, placeholders) {
+            const c = document.getElementById(containerId);
+            if (c.querySelector('p')) c.innerHTML = '';
             const row = document.createElement('div');
             row.className = 'dynamic-row';
-            row.innerHTML = `<input type="text" placeholder="Degree"><input type="text" placeholder="Institution"><input type="text" placeholder="Year"><button type="button" onclick="this.parentElement.remove()" style="color:#dc3545"><i class="fas fa-trash"></i></button>`;
-            container.appendChild(row);
+            row.innerHTML = placeholders.map(p => `<input type="text" placeholder="${p}">`).join('') +
+                `<button type="button" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>`;
+            c.appendChild(row);
         }
-        
-        function addEditExpRow() {
-            const container = document.getElementById('editExpContainer');
-            if(container.innerHTML.includes('No work experience records')) container.innerHTML = '';
-            const row = document.createElement('div');
-            row.className = 'dynamic-row';
-            row.innerHTML = `<input type="text" placeholder="Company"><input type="text" placeholder="Designation"><input type="text" placeholder="Years"><button type="button" onclick="this.parentElement.remove()" style="color:#dc3545"><i class="fas fa-trash"></i></button>`;
-            container.appendChild(row);
-        }
-        
-        function addEditFamilyRow() {
-            const container = document.getElementById('editFamilyContainer');
-            if(container.innerHTML.includes('No family records')) container.innerHTML = '';
-            const row = document.createElement('div');
-            row.className = 'dynamic-row';
-            row.innerHTML = `<input type="text" placeholder="Name"><input type="text" placeholder="Relationship"><input type="text" placeholder="Occupation"><button type="button" onclick="this.parentElement.remove()" style="color:#dc3545"><i class="fas fa-trash"></i></button>`;
-            container.appendChild(row);
-        }
-        
-        function collectEducationData() {
-            const container = document.getElementById('editEducationContainer');
-            const rows = container.querySelectorAll('.dynamic-row');
-            if(!rows.length && container.innerHTML.includes('No education records')) return null;
-            const result = [];
-            rows.forEach(row => {
-                const inputs = row.querySelectorAll('input');
-                if(inputs[0]?.value.trim()) {
-                    result.push({ degree: inputs[0].value, institution: inputs[1].value, year: inputs[2].value });
-                }
+
+function collectDynamicRows(containerId, keys) {
+    const container = document.getElementById(containerId);
+    if (!container) return null;
+    
+    const rows = container.querySelectorAll('.dynamic-row');
+    const result = [];
+    rows.forEach(row => {
+        const inputs = row.querySelectorAll('input');
+        if (inputs.length > 0 && inputs[0].value && inputs[0].value.trim()) {
+            const obj = {};
+            keys.forEach((k, i) => { 
+                if (inputs[i]) obj[k] = inputs[i].value || ''; 
             });
-            return result.length ? JSON.stringify(result) : null;
+            result.push(obj);
+        }
+    });
+    return result.length ? JSON.stringify(result) : null;
+}
+
+async function saveEditOnboardingDetails(onboardingId) {
+    const saveBtn = document.getElementById('saveEditOnboardingBtn');
+    if (!saveBtn) return;
+    
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<div class="loading-spinner" style="width:14px;height:14px;border-width:2px;display:inline-block;vertical-align:middle;margin-right:6px;"></div>Saving…';
+
+    try {
+        // First get the onboarding data to get employeePrimeId
+        const onboardingResponse = await fetch(`${API_BASE_URL}/onboarding/get-by-id/${onboardingId}`);
+        const onboardingResult = await onboardingResponse.json();
+        
+        if (!onboardingResult.success || !onboardingResult.data) {
+            throw new Error('Could not fetch onboarding data');
         }
         
-        function collectExpData() {
-            const container = document.getElementById('editExpContainer');
-            const rows = container.querySelectorAll('.dynamic-row');
-            if(!rows.length && container.innerHTML.includes('No work experience records')) return null;
-            const result = [];
-            rows.forEach(row => {
-                const inputs = row.querySelectorAll('input');
-                if(inputs[0]?.value.trim()) {
-                    result.push({ company: inputs[0].value, designation: inputs[1].value, years: inputs[2].value });
-                }
-            });
-            return result.length ? JSON.stringify(result) : null;
+        const onboardingData = onboardingResult.data;
+        const employeePrimeId = onboardingData.employeePrimeId;
+        
+        // Prepare onboarding update data (only editable fields)
+        const onboardingUpdateData = new FormData();
+        
+        // Section B fields
+        const personalEmail = document.getElementById('edit_personalEmail')?.value || '';
+        const mobileNumber = document.getElementById('edit_mobileNumber')?.value || '';
+        const alternateNumber = document.getElementById('edit_alternateNumber')?.value || '';
+        const maritalStatus = document.getElementById('edit_maritalStatus')?.value || '';
+        const bloodGroup = document.getElementById('edit_bloodGroup')?.value || '';
+        const linkedinProfile = document.getElementById('edit_linkedinProfile')?.value || '';
+        
+        // Address fields
+        const currentStreet = document.getElementById('edit_currentStreet')?.value || '';
+        const currentCity = document.getElementById('edit_currentCity')?.value || '';
+        const currentState = document.getElementById('edit_currentState')?.value || '';
+        const currentPincode = document.getElementById('edit_currentPincode')?.value || '';
+        const currentCountry = document.getElementById('edit_currentCountry')?.value || 'India';
+        const permanentStreet = document.getElementById('edit_permanentStreet')?.value || '';
+        const permanentCity = document.getElementById('edit_permanentCity')?.value || '';
+        const permanentState = document.getElementById('edit_permanentState')?.value || '';
+        const permanentPincode = document.getElementById('edit_permanentPincode')?.value || '';
+        const permanentCountry = document.getElementById('edit_permanentCountry')?.value || 'India';
+        
+        // Section C fields
+        const fatherSpouseName = document.getElementById('edit_fatherSpouseName')?.value || '';
+        const emergencyName = document.getElementById('edit_emergencyName')?.value || '';
+        const emergencyRelationship = document.getElementById('edit_emergencyRelationship')?.value || '';
+        const emergencyPhone = document.getElementById('edit_emergencyPhone')?.value || '';
+        const bankName = document.getElementById('edit_bankName')?.value || '';
+        const accountNumber = document.getElementById('edit_accountNumber')?.value || '';
+        const ifscCode = document.getElementById('edit_ifscCode')?.value || '';
+        const offeredSalary = document.getElementById('edit_offeredSalary')?.value || '';
+        const assignedHR = document.getElementById('edit_assignedHR')?.value || '';
+        const assignedManager = document.getElementById('edit_assignedManager')?.value || '';
+        const remarks = document.getElementById('edit_remarks')?.value || '';
+        
+        // PWD fields
+        const isPhysicallyChallenged = document.getElementById('edit_isPhysicallyChallenged')?.checked || false;
+        const disabilityType = document.getElementById('edit_disabilityType')?.value || '';
+        const disabilityPercentage = document.getElementById('edit_disabilityPercentage')?.value || '';
+        const certificateNumber = document.getElementById('edit_certificateNumber')?.value || '';
+        
+        // JSON fields
+        const education = collectDynamicRows('editEducationContainer', ['degree', 'institution', 'year']);
+        const workExperience = collectDynamicRows('editExpContainer', ['company', 'designation', 'years']);
+        const family = collectDynamicRows('editFamilyContainer', ['name', 'relationship', 'occupation']);
+        
+        // Append all fields to form data
+        onboardingUpdateData.append('personalEmail', personalEmail);
+        onboardingUpdateData.append('mobileNumber', mobileNumber);
+        onboardingUpdateData.append('alternateNumber', alternateNumber);
+        onboardingUpdateData.append('maritalStatus', maritalStatus);
+        onboardingUpdateData.append('bloodGroup', bloodGroup);
+        onboardingUpdateData.append('linkedinProfile', linkedinProfile);
+        onboardingUpdateData.append('currentStreet', currentStreet);
+        onboardingUpdateData.append('currentCity', currentCity);
+        onboardingUpdateData.append('currentState', currentState);
+        onboardingUpdateData.append('currentPincode', currentPincode);
+        onboardingUpdateData.append('currentCountry', currentCountry);
+        onboardingUpdateData.append('permanentStreet', permanentStreet);
+        onboardingUpdateData.append('permanentCity', permanentCity);
+        onboardingUpdateData.append('permanentState', permanentState);
+        onboardingUpdateData.append('permanentPincode', permanentPincode);
+        onboardingUpdateData.append('permanentCountry', permanentCountry);
+        onboardingUpdateData.append('fatherSpouseName', fatherSpouseName);
+        onboardingUpdateData.append('emergencyName', emergencyName);
+        onboardingUpdateData.append('emergencyRelationship', emergencyRelationship);
+        onboardingUpdateData.append('emergencyPhone', emergencyPhone);
+        onboardingUpdateData.append('bankName', bankName);
+        onboardingUpdateData.append('accountNumber', accountNumber);
+        onboardingUpdateData.append('ifscCode', ifscCode);
+        onboardingUpdateData.append('offeredSalary', offeredSalary);
+        onboardingUpdateData.append('assignedHR', assignedHR);
+        onboardingUpdateData.append('assignedManager', assignedManager);
+        onboardingUpdateData.append('remarks', remarks);
+        onboardingUpdateData.append('isPhysicallyChallenged', isPhysicallyChallenged);
+        onboardingUpdateData.append('disabilityType', disabilityType);
+        onboardingUpdateData.append('disabilityPercentage', disabilityPercentage);
+        onboardingUpdateData.append('certificateNumber', certificateNumber);
+        
+        if (education) onboardingUpdateData.append('education', education);
+        if (workExperience) onboardingUpdateData.append('workExperience', workExperience);
+        if (family) onboardingUpdateData.append('family', family);
+        
+        // Update onboarding record
+        const updateResponse = await fetch(`${API_BASE_URL}/onboarding/update/${onboardingId}`, {
+            method: 'PUT',
+            body: onboardingUpdateData
+        });
+        
+        const updateResult = await updateResponse.json();
+        
+        if (updateResult.success) {
+            showToast('Onboarding details saved successfully!', 'success');
+            closeEditOnboardingModal();
+            loadOnboardingList();
+        } else {
+            showToast(updateResult.message || 'Save failed', 'error');
         }
         
-        function collectFamilyData() {
-            const container = document.getElementById('editFamilyContainer');
-            const rows = container.querySelectorAll('.dynamic-row');
-            if(!rows.length && container.innerHTML.includes('No family records')) return null;
-            const result = [];
-            rows.forEach(row => {
-                const inputs = row.querySelectorAll('input');
-                if(inputs[0]?.value.trim()) {
-                    result.push({ name: inputs[0].value, relationship: inputs[1].value, occupation: inputs[2].value });
-                }
-            });
-            return result.length ? JSON.stringify(result) : null;
+    } catch (error) {
+        console.error('Save error:', error);
+        showToast('Network error while saving: ' + error.message, 'error');
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = '<i class="fas fa-save mr-1"></i>Save Changes';
+    }
+}
+
+async function uploadDocumentToOnboarding(fileInput) {
+    const file = fileInput.files[0];
+    if (!file) return;
+
+    // Get the current onboarding ID
+    const onboardingId = currentEditOnboardingId;
+    if (!onboardingId) {
+        showToast('No onboarding record selected', 'error');
+        return;
+    }
+
+    // First get the onboarding data to fetch employeePrimeId
+    try {
+        const onboardingResponse = await fetch(`${API_BASE_URL}/onboarding/get-by-id/${onboardingId}`);
+        const onboardingResult = await onboardingResponse.json();
+        
+        if (!onboardingResult.success || !onboardingResult.data) {
+            showToast('Could not fetch onboarding data', 'error');
+            return;
         }
         
-        async function saveEditOnboardingDetails() {
-            const formData = new FormData();
+        const onboardingData = onboardingResult.data;
+        const employeePrimeId = onboardingData.employeePrimeId;
+        
+        if (!employeePrimeId) {
+            showToast('Employee not found for this onboarding record', 'error');
+            return;
+        }
+        
+        // Get the document type from select dropdown
+        const docTypeSelect = document.getElementById('edit_docTypeSelect');
+        const selectedDocType = docTypeSelect.value;
+        
+        // Map document type to the correct field name for employee update
+        const docFieldMap = {
+            'aadhaarDocument': 'aadhaarDocument',
+            'panDocument': 'panDocument',
+            'degreeDocument': 'degreeDocument',
+            'experienceDocument': 'experienceDocument'
+        };
+        
+        const fieldName = docFieldMap[selectedDocType];
+        if (!fieldName) {
+            showToast('Invalid document type', 'error');
+            return;
+        }
+        
+        const progress = document.getElementById('uploadProgress');
+        progress.classList.add('active');
+        
+        // First, fetch current employee data to preserve other fields
+        const empResponse = await fetch(`${API_BASE_URL}/employees/get-employee-by-employeePrimeId/${employeePrimeId}`);
+        const empResult = await empResponse.json();
+        
+        if (!empResult.success || !empResult.data) {
+            showToast('Could not fetch employee data', 'error');
+            progress.classList.remove('active');
+            return;
+        }
+        
+        const employee = empResult.data;
+        
+        // Create FormData with existing employee data plus the new document
+        const formData = new FormData();
+        
+        // Create employee payload with all existing data
+        const employeePayload = {
+            firstName: employee.firstName || '',
+            middleName: employee.middleName || '',
+            lastName: employee.lastName || '',
+            dateOfBirth: employee.dateOfBirth || '',
+            gender: employee.gender || '',
+            maritalStatus: employee.maritalStatus || '',
+            bloodGroup: employee.bloodGroup || '',
+            panNumber: employee.panNumber || '',
+            aadhaarNumber: employee.aadhaarNumber || '',
+            nationality: employee.nationality || 'Indian',
+            religion: employee.religion || '',
+            linkedinProfile: employee.linkedinProfile || '',
+            fatherSpouseName: employee.fatherSpouseName || '',
+            isPhysicallyChallenged: employee.isPhysicallyChallenged || false,
+            disabilityType: employee.disabilityType || '',
+            disabilityPercentage: employee.disabilityPercentage || null,
+            certificateNumber: employee.certificateNumber || '',
+            department: employee.department || '',
+            subDepartment: employee.subDepartment || '',
+            designation: employee.designation || '',
+            employeeGrade: employee.employeeGrade || '',
+            employmentType: employee.employmentType || '',
+            joiningDate: employee.joiningDate || '',
+            probationEndDate: employee.probationEndDate || '',
+            reportingManager: employee.reportingManager || '',
+            hrBusinessPartner: employee.hrBusinessPartner || '',
+            workLocation: employee.workLocation || '',
+            basicSalary: employee.basicSalary || null,
+            shift: employee.shift || '',
+            costCentre: employee.costCentre || '',
+            bankName: employee.bankName || '',
+            accountNumber: employee.accountNumber || '',
+            ifscCode: employee.ifscCode || '',
+            personalEmail: employee.personalEmail || '',
+            workEmail: employee.workEmail || '',
+            mobileNumber: employee.mobileNumber || '',
+            alternateNumber: employee.alternateNumber || '',
+            currentStreet: employee.currentStreet || '',
+            currentCity: employee.currentCity || '',
+            currentState: employee.currentState || '',
+            currentPincode: employee.currentPincode || '',
+            currentCountry: employee.currentCountry || 'India',
+            permanentStreet: employee.permanentStreet || '',
+            permanentCity: employee.permanentCity || '',
+            permanentState: employee.permanentState || '',
+            permanentPincode: employee.permanentPincode || '',
+            permanentCountry: employee.permanentCountry || 'India',
+            emergencyName: employee.emergencyName || '',
+            emergencyRelationship: employee.emergencyRelationship || '',
+            emergencyPhone: employee.emergencyPhone || '',
+            education: employee.education || null,
+            family: employee.family || null,
+            workExperience: employee.workExperience || null
+        };
+        
+        formData.append('employee', JSON.stringify(employeePayload));
+        
+        // Add the new document file
+        formData.append(fieldName, file);
+        
+        // Also preserve existing documents if they're not being replaced
+        // The backend will handle replacing only if new file is provided
+        
+        console.log('Uploading document:', fieldName, file.name);
+        
+        // Update the employee record with the new document
+        const updateResponse = await fetch(`${API_BASE_URL}/employees/update-employee/${employeePrimeId}`, {
+            method: 'PUT',
+            body: formData
+        });
+        
+        const updateResult = await updateResponse.json();
+        
+        if (updateResult.success) {
+            showToast(`${docTypeSelect.options[docTypeSelect.selectedIndex].text} uploaded successfully!`, 'success');
             
-            formData.append('personalEmail', document.getElementById('edit_personalEmail')?.value || '');
-            formData.append('mobileNumber', document.getElementById('edit_mobileNumber')?.value || '');
-            formData.append('alternateNumber', document.getElementById('edit_alternateNumber')?.value || '');
-            formData.append('maritalStatus', document.getElementById('edit_maritalStatus')?.value || '');
-            formData.append('bloodGroup', document.getElementById('edit_bloodGroup')?.value || '');
-            formData.append('linkedinProfile', document.getElementById('edit_linkedinProfile')?.value || '');
-            
-            formData.append('currentStreet', document.getElementById('edit_currentStreet')?.value || '');
-            formData.append('currentCity', document.getElementById('edit_currentCity')?.value || '');
-            formData.append('currentState', document.getElementById('edit_currentState')?.value || '');
-            formData.append('currentPincode', document.getElementById('edit_currentPincode')?.value || '');
-            formData.append('currentCountry', document.getElementById('edit_currentCountry')?.value || 'India');
-            formData.append('permanentStreet', document.getElementById('edit_permanentStreet')?.value || '');
-            formData.append('permanentCity', document.getElementById('edit_permanentCity')?.value || '');
-            formData.append('permanentState', document.getElementById('edit_permanentState')?.value || '');
-            formData.append('permanentPincode', document.getElementById('edit_permanentPincode')?.value || '');
-            formData.append('permanentCountry', document.getElementById('edit_permanentCountry')?.value || 'India');
-            
-            formData.append('fatherSpouseName', document.getElementById('edit_fatherSpouseName')?.value || '');
-            formData.append('emergencyName', document.getElementById('edit_emergencyName')?.value || '');
-            formData.append('emergencyRelationship', document.getElementById('edit_emergencyRelationship')?.value || '');
-            formData.append('emergencyPhone', document.getElementById('edit_emergencyPhone')?.value || '');
-            formData.append('bankName', document.getElementById('edit_bankName')?.value || '');
-            formData.append('accountNumber', document.getElementById('edit_accountNumber')?.value || '');
-            formData.append('ifscCode', document.getElementById('edit_ifscCode')?.value || '');
-            
-            const isPwd = document.getElementById('edit_isPhysicallyChallenged')?.checked || false;
-            formData.append('isPhysicallyChallenged', isPwd);
-            if(isPwd) {
-                formData.append('disabilityType', document.getElementById('edit_disabilityType')?.value || '');
-                formData.append('disabilityPercentage', document.getElementById('edit_disabilityPercentage')?.value || '');
-                formData.append('certificateNumber', document.getElementById('edit_certificateNumber')?.value || '');
+            // Refresh the document grid to show updated status
+            const refreshResponse = await fetch(`${API_BASE_URL}/employees/get-employee-by-employeePrimeId/${employeePrimeId}`);
+            const refreshResult = await refreshResponse.json();
+            if (refreshResult.success && refreshResult.data) {
+                const updatedEmployee = refreshResult.data;
+                const docGridHtml = buildDocGridWithEmployeeId(updatedEmployee, updatedEmployee.employeeId);
+                document.getElementById('editDocGrid').innerHTML = docGridHtml;
             }
-            
-            const education = collectEducationData();
-            const workExp = collectExpData();
-            const family = collectFamilyData();
-            if(education) formData.append('education', education);
-            if(workExp) formData.append('workExperience', workExp);
-            if(family) formData.append('family', family);
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/onboarding/update/${currentEditOnboardingId}`, {
-                    method: 'PUT',
-                    body: formData
-                });
-                const result = await response.json();
-                if(result.success) {
-                    showToast('Onboarding details saved!', 'success');
-                    closeEditOnboardingModal();
-                    loadOnboardingList();
-                } else {
-                    showToast(result.message || 'Save failed', 'error');
-                }
-            } catch(error) {
-                showToast('Error saving details', 'error');
-            }
+        } else {
+            showToast(updateResult.message || 'Upload failed', 'error');
         }
         
-        async function uploadDocumentToOnboarding(fileInput) {
-            const file = fileInput.files[0];
-            if(!file) return;
-            
-            const docType = document.getElementById('edit_docTypeSelect').value;
-            const fieldMap = {
-                'profile': 'profilePhoto',
-                'aadhaar': 'aadhaarDocument',
-                'pan': 'panDocument',
-                'degree': 'degreeDocument',
-                'experience': 'experienceDocument',
-                'offer': 'offerLetter'
-            };
-            
-            const formData = new FormData();
-            formData.append(fieldMap[docType], file);
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/onboarding/update/${currentEditOnboardingId}`, {
-                    method: 'PUT',
-                    body: formData
-                });
-                const result = await response.json();
-                if(result.success) {
-                    showToast('Document uploaded!', 'success');
-                    openEditOnboardingModal(currentEditOnboardingId);
-                } else {
-                    showToast('Upload failed', 'error');
-                }
-            } catch(error) {
-                showToast('Error uploading', 'error');
-            }
-            fileInput.value = '';
-        }
-        
+    } catch (error) {
+        console.error('Upload error:', error);
+        showToast('Network error during upload: ' + error.message, 'error');
+    } finally {
+        const progress = document.getElementById('uploadProgress');
+        progress.classList.remove('active');
+        fileInput.value = '';
+    }
+}
+
         function closeEditOnboardingModal() {
             document.getElementById('editOnboardingModal').classList.remove('active');
+            currentEditOnboardingId = null;
         }
-        
-        // ==================== UPDATE STATUS (ORIGINAL) ====================
+
         function showUpdateStatusModal(id, status) {
             currentOnboardingId = id;
             document.getElementById('update_status').value = status || 'PENDING';
             document.getElementById('statusModal').classList.add('active');
         }
-        
+
         async function confirmUpdateStatus() {
             const newStatus = document.getElementById('update_status').value;
             try {
                 const response = await fetch(`${API_BASE_URL}/onboarding/update-status/${currentOnboardingId}?status=${newStatus}`, { method: 'PATCH' });
                 const result = await response.json();
-                if(result.success) {
-                    showToast('Status updated!', 'success');
-                    closeStatusModal();
-                    loadOnboardingList();
-                } else { showToast('Update failed', 'error'); }
-            } catch(error) { showToast('Error', 'error'); }
+                if (result.success) { 
+                    showToast('Status updated!', 'success'); 
+                    closeStatusModal(); 
+                    loadOnboardingList(); 
+                } else {
+                    showToast('Update failed', 'error');
+                }
+            } catch { 
+                showToast('Network error', 'error'); 
+            }
         }
-        
-        // ==================== DELETE (ORIGINAL) ====================
+
         async function deleteOnboarding(id) {
-            if(confirm('Delete this onboarding record?')) {
-                try {
-                    const response = await fetch(`${API_BASE_URL}/onboarding/delete/${id}`, { method: 'DELETE' });
-                    const result = await response.json();
-                    if(result.success) {
-                        showToast('Deleted!', 'success');
-                        loadOnboardingList();
-                    }
-                } catch(error) { showToast('Error deleting', 'error'); }
+            if (!confirm('Delete this onboarding record?')) return;
+            try {
+                const response = await fetch(`${API_BASE_URL}/onboarding/delete/${id}`, { method: 'DELETE' });
+                const result = await response.json();
+                if (result.success) {
+                    showToast('Record deleted.', 'success');
+                    loadOnboardingList();
+                } else {
+                    showToast('Delete failed', 'error');
+                }
+            } catch { 
+                showToast('Network error during delete', 'error'); 
             }
         }
-        
-        // ==================== DOCUMENTS (ORIGINAL) ====================
-        async function loadDocumentStatus() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/onboarding/get-all?page=0&size=100`);
-                const result = await response.json();
-                if(result.success && result.data) {
-                    const docTypes = ['pan', 'aadhaar', 'offer', 'degree', 'passport', 'bank', 'experience', 'medical', 'contract'];
-                    let uploaded = 0;
-                    docTypes.forEach(doc => {
-                        const hasDoc = result.data.some(item => {
-                            switch(doc) {
-                                case 'pan': return item.panDocumentUrl;
-                                case 'aadhaar': return item.aadhaarDocumentUrl;
-                                case 'offer': return item.offerLetterUrl;
-                                case 'degree': return item.degreeDocumentUrl;
-                                case 'passport': return item.passportPhotoUrl;
-                                case 'bank': return item.bankDocumentUrl;
-                                case 'experience': return item.experienceDocumentUrl;
-                                case 'medical': return item.medicalCertificateUrl;
-                                case 'contract': return item.signedContractUrl;
-                                default: return false;
-                            }
-                        });
-                        const span = document.getElementById(`doc-${doc}-status`);
-                        if(span) {
-                            if(hasDoc) {
-                                span.className = 'status-badge status-completed text-xs ml-2';
-                                span.innerText = 'Uploaded';
-                                uploaded++;
-                            } else {
-                                span.className = 'status-badge status-pending text-xs ml-2';
-                                span.innerText = 'Pending';
-                            }
-                        }
-                    });
-                    document.getElementById('uploadedDocs').innerText = uploaded;
-                    const percent = Math.round((uploaded / 9) * 100);
-                    document.getElementById('completionRate').innerText = percent + '%';
-                    document.getElementById('uploadFill').style.width = percent + '%';
-                    document.getElementById('completionFill').style.width = percent + '%';
-                }
-            } catch(error) { console.error('Error:', error); }
+
+        function closeStatusModal() { 
+            document.getElementById('statusModal').classList.remove('active'); 
         }
-        
-        async function loadRecentDocuments() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/onboarding/get-all?page=0&size=10`);
-                const result = await response.json();
-                if(result.success && result.data) {
-                    const docs = [];
-                    result.data.forEach(item => {
-                        if(item.panDocumentUrl) docs.push({ name: 'PAN Card', onboardingId: item.onboardingId, name2: item.employeeName, type: 'pan' });
-                        if(item.aadhaarDocumentUrl) docs.push({ name: 'Aadhaar Card', onboardingId: item.onboardingId, name2: item.employeeName, type: 'aadhaar' });
-                        if(item.offerLetterUrl) docs.push({ name: 'Offer Letter', onboardingId: item.onboardingId, name2: item.employeeName, type: 'offer' });
-                        if(item.degreeDocumentUrl) docs.push({ name: 'Degree Certificate', onboardingId: item.onboardingId, name2: item.employeeName, type: 'degree' });
-                        if(item.passportPhotoUrl) docs.push({ name: 'Passport Photo', onboardingId: item.onboardingId, name2: item.employeeName, type: 'passport' });
-                        if(item.bankDocumentUrl) docs.push({ name: 'Bank Document', onboardingId: item.onboardingId, name2: item.employeeName, type: 'bank' });
-                        if(item.experienceDocumentUrl) docs.push({ name: 'Experience Letter', onboardingId: item.onboardingId, name2: item.employeeName, type: 'experience' });
-                        if(item.medicalCertificateUrl) docs.push({ name: 'Medical Certificate', onboardingId: item.onboardingId, name2: item.employeeName, type: 'medical' });
-                        if(item.signedContractUrl) docs.push({ name: 'Signed Contract', onboardingId: item.onboardingId, name2: item.employeeName, type: 'contract' });
-                    });
-                    const container = document.getElementById('recentDocumentsList');
-                    if(docs.length) {
-                        container.innerHTML = docs.slice(0, 5).map(d => `<div class="flex justify-between p-2 border-b"><span>${d.name2} - ${d.name}</span><a href="${API_BASE_URL}/onboarding/${d.onboardingId}/document/${d.type}" target="_blank" class="text-[#1B738C]">View</a></div>`).join('');
-                    } else { container.innerHTML = '<div class="text-center py-4">No documents uploaded</div>'; }
-                }
-            } catch(error) { console.error('Error:', error); }
-        }
-        
-        function uploadDocument(docType) {
-            currentDocType = docType;
-            let docName = '';
-            switch(docType) {
-                case 'pan': docName = 'PAN Card'; break;
-                case 'aadhaar': docName = 'Aadhar Card'; break;
-                case 'offer': docName = 'Offer Letter'; break;
-                case 'degree': docName = 'Degree Certificate'; break;
-                case 'passport': docName = 'Passport Photo'; break;
-                case 'bank': docName = 'Bank Details'; break;
-                case 'experience': docName = 'Experience Letter'; break;
-                case 'medical': docName = 'Medical Certificate'; break;
-                case 'contract': docName = 'Signed Contract'; break;
-            }
-            document.getElementById('doc_name').value = docName;
-            loadOnboardingOptions();
-            document.getElementById('documentModal').classList.add('active');
-        }
-        
-        async function loadOnboardingOptions() {
-            try {
-                const response = await fetch(`${API_BASE_URL}/onboarding/get-all?page=0&size=100`);
-                const result = await response.json();
-                if(result.success && result.data) {
-                    const select = document.getElementById('doc_onboarding_id');
-                    select.innerHTML = '<option value="">Select Onboarding</option>';
-                    result.data.forEach(item => {
-                        select.innerHTML += `<option value="${item.id}">${item.employeeName || item.onboardingId}</option>`;
-                    });
-                }
-            } catch(error) { console.error('Error:', error); }
-        }
-        
-        document.getElementById('documentUploadForm')?.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            const onboardingId = document.getElementById('doc_onboarding_id').value;
-            const file = document.getElementById('doc_file').files[0];
-            if(!onboardingId || !file) { showToast('Please fill all fields', 'error'); return; }
-            
-            const formData = new FormData();
-            switch(currentDocType) {
-                case 'pan': formData.append('panDocument', file); break;
-                case 'aadhaar': formData.append('aadhaarDocument', file); break;
-                case 'degree': formData.append('degreeDocument', file); break;
-                case 'experience': formData.append('experienceDocument', file); break;
-                case 'offer': formData.append('offerLetter', file); break;
-                case 'passport': formData.append('passportPhoto', file); break;
-                case 'bank': formData.append('bankDocument', file); break;
-                case 'medical': formData.append('medicalCertificate', file); break;
-                case 'contract': formData.append('signedContract', file); break;
-            }
-            
-            try {
-                const response = await fetch(`${API_BASE_URL}/onboarding/update/${onboardingId}`, { method: 'PUT', body: formData });
-                const result = await response.json();
-                if(result.success) {
-                    showToast('Document uploaded!', 'success');
-                    closeDocumentModal();
-                    loadDocumentStatus();
-                    loadRecentDocuments();
-                } else { showToast('Upload failed', 'error'); }
-            } catch(error) { showToast('Error uploading', 'error'); }
-        });
-        
-        function closeDocumentModal() { document.getElementById('documentModal').classList.remove('active'); document.getElementById('documentUploadForm').reset(); }
-        function closeStatusModal() { document.getElementById('statusModal').classList.remove('active'); }
-        
-        // ==================== EXPORT ====================
+
         function exportOnboardingList() {
-            console.log('Exporting:', allOnboardingData);
-            showToast(`Exported ${allOnboardingData.length} records! Check console`, 'success');
+            showToast(`Exported ${allOnboardingData.length} records!`, 'success');
         }
-        
-        // ==================== TABS ====================
-        function initTabs() {
-            const tabs = document.querySelectorAll('.tab-btn');
-            tabs.forEach(tab => {
-                tab.addEventListener('click', function() {
-                    tabs.forEach(t => t.classList.remove('active'));
-                    this.classList.add('active');
-                    document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-                    document.getElementById(`tab-${this.dataset.tab}`).classList.add('active');
-                    if(this.dataset.tab === 'documents') { loadDocumentStatus(); loadRecentDocuments(); }
-                });
-            });
-        }
-        
+
         function setActiveMenu() {
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.classList.remove('active');
-                if(link.getAttribute('data-module') === 'onboarding') {
-                    link.classList.add('active');
-                }
+                if (link.getAttribute('data-module') === 'onboarding') link.classList.add('active');
             });
         }
-        
-        function addSyncButton() {
-            const headerDiv = document.querySelector('.section-card .flex.justify-between.items-center');
-            if (headerDiv && !document.getElementById('syncOnboardingBtn')) {
-                const syncBtn = document.createElement('button');
-                syncBtn.id = 'syncOnboardingBtn';
-                syncBtn.className = 'btn-primary text-sm';
-                syncBtn.innerHTML = '<i class="fas fa-sync-alt mr-1"></i>Sync Employees';
-                syncBtn.onclick = async () => {
-                    showToast('Syncing employees with onboarding...', 'info');
-                    await syncOnboardingWithEmployees();
-                };
-                headerDiv.appendChild(syncBtn);
-            }
-        }
-        
-        // ==================== INIT ====================
+
         document.addEventListener('DOMContentLoaded', async function() {
-            initTabs();
             await loadOnboardingList();
             setActiveMenu();
-            addSyncButton();
-            
-            setInterval(async () => {
-                await syncOnboardingWithEmployees();
-            }, 30000);
+            setInterval(syncOnboardingWithEmployees, 60000);
         });
     </script>
 </body>

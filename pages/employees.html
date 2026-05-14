@@ -162,8 +162,8 @@
         select,
         textarea {
             border: 1px solid var(--primary-soft);
-            border-radius: 16px;
-            padding: 4px 14px;
+            border-radius: 12px;
+            padding: 10px 14px;
             width: 100%;
             font-size: 13px;
             transition: 0.2s;
@@ -641,6 +641,41 @@
             }
         }
 
+        /* Fix for promotion modal button positioning */
+#promotionModal .modal-container {
+    max-width: 550px;
+    overflow-y: visible;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+}
+
+#promotionModal .modal-header {
+    padding: 18px 22px;
+    flex-shrink: 0;
+}
+
+#promotionModal form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+#promotionModal .form-content {
+    padding: 0 22px;
+    flex: 1;
+}
+
+#promotionModal .button-container {
+    padding: 16px 22px;
+    background: white;
+    border-radius: 0 0 24px 24px;
+    border-top: 1px solid var(--primary-soft);
+    margin-top: auto;
+    flex-shrink: 0;
+}
+
         .main-content {
             margin-top: 64px;
         }
@@ -916,7 +951,7 @@
         .form-group textarea {
             width: 100%;
             padding: 10px 12px;
-            border-radius: 16px;
+            border-radius: 6px;
             border: 1px solid var(--primary-soft);
             font-size: 13px;
             color: var(--text-dark);
@@ -1355,6 +1390,20 @@
                                             placeholder="House/Flat No, Street, Area, Landmark (e.g., 12B, Shanti Nagar, Near City Mall)"></textarea>
                                     </div>
 
+
+                                    <!-- ✅ CHECKBOX: Same as Current Address -->
+                                    <div class="mb-3"
+                                        style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+                                        <input type="checkbox" id="sameAsCurrentCheckbox"
+                                            onchange="copyCurrentToPermanent()"
+                                            style="width: 18px; height: 18px; margin: 0; cursor: pointer;">
+                                        <label for="sameAsCurrentCheckbox"
+                                            style="margin: 0; cursor: pointer; font-weight: 500; color: var(--primary);">
+                                            <i class="fas fa-copy mr-1"></i> Same as current address
+                                        </label>
+                                    </div>
+
+
                                     <div class="grid-4">
                                         <div class="form-group">
                                             <label>City</label>
@@ -1466,7 +1515,8 @@
                                     <button type="reset" class="btn-outline">Reset</button>
                                     <button type="button" id="nextBtn" class="btn-primary" onclick="nextStep()">Next <i
                                             class="fas fa-arrow-right ml-1"></i></button>
-                                    <button type="submit" id="saveBtn" class="btn-success" style="display:none;">Save Employee</button>
+                                    <button type="submit" id="saveBtn" class="btn-success" style="display:none;"><i
+                                            class="fas fa-save mr-1"></i>Save Employee</button>
                                 </div>
                             </div>
                         </form>
@@ -1567,71 +1617,92 @@
                     </div>
                 </div>
 
-                <!-- ==================== ADD/EDIT PROMOTION MODAL ==================== -->
-                <div id="promotionModal" class="modal-overlay">
-                    <div class="modal-container" style="max-width: 550px;">
+<!-- ==================== ADD/EDIT PROMOTION MODAL ==================== -->
+<div id="promotionModal" class="modal-overlay">
+    <div class="modal-container" style="max-width: 550px; overflow-y: visible; height: auto; display: flex; flex-direction: column;">
+        <div class="modal-header">
+            <h3 id="promotionModalTitle">Add Promotion</h3>
+            <span class="modal-close" onclick="closePromotionModal()">&times;</span>
+        </div>
+        <form id="promotionForm" onsubmit="savePromotion(event)" style="flex: 1; display: flex; flex-direction: column;">
+            <div class="h-[350px] overflow-auto" style="padding: 0 22px;">
+                <input type="hidden" id="promotionId">
+                <input type="hidden" id="promoEmployeeId">
+                <input type="hidden" id="promoEmployeePrimeId">
+
+                <!-- Selected Employee Display -->
+                <div class="form-group" style="background: var(--primary-bg-light); border-radius: 10px; padding: 12px; margin-bottom: 16px;">
+                    <label style="margin-bottom: 4px;">Selected Employee</label>
+                    <div style="font-weight: 700; color: var(--primary); font-size: 14px;" id="selectedEmployeeName">-</div>
+                </div>
+
+                <div class="grid-2 mb-3">
+                    <div class="form-group">
+                        <label>Previous Designation</label>
+                        <input type="text" id="prevDesig" placeholder="e.g., Software Engineer" readonly
+                            style="background:#f5f5f5;">
+                    </div>
+                    <div class="form-group">
+                        <label>New Designation <span class="req">*</span></label>
+                        <input type="text" id="newDesig" placeholder="e.g., Senior Software Engineer"
+                            required>
+                    </div>
+                </div>
+
+                <div class="grid-2 mb-3">
+                    <div class="form-group">
+                        <label>Previous Salary (₹)</label>
+                        <input type="number" id="prevSalary" class="mono" placeholder="0.00" readonly
+                            style="background:#f5f5f5;">
+                    </div>
+                    <div class="form-group">
+                        <label>New Salary (₹)</label>
+                        <input type="number" id="newSalary" class="mono" placeholder="0.00">
+                    </div>
+                </div>
+
+                <div class="grid-2 mb-3">
+                    <div class="form-group">
+                        <label>Promotion Date <span class="req">*</span></label>
+                        <input type="date" id="promoDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Effective From</label>
+                        <input type="date" id="effectiveFrom">
+                        <div class="fhint">Leave blank to use Promotion Date</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Remarks</label>
+                    <textarea id="remarks" rows="3"
+                        placeholder="Additional notes about the promotion..."></textarea>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3 mt-4 pt-3 border-t"
+                style="border-color: var(--primary-soft); padding: 16px 22px; background: white; border-radius: 0 0 24px 24px; margin-top: auto;">
+                <button type="button" class="btn-outline" onclick="closePromotionModal()">Cancel</button>
+                <button type="submit" class="btn-success">Save Promotion</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+                <!-- ==================== VIEW PROMOTION MODAL ==================== -->
+                <div id="viewPromotionModal" class="modal-overlay">
+                    <div class="modal-container" style="max-width: 500px;">
                         <div class="modal-header">
-                            <h3 id="promotionModalTitle">Add Promotion</h3>
-                            <span class="modal-close" onclick="closePromotionModal()">&times;</span>
+                            <h3 style="color: var(--primary);">Promotion Details</h3>
+                            <span class="modal-close" onclick="closeViewPromotionModal()">&times;</span>
                         </div>
-                        <form id="promotionForm" onsubmit="savePromotion(event)">
-                            <input type="hidden" id="promotionId">
-
-                            <div class="form-group">
-                                <label>Employee <span class="req">*</span></label>
-                                <select id="promoEmployeeId" required>
-                                    <option value="">Select Employee</option>
-                                </select>
-                            </div>
-
-                            <div class="grid-2 mb-3">
-                                <div class="form-group">
-                                    <label>Previous Designation</label>
-                                    <input type="text" id="prevDesig" placeholder="e.g., Software Engineer">
-                                </div>
-                                <div class="form-group">
-                                    <label>New Designation <span class="req">*</span></label>
-                                    <input type="text" id="newDesig" placeholder="e.g., Senior Software Engineer"
-                                        required>
-                                </div>
-                            </div>
-
-                            <div class="grid-2 mb-3">
-                                <div class="form-group">
-                                    <label>Previous Salary (₹)</label>
-                                    <input type="number" id="prevSalary" class="mono" placeholder="0.00">
-                                </div>
-                                <div class="form-group">
-                                    <label>New Salary (₹)</label>
-                                    <input type="number" id="newSalary" class="mono" placeholder="0.00">
-                                </div>
-                            </div>
-
-                            <div class="grid-2 mb-3">
-                                <div class="form-group">
-                                    <label>Promotion Date <span class="req">*</span></label>
-                                    <input type="date" id="promoDate" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Effective From</label>
-                                    <input type="date" id="effectiveFrom">
-                                    <div class="fhint">Leave blank to use Promotion Date</div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Remarks</label>
-                                <textarea id="remarks" rows="3"
-                                    placeholder="Additional notes about the promotion..."></textarea>
-                            </div>
-
-                            <div class="flex justify-end gap-3 mt-4 pt-3 border-t"
-                                style="border-color: var(--primary-soft);">
-                                <button type="button" class="btn-outline"
-                                    onclick="closePromotionModal()">Cancel</button>
-                                <button type="submit" class="btn-success">Save Promotion</button>
-                            </div>
-                        </form>
+                        <div id="viewPromotionContent" style="padding: 10px 0;">
+                            <!-- Content will be populated dynamically -->
+                        </div>
+                        <div class="flex justify-end gap-3 mt-4 pt-3 border-t"
+                            style="border-color: var(--primary-soft);">
+                            <button type="button" class="btn-outline" onclick="closeViewPromotionModal()">Close</button>
+                        </div>
                     </div>
                 </div>
 
@@ -1650,9 +1721,9 @@
 
             <!-- ==================== PATCH 2: QUICK ADD MEMBER MODAL ==================== -->
             <!-- Lightweight 5-field employee registration overlay.
-                Uses existing .modal-overlay / .modal-container pattern from company.html.
-                On success: shows credential card with Copy-to-Clipboard.
-                On close/re-open: fully resets to registration form (no stale state). -->
+                 Uses existing .modal-overlay / .modal-container pattern from company.html.
+                 On success: shows credential card with Copy-to-Clipboard.
+                 On close/re-open: fully resets to registration form (no stale state). -->
             <div id="quickAddMemberModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="quickAddModalTitle">
                 <div class="modal-container" style="width:480px;max-width:95%;">
 
@@ -2266,10 +2337,7 @@
                             ${editField('Nationality', 'efNat', emp.nationality || 'Indian')}${editField('Religion', 'efRel', emp.religion)}${editField("Father's / Spouse Name", 'efFatherName', emp.fatherSpouseName)}
                         </div>
                         <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px;">
-                            ${editField('LinkedIn Profile', 'efLI', emp.linkedinProfile)}${editField('Employee Status', 'efStatus', emp.status)}
-                        </div>
-                    </div>
-                    <!-- TAB 1: Job Details -->
+${editField('LinkedIn Profile', 'efLI', emp.linkedinProfile)}<div class="form-group"><label>Employee Status</label><div style="padding:8px 12px; background:var(--primary-bg-light); border-radius:8px; font-size:12px; color:${emp.status === 'Active' ? '#2b7a3e' : '#dc3545'}; font-weight:600;">${emp.status || 'Active'}</div></div>                    <!-- TAB 1: Job Details -->
                     <div id="editSt1" style="display:none;">
                         <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-briefcase mr-2"></i>Job Details</div>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
@@ -2368,9 +2436,41 @@
             </form>
         </div>`;
 
-            try { if (emp.education) { JSON.parse(emp.education).forEach(e => addEditEduRow(e.degree, e.institution, e.year)); } } catch (e) { }
-            try { if (emp.family) { JSON.parse(emp.family).forEach(f => addEditFamRow(f.name, f.relationship, f.occupation)); } } catch (e) { }
-            try { if (emp.workExperience) { JSON.parse(emp.workExperience).forEach(x => addEditExpRow(x.company, x.designation, x.years)); } } catch (e) { }
+            // Populate Education
+            const editEduList = document.getElementById('editEduList');
+            if (editEduList) editEduList.innerHTML = '';
+            try {
+                if (emp.education) {
+                    const eduData = typeof emp.education === 'string' ? JSON.parse(emp.education) : emp.education;
+                    if (Array.isArray(eduData) && eduData.length) {
+                        eduData.forEach(e => addEditEduRow(e.degree || '', e.institution || '', e.year || ''));
+                    }
+                }
+            } catch (e) { console.error('Error parsing education:', e); }
+
+            // Populate Family
+            const editFamList = document.getElementById('editFamList');
+            if (editFamList) editFamList.innerHTML = '';
+            try {
+                if (emp.family) {
+                    const famData = typeof emp.family === 'string' ? JSON.parse(emp.family) : emp.family;
+                    if (Array.isArray(famData) && famData.length) {
+                        famData.forEach(f => addEditFamRow(f.name || '', f.relationship || '', f.occupation || ''));
+                    }
+                }
+            } catch (e) { console.error('Error parsing family:', e); }
+
+            // Populate Experience
+            const editExpList = document.getElementById('editExpList');
+            if (editExpList) editExpList.innerHTML = '';
+            try {
+                if (emp.workExperience) {
+                    const expData = typeof emp.workExperience === 'string' ? JSON.parse(emp.workExperience) : emp.workExperience;
+                    if (Array.isArray(expData) && expData.length) {
+                        expData.forEach(x => addEditExpRow(x.company || '', x.designation || '', x.years || ''));
+                    }
+                }
+            } catch (e) { console.error('Error parsing experience:', e); }
 
             overlay.addEventListener('click', function (e) { if (e.target === overlay) closeEditOverlay(); });
         }
@@ -2411,27 +2511,49 @@
         }
 
         function addEditEduRow(degree = '', institution = '', year = '') {
+            const container = document.getElementById('editEduList');
+            if (!container) return;
+
             const row = document.createElement('div');
             row.className = 'edit-edu-row';
             row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr 32px;gap:8px;margin-bottom:8px;align-items:end;';
-            row.innerHTML = `<input placeholder="Degree" value="${degree}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Institution" value="${institution}" style="border:1px solid #1B738C; border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Year" value="${year}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
-            document.getElementById('editEduList').appendChild(row);
+            row.innerHTML = `<input type="text" placeholder="Degree" value="${degree.replace(/"/g, '&quot;')}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;">
+                     <input type="text" placeholder="Institution" value="${institution.replace(/"/g, '&quot;')}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;">
+                     <input type="text" placeholder="Year" value="${year}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;">
+                     <button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
+            container.appendChild(row);
         }
+
         function addEditFamRow(name = '', relationship = '', occupation = '') {
+            const container = document.getElementById('editFamList');
+            if (!container) return;
+
             const row = document.createElement('div');
             row.className = 'edit-fam-row';
             row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr 32px;gap:8px;margin-bottom:8px;align-items:end;';
-            row.innerHTML = `<input placeholder="Name" value="${name}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Relationship" value="${relationship}" style="border:1px solid #1B738C; border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Occupation" value="${occupation}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
-            document.getElementById('editFamList').appendChild(row);
+            row.innerHTML = `<input type="text" placeholder="Name" value="${name.replace(/"/g, '&quot;')}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;">
+                     <input type="text" placeholder="Relationship" value="${relationship.replace(/"/g, '&quot;')}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;">
+                     <input type="text" placeholder="Occupation" value="${occupation.replace(/"/g, '&quot;')}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;">
+                     <button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
+            container.appendChild(row);
         }
+
         function addEditExpRow(company = '', designation = '', years = '') {
+            const container = document.getElementById('editExpList');
+            if (!container) return;
+
             const row = document.createElement('div');
             row.className = 'edit-exp-row';
             row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr 32px;gap:8px;margin-bottom:8px;align-items:end;';
-            row.innerHTML = `<input placeholder="Company" value="${company}" style="border:1px solid #1B738C; border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Designation" value="${designation}" style="border:1px solid #1B738C; border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Years" value="${years}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
-            document.getElementById('editExpList').appendChild(row);
+            row.innerHTML = `<input type="text" placeholder="Company" value="${company.replace(/"/g, '&quot;')}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;">
+                     <input type="text" placeholder="Designation" value="${designation.replace(/"/g, '&quot;')}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;">
+                     <input type="text" placeholder="Years" value="${years}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;">
+                     <button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
+            container.appendChild(row);
         }
 
+
+        // ==================== EDIT FORM COLLECTION FUNCTIONS ====================
         function collectEditEducation() {
             const rows = document.querySelectorAll('#editEduList .edit-edu-row');
             const result = [];
@@ -2445,14 +2567,293 @@
                     });
                 }
             });
-            return result.length ? JSON.stringify(result) : null;  // Return null, not empty string
-        } function collectEditFamily() { const rows = document.querySelectorAll('#editFamList .edit-fam-row'); const result = []; rows.forEach(row => { const inputs = row.querySelectorAll('input'); if (inputs[0]?.value.trim()) result.push({ name: inputs[0].value, relationship: inputs[1].value, occupation: inputs[2].value }); }); return result.length ? JSON.stringify(result) : null; }
-        function collectEditExperience() { const rows = document.querySelectorAll('#editExpList .edit-exp-row'); const result = []; rows.forEach(row => { const inputs = row.querySelectorAll('input'); if (inputs[0]?.value.trim()) result.push({ company: inputs[0].value, designation: inputs[1].value, years: inputs[2].value }); }); return result.length ? JSON.stringify(result) : null; }
+            return result.length ? JSON.stringify(result) : null;
+        }
+
+        function collectEditFamily() {
+            const rows = document.querySelectorAll('#editFamList .edit-fam-row');
+            const result = [];
+            rows.forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                if (inputs[0]?.value.trim()) {
+                    result.push({
+                        name: inputs[0].value,
+                        relationship: inputs[1].value,
+                        occupation: inputs[2].value
+                    });
+                }
+            });
+            return result.length ? JSON.stringify(result) : null;
+        }
+
+        function collectEditExperience() {
+            const rows = document.querySelectorAll('#editExpList .edit-exp-row');
+            const result = [];
+            rows.forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                if (inputs[0]?.value.trim()) {
+                    result.push({
+                        company: inputs[0].value,
+                        designation: inputs[1].value,
+                        years: inputs[2].value
+                    });
+                }
+            });
+            return result.length ? JSON.stringify(result) : null;
+        }
+
+        // View Promotion Details
+        async function viewPromotion(promotionId) {
+            try {
+                const result = await fetch(`${PROMOTION_API_BASE}/${promotionId}`);
+                const response = await result.json();
+
+                if (result.ok && response.success) {
+                    const promo = response.data;
+                    const content = document.getElementById('viewPromotionContent');
+                    content.innerHTML = `
+                <div style="background: var(--primary-bg-light); border-radius: 12px; padding: 16px; margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--primary-soft);">
+                        <span style="font-weight: 600; color: var(--primary);">Employee:</span>
+                        <span style="color: var(--text-dark);">${promo.employeeName || '-'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--primary-soft);">
+                        <span style="font-weight: 600; color: var(--primary);">Employee ID:</span>
+                        <span style="color: var(--text-dark);">${promo.employeeId || '-'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--primary-soft);">
+                        <span style="font-weight: 600; color: var(--primary);">Previous Designation:</span>
+                        <span style="color: var(--text-dark);">${promo.previousDesignation || '-'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--primary-soft);">
+                        <span style="font-weight: 600; color: var(--primary);">New Designation:</span>
+                        <span style="color: var(--primary); font-weight: 600;">${promo.newDesignation || '-'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--primary-soft);">
+                        <span style="font-weight: 600; color: var(--primary);">Previous Salary:</span>
+                        <span style="color: var(--text-dark);">${promo.previousSalary ? '₹' + Number(promo.previousSalary).toLocaleString('en-IN') : '-'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--primary-soft);">
+                        <span style="font-weight: 600; color: var(--primary);">New Salary:</span>
+                        <span style="color: var(--primary); font-weight: 500;">${promo.newSalary ? '₹' + Number(promo.newSalary).toLocaleString('en-IN') : '-'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--primary-soft);">
+                        <span style="font-weight: 600; color: var(--primary);">Promotion Date:</span>
+                        <span style="color: var(--text-dark);">${formatDate(promo.promotionDate)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--primary-soft);">
+                        <span style="font-weight: 600; color: var(--primary);">Effective From:</span>
+                        <span style="color: var(--text-dark);">${formatDate(promo.effectiveFrom) || '-'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-weight: 600; color: var(--primary);">Remarks:</span>
+                        <span style="color: var(--text-dark); text-align: right; max-width: 300px;">${promo.remarks || '-'}</span>
+                    </div>
+                </div>
+            `;
+                    document.getElementById('viewPromotionModal').classList.add('active');
+                } else {
+                    showToast(response.message || 'Failed to load promotion details', 'error');
+                }
+            } catch (error) {
+                showToast('Network error: ' + error.message, 'error');
+            }
+        }
+
+        function closeViewPromotionModal() {
+            document.getElementById('viewPromotionModal').classList.remove('active');
+        }
+
+// Edit Promotion
+async function editPromotion(promotionId) {
+    try {
+        const result = await fetch(`${PROMOTION_API_BASE}/${promotionId}`);
+        const response = await result.json();
+        
+        if (result.ok && response.success) {
+            const promo = response.data;
+            
+            // Get employee name
+            const employeeName = promo.employeeName || currentSelectedEmployeeForPromo?.fullName || 'Employee';
+            
+            // Populate form for editing
+            document.getElementById('promotionId').value = promo.id;
+            document.getElementById('promoEmployeeId').value = promo.employeeId || currentSelectedEmployeeForPromo?.employeeId || '';
+            document.getElementById('promoEmployeePrimeId').value = promo.employeePrimeId || currentSelectedEmployeeForPromo?.employeePrimeId || '';
+            document.getElementById('prevDesig').value = promo.previousDesignation || '';
+            document.getElementById('newDesig').value = promo.newDesignation || '';
+            document.getElementById('prevSalary').value = promo.previousSalary || '';
+            document.getElementById('newSalary').value = promo.newSalary || '';
+            document.getElementById('promoDate').value = promo.promotionDate || '';
+            document.getElementById('effectiveFrom').value = promo.effectiveFrom || '';
+            document.getElementById('remarks').value = promo.remarks || '';
+            
+            // Update employee name display
+            const employeeNameDisplay = document.getElementById('selectedEmployeeName');
+            if (employeeNameDisplay) {
+                employeeNameDisplay.innerText = employeeName;
+            }
+            
+            document.getElementById('promotionModalTitle').innerHTML = `Edit Promotion for <span style="color: var(--primary-light);">${employeeName}</span>`;
+            document.getElementById('promotionModal').classList.add('active');
+        } else {
+            showToast(response.message || 'Failed to load promotion details', 'error');
+        }
+    } catch (error) {
+        showToast('Network error: ' + error.message, 'error');
+    }
+}
+
+        // Update savePromotion function to handle both Create and Update
+        async function savePromotion(event) {
+            event.preventDefault();
+
+            const promotionId = document.getElementById('promotionId').value;
+            const employeePrimeId = document.getElementById('promoEmployeeId').value;
+            const previousDesignation = document.getElementById('prevDesig').value;
+            const newDesignation = document.getElementById('newDesig').value.trim();
+            const previousSalary = document.getElementById('prevSalary').value ? parseFloat(document.getElementById('prevSalary').value) : null;
+            const newSalary = document.getElementById('newSalary').value ? parseFloat(document.getElementById('newSalary').value) : null;
+            const promotionDate = document.getElementById('promoDate').value;
+            const effectiveFrom = document.getElementById('effectiveFrom').value || promotionDate;
+            const remarks = document.getElementById('remarks').value;
+
+            if (!employeePrimeId) {
+                showToast('Please select an employee first', 'error');
+                return;
+            }
+
+            if (!newDesignation) {
+                showToast('Please enter new designation', 'error');
+                return;
+            }
+
+            if (!promotionDate) {
+                showToast('Please select promotion date', 'error');
+                return;
+            }
+
+            const payload = {
+                employeePrimeId: parseInt(employeePrimeId),
+                previousDesignation: previousDesignation || null,
+                newDesignation: newDesignation,
+                promotionDate: promotionDate,
+                previousSalary: previousSalary,
+                newSalary: newSalary,
+                effectiveFrom: effectiveFrom,
+                remarks: remarks || null
+            };
+
+            const saveBtn = event.submitter;
+            const originalText = saveBtn.innerHTML;
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Saving...';
+
+            try {
+                let url = `${PROMOTION_API_BASE}/create`;
+                let method = 'POST';
+
+                if (promotionId) {
+                    // For update, many backends don't support PUT, so we'll do DELETE + CREATE
+                    // Or if your backend supports PUT, use this:
+                    // url = `${PROMOTION_API_BASE}/update/${promotionId}`;
+                    // method = 'PUT';
+
+                    // Alternative: Show message that update is not supported
+                    showToast('Edit functionality: Please delete and create new promotion record', 'info');
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = originalText;
+                    return;
+                }
+
+                const result = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const response = await result.json();
+
+                if (result.ok && response.success) {
+                    showToast(promotionId ? 'Promotion updated successfully!' : 'Promotion added successfully!', 'success');
+                    closePromotionModal();
+                    await loadEmployeePromotions();
+                    await fetchAndRenderEmployees();
+                } else {
+                    showToast(response.message || 'Failed to save promotion', 'error');
+                }
+            } catch (error) {
+                showToast('Network error: ' + error.message, 'error');
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = originalText;
+            }
+        }
+
+// Open Add Promotion Modal
+async function openAddPromotionModal() {
+    const employeeSelect = document.getElementById('promotionEmployeeSelect');
+    const employeeId = employeeSelect?.value;
+
+    if (!employeeId) {
+        showToast('Please select an employee first', 'error');
+        return;
+    }
+
+    // Get employee details
+    const result = await apiFetch(`${API_BASE}/get-employee-by-employeeId/${employeeId}`);
+    if (!result.ok || !result.data?.data) {
+        showToast('Could not fetch employee details', 'error');
+        return;
+    }
+
+    const employee = result.data.data;
+    currentSelectedEmployeeForPromo = employee;
+    
+    // Get the employee name
+    const employeeName = employee.fullName || `${employee.firstName || ''} ${employee.lastName || ''}`.trim();
+
+    // Reset form
+    document.getElementById('promotionId').value = '';
+    document.getElementById('promoEmployeeId').value = employee.employeeId || '';
+    document.getElementById('promoEmployeePrimeId').value = employee.employeePrimeId || '';
+    document.getElementById('prevDesig').value = employee.designation || '';
+    document.getElementById('newDesig').value = '';
+    document.getElementById('prevSalary').value = employee.basicSalary || '';
+    document.getElementById('newSalary').value = '';
+    document.getElementById('promoDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('effectiveFrom').value = '';
+    document.getElementById('remarks').value = '';
+
+    // Set modal title with employee name
+    document.getElementById('promotionModalTitle').innerHTML = `Add Promotion for <span style="color: var(--primary-light);">${employeeName}</span>`;
+    
+    // Optional: Add a hidden or display field to show employee name in the form
+    // You can also add a readonly field in the modal body to show the employee name
+    document.getElementById('promotionModal').classList.add('active');
+}
+
+        // Update closePromotionModal function
+        function closePromotionModal() {
+            document.getElementById('promotionModal').classList.remove('active');
+            // Reset form
+            document.getElementById('promotionId').value = '';
+            document.getElementById('promoEmployeeId').value = '';
+            document.getElementById('prevDesig').value = '';
+            document.getElementById('newDesig').value = '';
+            document.getElementById('prevSalary').value = '';
+            document.getElementById('newSalary').value = '';
+            document.getElementById('promoDate').value = '';
+            document.getElementById('effectiveFrom').value = '';
+            document.getElementById('remarks').value = '';
+        }
 
         async function submitEditEmployee(e, employeePrimeId) {
             e.preventDefault();
 
-            // Validation
+            console.log('Submitting edit for employee:', employeePrimeId);
+
+            // Get form values correctly
             const firstName = document.getElementById('efFN')?.value.trim();
             const lastName = document.getElementById('efLN')?.value.trim();
             const email = document.getElementById('efPEmail')?.value.trim();
@@ -2464,20 +2865,91 @@
             const ecName = document.getElementById('efECName')?.value.trim();
             const ecPhone = document.getElementById('efECPhone')?.value.trim();
 
+            // Validation
             if (!firstName || !lastName) { showToast('Please enter First Name and Last Name', 'error'); switchEditTab(0); return; }
             if (!email || !mobile) { showToast('Please enter Email and Mobile number', 'error'); switchEditTab(2); return; }
             if (!dept || !desig) { showToast('Please select Department and Designation', 'error'); switchEditTab(1); return; }
             if (!joiningDate || !basicSalary) { showToast('Please enter Joining Date and Basic Salary', 'error'); switchEditTab(1); return; }
             if (!ecName || !ecPhone) { showToast('Please enter Emergency Contact details', 'error'); switchEditTab(2); return; }
 
-            // Helper function to convert empty string to null
-            const toNull = (val) => (val === undefined || val === null || val === '') ? null : val;
+            // Get password values (optional)
+            const password = document.getElementById('efPassword')?.value.trim();
+            const confirmPassword = document.getElementById('efConfirmPassword')?.value.trim();
 
-const employeePayload = { firstName, middleName: document.getElementById('fMN').value.trim(), lastName, password: password, dateOfBirth: document.getElementById('fDOB').value || null, gender: document.getElementById('fGender').value, maritalStatus: document.getElementById('fMarital').value, bloodGroup: document.getElementById('fBlood').value, panNumber: document.getElementById('fPAN').value.trim().toUpperCase(), aadhaarNumber: document.getElementById('fAAD').value.trim(), nationality: document.getElementById('fNat').value.trim(), religion: document.getElementById('fRel').value.trim(), linkedinProfile: document.getElementById('fLI').value.trim(), fatherSpouseName: document.getElementById('fFatherName').value.trim(), isPhysicallyChallenged: pwdToggle, disabilityType: pwdToggle ? document.getElementById('fPWDType').value : null, disabilityPercentage: pwdToggle ? (parseInt(document.getElementById('fPWDPct').value) || null) : null, certificateNumber: pwdToggle ? document.getElementById('fPWDCert').value.trim() : null, department: dept, subDepartment: document.getElementById('fSubDept').value.trim(), designation: desig, employeeGrade: document.getElementById('fGrade').value, employmentType: document.getElementById('fEmpType').value, joiningDate, probationEndDate: document.getElementById('fProbEnd').value || null, reportingManager: document.getElementById('fMgr').value.trim(), hrBusinessPartner: document.getElementById('fHRBP').value.trim(), workLocation: document.getElementById('fWL').value, basicSalary: parseFloat(basicSalary) || null, shift: document.getElementById('fShift').value, costCentre: document.getElementById('fCC').value.trim(), bankName: document.getElementById('fBank').value.trim(), accountNumber: document.getElementById('fAccNo').value.trim(), ifscCode: document.getElementById('fIFSC').value.trim().toUpperCase(), personalEmail: email, workEmail: document.getElementById('fWEmail').value.trim(), mobileNumber: mobile, alternateNumber: document.getElementById('fAlt').value.trim(), currentStreet: document.getElementById('fCAddr').value.trim(), currentCity: document.getElementById('fCity').value.trim(), currentState: document.getElementById('fState').value.trim(), currentPincode: document.getElementById('fPIN').value.trim(), currentCountry: document.getElementById('fCountry').value.trim(), permanentStreet: document.getElementById('fPAddr').value.trim(), permanentCity: document.getElementById('fPCity').value.trim(), permanentState: document.getElementById('fPState').value.trim(), permanentPincode: document.getElementById('fPPIN').value.trim(), permanentCountry: document.getElementById('fPCountry').value.trim(), emergencyName: ecName, emergencyRelationship: document.getElementById('fECRel').value, emergencyPhone: ecPhone, education: collectEducation(), family: collectFamily(), workExperience: collectExperience() };
+            // Validate password if provided
+            if (password && password !== confirmPassword) {
+                showToast('Passwords do not match', 'error');
+                return;
+            }
+            if (password && password.length < 6) {
+                showToast('Password must be at least 6 characters', 'error');
+                return;
+            }
+
+            // Build payload WITHOUT status field
+            const employeePayload = {
+                firstName: firstName,
+                middleName: document.getElementById('efMN')?.value.trim() || null,
+                lastName: lastName,
+                dateOfBirth: document.getElementById('efDOB')?.value || null,
+                gender: document.getElementById('efGender')?.value,
+                maritalStatus: document.getElementById('efMarital')?.value,
+                bloodGroup: document.getElementById('efBlood')?.value,
+                panNumber: document.getElementById('efPAN')?.value.trim().toUpperCase() || null,
+                aadhaarNumber: document.getElementById('efAAD')?.value.trim() || null,
+                nationality: document.getElementById('efNat')?.value.trim() || 'Indian',
+                religion: document.getElementById('efRel')?.value.trim() || null,
+                linkedinProfile: document.getElementById('efLI')?.value.trim() || null,
+                fatherSpouseName: document.getElementById('efFatherName')?.value.trim() || null,
+                department: dept,
+                subDepartment: document.getElementById('efSubDept')?.value.trim() || null,
+                designation: desig,
+                employeeGrade: document.getElementById('efGrade')?.value,
+                employmentType: document.getElementById('efEmpType')?.value,
+                joiningDate: joiningDate,
+                probationEndDate: document.getElementById('efProbEnd')?.value || null,
+                reportingManager: document.getElementById('efMgr')?.value.trim() || null,
+                hrBusinessPartner: document.getElementById('efHRBP')?.value.trim() || null,
+                workLocation: document.getElementById('efWL')?.value,
+                basicSalary: parseFloat(basicSalary) || null,
+                shift: document.getElementById('efShift')?.value,
+                costCentre: document.getElementById('efCC')?.value.trim() || null,
+                bankName: document.getElementById('efBank')?.value.trim() || null,
+                accountNumber: document.getElementById('efAccNo')?.value.trim() || null,
+                ifscCode: document.getElementById('efIFSC')?.value.trim().toUpperCase() || null,
+                personalEmail: email,
+                workEmail: document.getElementById('efWEmail')?.value.trim() || null,
+                mobileNumber: mobile,
+                alternateNumber: document.getElementById('efAlt')?.value.trim() || null,
+                currentStreet: document.getElementById('efCAddr')?.value.trim() || null,
+                currentCity: document.getElementById('efCity')?.value.trim() || null,
+                currentState: document.getElementById('efState')?.value.trim() || null,
+                currentPincode: document.getElementById('efPIN')?.value.trim() || null,
+                currentCountry: document.getElementById('efCountry')?.value.trim() || 'India',
+                permanentStreet: document.getElementById('efPAddr')?.value.trim() || null,
+                permanentCity: document.getElementById('efPCity')?.value.trim() || null,
+                permanentState: document.getElementById('efPState')?.value.trim() || null,
+                permanentPincode: document.getElementById('efPPIN')?.value.trim() || null,
+                permanentCountry: document.getElementById('efPCountry')?.value.trim() || 'India',
+                emergencyName: ecName,
+                emergencyRelationship: document.getElementById('efECRel')?.value,
+                emergencyPhone: ecPhone,
+                education: collectEditEducation(),
+                family: collectEditFamily(),
+                workExperience: collectEditExperience()
+            };
+
+            // Add password only if provided
+            if (password) {
+                employeePayload.password = password;
+            }
+
+            console.log('Sending payload:', employeePayload);
+
             const formData = new FormData();
             formData.append('employee', JSON.stringify(employeePayload));
 
-            // Append new document files if selected
+            // Append document files if selected
             const docFieldMap = {
                 'efAadhaar': 'aadhaarDocument',
                 'efPAN_doc': 'panDocument',
@@ -2584,6 +3056,62 @@ const employeePayload = { firstName, middleName: document.getElementById('fMN').
             if (toggle.checked) { details.style.display = 'block'; label.innerText = 'Yes'; }
             else { details.style.display = 'none'; label.innerText = 'No'; }
         }
+
+        // ==================== COPY CURRENT ADDRESS TO PERMANENT ====================
+        function copyCurrentToPermanent() {
+            const isChecked = document.getElementById('sameAsCurrentCheckbox').checked;
+
+            if (isChecked) {
+                // Get current address values
+                const currentStreet = document.getElementById('fCAddr').value;
+                const currentCity = document.getElementById('fCity').value;
+                const currentState = document.getElementById('fState').value;
+                const currentPin = document.getElementById('fPIN').value;
+                const currentCountry = document.getElementById('fCountry').value;
+
+                // Copy to permanent address fields
+                document.getElementById('fPAddr').value = currentStreet;
+                document.getElementById('fPCity').value = currentCity;
+                document.getElementById('fPState').value = currentState;
+                document.getElementById('fPPIN').value = currentPin;
+                document.getElementById('fPCountry').value = currentCountry;
+
+                // Optional: Show a small visual feedback
+                showToast('Permanent address copied from current address', 'info');
+            } else {
+                // Optionally clear fields when unchecked? 
+                // Better to leave as is - user might want to modify only some fields
+                // If you want to clear when unchecked, uncomment below:
+                /*
+                document.getElementById('fPAddr').value = '';
+                document.getElementById('fPCity').value = '';
+                document.getElementById('fPState').value = '';
+                document.getElementById('fPPIN').value = '';
+                document.getElementById('fPCountry').value = 'India';
+                */
+            }
+        }
+
+        // Add this function to sync addresses in real-time when checkbox is checked
+        function setupAddressSync() {
+            const currentFields = ['fCAddr', 'fCity', 'fState', 'fPIN', 'fCountry'];
+            const permanentFields = ['fPAddr', 'fPCity', 'fPState', 'fPPIN', 'fPCountry'];
+
+            currentFields.forEach((currId, idx) => {
+                const currField = document.getElementById(currId);
+                if (currField) {
+                    currField.addEventListener('input', function () {
+                        const isChecked = document.getElementById('sameAsCurrentCheckbox')?.checked;
+                        if (isChecked) {
+                            document.getElementById(permanentFields[idx]).value = this.value;
+                        }
+                    });
+                }
+            });
+        }
+
+        // Call this function after DOM is loaded (add inside DOMContentLoaded)
+        // setupAddressSync();
 
         // ==================== DYNAMIC ROWS ====================
         function addEduRow() {
@@ -2745,7 +3273,7 @@ const employeePayload = { firstName, middleName: document.getElementById('fMN').
             if (!ecName || !ecPhone) { showToast('Please enter Emergency Contact details', 'error'); return; }
 
             const pwdToggle = document.getElementById('fPWDToggle').checked;
-const employeePayload = { firstName, middleName: document.getElementById('fMN').value.trim(), lastName, password: password, dateOfBirth: document.getElementById('fDOB').value || null, gender: document.getElementById('fGender').value, maritalStatus: document.getElementById('fMarital').value, bloodGroup: document.getElementById('fBlood').value, panNumber: document.getElementById('fPAN').value.trim().toUpperCase(), aadhaarNumber: document.getElementById('fAAD').value.trim(), nationality: document.getElementById('fNat').value.trim(), religion: document.getElementById('fRel').value.trim(), linkedinProfile: document.getElementById('fLI').value.trim(), fatherSpouseName: document.getElementById('fFatherName').value.trim(), isPhysicallyChallenged: pwdToggle, disabilityType: pwdToggle ? document.getElementById('fPWDType').value : null, disabilityPercentage: pwdToggle ? (parseInt(document.getElementById('fPWDPct').value) || null) : null, certificateNumber: pwdToggle ? document.getElementById('fPWDCert').value.trim() : null, department: dept, subDepartment: document.getElementById('fSubDept').value.trim(), designation: desig, employeeGrade: document.getElementById('fGrade').value, employmentType: document.getElementById('fEmpType').value, joiningDate, probationEndDate: document.getElementById('fProbEnd').value || null, reportingManager: document.getElementById('fMgr').value.trim(), hrBusinessPartner: document.getElementById('fHRBP').value.trim(), workLocation: document.getElementById('fWL').value, basicSalary: parseFloat(basicSalary) || null, shift: document.getElementById('fShift').value, costCentre: document.getElementById('fCC').value.trim(), bankName: document.getElementById('fBank').value.trim(), accountNumber: document.getElementById('fAccNo').value.trim(), ifscCode: document.getElementById('fIFSC').value.trim().toUpperCase(), personalEmail: email, workEmail: document.getElementById('fWEmail').value.trim(), mobileNumber: mobile, alternateNumber: document.getElementById('fAlt').value.trim(), currentStreet: document.getElementById('fCAddr').value.trim(), currentCity: document.getElementById('fCity').value.trim(), currentState: document.getElementById('fState').value.trim(), currentPincode: document.getElementById('fPIN').value.trim(), currentCountry: document.getElementById('fCountry').value.trim(), permanentStreet: document.getElementById('fPAddr').value.trim(), permanentCity: document.getElementById('fPCity').value.trim(), permanentState: document.getElementById('fPState').value.trim(), permanentPincode: document.getElementById('fPPIN').value.trim(), permanentCountry: document.getElementById('fPCountry').value.trim(), emergencyName: ecName, emergencyRelationship: document.getElementById('fECRel').value, emergencyPhone: ecPhone, education: collectEducation(), family: collectFamily(), workExperience: collectExperience() };
+            const employeePayload = { firstName, middleName: document.getElementById('fMN').value.trim(), lastName, password: password, dateOfBirth: document.getElementById('fDOB').value || null, gender: document.getElementById('fGender').value, maritalStatus: document.getElementById('fMarital').value, bloodGroup: document.getElementById('fBlood').value, panNumber: document.getElementById('fPAN').value.trim().toUpperCase(), aadhaarNumber: document.getElementById('fAAD').value.trim(), nationality: document.getElementById('fNat').value.trim(), religion: document.getElementById('fRel').value.trim(), linkedinProfile: document.getElementById('fLI').value.trim(), fatherSpouseName: document.getElementById('fFatherName').value.trim(), isPhysicallyChallenged: pwdToggle, disabilityType: pwdToggle ? document.getElementById('fPWDType').value : null, disabilityPercentage: pwdToggle ? (parseInt(document.getElementById('fPWDPct').value) || null) : null, certificateNumber: pwdToggle ? document.getElementById('fPWDCert').value.trim() : null, department: dept, subDepartment: document.getElementById('fSubDept').value.trim(), designation: desig, employeeGrade: document.getElementById('fGrade').value, employmentType: document.getElementById('fEmpType').value, joiningDate, probationEndDate: document.getElementById('fProbEnd').value || null, reportingManager: document.getElementById('fMgr').value.trim(), hrBusinessPartner: document.getElementById('fHRBP').value.trim(), workLocation: document.getElementById('fWL').value, basicSalary: parseFloat(basicSalary) || null, shift: document.getElementById('fShift').value, costCentre: document.getElementById('fCC').value.trim(), bankName: document.getElementById('fBank').value.trim(), accountNumber: document.getElementById('fAccNo').value.trim(), ifscCode: document.getElementById('fIFSC').value.trim().toUpperCase(), personalEmail: email, workEmail: document.getElementById('fWEmail').value.trim(), mobileNumber: mobile, alternateNumber: document.getElementById('fAlt').value.trim(), currentStreet: document.getElementById('fCAddr').value.trim(), currentCity: document.getElementById('fCity').value.trim(), currentState: document.getElementById('fState').value.trim(), currentPincode: document.getElementById('fPIN').value.trim(), currentCountry: document.getElementById('fCountry').value.trim(), permanentStreet: document.getElementById('fPAddr').value.trim(), permanentCity: document.getElementById('fPCity').value.trim(), permanentState: document.getElementById('fPState').value.trim(), permanentPincode: document.getElementById('fPPIN').value.trim(), permanentCountry: document.getElementById('fPCountry').value.trim(), emergencyName: ecName, emergencyRelationship: document.getElementById('fECRel').value, emergencyPhone: ecPhone, education: collectEducation(), family: collectFamily(), workExperience: collectExperience() };
             const formData = new FormData();
             formData.append('employee', JSON.stringify(employeePayload));
             const docKeyMap = { 'Aadhaar Card': 'aadhaarDocument', 'PAN Card': 'panDocument', 'Degree Certificate': 'degreeDocument', 'Experience Letter': 'experienceDocument' };
@@ -2755,7 +3283,7 @@ const employeePayload = { firstName, middleName: document.getElementById('fMN').
             saveBtn.disabled = true; saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
 
             let result, resData;
-            try { result = await fetch(`${API_BASE}/create-employee`, { method: 'POST', body: formData }); resData = await result.json(); } catch (err) { saveBtn.disabled = false; saveBtn.innerHTML = 'Save Employee'; showToast('Network error.', 'error'); return; }
+            try { result = await fetch(`${API_BASE}/create-employee`, { method: 'POST', body: formData }); resData = await result.json(); } catch (err) { saveBtn.disabled = false; saveBtn.innerHTML = '<i class="fas fa-save mr-1"></i>Save Employee'; showToast('Network error.', 'error'); return; }
 
             saveBtn.disabled = false; saveBtn.innerHTML = '<i class="fas fa-save mr-1"></i>Save Employee';
             if (result.ok && resData.success) {
@@ -2906,38 +3434,47 @@ const employeePayload = { firstName, middleName: document.getElementById('fMN').
             renderPromotionsTable(promotions);
         }
 
-        // Render promotions table
+        // Render promotions table with Edit and View buttons
         function renderPromotionsTable(promotions) {
             const tbody = document.getElementById('promotionsList');
 
             if (!promotions || promotions.length === 0) {
                 tbody.innerHTML = `
-                <tr><td colspan="9" class="py-8 text-center" style="color:var(--text-light);">
-                    <i class="fas fa-info-circle mr-2"></i>No promotion records found for this employee
-                </td></tr>`;
+        <tr><td colspan="10" class="py-8 text-center" style="color:var(--text-light);">
+            <i class="fas fa-info-circle mr-2"></i>No promotion records found for this employee
+        </td></tr>`;
                 return;
             }
 
             let html = '';
             promotions.forEach(promo => {
                 html += `
-                <tr class="border-b data-row" style="border-color:#1B738C;">
-                    <td class="py-3 text-sm" style="color:var(--text-light);">${promo.id || '-'}</td>
-                    <td class="py-3 text-sm" style="color:var(--text-light);">${promo.previousDesignation || '-'}</td>
-                    <td class="py-3 text-sm" style="color:var(--primary); font-weight:600;">${promo.newDesignation || '-'}</td>
-                    <td class="py-3 text-sm" style="color:var(--text-light);">${promo.previousSalary ? '₹' + Number(promo.previousSalary).toLocaleString('en-IN') : '-'}</td>
-                    <td class="py-3 text-sm" style="color:var(--primary); font-weight:500;">${promo.newSalary ? '₹' + Number(promo.newSalary).toLocaleString('en-IN') : '-'}</td>
-                    <td class="py-3 text-sm" style="color:var(--text-light);">${formatDate(promo.promotionDate)}</td>
-                    <td class="py-3 text-sm" style="color:var(--text-light);">${formatDate(promo.effectiveFrom) || '-'}</td>
-                    <td class="py-3 text-sm" style="color:var(--text-light); max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${promo.remarks || '-'}</td>
-                    <td class="py-3">
-                        <button onclick="deletePromotionRecord(${promo.id})" title="Delete"
-                            style="background:rgba(220,53,69,0.1); border:1px solid #dc3545; padding:5px 9px; border-radius:6px; cursor:pointer; font-size:12px; color:#dc3545;">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            `;
+        <tr class="border-b data-row" style="border-color:#1B738C;">
+            <td class="py-3 text-sm" style="color:var(--text-light);">${promo.id || '-'}</td>
+            <td class="py-3 text-sm" style="color:var(--text-light);">${promo.previousDesignation || '-'}</td>
+            <td class="py-3 text-sm" style="color:var(--primary); font-weight:600;">${promo.newDesignation || '-'}</td>
+            <td class="py-3 text-sm" style="color:var(--text-light);">${promo.previousSalary ? '₹' + Number(promo.previousSalary).toLocaleString('en-IN') : '-'}</td>
+            <td class="py-3 text-sm" style="color:var(--primary); font-weight:500;">${promo.newSalary ? '₹' + Number(promo.newSalary).toLocaleString('en-IN') : '-'}</td>
+            <td class="py-3 text-sm" style="color:var(--text-light);">${formatDate(promo.promotionDate)}</td>
+            <td class="py-3 text-sm" style="color:var(--text-light);">${formatDate(promo.effectiveFrom) || '-'}</td>
+            <td class="py-3 text-sm" style="color:var(--text-light); max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${promo.remarks || '-'}</td>
+            <td class="py-3">
+                <div style="display:flex; gap:6px; align-items:center;">
+                    <button onclick="viewPromotion(${promo.id})" title="View"
+                        style="background:var(--primary-bg-light); border:1px solid #1B738C; padding:5px 9px; border-radius:6px; cursor:pointer; font-size:12px; color:var(--primary);">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button onclick="editPromotion(${promo.id})" title="Edit"
+                        style="background:var(--primary-bg-light); border:1px solid #1B738C; padding:5px 9px; border-radius:6px; cursor:pointer; font-size:12px; color:var(--primary);">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button onclick="deletePromotionRecord(${promo.id})" title="Delete"
+                        style="background:rgba(220,53,69,0.1); border:1px solid #dc3545; padding:5px 9px; border-radius:6px; cursor:pointer; font-size:12px; color:#dc3545;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>`;
             });
             tbody.innerHTML = html;
         }
@@ -2949,52 +3486,77 @@ const employeePayload = { firstName, middleName: document.getElementById('fMN').
             return date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
         }
 
-        // Open Add Promotion Modal
-        async function openAddPromotionModal() {
-            const employeeSelect = document.getElementById('promotionEmployeeSelect');
-            const employeeId = employeeSelect?.value;
+// Open Add Promotion Modal
+async function openAddPromotionModal() {
+    const employeeSelect = document.getElementById('promotionEmployeeSelect');
+    const employeeId = employeeSelect?.value;
 
-            if (!employeeId) {
-                showToast('Please select an employee first', 'error');
-                return;
-            }
+    if (!employeeId) {
+        showToast('Please select an employee first', 'error');
+        return;
+    }
 
-            // Get employee details
-            const result = await apiFetch(`${API_BASE}/get-employee-by-employeeId/${employeeId}`);
-            if (!result.ok || !result.data?.data) {
-                showToast('Could not fetch employee details', 'error');
-                return;
-            }
+    // Get employee details
+    const result = await apiFetch(`${API_BASE}/get-employee-by-employeeId/${employeeId}`);
+    if (!result.ok || !result.data?.data) {
+        showToast('Could not fetch employee details', 'error');
+        return;
+    }
 
-            const employee = result.data.data;
-            currentSelectedEmployee = employee;
+    const employee = result.data.data;
+    currentSelectedEmployeeForPromo = employee;
+    
+    // Get the employee name
+    const employeeName = employee.fullName || `${employee.firstName || ''} ${employee.lastName || ''}`.trim();
 
-            // Reset form
-            document.getElementById('promotionId').value = '';
-            document.getElementById('prevDesig').value = employee.designation || '';
-            document.getElementById('newDesig').value = '';
-            document.getElementById('prevSalary').value = employee.basicSalary || '';
-            document.getElementById('newSalary').value = '';
-            document.getElementById('promoDate').value = new Date().toISOString().split('T')[0];
-            document.getElementById('effectiveFrom').value = '';
-            document.getElementById('remarks').value = '';
+    // Reset form
+    document.getElementById('promotionId').value = '';
+    document.getElementById('promoEmployeeId').value = employee.employeeId || '';
+    document.getElementById('promoEmployeePrimeId').value = employee.employeePrimeId || '';
+    document.getElementById('prevDesig').value = employee.designation || '';
+    document.getElementById('newDesig').value = '';
+    document.getElementById('prevSalary').value = employee.basicSalary || '';
+    document.getElementById('newSalary').value = '';
+    document.getElementById('promoDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('effectiveFrom').value = '';
+    document.getElementById('remarks').value = '';
 
-            // Set employee dropdown value
-            const promoEmployeeSelect = document.getElementById('promoEmployeeId');
-            promoEmployeeSelect.value = employee.employeePrimeId;
-            promoEmployeeSelect.disabled = true;
+    // Update the employee name display in modal
+    const employeeNameDisplay = document.getElementById('selectedEmployeeName');
+    if (employeeNameDisplay) {
+        employeeNameDisplay.innerText = employeeName;
+    }
 
-            document.getElementById('promotionModalTitle').innerText = 'Add Promotion';
-            document.getElementById('promotionModal').classList.add('active');
-        }
+    // Set modal title with employee name
+    document.getElementById('promotionModalTitle').innerHTML = `Add Promotion for <span style="color: var(--primary-light);">${employeeName}</span>`;
+    
+    document.getElementById('promotionModal').classList.add('active');
+}
 
-        // Close Promotion Modal
-        function closePromotionModal() {
-            document.getElementById('promotionModal').classList.remove('active');
-            const promoEmployeeSelect = document.getElementById('promoEmployeeId');
-            promoEmployeeSelect.disabled = false;
-            promoEmployeeSelect.value = '';
-        }
+// Close Promotion Modal
+function closePromotionModal() {
+    document.getElementById('promotionModal').classList.remove('active');
+    // Reset form
+    document.getElementById('promotionId').value = '';
+    document.getElementById('promoEmployeeId').value = '';
+    document.getElementById('promoEmployeePrimeId').value = '';
+    document.getElementById('prevDesig').value = '';
+    document.getElementById('newDesig').value = '';
+    document.getElementById('prevSalary').value = '';
+    document.getElementById('newSalary').value = '';
+    document.getElementById('promoDate').value = '';
+    document.getElementById('effectiveFrom').value = '';
+    document.getElementById('remarks').value = '';
+    
+    // Clear employee name display
+    const employeeNameDisplay = document.getElementById('selectedEmployeeName');
+    if (employeeNameDisplay) {
+        employeeNameDisplay.innerText = '-';
+    }
+    
+    // Reset modal title
+    document.getElementById('promotionModalTitle').innerHTML = 'Add Promotion';
+}
 
         // Save Promotion (Create/Update)
         async function savePromotion(event) {
@@ -3139,7 +3701,6 @@ const employeePayload = { firstName, middleName: document.getElementById('fMN').
                 }
             });
         }
-
 
         // ==================== PATCH 3: QUICK ADD MEMBER — JS ====================
 // Production-grade implementation:
