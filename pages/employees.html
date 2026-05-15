@@ -1112,11 +1112,11 @@
                                 <div class="sec-title"><i class="fas fa-id-card"></i> Personal Information</div>
                                 <div class="grid-4 mb-4">
                                     <div class="form-group"><label>First Name <span class="req">*</span></label><input
-                                            id="fFN" placeholder="e.g. Arjun" required></div>
+                                            id="fFN" placeholder="e.g. Arjun" ></div>
                                     <div class="form-group"><label>Middle Name</label><input id="fMN"
                                             placeholder="e.g. Kumar"></div>
                                     <div class="form-group"><label>Last Name <span class="req">*</span></label><input
-                                            id="fLN" placeholder="e.g. Sharma" required></div>
+                                            id="fLN" placeholder="e.g. Sharma" ></div>
                                     <div class="form-group"><label>Employee ID</label><input id="fEID" class="mono"
                                             readonly
                                             style="background:var(--primary-bg-light);color:var(--primary);font-weight:700;">
@@ -1127,7 +1127,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Gender <span class="req">*</span></label>
-                                        <select id="fGender" required>
+                                        <select id="fGender" >
                                             <option value="">Select Gender</option>
                                             <option>Male</option>
                                             <option>Female</option>
@@ -1663,8 +1663,8 @@
 
                 <div class="grid-2 mb-3">
                     <div class="form-group">
-                        <label>Promotion Date <span class="req">*</span></label>
-                        <input type="date" id="promoDate" required>
+                        <label>Promotion Date <span class="req"></span></label>
+                        <input type="date" id="promoDate" >
                     </div>
                     <div class="form-group">
                         <label>Effective From</label>
@@ -1936,7 +1936,7 @@
 
     <script>
         // ==================== CONFIG ====================
-        const API_BASE = 'http://localhost:8086/api/employees';
+        const API_BASE = 'https://hrms-api.kunashshowcase.online/api/employees';
 
         // ==================== GLOBAL VARIABLES ====================
         let currentPage = 0;
@@ -1958,6 +1958,7 @@
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
             toast.innerHTML = message;
+            toast.style.zIndex = '9999';
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
         }
@@ -2288,7 +2289,7 @@
             showEditOverlay(result.data.data, false, employeePrimeId);
         }
 
-        function showEditOverlay(emp, loading, employeePrimeId) {
+       function showEditOverlay(emp, loading, employeePrimeId) {
             let overlay = document.getElementById('editEmployeeOverlay');
             if (!overlay) { overlay = document.createElement('div'); overlay.id = 'editEmployeeOverlay'; document.body.appendChild(overlay); }
 
@@ -2321,6 +2322,7 @@
             </div>
             <form id="editEmployeeForm" onsubmit="submitEditEmployee(event, ${employeePrimeId})">
                 <div style="padding:24px;overflow-y:auto;max-height:calc(100vh - 250px);">
+
                     <!-- TAB 0: Personal -->
                     <div id="editSt0">
                         <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-id-card mr-2"></i>Personal Information</div>
@@ -2337,7 +2339,12 @@
                             ${editField('Nationality', 'efNat', emp.nationality || 'Indian')}${editField('Religion', 'efRel', emp.religion)}${editField("Father's / Spouse Name", 'efFatherName', emp.fatherSpouseName)}
                         </div>
                         <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px;">
-${editField('LinkedIn Profile', 'efLI', emp.linkedinProfile)}<div class="form-group"><label>Employee Status</label><div style="padding:8px 12px; background:var(--primary-bg-light); border-radius:8px; font-size:12px; color:${emp.status === 'Active' ? '#2b7a3e' : '#dc3545'}; font-weight:600;">${emp.status || 'Active'}</div></div>                    <!-- TAB 1: Job Details -->
+                           ${editField('LinkedIn Profile', 'efLI', emp.linkedinProfile)}<div class="form-group"><label>Employee Status</label><div style="padding:8px 12px; background:var(--primary-bg-light); border-radius:8px; font-size:12px; color:${emp.status === 'Active' ? '#2b7a3e' : '#dc3545'}; font-weight:600;">${emp.status || 'Active'}</div>
+                           </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB 1: Job Details -->
                     <div id="editSt1" style="display:none;">
                         <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-briefcase mr-2"></i>Job Details</div>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
@@ -2357,21 +2364,18 @@ ${editField('LinkedIn Profile', 'efLI', emp.linkedinProfile)}<div class="form-gr
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
                             ${editField('Bank Name', 'efBank', emp.bankName)}${editField('Account Number', 'efAccNo', emp.accountNumber)}${editField('IFSC Code', 'efIFSC', emp.ifscCode)}
                         </div>
-                            <!-- 🔴🔴🔴 YAHAN PE ADD KARO (Bank Details ke BAAD) 🔴🔴🔴 -->
-    <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;margin-top:16px;"><i class="fas fa-lock mr-2"></i>Login Credentials</div>
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
-        <div>
-            <label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">New Password</label>
-            <input type="password" id="efPassword" placeholder="Leave blank to keep current" style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
-            <div style="font-size:10px;color:var(--text-light);margin-top:3px;">Minimum 6 characters</div>
-        </div>
-        <div>
-            <label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">Confirm New Password</label>
-            <input type="password" id="efConfirmPassword" placeholder="Re-enter new password" style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
-        </div>
-    </div>
-    <!-- 🔴🔴🔴 ADD KARNA YAHAN TAK 🔴🔴🔴 -->
-
+                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;margin-top:16px;"><i class="fas fa-lock mr-2"></i>Login Credentials</div>
+                        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
+                            <div>
+                                <label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">New Password</label>
+                                <input type="password" id="efPassword" placeholder="Leave blank to keep current" style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
+                                <div style="font-size:10px;color:var(--text-light);margin-top:3px;">Minimum 6 characters</div>
+                            </div>
+                            <div>
+                                <label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">Confirm New Password</label>
+                                <input type="password" id="efConfirmPassword" placeholder="Re-enter new password" style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
+                            </div>
+                        </div>
                     </div>
 
                     <!-- TAB 2: Contact & Address -->
@@ -2412,6 +2416,7 @@ ${editField('LinkedIn Profile', 'efLI', emp.linkedinProfile)}<div class="form-gr
                         <div id="editExpList"></div>
                         <button type="button" onclick="addEditExpRow()" class="btn-outline btn-sm"><i class="fas fa-plus mr-1"></i> Add Experience</button>
                     </div>
+
                     <!-- TAB 4: Documents -->
                     <div id="editSt4" style="display:none;">
                         <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-folder mr-2"></i>Upload / Replace Documents</div>
@@ -2425,6 +2430,7 @@ ${editField('LinkedIn Profile', 'efLI', emp.linkedinProfile)}<div class="form-gr
                             ${editFileField('Profile Photo', 'efProfilePhoto', !!(emp.profilePhotoUrl || emp.profilePhotoImage), `${API_BASE}/${emp.employeeId}/profile-image`)}
                         </div>
                     </div>
+
                 </div>
                 <div style="padding:16px 24px;border-top:1px solid #1B738C;display:flex;justify-content:space-between;align-items:center;background:var(--primary-bg-light);">
                     <span style="font-size:11px;color:var(--text-light);"><i class="fas fa-info-circle mr-1"></i>Fields marked with * are required</span>
@@ -2474,23 +2480,43 @@ ${editField('LinkedIn Profile', 'efLI', emp.linkedinProfile)}<div class="form-gr
 
             overlay.addEventListener('click', function (e) { if (e.target === overlay) closeEditOverlay(); });
         }
-
+        // function editField(label, id, value, type = 'text', required = false) {
+        //     const req = required ? 'required' : '';
+        //     // Handle null/undefined values
+        //     const val = (value !== null && value !== undefined) ? value : '';
+        //     return `<div>
+        // <label style="font-size:11px;font-weight:600; color: #1B738C; display:block;margin-bottom:4px;">${label} ${required ? '<span class="req">*</span>' : ''}</label>
+        // <input type="${type}" id="${id}" name="${id}" value="${String(val).replace(/"/g, '&quot;')}" ${req}
+        //         style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
+        // </div>`;
+        // }
+        
+        
         function editField(label, id, value, type = 'text', required = false) {
-            const req = required ? 'required' : '';
             // Handle null/undefined values
             const val = (value !== null && value !== undefined) ? value : '';
             return `<div>
-        <label style="font-size:11px;font-weight:600; color: #1B738C; display:block;margin-bottom:4px;">${label} ${required ? '<span class="req">*</span>' : ''}</label>
-        <input type="${type}" id="${id}" value="${String(val).replace(/"/g, '&quot;')}" ${req}
-            style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
-    </div>`;
+                <label style="font-size:11px;font-weight:600; color: #1B738C; display:block;margin-bottom:4px;">${label} ${required ? '<span class="req">*</span>' : ''}</label>
+                <input type="${type}" id="${id}" name="${id}" value="${String(val).replace(/"/g, '&quot;')}"
+                        style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
+                </div>`;
         }
+        
+        
+        // function editSelectField(label, id, options, selected, required = false) {
+        //     const opts = options.map(o => `<option value="${o}" ${o === selected ? 'selected' : ''}>${o}</option>`).join('');
+        //     return `<div><label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">${label}</label><select id="${id}" name="${id}" ${required ? 'required' : ''} style="border:1px solid #1B738C; border-radius:10px;padding:8px 12px;width:100%;font-size:12px;box-sizing:border-box;color:var(--text-dark);"><option value="">Select</option>${opts}</select></div>`;
+        // }
+        
         function editSelectField(label, id, options, selected, required = false) {
-            const opts = options.map(o => `<option value="${o}" ${o === selected ? 'selected' : ''}>${o}</option>`).join('');
-            return `<div><label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">${label}</label><select id="${id}" ${required ? 'required' : ''} style="border:1px solid #1B738C; border-radius:10px;padding:8px 12px;width:100%;font-size:12px;box-sizing:border-box;color:var(--text-dark);"><option value="">Select</option>${opts}</select></div>`;
-        }
+    const opts = options.map(o => `<option value="${o}" ${o === selected ? 'selected' : ''}>${o}</option>`).join('');
+    return `<div><label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">${label}</label><select id="${id}" name="${id}" style="border:1px solid #1B738C; border-radius:10px;padding:8px 12px;width:100%;font-size:12px;box-sizing:border-box;color:var(--text-dark);"><option value="">Select</option>${opts}</select></div>`;
+}
+        
+        
+        
         function editTextareaField(label, id, value) {
-            return `<div><label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">${label}</label><textarea id="${id}" rows="2" style="border:1px solid #1B738C; border-radius:10px;padding:8px 12px;width:100%;font-size:12px;box-sizing:border-box;resize:vertical;color:var(--text-dark);">${value || ''}</textarea></div>`;
+            return `<div><label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">${label}</label><textarea id="${id}" name="${id}" rows="2" style="border:1px solid #1B738C; border-radius:10px;padding:8px 12px;width:100%;font-size:12px;box-sizing:border-box;resize:vertical;color:var(--text-dark);">${value || ''}</textarea></div>`;
         }
         function editFileField(label, id, hasDoc, viewUrl) {
             return `<div style="background:var(--primary-bg-light);border-radius:10px;padding:12px;border:1px solid #1B738C;">
@@ -3393,7 +3419,7 @@ async function openAddPromotionModal() {
         });
 
         // ==================== PROMOTION VARIABLES ====================
-        const PROMOTION_API_BASE = 'http://localhost:8086/api/promotions';
+        const PROMOTION_API_BASE = 'https://hrms-api.kunashshowcase.online/api/promotions';
         let deletePromoId = null;
         let currentSelectedEmployee = null;
 
@@ -3504,15 +3530,19 @@ async function openAddPromotionModal() {
     }
 
     const employee = result.data.data;
-    currentSelectedEmployeeForPromo = employee;
     
     // Get the employee name
     const employeeName = employee.fullName || `${employee.firstName || ''} ${employee.lastName || ''}`.trim();
 
+    // Debug logs
+    console.log('Employee object:', employee);
+    console.log('employeePrimeId:', employee.employeePrimeId);
+    console.log('employeeId:', employee.employeeId);
+
     // Reset form
     document.getElementById('promotionId').value = '';
-    document.getElementById('promoEmployeeId').value = employee.employeeId || '';
-    document.getElementById('promoEmployeePrimeId').value = employee.employeePrimeId || '';
+    document.getElementById('promoEmployeePrimeId').value = employee.employeePrimeId || '';  // ← This is the numeric ID
+    document.getElementById('promoEmployeeId').value = employee.employeeId || '';  // ← This is the string ID
     document.getElementById('prevDesig').value = employee.designation || '';
     document.getElementById('newDesig').value = '';
     document.getElementById('prevSalary').value = employee.basicSalary || '';
@@ -3521,17 +3551,16 @@ async function openAddPromotionModal() {
     document.getElementById('effectiveFrom').value = '';
     document.getElementById('remarks').value = '';
 
-    // Update the employee name display in modal
+    // Update the employee name display
     const employeeNameDisplay = document.getElementById('selectedEmployeeName');
     if (employeeNameDisplay) {
         employeeNameDisplay.innerText = employeeName;
     }
 
-    // Set modal title with employee name
     document.getElementById('promotionModalTitle').innerHTML = `Add Promotion for <span style="color: var(--primary-light);">${employeeName}</span>`;
-    
     document.getElementById('promotionModal').classList.add('active');
 }
+
 
 // Close Promotion Modal
 function closePromotionModal() {
@@ -3560,84 +3589,84 @@ function closePromotionModal() {
 
         // Save Promotion (Create/Update)
         async function savePromotion(event) {
-            event.preventDefault();
+    event.preventDefault();
 
-            const employeePrimeId = document.getElementById('promoEmployeeId').value;
-            const promotionId = document.getElementById('promotionId').value;
-            const previousDesignation = document.getElementById('prevDesig').value;
-            const newDesignation = document.getElementById('newDesig').value.trim();
-            const previousSalary = document.getElementById('prevSalary').value ? parseFloat(document.getElementById('prevSalary').value) : null;
-            const newSalary = document.getElementById('newSalary').value ? parseFloat(document.getElementById('newSalary').value) : null;
-            const promotionDate = document.getElementById('promoDate').value;
-            const effectiveFrom = document.getElementById('effectiveFrom').value || promotionDate;
-            const remarks = document.getElementById('remarks').value;
+    // IMPORTANT: Use the correct element ID
+    const employeePrimeId = document.getElementById('promoEmployeePrimeId').value;  // ← FIXED: Use PrimeId
+    const promotionId = document.getElementById('promotionId').value;
+    
+    const previousDesignation = document.getElementById('prevDesig').value;
+    const newDesignation = document.getElementById('newDesig').value.trim();
+    const previousSalary = document.getElementById('prevSalary').value ? parseFloat(document.getElementById('prevSalary').value) : null;
+    const newSalary = document.getElementById('newSalary').value ? parseFloat(document.getElementById('newSalary').value) : null;
+    const promotionDate = document.getElementById('promoDate').value;
+    const effectiveFrom = document.getElementById('effectiveFrom').value || promotionDate;
+    const remarks = document.getElementById('remarks').value;
 
-            if (!employeePrimeId) {
-                showToast('Please select an employee', 'error');
-                return;
-            }
+    console.log('employeePrimeId value:', employeePrimeId);  // Debug log
 
-            if (!newDesignation) {
-                showToast('Please enter new designation', 'error');
-                return;
-            }
+    if (!employeePrimeId || employeePrimeId === '') {
+        showToast('Please select an employee first', 'error');
+        return;
+    }
 
-            if (!promotionDate) {
-                showToast('Please select promotion date', 'error');
-                return;
-            }
+    if (!newDesignation) {
+        showToast('Please enter new designation', 'error');
+        return;
+    }
 
-            const payload = {
-                employeePrimeId: parseInt(employeePrimeId),
-                previousDesignation: previousDesignation || null,
-                newDesignation: newDesignation,
-                promotionDate: promotionDate,
-                previousSalary: previousSalary,
-                newSalary: newSalary,
-                effectiveFrom: effectiveFrom,
-                remarks: remarks || null
-            };
+    if (!promotionDate) {
+        showToast('Please select promotion date', 'error');
+        return;
+    }
 
-            const saveBtn = event.submitter;
-            const originalText = saveBtn.innerHTML;
-            saveBtn.disabled = true;
-            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Saving...';
+    const payload = {
+        employeePrimeId: parseInt(employeePrimeId),
+        previousDesignation: previousDesignation || null,
+        newDesignation: newDesignation,
+        promotionDate: promotionDate,
+        previousSalary: previousSalary,
+        newSalary: newSalary,
+        effectiveFrom: effectiveFrom,
+        remarks: remarks || null
+    };
 
-            try {
-                let result;
-                if (promotionId) {
-                    // Update not implemented in controller, but we can do delete+create or just show error
-                    showToast('Update not supported. Please delete and create new.', 'error');
-                    saveBtn.disabled = false;
-                    saveBtn.innerHTML = originalText;
-                    return;
-                } else {
-                    result = await fetch(`${PROMOTION_API_BASE}/create`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                }
+    console.log('Sending payload:', payload);
 
-                const response = await result.json();
+    const saveBtn = event.submitter;
+    const originalText = saveBtn.innerHTML;
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Saving...';
 
-                if (result.ok && response.success) {
-                    showToast('Promotion added successfully!', 'success');
-                    closePromotionModal();
-                    // Refresh promotions list
-                    await loadEmployeePromotions();
-                    // Also refresh employee list to show updated designation
-                    await fetchAndRenderEmployees();
-                } else {
-                    showToast(response.message || 'Failed to save promotion', 'error');
-                }
-            } catch (error) {
-                showToast('Network error: ' + error.message, 'error');
-            } finally {
-                saveBtn.disabled = false;
-                saveBtn.innerHTML = originalText;
-            }
+    try {
+        const result = await fetch(`${PROMOTION_API_BASE}/create`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const response = await result.json();
+        console.log('Server response:', response);
+
+        if (result.ok && response.success) {
+            showToast('Promotion added successfully!', 'success');
+            closePromotionModal();
+            await loadEmployeePromotions();
+            await fetchAndRenderEmployees();
+        } else {
+            showToast(response.message || 'Failed to save promotion', 'error');
         }
+    } catch (error) {
+        showToast('Network error: ' + error.message, 'error');
+        console.error('Fetch error:', error);
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = originalText;
+    }
+}
+
+
+
 
         // Delete Promotion
         let deletePromoIdLocal = null;
