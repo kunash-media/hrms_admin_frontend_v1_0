@@ -79,7 +79,6 @@
         .btn-success:hover:not(:disabled) { background-color: #1e5a2e; transform: translateY(-1px); }
 
         .btn-danger {
-            /* background-color: #dc3545; */
             color: red;
             padding: 6px 14px;
             border-radius: 8px;
@@ -88,10 +87,8 @@
             border: 2px solid #dfedefa9;
             font-size: 12px;
         }
-        /* .btn-danger:hover { background-color: #c82333; } */
 
         .btn-info {
-            /* background-color: #17a2b8; */
             color: rgb(100, 93, 17);
             padding: 6px 14px;
             border-radius: 8px;
@@ -100,10 +97,8 @@
             border: 2px solid #dfedefa9;
             font-size: 12px;
         }
-        /* .btn-info:hover { background-color: #138496; } */
 
         .btn-warning {
-            /* background-color: #f0a500; */
             color: rgb(66, 18, 237);
             padding: 6px 14px;
             border-radius: 8px;
@@ -112,7 +107,6 @@
             border: 2px solid #dfedefa9;
             font-size: 12px;
         }
-        /* .btn-warning:hover { background-color: #d4920a; } */
 
        input,
         select,
@@ -135,8 +129,6 @@
             border-color: var(--primary);
             box-shadow: 0 0 0 2px rgba(27, 115, 140, 0.1);
         }
-       
-        
 
         .form-group { margin-bottom: 10px; }
 
@@ -309,21 +301,17 @@
         tbody tr:hover { background: var(--primary-bg-light); }
         tbody tr { border-bottom: 1px solid var(--primary-soft); }
 
-        /* Companies main table */
         .companies-table { width: 100%; border-collapse: collapse; }
         .companies-table thead tr { background: var(--primary-bg-light); }
         .companies-table thead th { border-bottom: 2px solid var(--primary-soft); }
 
-        /* View modal info grid */
         .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .info-item label { font-size: 11px; font-weight: 700; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
         .info-item p { font-size: 14px; color: var(--primary); font-weight: 500; }
 
-        /* Disabled form overlay */
         .view-mode input, .view-mode select, .view-mode textarea { background-color: #f8fbfc; pointer-events: none; color: #444; }
         .view-mode .btn-success, .view-mode .btn-secondary { display: none; }
 
-        /* Registered banner */
         .registered-banner {
             background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
             border: 1px solid #a5d6a7;
@@ -362,7 +350,7 @@
                 </button>
             </div>
 
-            <!-- ===== COMPANIES TABLE VIEW ===== -->
+            <!-- COMPANIES TABLE VIEW -->
             <div id="companiesTableSection">
                 <div class="section-card">
                     <div class="overflow-x-auto">
@@ -392,7 +380,7 @@
                 </div>
             </div>
 
-             <!-- REGISTER / EDIT FORM SECTION -->
+            <!-- REGISTER / EDIT FORM SECTION -->
             <div id="formSection" style="display:none;">
                 <div id="formBanner" class="section-card" style="padding: 14px 20px; margin-bottom: 0; border-radius: 16px 16px 0 0; border-bottom: none; background: linear-gradient(135deg, var(--primary), var(--button-hover));">
                     <div class="flex items-center justify-between flex-wrap gap-2">
@@ -525,9 +513,6 @@
     </div>
 </div>
 
-<!-- Custom Department Modal -->
-
-
 <!-- Designation Modal -->
 <div id="designationModal" class="modal-overlay">
     <div class="modal-container">
@@ -542,7 +527,6 @@
                 <label>Department *</label>
                 <div class="inline-add-wrapper">
                     <select id="desigDeptSelect" required style="font-size: 11px; padding: 4px 8px;"><option value="">Select Department</option></select>
-                    <!-- <button type="button" onclick="openCustomDepartmentModal()" class="add-custom-btn"><i class="fas fa-plus-circle"></i> New</button> -->
                 </div>
             </div>
             <div class="form-group">
@@ -590,15 +574,13 @@
     </div>
 </div>
 
-
- <script src="/assets/js/common.js"></script>
-    <script src="/assets/js/sidebar.js"></script>
-    <script src="/assets/js/header.js"></script>
+<script src="/assets/js/common.js"></script>
+<script src="/assets/js/sidebar.js"></script>
+<script src="/assets/js/header.js"></script>
 
 <script>
     // ===== API CONFIG =====
-    // const API_BASE_URL = typeof window.API_BASE_URL !== 'undefined' ? window.API_BASE_URL : 'http://localhost:8086';
-    const COMPANY_API_URL = API_BASE_URL + '/api/company';
+    const COMPANY_API_URL = (typeof API_BASE_URL !== 'undefined' ? API_BASE_URL : 'http://localhost:8086') + '/api/company';
 
     // ===== STATE =====
     let currentCompanyId = null;
@@ -611,7 +593,7 @@
     let isEditMode = false;
     let savedLogoBase64 = null;
 
-    // ===== LOCAL STORAGE KEY =====
+    // ===== LOCAL STORAGE KEYS =====
     const COMPANY_STORAGE_KEY = 'hrms_company_registered';
     const COMPANY_DATA_KEY = 'hrms_company_data';
 
@@ -621,7 +603,7 @@
         toast.className = `toast ${type}`;
         toast.innerText = msg;
         document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
+        setTimeout(() => toast.remove(), 3500);
     }
 
     function escapeHtml(str) {
@@ -632,8 +614,6 @@
     function openModal(id) { document.getElementById(id).classList.add('active'); }
     function closeModal(id) { document.getElementById(id).classList.remove('active'); }
     function closeConfirmModal() { closeModal('confirmDeleteModal'); }
-    function openCustomDepartmentModal() { openModal('customDepartmentModal'); }
-    function closeCustomDepartmentModal() { closeModal('customDepartmentModal'); }
     function closeDepartmentModal() { closeModal('departmentModal'); }
     function closeDesignationModal() { closeModal('designationModal'); }
 
@@ -817,7 +797,7 @@
         newBtn.addEventListener('click', () => { closeModal('confirmDeleteModal'); if (onConfirm) onConfirm(); });
     }
 
-    // ===== FORM MODE: SHOW / HIDE =====
+    // ===== FORM MODE =====
     function setViewMode(enabled) {
         isViewMode = enabled;
         const form = document.getElementById('companyForm');
@@ -836,7 +816,6 @@
     }
 
     function openRegisterForm() {
-        // ONE TIME registration check
         const existing = getStoredCompany();
         if (existing && !isEditMode) {
             showToast('Company already registered! Use Edit to modify.', 'error');
@@ -912,8 +891,8 @@
         const sun = document.getElementById('day_sun'); if(sun) sun.checked = false;
         document.getElementById('logoPreview').innerHTML = '<i class="fas fa-building text-4xl" style="color: var(--primary-light);"></i>';
         selectedLogoFile = null;
-        currentCompanyId = null;  // ← ADD THIS LINE
-    savedLogoBase64 = null; 
+        savedLogoBase64 = null;
+        currentCompanyId = null;
         departmentsData = [];
         designationsData = [];
         renderDepartmentsList();
@@ -923,11 +902,10 @@
 
     // ===== POPULATE FORM =====
     function populateForm(d) {
-        // CRITICAL: restore real DB id so edit payload sends correct id to backend
-        if (d.dbId || d.id) {
-    currentCompanyId = d.dbId || d.id;
-    console.log('[Company] Restored DB id for edit:', currentCompanyId);
-}
+        // Restore DB id for edit
+        currentCompanyId = d.dbId || d.id || null;
+        console.log('[Company] populateForm — currentCompanyId:', currentCompanyId);
+
         document.getElementById('comp_name').value = d.companyName || '';
         document.getElementById('comp_gst').value = d.gstNumber || '';
         document.getElementById('comp_pan').value = d.panNumber || '';
@@ -939,20 +917,30 @@
         document.getElementById('comp_address').value = d.address || '';
         document.getElementById('comp_desc').value = d.description || '';
 
+        // Restore working days
         if (d.workingDays && Array.isArray(d.workingDays)) {
+            // Uncheck all first
+            ['mon','tue','wed','thu','fri','sat','sun'].forEach(day => {
+                const cb = document.getElementById(`day_${day}`);
+                if (cb) cb.checked = false;
+            });
             d.workingDays.forEach(day => {
-                const cb = document.getElementById(`day_${day.dayOfWeek.toLowerCase().substring(0,3)}`);
+                // dayOfWeek stored as "Mon","Tue" etc — take first 3 chars lowercase
+                const key = (day.dayOfWeek || '').toLowerCase().substring(0, 3);
+                const cb = document.getElementById(`day_${key}`);
                 if (cb) cb.checked = day.active;
             });
-            if (d.workingDays.length) {
+            if (d.workingDays.length > 0) {
                 document.getElementById('global_start_time').value = d.workingDays[0].startTime || '09:00';
                 document.getElementById('global_end_time').value = d.workingDays[0].endTime || '18:00';
             }
         }
 
+        // Restore departments & designations
         departmentsData = Array.isArray(d.departments) ? [...d.departments] : [];
         designationsData = Array.isArray(d.designations) ? [...d.designations] : [];
 
+        // Restore logo
         if (d.logoBase64) {
             document.getElementById('logoPreview').innerHTML = `<img src="${d.logoBase64}" class="w-full h-full object-cover rounded-2xl">`;
             savedLogoBase64 = d.logoBase64;
@@ -973,7 +961,6 @@
     }
 
     function saveCompanyToStorage(data) {
-        // Always persist the real DB id separately so edit can find it on reload
         if (currentCompanyId) data.dbId = currentCompanyId;
         localStorage.setItem(COMPANY_DATA_KEY, JSON.stringify(data));
         localStorage.setItem(COMPANY_STORAGE_KEY, 'true');
@@ -1005,12 +992,7 @@
             return;
         }
 
-        // Company is registered → hide Register button
         registerBtn.style.display = 'none';
-
-        const workingDaysStr = Array.isArray(company.workingDays)
-            ? company.workingDays.filter(d => d.active).map(d => d.dayOfWeek.substring(0,3)).join(', ')
-            : '—';
 
         tbody.innerHTML = `
             <tr>
@@ -1031,18 +1013,12 @@
                 <td style="color:var(--text-light);">${escapeHtml(company.phone)}</td>
                 <td>${company.gstNumber ? `<span class="badge-custom">${escapeHtml(company.gstNumber)}</span>` : '<span style="color:var(--text-light);">—</span>'}</td>
                 <td style="color:var(--text-light);">${company.establishedYear || '—'}</td>
-                <td><span style="background:#d4edda; color:#155724; padding:4px 12px; border-radius:40px; font-size:12px; font-weight:600;"><i class="fas fa-check-circle mr-1"></i></span></td>
+                <td><span style="background:#d4edda; color:#155724; padding:4px 12px; border-radius:40px; font-size:12px; font-weight:600;"><i class="fas fa-check-circle mr-1"></i> Active</span></td>
                 <td>
                     <div class="action-btn-group" style="justify-content:center;">
-                        <button onclick="handleViewCompany()" class="btn-info" title="View">
-                            <i class="fas fa-eye mr-1"></i>
-                        </button>
-                        <button onclick="handleEditCompany()" class="btn-warning" title="Edit">
-                            <i class="fas fa-edit mr-1"></i>
-                        </button>
-                        <button onclick="handleDeleteCompany()" class="btn-danger" title="Delete">
-                            <i class="fas fa-trash mr-1"></i>
-                        </button>
+                        <button onclick="handleViewCompany()" class="btn-info" title="View"><i class="fas fa-eye mr-1"></i></button>
+                        <button onclick="handleEditCompany()" class="btn-warning" title="Edit"><i class="fas fa-edit mr-1"></i></button>
+                        <button onclick="handleDeleteCompany()" class="btn-danger" title="Delete"><i class="fas fa-trash mr-1"></i></button>
                     </div>
                 </td>
             </tr>`;
@@ -1066,7 +1042,6 @@
             const stored = getStoredCompany();
             const dbId = stored?.dbId || currentCompanyId;
 
-            // Call backend DELETE API if we have a real DB id
             if (dbId) {
                 try {
                     const resp = await fetch(`${COMPANY_API_URL}/profile/${dbId}`, {
@@ -1076,7 +1051,7 @@
                     const result = await resp.json().catch(() => ({}));
                     if (!resp.ok) {
                         showToast(result.message || 'Failed to delete from server', 'error');
-                        return; // Do NOT clear localStorage if backend delete failed
+                        return;
                     }
                     console.log('[Company] Deleted from DB, id:', dbId);
                 } catch (err) {
@@ -1091,7 +1066,7 @@
         });
     }
 
-    // ===== FORM SUBMIT =====
+    // ===== FORM SUBMIT — FIXED CONNECTIVITY =====
     document.getElementById('companyForm').addEventListener('submit', async function(e) {
         e.preventDefault();
 
@@ -1101,110 +1076,140 @@
         btn.innerHTML = '<span class="loading-spinner"></span> Saving...';
 
         try {
-            const name = document.getElementById('comp_name').value.trim();
+            // ── Validate required fields ──
+            const name  = document.getElementById('comp_name').value.trim();
             const email = document.getElementById('comp_email').value.trim();
             const phone = document.getElementById('comp_phone').value.trim();
 
-            if (!name) throw new Error('Company Name is required');
+            if (!name)  throw new Error('Company Name is required');
             if (!email) throw new Error('Email is required');
             if (!phone) throw new Error('Phone is required');
 
-            const days = ['mon','tue','wed','thu','fri','sat','sun'];
-            const dayNames = { mon:'Mon', tue:'Tue', wed:'Wed', thu:'Thu', fri:'Fri', sat:'Sat', sun:'Sun' };
-            const workingDays = days.map(day => ({
-                dayOfWeek: dayNames[day],
-                active: document.getElementById(`day_${day}`).checked,
+            // ── Build working days array ──
+            // Keys match exactly what frontend stores & what populateForm reads back
+            const dayMap = {
+                mon: 'Mon', tue: 'Tue', wed: 'Wed',
+                thu: 'Thu', fri: 'Fri', sat: 'Sat', sun: 'Sun'
+            };
+            const workingDays = Object.entries(dayMap).map(([key, label]) => ({
+                dayOfWeek: label,
+                active: document.getElementById(`day_${key}`).checked,
                 startTime: document.getElementById('global_start_time').value,
-                endTime: document.getElementById('global_end_time').value
+                endTime:   document.getElementById('global_end_time').value
             }));
 
-            // Use the real DB id for edit; null for new registration
-            const dbIdForPayload = isEditMode ? currentCompanyId : null;
+            // ── Determine DB id ──
+            // For new registration: null  →  backend does INSERT
+            // For edit: currentCompanyId  →  backend does UPDATE
+            const dbId = isEditMode ? currentCompanyId : null;
+            console.log('[Company] Submit — isEditMode:', isEditMode, '| dbId:', dbId);
+            console.log('[Company] Departments to save:', departmentsData);
+            console.log('[Company] Designations to save:', designationsData);
 
-            const companyObj = {
-                dbId: dbIdForPayload,          // real DB primary key — used by backend
-                companyName: name,
-                gstNumber: document.getElementById('comp_gst').value.trim() || null,
-                panNumber: document.getElementById('comp_pan').value.trim() || null,
-                cinNumber: document.getElementById('comp_cin').value.trim() || null,
-                email: email,
-                phone: phone,
-                website: document.getElementById('comp_website').value.trim() || null,
-                establishedYear: document.getElementById('comp_year').value ? parseInt(document.getElementById('comp_year').value) : null,
-                address: document.getElementById('comp_address').value.trim() || null,
-                description: document.getElementById('comp_desc').value.trim() || null,
-                workingDays: workingDays,
-                departments: [...departmentsData],
-                designations: [...designationsData],
-                logoBase64: savedLogoBase64 || null,
-                registeredAt: isEditMode ? getStoredCompany()?.registeredAt : new Date().toISOString(),
-                updatedAt: new Date().toISOString()
+            // ── Build API payload ──
+            // Field names must match CompanyRequestDTO exactly
+            const apiPayload = {
+                id:                 dbId,           // Long id — null = new, number = update
+                companyName:        name,
+                gstNumber:          document.getElementById('comp_gst').value.trim()     || null,
+                panNumber:          document.getElementById('comp_pan').value.trim()     || null,
+                cinNumber:          document.getElementById('comp_cin').value.trim()     || null,
+                email:              email,
+                phone:              phone,
+                website:            document.getElementById('comp_website').value.trim() || null,
+                establishedYear:    document.getElementById('comp_year').value
+                                        ? parseInt(document.getElementById('comp_year').value) : null,
+                address:            document.getElementById('comp_address').value.trim() || null,
+                description:        document.getElementById('comp_desc').value.trim()    || null,
+
+                // ── JSON string fields — must be valid JSON strings ──
+                // departmentsData objects: { departmentName, headOfDepartment }
+                // designationsData objects: { designationName, departmentName, level, baseSalary }
+                workingDays:        JSON.stringify(workingDays),
+                breakTimings:       JSON.stringify({ lunchStart: '13:00', lunchEnd: '14:00' }),
+                holidays:           JSON.stringify([]),
+                departments:        JSON.stringify(departmentsData),
+                designations:       JSON.stringify(designationsData),
+                socialMedia:        JSON.stringify([]),
+                contactPersons:     JSON.stringify([]),
+                bankDetails:        JSON.stringify([])
             };
 
-            // Try API save
-            try {
-                const payload = {
-                    id: dbIdForPayload,        // null = INSERT, real id = UPDATE
-                    companyName: companyObj.companyName,
-                    gstNumber: companyObj.gstNumber,
-                    panNumber: companyObj.panNumber,
-                    cinNumber: companyObj.cinNumber,
-                    email: companyObj.email,
-                    phone: companyObj.phone,
-                    website: companyObj.website,
-                    establishedYear: companyObj.establishedYear,
-                    address: companyObj.address,
-                    description: companyObj.description,
-                    workingDays: JSON.stringify(workingDays),
-                    breakTimings: JSON.stringify({ lunchStart: "13:00", lunchEnd: "14:00" }),
-                    holidays: "[]",
-                    departments: JSON.stringify(departmentsData),
-                    designations: JSON.stringify(designationsData),
-                    socialMedia: "[]",
-                    contactPersons: "[]",
-                    bankDetails: "[]"
-                };
+            console.log('[Company] API payload:', JSON.stringify(apiPayload, null, 2));
 
-                console.log('[Company] Sending to API. isEdit:', isEditMode, 'id:', payload.id);
+            // ── Call backend ──
+            const resp = await fetch(`${COMPANY_API_URL}/profile`, {
+                method:  isEditMode ? 'PATCH' : 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify(apiPayload)
+            });
 
-                const resp = await fetch(`${COMPANY_API_URL}/profile`, {
-                    method: isEditMode ? 'PATCH' : 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
+            const result = await resp.json().catch(() => ({}));
+            console.log('[Company] API response:', result);
 
-                if (resp.ok) {
-                    const result = await resp.json();
-                    if (result.success && result.data?.id) {
-                        currentCompanyId = result.data.id;
-                        companyObj.dbId = currentCompanyId;
-                        console.log('[Company] API success. DB id:', currentCompanyId);
-                        if (selectedLogoFile) {
-                            const fd = new FormData();
-                            fd.append('file', selectedLogoFile);
-                            await fetch(`${COMPANY_API_URL}/logo/${currentCompanyId}`, { method: 'POST', body: fd });
-                        }
-                    }
-                } else {
-                    const errBody = await resp.json().catch(() => ({}));
-                    throw new Error(errBody.message || `API error ${resp.status}`);
-                }
-            } catch(apiErr) {
-                console.warn('[Company] API call failed:', apiErr.message);
-                // Re-throw so the user sees the real error instead of silently failing
-                throw apiErr;
+            if (!resp.ok || !result.success) {
+                throw new Error(result.message || `Server error ${resp.status}`);
             }
 
-            // Always save to localStorage
-            saveCompanyToStorage(companyObj);
+            // ── Capture DB id from response ──
+            if (result.data && result.data.id) {
+                currentCompanyId = result.data.id;
+                console.log('[Company] DB id from response:', currentCompanyId);
+            }
 
-            showToast(isEditMode ? 'Company updated successfully!' : 'Company registered successfully!', 'success');
+            // ── Upload logo if a new file was selected ──
+            if (selectedLogoFile && currentCompanyId) {
+                try {
+                    const fd = new FormData();
+                    fd.append('file', selectedLogoFile);
+                    const logoResp = await fetch(`${COMPANY_API_URL}/logo/${currentCompanyId}`, {
+                        method: 'POST',
+                        body: fd
+                    });
+                    const logoResult = await logoResp.json().catch(() => ({}));
+                    if (logoResp.ok) {
+                        console.log('[Company] Logo uploaded successfully');
+                    } else {
+                        console.warn('[Company] Logo upload failed:', logoResult.message);
+                        showToast('Company saved but logo upload failed', 'info');
+                    }
+                } catch (logoErr) {
+                    console.warn('[Company] Logo upload error:', logoErr.message);
+                }
+            }
 
-            setTimeout(() => {
-                backToTable();
-            }, 800);
+            // ── Build localStorage object (matches what populateForm reads) ──
+            const storageObj = {
+                dbId:            currentCompanyId,
+                companyName:     name,
+                gstNumber:       apiPayload.gstNumber,
+                panNumber:       apiPayload.panNumber,
+                cinNumber:       apiPayload.cinNumber,
+                email:           email,
+                phone:           phone,
+                website:         apiPayload.website,
+                establishedYear: apiPayload.establishedYear,
+                address:         apiPayload.address,
+                description:     apiPayload.description,
+                workingDays:     workingDays,          // array — populateForm expects array
+                departments:     [...departmentsData],  // array — populateForm expects array
+                designations:    [...designationsData], // array — populateForm expects array
+                logoBase64:      savedLogoBase64 || (getStoredCompany()?.logoBase64 || null),
+                registeredAt:    isEditMode ? (getStoredCompany()?.registeredAt || new Date().toISOString()) : new Date().toISOString(),
+                updatedAt:       new Date().toISOString()
+            };
 
-        } catch(err) {
+            saveCompanyToStorage(storageObj);
+
+            showToast(
+                isEditMode ? 'Company updated successfully!' : 'Company registered successfully!',
+                'success'
+            );
+
+            setTimeout(() => backToTable(), 800);
+
+        } catch (err) {
+            console.error('[Company] Submit error:', err);
             showToast(err.message || 'Error saving company', 'error');
         } finally {
             btn.disabled = false;
@@ -1217,7 +1222,10 @@
         e.preventDefault();
         const n = document.getElementById('deptName').value.trim();
         if (!n) { showToast('Department name required', 'error'); return; }
-        const d = { departmentName: n, headOfDepartment: document.getElementById('deptHead').value.trim() };
+        const d = {
+            departmentName:   n,
+            headOfDepartment: document.getElementById('deptHead').value.trim()
+        };
         if (currentEditDeptIndex !== null && document.getElementById('deptId').value !== '') {
             departmentsData[currentEditDeptIndex] = d;
         } else {
@@ -1233,15 +1241,15 @@
     // ===== DESIG FORM =====
     document.getElementById('designationForm')?.addEventListener('submit', function(e) {
         e.preventDefault();
-        const n = document.getElementById('desigName').value.trim();
+        const n    = document.getElementById('desigName').value.trim();
         const dept = document.getElementById('desigDeptSelect').value;
-        if (!n) { showToast('Designation name required', 'error'); return; }
+        if (!n)    { showToast('Designation name required', 'error'); return; }
         if (!dept) { showToast('Select department', 'error'); return; }
         const d = {
             designationName: n,
-            departmentName: dept,
-            level: document.getElementById('desigLevel').value,
-            baseSalary: parseFloat(document.getElementById('desigSalary').value) || 0
+            departmentName:  dept,
+            level:           document.getElementById('desigLevel').value,
+            baseSalary:      parseFloat(document.getElementById('desigSalary').value) || 0
         };
         if (currentEditDesigIndex !== null && document.getElementById('desigId').value !== '') {
             designationsData[currentEditDesigIndex] = d;
@@ -1255,30 +1263,12 @@
         currentEditDesigIndex = null;
     });
 
-    // ===== CUSTOM DEPT FORM =====
-    document.getElementById('customDepartmentForm')?.addEventListener('submit', function(e) {
-        e.preventDefault();
-        const n = document.getElementById('customDeptName').value.trim();
-        if (!n) { showToast('Department name required', 'error'); return; }
-        if (!departmentsData.some(d => d.departmentName === n)) {
-            departmentsData.push({ departmentName: n, headOfDepartment: document.getElementById('customDeptHead').value.trim() || '' });
-            renderDepartmentsList();
-            loadDepartmentsIntoSelects();
-            showToast(`Department "${n}" added`, 'success');
-            closeCustomDepartmentModal();
-            const ds = document.getElementById('desigDeptSelect');
-            if (ds) ds.value = n;
-        } else {
-            showToast('Department already exists', 'error');
-        }
-    });
-
     // ===== INITIALIZE =====
     document.addEventListener('DOMContentLoaded', function() {
         if (typeof loadSidebar === 'function') loadSidebar();
-        if (typeof loadHeader === 'function') loadHeader();
+        if (typeof loadHeader  === 'function') loadHeader();
 
-        // Restore DB id from previously saved company data
+        // Restore DB id from localStorage on page load
         const stored = getStoredCompany();
         if (stored && stored.dbId) {
             currentCompanyId = stored.dbId;
