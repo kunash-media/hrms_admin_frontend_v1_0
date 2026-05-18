@@ -7,148 +7,213 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- html2pdf for payslip PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <!-- SheetJS for Excel export -->
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script> -->
+     <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 
   <style>
     * { font-family: 'Inter', sans-serif; }
     :root {
-      --primary:#1B738C; --primary-light:#62C9EA; --primary-soft:#BDE4EE;
-      --primary-bg:#e9f2f4; --btn-hover:#166278; --border:#1B738C;
+      --primary: #1B738C; --primary-light: #62C9EA; --primary-soft: #BDE4EE;
+      --primary-bg: #e9f2f4; --btn-hover: #166278; --border: #1B738C;
     }
-    body { background:#EBF4F6; }
+    body { background: #EBF4F6; }
 
-    /* ── Scrollbar ── */
-    ::-webkit-scrollbar { width:5px; }
-    ::-webkit-scrollbar-track { background:#f3eeef; }
-    ::-webkit-scrollbar-thumb { background:#1B738C; border-radius:10px; }
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #EBF4F6; }
+    ::-webkit-scrollbar-thumb { background: #1B738C; border-radius: 10px; }
 
     /* ── Sub-nav ── */
     .submodule-link {
-      padding:8px 20px; border-radius:8px; font-size:14px; font-weight:500;
-      transition:all .3s; background:transparent; color:#1B738C;
-      cursor:pointer; text-decoration:none; display:inline-block;
+      padding: 8px 20px; border-radius: 8px; font-size: 13.5px; font-weight: 500;
+      transition: all .2s; background: #EBF4F6; color: #337388;
+      cursor: pointer; text-decoration: none; display: inline-block;
+      border: 1.5px solid transparent;
     }
-    .submodule-link:hover { background:rgba(27,115,140,.1); }
-    .submodule-link.active { background:#1B738C; color:white; }
+    .submodule-link:hover { background: rgba(27,115,140,.1); color: var(--primary); border-color: #b1e0f0; }
+    .submodule-link.active { background: #1B738C; color: white; border-color: #1B738C; }
 
     /* ── Buttons ── */
-    .btn-primary   { background:#1B738C; color:white; padding:8px 16px; border-radius:8px; border:none; cursor:pointer; transition:all .3s; }
-    .btn-primary:hover { background:#166278; transform:translateY(-1px); }
-    .btn-outline   { border:1px solid #7fd8f0; color:#1B738C; padding:8px 16px; border-radius:8px; background:transparent; cursor:pointer; }
-    .btn-outline:hover { background:#1B738C; color:white; }
-    .btn-success   { background:#28a745; color:white; padding:8px 16px; border-radius:8px; border:none; cursor:pointer; }
-    .btn-success:hover { background:#218838; }
-    .btn-danger    { background:#dc3545; color:white; padding:8px 16px; border-radius:8px; border:none; cursor:pointer; }
-    .btn-danger:hover { background:#c82333; }
+    .btn-primary  { background: #1B738C; color: white; padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 500; transition: all .2s; display: inline-flex; align-items: center; gap: 6px; }
+    .btn-primary:hover  { background: #166278; transform: translateY(-1px); }
+    .btn-outline  { border: 1px solid #62C9EA; color: #1B738C; padding: 8px 16px; border-radius: 8px; background: transparent; cursor: pointer; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; transition: all .2s; }
+    .btn-outline:hover  { background: #1B738C; color: white; border-color: #1B738C; }
+    .btn-success  { background: #28a745; color: white; padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; transition: all .2s; }
+    .btn-success:hover  { background: #218838; }
+    .btn-danger   { background: #dc3545; color: white; padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; transition: all .2s; }
+    .btn-danger:hover   { background: #c82333; }
 
     /* ── Toast ── */
-    .toast {
-      position:fixed; bottom:20px; right:20px; padding:12px 20px;
-      border-radius:8px; color:white; z-index:9999;
-      animation:slideIn .3s ease;
-    }
-    .toast.success { background:#28a745; }
-    .toast.error   { background:#dc3545; }
-    .toast.info    { background:#17a2b8; }
-    @keyframes slideIn { from { transform:translateX(100%); opacity:0; } to { transform:translateX(0); opacity:1; } }
+    .toast { position: fixed; bottom: 20px; right: 20px; padding: 11px 18px; border-radius: 8px; color: white; z-index: 9999; animation: slideIn .28s ease; font-size: 13.5px; font-weight: 500; box-shadow: 0 4px 16px rgba(0,0,0,.12); }
+    .toast.success { background: #1a8c42; }
+    .toast.error   { background: #d43030; }
+    .toast.info    { background: #0e6fa8; }
+    @keyframes slideIn { from { transform: translateX(110%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
     /* ── Section card ── */
-    .section-card { background:white; border-radius:12px; border:1px solid #49abcb; padding:20px; margin-bottom:20px; }
+    .section-card { background: white; border-radius: 12px; border: 1px solid #49abcb; padding: 20px; margin-bottom: 20px; }
+
+    /* ── Inputs — scoped to .filter-input to avoid Tailwind conflicts ── */
+    /* Checkboxes are explicitly excluded via input[type="checkbox"] rule below */
+    .filter-input {
+      border: 1px solid #62C9EA;
+      border-radius: 8px;
+      padding: 9px 12px;
+      width: 100%;
+      font-size: 13px;
+      color: #333;
+      background: #fff;
+      transition: border-color .2s, box-shadow .2s;
+      font-family: 'Inter', sans-serif;
+    }
+    .filter-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(27,115,140,.08);
+    }
+    .filter-input::placeholder { color: #9bc9d8; }
+    label { font-size: 12px; font-weight: 600; color: #1B738C; margin-bottom: 4px; display: block; letter-spacing: .01em; }
 
     /* ── Table ── */
-    .data-table { width:100%; border-collapse:collapse; font-size:13px; }
-    .data-table thead tr { background:#1B738C; color:white; }
+    .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    .data-table thead tr { background: #1B738C; color: white; }
     .data-table thead th {
-      padding:11px 12px; text-align:left; font-weight:600;
-      white-space:nowrap; position:sticky; top:0; z-index:2;
+      padding: 10px 12px; text-align: left; font-weight: 600;
+      white-space: nowrap; position: sticky; top: 0; z-index: 2; font-size: 12px;
     }
-    .data-table thead th.text-right { text-align:right; }
-    .data-table tbody tr { border-bottom:1px solid #e4f3f8; transition:background .15s; }
-    .data-table tbody tr:hover { background:#f0fafd; }
-    .data-table tbody tr.selected-row { background:#dff5fb; }
-    .data-table tbody td { padding:10px 12px; vertical-align:middle; white-space:nowrap; }
-    .data-table tbody td.text-right { text-align:right; }
-    .data-table tfoot tr { background:#e9f6fb; font-weight:700; border-top:2px solid #1B738C; }
-    .data-table tfoot td { padding:10px 12px; white-space:nowrap; }
-    .data-table tfoot td.text-right { text-align:right; }
+    .data-table thead th.text-right { text-align: right; }
+    .data-table tbody tr { border-bottom: 1px solid #e4f3f8; transition: background .15s; }
+    .data-table tbody tr:hover { background: #f0fafd; }
+    .data-table tbody tr.selected-row { background: #dff5fb; }
+    .data-table tbody td { padding: 10px 12px; vertical-align: middle; white-space: nowrap; }
+    .data-table tbody td.text-right { text-align: right; }
+    .data-table tfoot tr { background: #e9f6fb; font-weight: 700; border-top: 2px solid #1B738C; }
+    .data-table tfoot td { padding: 10px 12px; white-space: nowrap; font-size: 12.5px; }
+    .data-table tfoot td.text-right { text-align: right; }
+
+    /* ── Table wrapper — fixed scroll padding ── */
+    .table-wrapper {
+      overflow-x: auto;
+      overflow-y: visible;
+      border-radius: 0 0 12px 12px;
+    }
+    .table-wrapper::-webkit-scrollbar { height: 5px; }
+    .table-wrapper::-webkit-scrollbar-track { background: #f0f8fb; border-radius: 10px; }
+    .table-wrapper::-webkit-scrollbar-thumb { background: #62C9EA; border-radius: 10px; }
 
     /* Status badge */
-    .badge { padding:3px 10px; border-radius:20px; font-size:11px; font-weight:600; }
-    .badge-processed { background:#d1fae5; color:#065f46; }
-    .badge-paid      { background:#dbeafe; color:#1e40af; }
-    .badge-draft     { background:#f3f4f6; color:#374151; }
-    .badge-failed    { background:#fee2e2; color:#991b1b; }
-    .badge-cancelled { background:#fef3c7; color:#92400e; }
+    .badge { padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+    .badge-processed { background: #d1fae5; color: #065f46; }
+    .badge-paid      { background: #dbeafe; color: #1e40af; }
+    .badge-draft     { background: #f3f4f6; color: #374151; }
+    .badge-failed    { background: #fee2e2; color: #991b1b; }
+    .badge-cancelled { background: #fef3c7; color: #92400e; }
 
-    /* Checkbox */
-    input[type="checkbox"] { accent-color:#1B738C; width:15px; height:15px; cursor:pointer; }
+    input[type="checkbox"] { accent-color: #1B738C; width: 15px; height: 15px; cursor: pointer; }
 
     /* ── Pagination ── */
     .page-btn {
-      width:34px; height:34px; border-radius:8px; border:1px solid #c4e6f0;
-      background:white; color:#1B738C; font-size:13px; font-weight:500;
-      cursor:pointer; display:inline-flex; align-items:center; justify-content:center;
-      transition:all .2s;
+      width: 32px; height: 32px; border-radius: 8px; border: 1px solid #c4e6f0;
+      background: white; color: #1B738C; font-size: 12px; font-weight: 500;
+      cursor: pointer; display: inline-flex; align-items: center; justify-content: center; transition: all .2s;
     }
-    .page-btn:hover { background:#1B738C; color:white; }
-    .page-btn.active { background:#1B738C; color:white; border-color:#1B738C; }
-    .page-btn:disabled { opacity:.4; cursor:not-allowed; }
+    .page-btn:hover  { background: #1B738C; color: white; }
+    .page-btn.active { background: #1B738C; color: white; border-color: #1B738C; }
+    .page-btn:disabled { opacity: .4; cursor: not-allowed; }
 
     /* ── Payslip modal ── */
-    .modal { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:1000; justify-content:center; align-items:center; }
-    .modal.active { display:flex; }
+    .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 1000; justify-content: center; align-items: center; }
+    .modal.active { display: flex; }
     .modal-content {
-      background:white; border-radius:16px; width:90%; max-width:740px;
-      max-height:88vh; overflow-y:auto; padding:24px;
+      background: white; border-radius: 16px; width: 92%; max-width: 780px;
+      max-height: 90vh; display: flex; flex-direction: column; overflow: hidden;
+    }
+    .modal-body   { padding: 24px 24px 0 24px; overflow-y: auto; flex: 1; }
+    .modal-footer { padding: 16px 24px; border-top: 1px solid #e4f3f8; background: white;
+                    display: flex; justify-content: flex-end; gap: 12px;
+                    border-radius: 0 0 16px 16px; flex-shrink: 0; }
+
+    /* ── Export overlay ── */
+    .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 2000; justify-content: center; align-items: center; }
+    .overlay.active { display: flex; }
+    .overlay-box { background: white; border-radius: 16px; padding: 32px; max-width: 460px; width: 90%; text-align: center; }
+
+    /* ══════════════════════════════════════════
+       PAYSLIP DOCUMENT STYLES
+    ══════════════════════════════════════════ */
+    .payslip-container { max-width: 750px; margin: 0 auto; background: white; padding: 22px 26px; font-size: 12.5px; color: #111; }
+
+    /* Logo + header row */
+    .ps-top-row { display: flex; align-items: center; gap: 16px; margin-bottom: 10px; }
+    .ps-logo    { width: 56px; height: 56px; object-fit: contain; flex-shrink: 0; }
+    .ps-logo-placeholder { width: 56px; height: 56px; background: #e9f6fb; border-radius: 8px; border: 1px solid #b8e4f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .ps-company-block { flex: 1; }
+
+    .ps-header { border: 2px solid #1B738C; border-radius: 6px; overflow: hidden; margin-bottom: 12px; }
+    .ps-company-row { background: #1B738C; color: white; padding: 10px 16px; display: flex; align-items: center; gap: 14px; }
+    .ps-company-logo-wrap { background: white; border-radius: 6px; padding: 3px; flex-shrink: 0; }
+    .ps-company-logo-wrap img { width: 44px; height: 44px; object-fit: contain; display: block; }
+    .ps-company-logo-wrap .ps-logo-fallback { width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; font-size: 9px; color: #1B738C; font-weight: 700; text-align: center; }
+    .ps-company-text { flex: 1; text-align: center; }
+    .ps-company-name { font-size: 15px; font-weight: 700; letter-spacing: .4px; }
+    .ps-company-addr { font-size: 10.5px; opacity: .88; margin-top: 3px; }
+    .ps-month-row    { text-align: center; padding: 6px; font-weight: 600; font-size: 12px; color: #1B738C; background: #e9f6fb; border-top: 1px solid #62C9EA; }
+
+    .ps-emp-grid { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid #1B738C; border-radius: 6px; overflow: hidden; margin-bottom: 12px; }
+    .ps-emp-cell { display: flex; gap: 8px; padding: 6px 12px; border-bottom: 1px solid #d4edf5; }
+    .ps-emp-cell:nth-child(odd)  { border-right: 1px solid #d4edf5; }
+    .ps-emp-cell:nth-last-child(1), .ps-emp-cell:nth-last-child(2) { border-bottom: none; }
+    .ps-emp-label { color: #1B738C; font-weight: 600; min-width: 120px; font-size: 11px; flex-shrink: 0; }
+    .ps-emp-value { color: #222; font-size: 11px; }
+
+    /* ── Attendance strip (NEW) ── */
+    .ps-att-strip { display: grid; grid-template-columns: repeat(6,1fr); border: 1px solid #1B738C; border-radius: 6px; overflow: hidden; margin-bottom: 12px; }
+    .ps-att-cell  { text-align: center; padding: 6px 4px; border-right: 1px solid #d4edf5; }
+    .ps-att-cell:last-child { border-right: none; }
+    .ps-att-val   { font-size: 14px; font-weight: 800; color: #1B738C; }
+    .ps-att-val.lop  { color: #dc3545; }
+    .ps-att-val.paid { color: #16a34a; }
+    .ps-att-lbl   { font-size: 9.5px; color: #5a7c8a; margin-top: 2px; }
+    .ps-att-head  { background: #1B738C; grid-column: 1/-1; text-align: center; padding: 4px; font-size: 10px; font-weight: 700; color: white; letter-spacing: .06em; text-transform: uppercase; }
+
+    .ps-salary-table { width: 100%; border-collapse: collapse; border: 1px solid #1B738C; border-radius: 6px; overflow: hidden; margin-bottom: 12px; }
+    .ps-salary-table thead th { background: #1B738C; color: white; padding: 7px 12px; font-size: 11.5px; text-align: left; font-weight: 600; }
+    .ps-salary-table thead th.amt-col { text-align: right; }
+    .ps-salary-table tbody td { padding: 6px 12px; font-size: 11.5px; border-bottom: 1px solid #e4f3f8; }
+    .ps-salary-table tbody tr:last-child td { border-bottom: none; }
+    .ps-salary-table tbody td.amt-col { text-align: right; }
+    .ps-salary-table tbody tr.lop-row td { color: #dc3545; }
+    .ps-salary-table tbody tr.exp-row td { color: #0e6fa8; }
+    .ps-salary-table tfoot .total-row td { font-weight: 700; background: #e9f6fb; border-top: 2px solid #1B738C; padding: 7px 12px; font-size: 11.5px; }
+    .ps-salary-table tfoot .total-row td.amt-col { text-align: right; }
+
+    .ps-net-row { display: flex; justify-content: space-between; align-items: center; background: #1B738C; color: white; border-radius: 6px; padding: 10px 16px; margin-bottom: 10px; }
+    .ps-net-label  { font-size: 13px; font-weight: 600; }
+    .ps-net-words  { font-size: 10.5px; opacity: .85; margin-top: 3px; font-style: italic; }
+    .ps-net-amount { font-size: 22px; font-weight: 800; }
+    .ps-footer { text-align: center; font-size: 10px; color: #888; padding-top: 8px; border-top: 1px solid #e0f0f7; }
+
+    .main-content { margin-top: 64px; }
+
+    @media (max-width: 768px) {
+      .section-card { padding: 14px; }
+      .ps-emp-grid, .ps-att-strip { grid-template-columns: 1fr; }
+      .ps-emp-cell:nth-child(odd) { border-right: none; }
+      .ps-att-strip { grid-template-columns: repeat(3,1fr); }
+      .modal-content { padding: 16px; width: 96%; }
     }
 
-    /* ── Export confirm overlay ── */
-    .overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,.5); z-index:2000; justify-content:center; align-items:center; }
-    .overlay.active { display:flex; }
-    .overlay-box { background:white; border-radius:16px; padding:32px; max-width:460px; width:90%; text-align:center; }
 
-    /* ── Payslip Document Styles (mirror of reference sheet) ── */
-    .payslip-container { max-width:750px; margin:0 auto; background:white; padding:22px 26px; font-size:12.5px; color:#111; }
-    .ps-header { border:2px solid #1B738C; border-radius:6px; overflow:hidden; margin-bottom:12px; }
-    .ps-company-row { background:#1B738C; color:white; text-align:center; padding:10px 16px; }
-    .ps-company-name { font-size:15px; font-weight:700; letter-spacing:.4px; }
-    .ps-company-addr { font-size:10.5px; opacity:.88; margin-top:3px; }
-    .ps-month-row { text-align:center; padding:6px; font-weight:600; font-size:12px; color:#1B738C; background:#e9f6fb; border-top:1px solid #62C9EA; }
-    .ps-emp-grid { display:grid; grid-template-columns:1fr 1fr; border:1px solid #1B738C; border-radius:6px; overflow:hidden; margin-bottom:12px; }
-    .ps-emp-cell { display:flex; gap:8px; padding:6px 12px; border-bottom:1px solid #d4edf5; }
-    .ps-emp-cell:nth-child(odd) { border-right:1px solid #d4edf5; }
-    .ps-emp-cell:nth-last-child(1),.ps-emp-cell:nth-last-child(2) { border-bottom:none; }
-    .ps-emp-label { color:#1B738C; font-weight:600; min-width:120px; font-size:11px; flex-shrink:0; }
-    .ps-emp-value { color:#222; font-size:11px; }
-    .ps-salary-table { width:100%; border-collapse:collapse; border:1px solid #1B738C; border-radius:6px; overflow:hidden; margin-bottom:12px; }
-    .ps-salary-table thead th { background:#1B738C; color:white; padding:7px 12px; font-size:11.5px; text-align:left; font-weight:600; }
-    .ps-salary-table thead th.amt-col { text-align:right; }
-    .ps-salary-table tbody td { padding:6px 12px; font-size:11.5px; border-bottom:1px solid #e4f3f8; }
-    .ps-salary-table tbody tr:last-child td { border-bottom:none; }
-    .ps-salary-table tbody td.amt-col { text-align:right; }
-    .ps-salary-table tfoot .total-row td { font-weight:700; background:#e9f6fb; border-top:2px solid #1B738C; padding:7px 12px; font-size:11.5px; }
-    .ps-salary-table tfoot .total-row td.amt-col { text-align:right; }
-    .ps-net-row { display:flex; justify-content:space-between; align-items:center; background:#1B738C; color:white; border-radius:6px; padding:10px 16px; margin-bottom:10px; }
-    .ps-net-label { font-size:13px; font-weight:600; }
-    .ps-net-words { font-size:10.5px; opacity:.85; margin-top:3px; font-style:italic; }
-    .ps-net-amount { font-size:22px; font-weight:800; }
-    .ps-footer { text-align:center; font-size:10px; color:#888; padding-top:8px; border-top:1px solid #e0f0f7; }
-
-    .main-content { margin-top:64px; }
-
-    input,select { border:1px solid #c0dde8; border-radius:8px; padding:8px 12px; }
-    input:focus,select:focus { outline:none; border-color:#1B738C; box-shadow:0 0 0 2px rgba(27,115,140,.1); }
-    label { font-size:12px; font-weight:500; color:#1B738C; margin-bottom:4px; display:block; }
-
-    @media (max-width:768px) {
-      .section-card { padding:14px; }
-      .ps-emp-grid { grid-template-columns:1fr; }
-      .ps-emp-cell:nth-child(odd) { border-right:none; }
-      .modal-content { padding:16px; }
+    @media print {
+    body * { visibility: hidden; }
+    #payslipToPrint, #payslipToPrint * { visibility: visible; }
+    #payslipToPrint { 
+        position: absolute; 
+        left: 0; 
+        top: 0; 
+        width: 100%; 
     }
+}
   </style>
 </head>
 <body>
@@ -163,7 +228,7 @@
 
       <!-- Page Header -->
       <div class="mb-5">
-        <h1 class="text-2xl font-bold text-[#1B738C]">Payroll Management</h1>
+        <h1 class="text-xl font-bold text-[#1B738C]">Payroll Management</h1>
         <p class="text-sm text-[#1B738C] mt-1">Manage salary structures &amp; process employee payroll.</p>
       </div>
 
@@ -177,12 +242,11 @@
       <div class="section-card mb-5">
         <div class="flex flex-wrap gap-4 items-end justify-between">
 
-          <!-- Left: filters -->
           <div class="flex flex-wrap gap-3 items-end flex-1 min-w-0">
 
             <div class="min-w-[140px]">
               <label>Month</label>
-              <select id="filterMonth" class="text-sm">
+              <select id="filterMonth" class="filter-input">
                 <option value="">All Months</option>
                 <option value="JANUARY">January</option><option value="FEBRUARY">February</option>
                 <option value="MARCH">March</option><option value="APRIL">April</option>
@@ -195,21 +259,17 @@
 
             <div class="min-w-[110px]">
               <label>Year</label>
-              <select id="filterYear" class="text-sm">
-                <option value="">All Years</option>
-              </select>
+              <select id="filterYear" class="filter-input"><option value="">All Years</option></select>
             </div>
 
             <div class="min-w-[140px]">
               <label>Department</label>
-              <select id="filterDept" class="text-sm">
-                <option value="">All Departments</option>
-              </select>
+              <select id="filterDept" class="filter-input"><option value="">All Departments</option></select>
             </div>
 
             <div class="min-w-[140px]">
               <label>Status</label>
-              <select id="filterStatus" class="text-sm">
+              <select id="filterStatus" class="filter-input">
                 <option value="">All Statuses</option>
                 <option value="PROCESSED">Processed</option>
                 <option value="PAID">Paid</option>
@@ -221,19 +281,16 @@
 
             <div class="min-w-[180px]">
               <label>Search</label>
-              <input id="filterSearch" type="text" placeholder="Name, ID, designation…" class="text-sm">
+              <input id="filterSearch" type="text" placeholder="Name, ID, designation…" class="filter-input">
             </div>
 
-            <button id="resetFiltersBtn"
-                    class="btn-outline text-sm px-4 py-2 hidden flex items-center gap-1.5 self-end">
+            <button id="resetFiltersBtn" class="btn-outline text-sm px-4 py-2 hidden self-end">
               <i class="fas fa-times-circle text-xs"></i> Reset
             </button>
           </div>
 
-          <!-- Right: actions -->
           <div class="flex gap-2 items-end flex-shrink-0">
-            <button id="exportExcelBtn"
-                    class="btn-primary flex items-center gap-2 text-sm px-4 py-2">
+            <button id="exportExcelBtn" class="btn-primary text-sm px-4 py-2">
               <i class="fas fa-file-excel"></i> Export Excel
             </button>
           </div>
@@ -241,29 +298,25 @@
         </div>
       </div>
 
-      <!-- Selection info bar (shown when rows are checked) -->
+      <!-- Selection bar -->
       <div id="selectionBar"
            class="hidden mb-3 px-4 py-2.5 rounded-xl border border-[#62C9EA] bg-[#e9f6fb] text-sm text-[#1B738C] font-medium flex items-center justify-between gap-3">
         <span><i class="fas fa-check-circle mr-1.5"></i><span id="selectionCount">0</span> record(s) selected</span>
         <div class="flex gap-2">
-          <button id="exportSelectedBtn"
-                  class="btn-primary text-xs px-3 py-1.5 flex items-center gap-1.5">
+          <button id="exportSelectedBtn" class="btn-primary text-xs px-3 py-1.5">
             <i class="fas fa-file-excel"></i> Export Selected
           </button>
-          <button id="clearSelectionBtn"
-                  class="btn-outline text-xs px-3 py-1.5">
-            Clear Selection
-          </button>
+          <button id="clearSelectionBtn" class="btn-outline text-xs px-3 py-1.5">Clear Selection</button>
         </div>
       </div>
 
-      <!-- Table card -->
+      <!-- Table card — NO extra padding on wrapper -->
       <div class="section-card p-0 overflow-hidden">
-        <div class="overflow-x-auto">
+        <div class="table-wrapper">
           <table class="data-table" id="payrollTable">
             <thead>
               <tr>
-                <th class="w-10 text-center">
+                <th class="w-10 text-center pl-3">
                   <input type="checkbox" id="selectAllChk" title="Select all on this page">
                 </th>
                 <th>Sr.</th>
@@ -277,23 +330,24 @@
                 <th class="text-right">HRA (₹)</th>
                 <th class="text-right">Allowances (₹)</th>
                 <th class="text-right">Gross (₹)</th>
+                <th class="text-right">Days</th>
+                <th class="text-right">LOP Days</th>
+                <th class="text-right">LOP Ded. (₹)</th>
                 <th class="text-right">Emp PF (₹)</th>
-                <th class="text-right">Employer PF (₹)</th>
+                <th class="text-right">Empr PF (₹)</th>
                 <th class="text-right">ESI (₹)</th>
                 <th class="text-right">TDS (₹)</th>
                 <th class="text-right">Total Ded. (₹)</th>
+                <th class="text-right">Exp. Reimb. (₹)</th>
                 <th class="text-right">Net Pay (₹)</th>
                 <th class="text-center">Actions</th>
               </tr>
             </thead>
-            <tbody id="tableBody">
-              <!-- rows injected by JS -->
-            </tbody>
+            <tbody id="tableBody"></tbody>
             <tfoot id="tableFoot"></tfoot>
           </table>
         </div>
 
-        <!-- Empty / loading state -->
         <div id="tableEmpty" class="hidden text-center py-16 text-gray-400">
           <i class="fas fa-file-invoice-dollar text-4xl mb-3 block opacity-30"></i>
           <p class="text-sm">No payroll records found.</p>
@@ -303,7 +357,6 @@
           <p class="text-sm">Loading payroll records…</p>
         </div>
 
-        <!-- Pagination -->
         <div class="flex flex-wrap items-center justify-between gap-3 px-4 py-3 border-t border-[#e4f3f8]">
           <div class="text-xs text-gray-500" id="paginationInfo"></div>
           <div class="flex items-center gap-1.5" id="paginationControls"></div>
@@ -317,26 +370,25 @@
 <!-- ═══════════ PAYSLIP MODAL ═══════════ -->
 <div id="payslipModal" class="modal">
   <div class="modal-content">
-    <div class="flex justify-between items-center mb-5">
-      <h3 class="text-xl font-semibold text-[#1B738C]">Salary Slip</h3>
-      <button onclick="closePayslipModal()"
-              class="text-3xl leading-none text-gray-400 hover:text-[#1B738C] transition-colors">&times;</button>
+    <div class="modal-body">
+      <div class="flex justify-between items-center mb-5">
+        <h3 class="text-xl font-semibold text-[#1B738C]">Salary Slip</h3>
+        <button onclick="closePayslipModal()" class="text-3xl leading-none text-gray-400 hover:text-[#1B738C] transition-colors">&times;</button>
+      </div>
+      <div id="payslipContent" class="mb-4"></div>
     </div>
-    <div id="payslipContent" class="mb-5"></div>
-    <div class="flex justify-end gap-3">
-      <button onclick="downloadPayslipPDF()"
-              class="btn-primary flex items-center gap-2 px-5 py-2.5 text-sm font-medium">
+    <div class="modal-footer">
+      <button onclick="downloadPayslipPDF()" class="btn-primary px-5 py-2.5 text-sm font-medium">
         <i class="fas fa-download"></i> Download PDF
       </button>
-      <button onclick="printPayslip()"
-              class="btn-outline flex items-center gap-2 px-5 py-2.5 text-sm font-medium">
+      <button onclick="printPayslip()" class="btn-outline px-5 py-2.5 text-sm font-medium">
         <i class="fas fa-print"></i> Print
       </button>
     </div>
   </div>
 </div>
 
-<!-- ═══════════ EXPORT CONFIRM OVERLAY ═══════════ -->
+<!-- ═══════════ EXPORT CONFIRM ═══════════ -->
 <div id="exportOverlay" class="overlay">
   <div class="overlay-box">
     <div class="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
@@ -345,22 +397,19 @@
     <h3 class="text-lg font-bold text-gray-800 mb-2">Export All Records?</h3>
     <p class="text-sm text-gray-500 mb-6">
       This will export <strong id="exportTotalCount">all</strong> payroll records
-      currently matching your filters into a formatted Excel file (Salary Register format).
+      matching your filters into a formatted Excel file (Salary Register format).
     </p>
     <div class="flex gap-3 justify-center">
-      <button id="exportConfirmYes"
-              class="btn-success flex items-center gap-2 px-6 py-2.5 text-sm font-semibold">
+      <button id="exportConfirmYes" class="btn-success px-6 py-2.5 text-sm font-semibold">
         <i class="fas fa-check"></i> Yes, Export All
       </button>
-      <button id="exportConfirmNo"
-              class="btn-danger flex items-center gap-2 px-6 py-2.5 text-sm font-semibold">
+      <button id="exportConfirmNo" class="btn-danger px-6 py-2.5 text-sm font-semibold">
         <i class="fas fa-times"></i> Cancel
       </button>
     </div>
   </div>
 </div>
 
-<!-- Scripts -->
 <script src="../../assets/js/common.js"></script>
 <script src="../../assets/js/sidebar.js"></script>
 <script src="../../assets/js/header.js"></script>
@@ -368,88 +417,61 @@
 <script>
 'use strict';
 
-/* ═══════════════════════════════════════════════════════════════
-   CONFIGURATION
-═══════════════════════════════════════════════════════════════ */
-var BASE_URL   = 'http://localhost:8086';
-var PAGE_SIZE  = 20;   // rows per page
+/* ═══════════════════════════════════════════
+   CONFIG & STATE
+═══════════════════════════════════════════ */
+var BASE_URL  = 'http://localhost:8086';
+var PAGE_SIZE = 20;
 
-/* ═══════════════════════════════════════════════════════════════
-   STATE
-═══════════════════════════════════════════════════════════════ */
-var allRecords        = [];   // full dataset from API (all pages fetched)
-var filteredRecords   = [];   // after client-side filter
-var currentPage       = 1;
-var selectedIds       = new Set();   // Set of payrollId strings
-var currentPayslipRec = null;        // record open in modal
+var allRecords      = [];
+var filteredRecords = [];
+var currentPage     = 1;
+var selectedIds     = new Set();
+var currentPayslipRec = null;
 
-/* ═══════════════════════════════════════════════════════════════
-   BOOT  –  exact call order from original payslips page
-═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   BOOT
+═══════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', function () {
-  /* These are defined in sidebar.js / header.js loaded above.
-     Called unconditionally, matching the original page flow. */
   loadSidebar();
   loadHeader();
-
   bindFilterEvents();
   bindExportEvents();
   bindSelectEvents();
-
   fetchAllRecords();
 });
 
-/* ═══════════════════════════════════════════════════════════════
-   API  –  fetch ALL pages then merge into allRecords
-   The server uses Spring pagination (content / totalPages).
-   We fetch page 0 first, then remaining pages in parallel.
-═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   API FETCH — all pages
+═══════════════════════════════════════════ */
 function fetchAllRecords() {
   showLoading(true);
-
   fetch(BASE_URL + '/api/v1/payroll/get-all-payroll?page=0&size=100')
-    .then(function (r) {
-      if (!r.ok) throw new Error('HTTP ' + r.status);
-      return r.json();
-    })
-    .then(function (json) {
-      /* Support both paginated {content,totalPages} and plain array responses */
-      var records    = [];
-      var totalPages = 1;
+    .then(function(r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function(json) {
+      var records = [], totalPages = 1;
+      if (json && Array.isArray(json.content))           { records = json.content; totalPages = json.totalPages || 1; }
+      else if (Array.isArray(json))                       { records = json; }
+      else if (json && json.data && Array.isArray(json.data)) { records = json.data; }
 
-      if (json && Array.isArray(json.content)) {
-        records    = json.content;
-        totalPages = json.totalPages || 1;
-      } else if (Array.isArray(json)) {
-        records = json;
-      } else if (json && json.data && Array.isArray(json.data)) {
-        records = json.data;
-      }
+      if (totalPages <= 1) { allRecords = records; onDataReady(); return; }
 
-      if (totalPages <= 1) {
-        allRecords = records;
-        onDataReady();
-        return;
-      }
-
-      /* Fetch remaining pages in parallel */
-      var pagePromises = [];
+      var promises = [];
       for (var p = 1; p < totalPages; p++) {
-        pagePromises.push(
+        promises.push(
           fetch(BASE_URL + '/api/v1/payroll/get-all-payroll?page=' + p + '&size=100')
-            .then(function (r) { return r.json(); })
-            .then(function (j) { return Array.isArray(j.content) ? j.content : []; })
-            .catch(function () { return []; })
+            .then(function(r) { return r.json(); })
+            .then(function(j) { return Array.isArray(j.content) ? j.content : []; })
+            .catch(function() { return []; })
         );
       }
-
-      Promise.all(pagePromises).then(function (pages) {
-        pages.forEach(function (pg) { records = records.concat(pg); });
+      Promise.all(promises).then(function(pages) {
+        pages.forEach(function(pg) { records = records.concat(pg); });
         allRecords = records;
         onDataReady();
       });
     })
-    .catch(function (err) {
+    .catch(function(err) {
       console.error('[Payslips] API error:', err);
       showToast('Failed to load payroll records. Please refresh.', 'error');
       showLoading(false);
@@ -463,43 +485,31 @@ function onDataReady() {
   applyFilters();
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   DYNAMIC FILTER OPTIONS  (years, departments from live data)
-═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   DYNAMIC FILTERS
+═══════════════════════════════════════════ */
 function populateDynamicFilters() {
   var years = [], depts = [];
-  allRecords.forEach(function (r) {
+  allRecords.forEach(function(r) {
     if (r.payrollYear && years.indexOf(r.payrollYear) === -1) years.push(r.payrollYear);
     if (r.department  && depts.indexOf(r.department)  === -1) depts.push(r.department);
   });
-  years.sort(function (a, b) { return b - a; });
+  years.sort(function(a,b) { return b-a; });
   depts.sort();
-
   var ySel = document.getElementById('filterYear');
-  years.forEach(function (y) {
-    var o = document.createElement('option'); o.value = y; o.text = y;
-    ySel.appendChild(o);
-  });
-
+  years.forEach(function(y) { var o = document.createElement('option'); o.value = y; o.text = y; ySel.appendChild(o); });
   var dSel = document.getElementById('filterDept');
-  depts.forEach(function (d) {
-    var o = document.createElement('option'); o.value = d; o.text = d;
-    dSel.appendChild(o);
-  });
+  depts.forEach(function(d) { var o = document.createElement('option'); o.value = d; o.text = d; dSel.appendChild(o); });
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   FILTER  LOGIC
-═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   FILTER LOGIC
+═══════════════════════════════════════════ */
 function bindFilterEvents() {
-  ['filterMonth','filterYear','filterDept','filterStatus'].forEach(function (id) {
-    document.getElementById(id).addEventListener('change', function () {
-      currentPage = 1; selectedIds.clear(); applyFilters();
-    });
+  ['filterMonth','filterYear','filterDept','filterStatus'].forEach(function(id) {
+    document.getElementById(id).addEventListener('change', function() { currentPage=1; selectedIds.clear(); applyFilters(); });
   });
-  document.getElementById('filterSearch').addEventListener('input', function () {
-    currentPage = 1; selectedIds.clear(); applyFilters();
-  });
+  document.getElementById('filterSearch').addEventListener('input', function() { currentPage=1; selectedIds.clear(); applyFilters(); });
   document.getElementById('resetFiltersBtn').addEventListener('click', resetFilters);
 }
 
@@ -509,428 +519,461 @@ function applyFilters() {
   var dept   = document.getElementById('filterDept').value.trim().toLowerCase();
   var status = document.getElementById('filterStatus').value.trim().toUpperCase();
   var search = document.getElementById('filterSearch').value.trim().toLowerCase();
-
   var anyActive = month || year || dept || status || search;
-  var resetBtn  = document.getElementById('resetFiltersBtn');
-  anyActive
-    ? resetBtn.classList.remove('hidden')
-    : resetBtn.classList.add('hidden');
-
-  filteredRecords = allRecords.filter(function (r) {
-    if (month  && (r.payrollMonth || '').toUpperCase()   !== month)  return false;
-    if (year   && String(r.payrollYear)                  !== year)   return false;
-    if (dept   && (r.department || '').toLowerCase()     !== dept)   return false;
-    if (status && (r.status || '').toUpperCase()         !== status) return false;
+  anyActive ? document.getElementById('resetFiltersBtn').classList.remove('hidden')
+            : document.getElementById('resetFiltersBtn').classList.add('hidden');
+  filteredRecords = allRecords.filter(function(r) {
+    if (month  && (r.payrollMonth||'').toUpperCase()  !== month)  return false;
+    if (year   && String(r.payrollYear)               !== year)   return false;
+    if (dept   && (r.department||'').toLowerCase()    !== dept)   return false;
+    if (status && (r.status||'').toUpperCase()        !== status) return false;
     if (search) {
-      var hay = [r.fullName, r.employeeId, r.designation, r.department, r.status]
-                  .join(' ').toLowerCase();
+      var hay = [r.fullName,r.employeeId,r.designation,r.department,r.status].join(' ').toLowerCase();
       if (!hay.includes(search)) return false;
     }
     return true;
   });
-
-  renderTable();
-  renderPagination();
-  updateSelectionBar();
+  renderTable(); renderPagination(); updateSelectionBar();
 }
 
 function resetFilters() {
-  ['filterMonth','filterYear','filterDept','filterStatus'].forEach(function (id) {
-    document.getElementById(id).value = '';
-  });
-  document.getElementById('filterSearch').value = '';
-  currentPage = 1;
-  selectedIds.clear();
-  applyFilters();
+  ['filterMonth','filterYear','filterDept','filterStatus'].forEach(function(id) { document.getElementById(id).value=''; });
+  document.getElementById('filterSearch').value='';
+  currentPage=1; selectedIds.clear(); applyFilters();
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   TABLE  RENDER
-═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   TABLE RENDER — with new columns
+═══════════════════════════════════════════ */
 function renderTable() {
   var tbody = document.getElementById('tableBody');
   var empty = document.getElementById('tableEmpty');
-
   if (!filteredRecords.length) {
-    tbody.innerHTML = '';
-    document.getElementById('tableFoot').innerHTML = '';
-    empty.classList.remove('hidden');
-    return;
+    tbody.innerHTML=''; document.getElementById('tableFoot').innerHTML='';
+    empty.classList.remove('hidden'); return;
   }
   empty.classList.add('hidden');
 
-  var start  = (currentPage - 1) * PAGE_SIZE;
-  var end    = Math.min(start + PAGE_SIZE, filteredRecords.length);
-  var page   = filteredRecords.slice(start, end);
+  var start = (currentPage-1)*PAGE_SIZE;
+  var end   = Math.min(start+PAGE_SIZE, filteredRecords.length);
+  var page  = filteredRecords.slice(start, end);
 
-  /* Running totals for footer (current page) */
   var totBasic=0,totHra=0,totAllow=0,totGross=0,totEmpPf=0,totEmrPf=0,
-      totEsi=0,totTds=0,totDed=0,totNet=0;
+      totEsi=0,totTds=0,totDed=0,totExp=0,totLopDed=0,totNet=0;
 
-  var rows = page.map(function (r, idx) {
-    var n        = safe;
-    var basic    = n(r.basicSalary);
-    var hra      = n(r.hra);
-    var allow    = n(r.allowances);
-    var gross    = n(r.grossSalary);
-    var empPf    = n(r.employeePf);
-    var emplrPf  = n(r.employerPf);
-    var esi      = n(r.esi);
-    var tds      = n(r.tds);
-    var totalDed = n(r.totalDeductions);
-    var net      = n(r.netSalary);
-    var ml       = monthLabel(r.payrollMonth) + ' ' + (r.payrollYear || '');
+  var rows = page.map(function(r, idx) {
+    var basic    = safe(r.basicSalary);
+    var hra      = safe(r.hra);
+    var allow    = safe(r.allowances);
+    var gross    = safe(r.grossSalary);
+    var empPf    = safe(r.employeePf);
+    var emplrPf  = safe(r.employerPf);
+    var esi      = safe(r.esi);
+    var tds      = safe(r.tds);
+    var totalDed = safe(r.totalDeductions);
+    var net      = safe(r.netSalary);
+    var lopDays  = safe(r.lopDays);
+    var lopDed   = safe(r.lopDeduction);
+    var expReimb = safe(r.expenseReimbursement);
+    var daysWkd  = r.daysWorked  != null ? r.daysWorked  : '—';
+    var wkDays   = r.workingDaysInMonth != null ? r.workingDaysInMonth : '—';
+    var ml       = monthLabel(r.payrollMonth) + ' ' + (r.payrollYear||'');
     var rid      = String(r.payrollId);
     var checked  = selectedIds.has(rid) ? 'checked' : '';
     var rowCls   = selectedIds.has(rid) ? 'selected-row' : '';
 
-    totBasic   += basic;   totHra     += hra;   totAllow  += allow;
-    totGross   += gross;   totEmpPf   += empPf; totEmrPf  += emplrPf;
-    totEsi     += esi;     totTds     += tds;   totDed    += totalDed; totNet += net;
+    totBasic+=basic; totHra+=hra; totAllow+=allow; totGross+=gross;
+    totEmpPf+=empPf; totEmrPf+=emplrPf; totEsi+=esi; totTds+=tds;
+    totDed+=totalDed; totExp+=expReimb; totLopDed+=lopDed; totNet+=net;
 
-    return '<tr class="' + rowCls + '" data-id="' + rid + '">'
-      + '<td class="text-center"><input type="checkbox" class="row-chk" data-id="' + rid + '" ' + checked + '></td>'
-      + '<td class="text-gray-500">' + (start + idx + 1) + '</td>'
-      + '<td class="font-medium text-gray-800">' + esc(r.fullName || '—') + '</td>'
-      + '<td class="text-[#1B738C] font-mono text-xs">' + esc(r.employeeId || '—') + '</td>'
-      + '<td>' + esc(r.designation || '—') + '</td>'
-      + '<td>' + esc(r.department  || '—') + '</td>'
-      + '<td class="text-xs">' + ml + '</td>'
-      + '<td><span class="badge ' + badgeClass(r.status) + '">' + (r.status||'—') + '</span></td>'
-      + '<td class="text-right font-mono">' + fmt(basic)    + '</td>'
-      + '<td class="text-right font-mono">' + fmt(hra)      + '</td>'
-      + '<td class="text-right font-mono">' + fmt(allow)    + '</td>'
-      + '<td class="text-right font-mono font-semibold text-gray-700">' + fmt(gross)    + '</td>'
-      + '<td class="text-right font-mono">' + fmt(empPf)   + '</td>'
-      + '<td class="text-right font-mono">' + fmt(emplrPf) + '</td>'
-      + '<td class="text-right font-mono">' + fmt(esi)     + '</td>'
-      + '<td class="text-right font-mono">' + fmt(tds)     + '</td>'
-      + '<td class="text-right font-mono text-red-600">' + fmt(totalDed) + '</td>'
-      + '<td class="text-right font-mono font-bold text-green-700">' + fmt(net) + '</td>'
-      + '<td class="text-center">'
-      +   '<button onclick="openPayslip(\'' + rid + '\')" title="View Payslip"'
-      +     ' class="text-[#1B738C] hover:text-white hover:bg-[#1B738C] border border-[#62C9EA] rounded-lg px-2.5 py-1.5 text-xs transition-all mr-1">'
-      +     '<i class="fas fa-eye"></i>'
-      +   '</button>'
-      + '</td>'
-      + '</tr>';
+    var lopHtml  = lopDed  > 0 ? '<span class="text-orange-600 font-semibold">-'+fmt(lopDed)+'</span>' : '<span class="text-gray-400 text-xs">—</span>';
+    var expHtml  = expReimb > 0 ? '<span class="text-blue-600 font-semibold">+'+fmt(expReimb)+'</span>' : '<span class="text-gray-400 text-xs">—</span>';
+
+    return '<tr class="'+rowCls+'" data-id="'+rid+'">'
+      +'<td class="text-center pl-3"><input type="checkbox" class="row-chk" data-id="'+rid+'" '+checked+'></td>'
+      +'<td class="text-gray-500">'+(start+idx+1)+'</td>'
+      +'<td class="font-medium text-gray-800">'+esc(r.fullName||'—')+'</td>'
+      +'<td class="text-[#1B738C] font-mono text-xs">'+esc(r.employeeId||'—')+'</td>'
+      +'<td>'+esc(r.designation||'—')+'</td>'
+      +'<td>'+esc(r.department||'—')+'</td>'
+      +'<td class="text-xs">'+ml+'</td>'
+      +'<td><span class="badge '+badgeClass(r.status)+'">'+(r.status||'—')+'</span></td>'
+      +'<td class="text-right font-mono">'+fmt(basic)+'</td>'
+      +'<td class="text-right font-mono">'+fmt(hra)+'</td>'
+      +'<td class="text-right font-mono">'+fmt(allow)+'</td>'
+      +'<td class="text-right font-mono font-semibold text-gray-700">'+fmt(gross)+'</td>'
+      +'<td class="text-right text-xs text-gray-500">'+daysWkd+'/'+wkDays+'</td>'
+      +'<td class="text-right text-xs '+(lopDays>0?'text-orange-600 font-semibold':'text-gray-400')+'">'+lopDays+'</td>'
+      +'<td class="text-right">'+lopHtml+'</td>'
+      +'<td class="text-right font-mono">'+fmt(empPf)+'</td>'
+      +'<td class="text-right font-mono">'+fmt(emplrPf)+'</td>'
+      +'<td class="text-right font-mono">'+fmt(esi)+'</td>'
+      +'<td class="text-right font-mono">'+fmt(tds)+'</td>'
+      +'<td class="text-right font-mono text-red-600">'+fmt(totalDed)+'</td>'
+      +'<td class="text-right">'+expHtml+'</td>'
+      +'<td class="text-right font-mono font-bold text-green-700">'+fmt(net)+'</td>'
+      +'<td class="text-center">'
+      +  '<button onclick="openPayslip(\''+rid+'\')" title="View Payslip"'
+      +  ' class="text-[#1B738C] hover:text-white hover:bg-[#1B738C] border border-[#62C9EA] rounded-lg px-2.5 py-1.5 text-xs transition-all">'
+      +  '<i class="fas fa-eye"></i>'
+      +'</button>'
+      +'</td>'
+      +'</tr>';
   }).join('');
 
   tbody.innerHTML = rows;
 
-  /* Footer totals */
   document.getElementById('tableFoot').innerHTML =
-    '<tr class="total-row">'
-    + '<td colspan="8" class="font-bold">Page Totals (' + page.length + ' records)</td>'
-    + '<td class="text-right">' + fmt(totBasic)   + '</td>'
-    + '<td class="text-right">' + fmt(totHra)     + '</td>'
-    + '<td class="text-right">' + fmt(totAllow)   + '</td>'
-    + '<td class="text-right font-bold">' + fmt(totGross) + '</td>'
-    + '<td class="text-right">' + fmt(totEmpPf)  + '</td>'
-    + '<td class="text-right">' + fmt(totEmrPf)  + '</td>'
-    + '<td class="text-right">' + fmt(totEsi)    + '</td>'
-    + '<td class="text-right">' + fmt(totTds)    + '</td>'
-    + '<td class="text-right text-red-600 font-bold">' + fmt(totDed) + '</td>'
-    + '<td class="text-right text-green-700 font-bold">' + fmt(totNet) + '</td>'
-    + '<td></td>'
-    + '</tr>';
+    '<tr>'
+    +'<td colspan="8" class="font-bold pl-3">Page Totals ('+page.length+' records)</td>'
+    +'<td class="text-right">'+fmt(totBasic)+'</td>'
+    +'<td class="text-right">'+fmt(totHra)+'</td>'
+    +'<td class="text-right">'+fmt(totAllow)+'</td>'
+    +'<td class="text-right font-bold">'+fmt(totGross)+'</td>'
+    +'<td colspan="3"></td>'
+    +'<td class="text-right">'+fmt(totEmpPf)+'</td>'
+    +'<td class="text-right">'+fmt(totEmrPf)+'</td>'
+    +'<td class="text-right">'+fmt(totEsi)+'</td>'
+    +'<td class="text-right">'+fmt(totTds)+'</td>'
+    +'<td class="text-right text-red-600 font-bold">'+fmt(totDed)+'</td>'
+    +'<td class="text-right text-blue-600">'+fmt(totExp)+'</td>'
+    +'<td class="text-right text-green-700 font-bold">'+fmt(totNet)+'</td>'
+    +'<td></td>'
+    +'</tr>';
 
-  /* Re-bind row checkbox events */
-  document.querySelectorAll('.row-chk').forEach(function (chk) {
-    chk.addEventListener('change', function () {
+  document.querySelectorAll('.row-chk').forEach(function(chk) {
+    chk.addEventListener('change', function() {
       var id = this.getAttribute('data-id');
-      if (this.checked) selectedIds.add(id);
-      else selectedIds.delete(id);
+      if (this.checked) selectedIds.add(id); else selectedIds.delete(id);
       var row = this.closest('tr');
-      row && (this.checked
-        ? row.classList.add('selected-row')
-        : row.classList.remove('selected-row'));
-      syncSelectAll();
-      updateSelectionBar();
+      row && (this.checked ? row.classList.add('selected-row') : row.classList.remove('selected-row'));
+      syncSelectAll(); updateSelectionBar();
     });
   });
-
   syncSelectAll();
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   PAGINATION
-═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   PAGINATION (unchanged)
+═══════════════════════════════════════════ */
 function renderPagination() {
-  var total     = filteredRecords.length;
-  var totalPgs  = Math.max(1, Math.ceil(total / PAGE_SIZE));
-  var start     = (currentPage - 1) * PAGE_SIZE + 1;
-  var end       = Math.min(currentPage * PAGE_SIZE, total);
-
+  var total    = filteredRecords.length;
+  var totalPgs = Math.max(1, Math.ceil(total/PAGE_SIZE));
+  var start    = (currentPage-1)*PAGE_SIZE+1;
+  var end      = Math.min(currentPage*PAGE_SIZE, total);
   document.getElementById('paginationInfo').textContent =
-    total === 0 ? 'No records' :
-    'Showing ' + start + '–' + end + ' of ' + total + ' records';
-
+    total===0 ? 'No records' : 'Showing '+start+'–'+end+' of '+total+' records';
   var ctrl = document.getElementById('paginationControls');
-  ctrl.innerHTML = '';
-
+  ctrl.innerHTML='';
   function mkBtn(label, page, disabled, active) {
     var b = document.createElement('button');
-    b.className = 'page-btn' + (active ? ' active' : '');
-    b.innerHTML = label;
-    b.disabled  = disabled;
-    if (!disabled) b.addEventListener('click', function () { currentPage = page; renderTable(); renderPagination(); });
+    b.className = 'page-btn'+(active?' active':'');
+    b.innerHTML = label; b.disabled = disabled;
+    if (!disabled) b.addEventListener('click', function() { currentPage=page; renderTable(); renderPagination(); });
     return b;
   }
-
-  ctrl.appendChild(mkBtn('<i class="fas fa-chevron-left text-xs"></i>', currentPage - 1, currentPage === 1));
-
-  /* Window of pages: always show first, last, current ±1 */
+  ctrl.appendChild(mkBtn('<i class="fas fa-chevron-left text-xs"></i>', currentPage-1, currentPage===1));
   var pages = new Set([1, totalPgs]);
-  for (var p = Math.max(1, currentPage - 1); p <= Math.min(totalPgs, currentPage + 1); p++) pages.add(p);
-  var sorted = Array.from(pages).sort(function (a, b) { return a - b; });
-  var prev   = 0;
-  sorted.forEach(function (pg) {
-    if (prev && pg - prev > 1) {
-      var dots = document.createElement('span');
-      dots.className = 'text-gray-400 text-xs px-1';
-      dots.textContent = '…';
-      ctrl.appendChild(dots);
-    }
-    ctrl.appendChild(mkBtn(pg, pg, false, pg === currentPage));
-    prev = pg;
+  for (var p=Math.max(1,currentPage-1); p<=Math.min(totalPgs,currentPage+1); p++) pages.add(p);
+  var sorted = Array.from(pages).sort(function(a,b){return a-b;}); var prev=0;
+  sorted.forEach(function(pg) {
+    if (prev && pg-prev>1) { var d=document.createElement('span'); d.className='text-gray-400 text-xs px-1'; d.textContent='…'; ctrl.appendChild(d); }
+    ctrl.appendChild(mkBtn(pg, pg, false, pg===currentPage)); prev=pg;
   });
-
-  ctrl.appendChild(mkBtn('<i class="fas fa-chevron-right text-xs"></i>', currentPage + 1, currentPage === totalPgs));
+  ctrl.appendChild(mkBtn('<i class="fas fa-chevron-right text-xs"></i>', currentPage+1, currentPage===totalPgs));
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   CHECKBOX / SELECTION
-═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   CHECKBOX / SELECTION (unchanged)
+═══════════════════════════════════════════ */
 function bindSelectEvents() {
-  document.getElementById('selectAllChk').addEventListener('change', function () {
-    var start = (currentPage - 1) * PAGE_SIZE;
-    var end   = Math.min(start + PAGE_SIZE, filteredRecords.length);
-    var page  = filteredRecords.slice(start, end);
-    page.forEach(function (r) {
-      var id = String(r.payrollId);
-      this.checked ? selectedIds.add(id) : selectedIds.delete(id);
-    }, this);
-    document.querySelectorAll('.row-chk').forEach(function (c) {
-      c.checked = this.checked;
-      var row = c.closest('tr');
-      row && (this.checked
-        ? row.classList.add('selected-row')
-        : row.classList.remove('selected-row'));
-    }, this);
+  document.getElementById('selectAllChk').addEventListener('change', function() {
+    var start=(currentPage-1)*PAGE_SIZE, end=Math.min(start+PAGE_SIZE,filteredRecords.length);
+    filteredRecords.slice(start,end).forEach(function(r) {
+      var id=String(r.payrollId); this.checked?selectedIds.add(id):selectedIds.delete(id);
+    },this);
+    document.querySelectorAll('.row-chk').forEach(function(c) {
+      c.checked=this.checked;
+      var row=c.closest('tr'); row&&(this.checked?row.classList.add('selected-row'):row.classList.remove('selected-row'));
+    },this);
     updateSelectionBar();
   });
-
-  document.getElementById('clearSelectionBtn').addEventListener('click', function () {
+  document.getElementById('clearSelectionBtn').addEventListener('click', function() {
     selectedIds.clear();
-    document.querySelectorAll('.row-chk').forEach(function (c) { c.checked = false; });
-    document.getElementById('selectAllChk').checked = false;
-    document.querySelectorAll('.selected-row').forEach(function (r) { r.classList.remove('selected-row'); });
+    document.querySelectorAll('.row-chk').forEach(function(c){c.checked=false;});
+    document.getElementById('selectAllChk').checked=false;
+    document.querySelectorAll('.selected-row').forEach(function(r){r.classList.remove('selected-row');});
     updateSelectionBar();
   });
-
-  document.getElementById('exportSelectedBtn').addEventListener('click', function () {
-    var rows = allRecords.filter(function (r) { return selectedIds.has(String(r.payrollId)); });
-    if (!rows.length) { showToast('No records selected.', 'info'); return; }
-    generateExcel(rows, 'Payroll_Selected_Export');
+  document.getElementById('exportSelectedBtn').addEventListener('click', function() {
+    var rows=allRecords.filter(function(r){return selectedIds.has(String(r.payrollId));});
+    if (!rows.length){showToast('No records selected.','info');return;}
+    generateExcel(rows,'Payroll_Selected_Export');
   });
 }
-
 function syncSelectAll() {
-  var start     = (currentPage - 1) * PAGE_SIZE;
-  var end       = Math.min(start + PAGE_SIZE, filteredRecords.length);
-  var pageIds   = filteredRecords.slice(start, end).map(function (r) { return String(r.payrollId); });
-  var allChecked = pageIds.length > 0 && pageIds.every(function (id) { return selectedIds.has(id); });
-  document.getElementById('selectAllChk').checked = allChecked;
+  var start=(currentPage-1)*PAGE_SIZE, end=Math.min(start+PAGE_SIZE,filteredRecords.length);
+  var pageIds=filteredRecords.slice(start,end).map(function(r){return String(r.payrollId);});
+  document.getElementById('selectAllChk').checked = pageIds.length>0&&pageIds.every(function(id){return selectedIds.has(id);});
 }
-
 function updateSelectionBar() {
-  var bar   = document.getElementById('selectionBar');
-  var count = selectedIds.size;
-  document.getElementById('selectionCount').textContent = count;
-  count > 0 ? bar.classList.remove('hidden') : bar.classList.add('hidden');
+  var count=selectedIds.size;
+  document.getElementById('selectionCount').textContent=count;
+  count>0?document.getElementById('selectionBar').classList.remove('hidden'):document.getElementById('selectionBar').classList.add('hidden');
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   EXPORT  EVENTS
-═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   EXPORT EVENTS
+═══════════════════════════════════════════ */
 function bindExportEvents() {
-  document.getElementById('exportExcelBtn').addEventListener('click', function () {
-    /* Show confirm overlay */
-    document.getElementById('exportTotalCount').textContent = filteredRecords.length;
+  document.getElementById('exportExcelBtn').addEventListener('click', function() {
+    document.getElementById('exportTotalCount').textContent=filteredRecords.length;
     document.getElementById('exportOverlay').classList.add('active');
   });
-
-  document.getElementById('exportConfirmYes').addEventListener('click', function () {
+  document.getElementById('exportConfirmYes').addEventListener('click', function() {
     document.getElementById('exportOverlay').classList.remove('active');
-    generateExcel(filteredRecords, 'Salary_Register');
+    generateExcel(filteredRecords,'Salary_Register');
   });
-
-  document.getElementById('exportConfirmNo').addEventListener('click', function () {
+  document.getElementById('exportConfirmNo').addEventListener('click', function() {
     document.getElementById('exportOverlay').classList.remove('active');
   });
-
-  /* Close overlay on backdrop click */
-  document.getElementById('exportOverlay').addEventListener('click', function (e) {
-    if (e.target === this) this.classList.remove('active');
+  document.getElementById('exportOverlay').addEventListener('click', function(e) {
+    if (e.target===this) this.classList.remove('active');
   });
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   EXCEL  EXPORT  –  mirrors the provided salary register sheet
-   Structure:
-     Row 1  : Company header (merged A1:U1)
-     Row 2  : "Salary Register – <Month Year>" (merged)
-     Row 3  : Group headers  (Employee Info, Attendance, Earnings, Deductions)
-     Row 4  : Column headers
-     Row 5+ : Data rows
-     Last   : TOTAL row
-     +1     : Footer note
-═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   EXCEL EXPORT — exact colors from reference
+   Color palette (from xlsx analysis):
+     Company row bg  : 1F4E79 (dark navy)   text: FFFFFF
+     Register title  : 1F4E79               text: FFFFFF   bg-light: EAF1FB
+     Group: EmpInfo  : 1F4E79
+     Group: Attend   : 2E5A88
+     Group: Earnings : 1A6B3C (dark green)
+     Group: Deduct   : 8B3A00 (dark brown)
+     Col header rows : same as group colors
+     NET PAY col hdr : 1F4E79
+     Gross cell      : D6F0E8 bg, bold
+     TotalDed cell   : FFE8D6 bg, bold
+     NET PAY cell    : E8F5E9 bg, 1A6B3C text, bold
+     Odd data rows   : FFFFFF
+     Even data rows  : F5F9FF
+     Total row       : 1F4E79, white text
+     Footer          : gray text
+═══════════════════════════════════════════ */
 function generateExcel(records, filenameBase) {
-  if (!records || !records.length) {
-    showToast('No records to export.', 'info');
-    return;
-  }
+  if (!records || !records.length) { showToast('No records to export.', 'info'); return; }
 
-  /* Determine period label from records */
-  var months  = [...new Set(records.map(function(r){ return r.payrollMonth; }))];
-  var years   = [...new Set(records.map(function(r){ return r.payrollYear;  }))];
-  var period  = (months.length === 1 ? monthLabel(months[0]) : 'Multiple Months')
-              + ' ' + (years.length  === 1 ? years[0]  : years.join('/'));
+  var months = [...new Set(records.map(function(r){return r.payrollMonth;}))];
+  var years  = [...new Set(records.map(function(r){return r.payrollYear; }))];
+  var period = (months.length===1?monthLabel(months[0]):'Multiple Months')
+             + ' ' + (years.length===1?years[0]:years.join('/'));
 
   var wb = XLSX.utils.book_new();
+
+  // ── Build data rows ──
   var wsData = [];
-
-  /* ── Row 1: Company name ── */
-  wsData.push(['Sustainable Integrated Environmental Consultant Private Ltd,   Pune, Maharashtra, INDIA 411057']);
-
-  /* ── Row 2: Register title ── */
-  wsData.push(['Salary Register \u2013 ' + period]);
-
-  /* ── Row 3: Group headers (positional) ── */
-  /* Cols:  A  B    C    D    E    F    G    H    I    J    K     L       M       N     O      P    Q    R    S    T    U */
-  wsData.push(['Employee Info','','','','Attendance','','','','Earnings','','','','','','Deductions','','','','','','']);
-
-  /* ── Row 4: Column headers ── */
-  wsData.push([
-    'Sr. No.','Employee Name','Emp. Code','Date of Joining','Designation',
-    'Working Days','LWP/ Absent','Days Paid',
-    'Basic','DA','HRA','Other Allowance','Reimburse-ment','Gross Earnings',
-    'PF Employee','PF Employer','PT','ESIC','TDS/IT Return','Total Deductions','NET PAY'
+  wsData.push(['Sustainable Integrated Environmental Consultant Private Ltd,   Pune, Maharashtra, INDIA 411057']);  // R1
+  wsData.push(['Salary Register \u2013 ' + period]);                                                               // R2
+  wsData.push(['']);                                                                                                // R3 spacer
+  wsData.push(['Employee Info','','','Attendance','','','','Earnings','','','','','','Deductions','','','','','','','']); // R4 group headers
+  wsData.push([                                                                                                     // R5 col headers
+    'Sr.\nNo.','Employee\nName','Emp.\nCode','Date of\nJoining','Designation',
+    'Working\nDays','LWP/\nAbsent','Days\nPaid',
+    'Basic','DA','HRA','Other\nAllowance','Reimburse-\nment','Gross\nEarnings',
+    'PF\nEmployee','PF\nEmployer','PT','ESIC','TDS/IT\nReturn','Total\nDeductions','NET PAY'
   ]);
 
-  /* ── Data rows ── */
-  var totals = { basic:0, da:0, hra:0, other:0, reimb:0, gross:0,
-                 empPf:0, emplrPf:0, pt:0, esi:0, tds:0, totalDed:0, net:0 };
+  var totals={basic:0,da:0,hra:0,other:0,reimb:0,gross:0,empPf:0,emplrPf:0,pt:0,esi:0,tds:0,totalDed:0,net:0};
+  var dataStartRow = 6; // 1-based
 
-  records.forEach(function (r, i) {
-    var basic   = safe(r.basicSalary);
-    var da      = 0;   /* not in API — kept for column alignment with sheet */
-    var hra     = safe(r.hra);
-    var other   = safe(r.allowances);
-    var reimb   = 0;   /* not in API — kept for column alignment */
-    var gross   = safe(r.grossSalary);
-    var empPf   = safe(r.employeePf);
-    var emplrPf = safe(r.employerPf);
-    var pt      = 0;   /* not in API */
-    var esi     = safe(r.esi);
-    var tds     = safe(r.tds);
-    var totalDed= safe(r.totalDeductions);
-    var net     = safe(r.netSalary);
+  records.forEach(function(r,i) {
+    var basic    = safe(r.basicSalary);
+    var hra      = safe(r.hra);
+    var other    = safe(r.allowances);
+    var reimb    = safe(r.expenseReimbursement);  // NOW POPULATED from API
+    var gross    = safe(r.grossSalary);
+    var empPf    = safe(r.employeePf);
+    var emplrPf  = safe(r.employerPf);
+    var esi      = safe(r.esi);
+    var tds      = safe(r.tds);
+    var totalDed = safe(r.totalDeductions);
+    var net      = safe(r.netSalary);
+    var lopDays  = safe(r.lopDays);
+    var wkDays   = r.workingDaysInMonth || 26;
+    var daysPaid = r.daysWorked || (wkDays - lopDays);
 
-    totals.basic    += basic;   totals.da      += da;
-    totals.hra      += hra;     totals.other   += other;
-    totals.reimb    += reimb;   totals.gross   += gross;
-    totals.empPf    += empPf;   totals.emplrPf += emplrPf;
-    totals.pt       += pt;      totals.esi     += esi;
-    totals.tds      += tds;     totals.totalDed+= totalDed; totals.net += net;
+    totals.basic+=basic; totals.hra+=hra; totals.other+=other; totals.reimb+=reimb;
+    totals.gross+=gross; totals.empPf+=empPf; totals.emplrPf+=emplrPf;
+    totals.esi+=esi; totals.tds+=tds; totals.totalDed+=totalDed; totals.net+=net;
 
     wsData.push([
-      i + 1,
-      r.fullName     || '',
-      r.employeeId   || '',
-      '',             /* DOJ not in API */
-      r.designation  || '',
-      30,             /* working days — not in API, standard 30 */
-      '-',            /* LWP */
-      30,             /* days paid */
-      basic, da, hra, other, reimb, gross,
-      empPf, emplrPf, pt,
-      esi > 0 ? esi : 'NA',
-      tds, totalDed, net
+      i+1, r.fullName||'', r.employeeId||'', '', r.designation||'',
+      wkDays, lopDays>0?lopDays:'-', daysPaid,
+      basic, 0, hra, other, reimb, gross,
+      empPf, emplrPf, 0,
+      esi>0?esi:'NA', tds, totalDed, net
     ]);
   });
 
-  /* ── TOTAL row ── */
-  wsData.push([
-    'TOTAL','','','','','','','',
-    totals.basic, totals.da, totals.hra, totals.other, totals.reimb, totals.gross,
-    totals.empPf, totals.emplrPf, totals.pt,
-    totals.esi > 0 ? totals.esi : '-',
-    totals.tds, totals.totalDed, totals.net
+  // Total row
+  wsData.push(['TOTAL','','','','','','','',
+    totals.basic,0,totals.hra,totals.other,totals.reimb,totals.gross,
+    totals.empPf,totals.emplrPf,0,
+    totals.esi>0?totals.esi:'-',totals.tds,totals.totalDed,totals.net
   ]);
-
-  /* ── Footer note ── */
+  // Footer
   wsData.push(['This is a Computer Generated Salary Register and does not require Signature']);
 
-  /* ── Build worksheet ── */
   var ws = XLSX.utils.aoa_to_sheet(wsData);
 
-  /* ── Merges ── */
-  var lastDataRow = wsData.length; /* 1-based, but XLSX uses 0-based index */
-  ws['!merges'] = [
-    { s:{r:0,c:0}, e:{r:0,c:20} },   /* Company name */
-    { s:{r:1,c:0}, e:{r:1,c:20} },   /* Register title */
-    /* Group header merges */
-    { s:{r:2,c:0}, e:{r:2,c:4}  },   /* Employee Info */
-    { s:{r:2,c:5}, e:{r:2,c:7}  },   /* Attendance */
-    { s:{r:2,c:8}, e:{r:2,c:13} },   /* Earnings */
-    { s:{r:2,c:14},e:{r:2,c:20} },   /* Deductions */
-    /* Total row label */
-    { s:{r:lastDataRow-1,c:0}, e:{r:lastDataRow-1,c:7} },
-    /* Footer */
-    { s:{r:lastDataRow,c:0}, e:{r:lastDataRow,c:20} },
-  ];
+  // ── Exact colors from reference xlsx ──
+  var C = {
+    navyBg    : 'FF1F4E79', navyText  : 'FFFFFFFF',
+    attBg     : 'FF2E5A88',
+    earnBg    : 'FF1A6B3C', earnText  : 'FF1A6B3C',
+    dedBg     : 'FF8B3A00',
+    companyBg : 'FFEAF1FB', companyText:'FF1F4E79',
+    grossCell : 'FFD6F0E8',
+    dedCell   : 'FFFFE8D6',
+    netCell   : 'FFE8F5E9',
+    oddRow    : 'FFFFFFFF',
+    evenRow   : 'FFF5F9FF',
+    black     : 'FF000000'
+  };
 
-  /* ── Column widths ── */
-  ws['!cols'] = [
-    {wch:7},{wch:24},{wch:14},{wch:14},{wch:18},
-    {wch:10},{wch:10},{wch:10},
-    {wch:12},{wch:10},{wch:12},{wch:15},{wch:14},{wch:14},
-    {wch:12},{wch:12},{wch:8},{wch:8},{wch:14},{wch:16},{wch:14}
-  ];
+  function cellStyle(addr, bgColor, fontColor, bold, hAlign, vAlign, wrapText, numFmt) {
+    if (!ws[addr]) ws[addr] = {t:'z', v:''};
+    ws[addr].s = {
+      fill  : bgColor ? { patternType:'solid', fgColor:{rgb:bgColor} } : undefined,
+      font  : { name:'Arial', sz:10, bold:!!bold, color:{ rgb: fontColor||C.black } },
+      alignment : { horizontal: hAlign||'left', vertical: vAlign||'center', wrapText: !!wrapText },
+      numFmt: numFmt||''
+    };
+  }
 
-  /* ── Cell styles via SheetJS-style (community xlsx doesn't support rich styles,
-        but we can set number formats) ── */
   var numFmt = '#,##0.00';
-  var numCols = [8,9,10,11,12,13,14,15,16,17,18,19,20]; /* 0-based */
-  for (var ri = 4; ri < wsData.length - 1; ri++) {
-    numCols.forEach(function (ci) {
-      var addr = XLSX.utils.encode_cell({r:ri, c:ci});
-      if (ws[addr] && typeof ws[addr].v === 'number') {
-        ws[addr].z = numFmt;
-      }
+  var totalRows = records.length;
+  var lastDataRow  = dataStartRow + totalRows - 1; // 1-based
+  var totalRowIdx  = lastDataRow + 1;              // 1-based
+  var footerRowIdx = totalRowIdx + 1;
+
+  // ── Row 1: company header ──
+  ws['A1'].s = { fill:{patternType:'solid',fgColor:{rgb:C.companyBg}}, font:{name:'Arial',sz:11,bold:true,color:{rgb:C.companyText}}, alignment:{horizontal:'center',vertical:'center'} };
+
+  // ── Row 2: register title ──
+  ws['A2'].s = { fill:{patternType:'solid',fgColor:{rgb:C.navyBg}}, font:{name:'Arial',sz:12,bold:true,color:{rgb:C.navyText}}, alignment:{horizontal:'center',vertical:'center'} };
+
+  // ── Row 4: group headers ──
+  var groupMap = {
+    A4:{bg:C.navyBg}, B4:{bg:C.navyBg}, C4:{bg:C.navyBg},       // Employee Info A-C
+    D4:{bg:C.attBg},  E4:{bg:C.attBg},  F4:{bg:C.attBg}, G4:{bg:C.attBg}, H4:{bg:C.attBg}, // Attendance D-H
+    I4:{bg:C.earnBg}, J4:{bg:C.earnBg}, K4:{bg:C.earnBg}, L4:{bg:C.earnBg}, M4:{bg:C.earnBg}, N4:{bg:C.earnBg}, // Earnings I-N
+    O4:{bg:C.dedBg},  P4:{bg:C.dedBg},  Q4:{bg:C.dedBg},  R4:{bg:C.dedBg},  S4:{bg:C.dedBg},  T4:{bg:C.dedBg},  U4:{bg:C.navyBg} // Deductions O-T, NET U
+  };
+  Object.keys(groupMap).forEach(function(addr) {
+    if (!ws[addr]) ws[addr]={t:'z',v:''};
+    ws[addr].s = { fill:{patternType:'solid',fgColor:{rgb:groupMap[addr].bg}}, font:{name:'Arial',sz:10,bold:true,color:{rgb:C.navyText}}, alignment:{horizontal:'center',vertical:'center'} };
+  });
+
+  // ── Row 5: column headers ──
+  var hdrColBg = ['A','B','C'].map(function(c){return {col:c,bg:C.navyBg};})
+    .concat(['D','E','F','G','H'].map(function(c){return {col:c,bg:C.attBg};}))
+    .concat(['I','J','K','L','M','N'].map(function(c){return {col:c,bg:C.earnBg};}))
+    .concat(['O','P','Q','R','S','T'].map(function(c){return {col:c,bg:C.dedBg};}))
+    .concat([{col:'U',bg:C.navyBg}]);
+  hdrColBg.forEach(function(item) {
+    var addr = item.col+'5';
+    if (!ws[addr]) ws[addr]={t:'z',v:''};
+    ws[addr].s = { fill:{patternType:'solid',fgColor:{rgb:item.bg}}, font:{name:'Arial',sz:9,bold:true,color:{rgb:C.navyText}}, alignment:{horizontal:'center',vertical:'center',wrapText:true} };
+  });
+
+  // ── Data rows ──
+  var cols = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U'];
+  var numericCols = new Set(['I','J','K','L','M','N','O','P','Q','S','T','U']);
+  for (var ri=0; ri<records.length; ri++) {
+    var excelRow = dataStartRow + ri; // 1-based
+    var isEven   = ri % 2 === 1;
+    var rowBg    = isEven ? C.evenRow : C.oddRow;
+    cols.forEach(function(col) {
+      var addr = col+excelRow;
+      if (!ws[addr]) ws[addr]={t:'z',v:''};
+      var isBold   = (col==='B'||col==='N'||col==='T'||col==='U');
+      var cellBg   = col==='N' ? C.grossCell : col==='T' ? C.dedCell : col==='U' ? C.netCell : rowBg;
+      var fontClr  = col==='U' ? C.earnText : C.black;
+      var hAlign   = numericCols.has(col) ? 'right' : (col==='A'||col==='C'||col==='D'||col==='F'||col==='G'||col==='H'||col==='R') ? 'center' : 'left';
+      ws[addr].s = {
+        fill : { patternType:'solid', fgColor:{rgb:cellBg} },
+        font : { name:'Arial', sz:9, bold:isBold, color:{rgb:fontClr} },
+        alignment : { horizontal:hAlign, vertical:'center' },
+        numFmt: numericCols.has(col) && col!=='R' ? numFmt : ''
+      };
     });
   }
 
-  XLSX.utils.book_append_sheet(wb, ws, 'Salary Register');
+  // ── Total row ──
+  var totRow = String(totalRowIdx);
+  cols.forEach(function(col) {
+    var addr = col+totRow;
+    if (!ws[addr]) ws[addr]={t:'z',v:''};
+    ws[addr].s = {
+      fill : { patternType:'solid', fgColor:{rgb:C.navyBg} },
+      font : { name:'Arial', sz:10, bold:true, color:{rgb:C.navyText} },
+      alignment : { horizontal: numericCols.has(col)?'right':'center', vertical:'center' },
+      numFmt: numericCols.has(col)&&col!=='R'?numFmt:''
+    };
+  });
 
-  /* ── Filename ── */
-  var fname = filenameBase + '_' + period.replace(/\s+/g,'_') + '.xlsx';
+  // ── Footer ──
+  var footAddr = 'A'+footerRowIdx;
+  if (ws[footAddr]) ws[footAddr].s = { font:{name:'Arial',sz:9,bold:false,color:{rgb:'FF808080'}}, alignment:{horizontal:'center',vertical:'center'} };
+
+  // ── Merges ──
+  ws['!merges'] = [
+    {s:{r:0,c:0}, e:{r:0,c:20}},  // Company header
+    {s:{r:1,c:0}, e:{r:1,c:20}},  // Register title
+    {s:{r:3,c:0}, e:{r:3,c:2}},   // Employee Info group
+    {s:{r:3,c:3}, e:{r:3,c:7}},   // Attendance group
+    {s:{r:3,c:8}, e:{r:3,c:13}},  // Earnings group
+    {s:{r:3,c:14},e:{r:3,c:19}},  // Deductions group
+    {s:{r:totalRowIdx-1,c:0}, e:{r:totalRowIdx-1,c:7}},   // Total label
+    {s:{r:footerRowIdx-1,c:0}, e:{r:footerRowIdx-1,c:20}} // Footer
+  ];
+
+  // ── Row heights ──
+  ws['!rows'] = [];
+  ws['!rows'][0] = {hpx:32};  // Company
+  ws['!rows'][1] = {hpx:22};  // Title
+  ws['!rows'][2] = {hpx:8};   // Spacer
+  ws['!rows'][3] = {hpx:18};  // Group headers
+  ws['!rows'][4] = {hpx:30};  // Col headers (wrap text)
+  for (var di=0; di<records.length; di++) ws['!rows'][5+di] = {hpx:18};
+  ws['!rows'][5+records.length]   = {hpx:18}; // Total
+  ws['!rows'][5+records.length+1] = {hpx:14}; // Footer
+
+  // ── Column widths ──
+  ws['!cols'] = [
+    {wch:5},{wch:22},{wch:14},{wch:12},{wch:18},
+    {wch:9},{wch:9},{wch:9},
+    {wch:13},{wch:10},{wch:13},{wch:14},{wch:14},{wch:14},
+    {wch:12},{wch:12},{wch:8},{wch:9},{wch:13},{wch:15},{wch:14}
+  ];
+
+  XLSX.utils.book_append_sheet(wb, ws, 'Salary Register');
+  var fname = filenameBase+'_'+period.replace(/\s+/g,'_')+'.xlsx';
   XLSX.writeFile(wb, fname);
-  showToast('Excel exported: ' + fname, 'success');
+  showToast('Excel exported: '+fname, 'success');
 }
 
-/* ═══════════════════════════════════════════════════════════════
-   PAYSLIP  MODAL
-═══════════════════════════════════════════════════════════════ */
+/* ═══════════════════════════════════════════
+   PAYSLIP MODAL — with logo + new fields
+═══════════════════════════════════════════ */
 function openPayslip(payrollId) {
-  var r = allRecords.find(function (x) { return String(x.payrollId) === String(payrollId); });
-  if (!r) { showToast('Record not found.', 'error'); return; }
+  var r = allRecords.find(function(x){return String(x.payrollId)===String(payrollId);});
+  if (!r) { showToast('Record not found.','error'); return; }
   currentPayslipRec = r;
 
-  var ml       = monthLabel(r.payrollMonth) + ' ' + (r.payrollYear || '');
+  var ml       = monthLabel(r.payrollMonth)+' '+(r.payrollYear||'');
   var basic    = safe(r.basicSalary);
   var hra      = safe(r.hra);
   var allow    = safe(r.allowances);
@@ -941,69 +984,96 @@ function openPayslip(payrollId) {
   var tds      = safe(r.tds);
   var totalDed = safe(r.totalDeductions);
   var net      = safe(r.netSalary);
+  var lopDays  = safe(r.lopDays);
+  var lopDed   = safe(r.lopDeduction);
+  var expReimb = safe(r.expenseReimbursement);
+  var daysWkd  = r.daysWorked         != null ? r.daysWorked         : '—';
+  var wkDays   = r.workingDaysInMonth != null ? r.workingDaysInMonth : '—';
+  var paidDays = r.daysWorked         != null ? r.daysWorked         : '—';
   var words    = numberToWords(Math.round(net));
 
   var f = function(v){ return parseFloat(v||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}); };
 
+  // Logo — try to load; if fails the onerror replaces with initials
+  var logoHtml = '<div class="ps-company-logo-wrap">'
+    +'<img src="/assets/Images/logo.png" alt="Company Logo"'
+    +' onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'"'
+    +' style="width:44px;height:44px;object-fit:contain;">'
+    +'<div class="ps-logo-fallback" style="display:none;">SIEC</div>'
+    +'</div>';
+
   var html =
     '<div id="payslipToPrint" class="payslip-container">'
 
-    /* Header */
-    + '<div class="ps-header">'
-    +   '<div class="ps-company-row">'
-    +     '<div class="ps-company-name">Sustainable Integrated Environmental Consultant.</div>'
-    +     '<div class="ps-company-addr">Office-401, Sanskriti Arcade, Kaspate Wasti, Wakad, Pune - 411057</div>'
-    +   '</div>'
-    +   '<div class="ps-month-row">PAYSLIP FOR THE MONTH OF ' + ml.toUpperCase() + '</div>'
-    + '</div>'
+    // ── Header with logo ──
+    +'<div class="ps-header">'
+    +  '<div class="ps-company-row">'
+    +    logoHtml
+    +    '<div class="ps-company-text">'
+    +      '<div class="ps-company-name">Sustainable Integrated Environmental Consultant.</div>'
+    +      '<div class="ps-company-addr">Office-401, Sanskriti Arcade, Kaspate Wasti, Wakad, Pune - 411057</div>'
+    +    '</div>'
+    +  '</div>'
+    +  '<div class="ps-month-row">PAYSLIP FOR THE MONTH OF '+ml.toUpperCase()+'</div>'
+    +'</div>'
 
-    /* Employee grid */
-    + '<div class="ps-emp-grid">'
-    +   cell('Name',              r.fullName    || '\u2014')
-    +   cell('Total Working Days','30')
-    +   cell('Emp. Code',         r.employeeId  || '\u2014')
-    +   cell('LWP / Absent',      '\u2014')
-    +   cell('Designation',       r.designation || '\u2014')
-    +   cell('Days Paid',         '30')
-    +   cell('Department',        r.department  || '\u2014')
-    +   cell('Pay Period',        ml)
-    + '</div>'
+    // ── Employee details grid ──
+    +'<div class="ps-emp-grid">'
+    +  cell('Name',          r.fullName    ||'—')
+    +  cell('Emp. Code',     r.employeeId  ||'—')
+    +  cell('Designation',   r.designation ||'—')
+    +  cell('Department',    r.department  ||'—')
+    +  cell('Pay Period',    ml)
+    +  cell('Status',        r.status      ||'—')
+    +'</div>'
 
-    /* Salary table */
-    + '<table class="ps-salary-table">'
-    + '<thead><tr>'
-    +   '<th style="width:36%">Earnings</th><th class="amt-col" style="width:14%">Amount (\u20B9)</th>'
-    +   '<th style="width:36%">Deductions</th><th class="amt-col" style="width:14%">Amount (\u20B9)</th>'
-    + '</tr></thead>'
-    + '<tbody>'
-    +   '<tr><td>Basic</td><td class="amt-col">' + f(basic)   + '</td><td>PF (Employee)</td><td class="amt-col">' + f(empPf)   + '</td></tr>'
-    +   '<tr><td>HRA</td>  <td class="amt-col">' + f(hra)     + '</td><td>PF (Employer)</td><td class="amt-col">' + f(emplrPf) + '</td></tr>'
-    +   '<tr><td>Other Allowances</td><td class="amt-col">' + f(allow) + '</td><td>ESI</td><td class="amt-col">' + (esi>0?f(esi):'NA') + '</td></tr>'
-    +   '<tr><td></td><td></td><td>TDS / IT Return</td><td class="amt-col">' + f(tds) + '</td></tr>'
-    + '</tbody>'
-    + '<tfoot><tr class="total-row">'
-    +   '<td>Gross Earnings</td><td class="amt-col">' + f(gross) + '</td>'
-    +   '<td>Total Deductions</td><td class="amt-col">' + f(totalDed) + '</td>'
-    + '</tr></tfoot>'
-    + '</table>'
+    // ── Attendance strip (NEW) ──
+    +'<div class="ps-att-strip">'
+    +  '<div class="ps-att-head">Attendance Summary</div>'
+    +  '<div class="ps-att-cell"><div class="ps-att-val">'+wkDays+'</div><div class="ps-att-lbl">Working Days</div></div>'
+    +  '<div class="ps-att-cell"><div class="ps-att-val paid">'+daysWkd+'</div><div class="ps-att-lbl">Days Worked</div></div>'
+    +  '<div class="ps-att-cell"><div class="ps-att-val lop">'+lopDays+'</div><div class="ps-att-lbl">LOP Days</div></div>'
+    +  '<div class="ps-att-cell"><div class="ps-att-val paid">'+paidDays+'</div><div class="ps-att-lbl">Days Paid</div></div>'
+    +  '<div class="ps-att-cell"><div class="ps-att-val '+(lopDed>0?'lop':'')+'">'+f(lopDed)+'</div><div class="ps-att-lbl">LOP Deduction</div></div>'
+    +  '<div class="ps-att-cell"><div class="ps-att-val" style="color:#0e6fa8">'+f(expReimb)+'</div><div class="ps-att-lbl">Exp. Reimb.</div></div>'
+    +'</div>'
 
-    /* Net pay */
-    + '<div class="ps-net-row">'
-    +   '<div><div class="ps-net-label">NET PAY (Take Home)</div>'
-    +   '<div class="ps-net-words">' + words + ' Only</div></div>'
-    +   '<div class="ps-net-amount">\u20B9 ' + f(net) + '</div>'
-    + '</div>'
+    // ── Salary table ──
+    +'<table class="ps-salary-table">'
+    +'<thead><tr>'
+    +'<th style="width:36%">Earnings</th><th class="amt-col" style="width:14%">Amount (₹)</th>'
+    +'<th style="width:36%">Deductions</th><th class="amt-col" style="width:14%">Amount (₹)</th>'
+    +'</tr></thead>'
+    +'<tbody>'
+    +'<tr><td>Basic Salary</td><td class="amt-col">'+f(basic)+'</td><td>PF (Employee 12%)</td><td class="amt-col">'+f(empPf)+'</td></tr>'
+    +'<tr><td>HRA</td><td class="amt-col">'+f(hra)+'</td><td>PF (Employer 12%)</td><td class="amt-col">'+f(emplrPf)+'</td></tr>'
+    +'<tr><td>Other Allowances</td><td class="amt-col">'+f(allow)+'</td><td>ESI</td><td class="amt-col">'+(esi>0?f(esi):'NA')+'</td></tr>'
+    +(expReimb>0?'<tr class="exp-row"><td>Expense Reimbursement</td><td class="amt-col">+'+f(expReimb)+'</td><td>TDS / IT Return</td><td class="amt-col">'+f(tds)+'</td></tr>':'<tr><td></td><td></td><td>TDS / IT Return</td><td class="amt-col">'+f(tds)+'</td></tr>')
+    +(lopDed>0?'<tr class="lop-row"><td></td><td></td><td>Loss of Pay ('+lopDays+' day'+(lopDays===1?'':'s')+')</td><td class="amt-col">-'+f(lopDed)+'</td></tr>':'')
+    +'</tbody>'
+    +'<tfoot><tr class="total-row">'
+    +'<td>Gross Earnings</td><td class="amt-col">'+f(gross)+'</td>'
+    +'<td>Total Deductions</td><td class="amt-col">'+f(totalDed + lopDed)+'</td>'
+    +'</tr></tfoot>'
+    +'</table>'
 
-    + '<div class="ps-footer">This is a Computer Generated Payslip and does not require Signature.<br>'
-    + 'For any discrepancies, please contact HR department within 7 days.</div>'
-    + '</div>';
+    // ── Net pay ──
+    +'<div class="ps-net-row">'
+    +'<div><div class="ps-net-label">NET PAY (Take Home)</div>'
+    +'<div class="ps-net-words">'+words+'</div></div>'
+    +'<div class="ps-net-amount">₹ '+f(net)+'</div>'
+    +'</div>'
+
+    +'<div class="ps-footer">This is a Computer Generated Payslip and does not require Signature.<br>'
+    +'For any discrepancies, please contact HR department within 7 days.</div>'
+    +'</div>';
 
   document.getElementById('payslipContent').innerHTML = html;
   document.getElementById('payslipModal').classList.add('active');
 }
 
 function cell(label, value) {
-  return '<div class="ps-emp-cell"><span class="ps-emp-label">' + esc(label) + '</span><span class="ps-emp-value">' + esc(value) + '</span></div>';
+  return '<div class="ps-emp-cell"><span class="ps-emp-label">'+esc(label)+'</span><span class="ps-emp-value">'+esc(value)+'</span></div>';
 }
 
 function closePayslipModal() {
@@ -1013,36 +1083,76 @@ function closePayslipModal() {
 function downloadPayslipPDF() {
   var el = document.getElementById('payslipToPrint');
   if (!el) return;
-  var r       = currentPayslipRec;
-  var name    = (r && r.fullName  ? r.fullName.replace(/\s+/g,'_') : 'Employee');
-  var period  = (r ? (r.payrollMonth + '_' + r.payrollYear) : 'slip');
+  var r = currentPayslipRec;
+  var name   = (r&&r.fullName?r.fullName.replace(/\s+/g,'_'):'Employee');
+  var period = (r?(r.payrollMonth+'_'+r.payrollYear):'slip');
   var opt = {
-    margin:[.4,.4,.4,.4],
-    filename: 'Salary_Slip_' + name + '_' + period + '.pdf',
-    image:{ type:'jpeg', quality:.98 },
-    html2canvas:{ scale:2 },
-    jsPDF:{ unit:'in', format:'a4', orientation:'portrait' }
+    margin:[.35,.35,.35,.35],
+    filename:'Salary_Slip_'+name+'_'+period+'.pdf',
+    image:{type:'jpeg',quality:.98},
+    html2canvas:{scale:2,useCORS:true},
+    jsPDF:{unit:'in',format:'a4',orientation:'portrait'}
   };
   html2pdf().set(opt).from(el).save()
-    .then(function(){ showToast('Payslip downloaded!','success'); })
-    .catch(function(){ showToast('PDF generation failed.','error'); });
+    .then(function(){showToast('Payslip downloaded!','success');})
+    .catch(function(){showToast('PDF generation failed.','error');});
 }
-/* ═══════════════════════════════════════════════════════════════
 
-/* ═══════════════════════════════════════════════════════════════
+
+function printPayslip() {
+    var payslipDiv = document.getElementById('payslipToPrint');
+    if (!payslipDiv) return showToast('Payslip not found', 'error');
+
+    var clone = payslipDiv.cloneNode(true);
+    // remove scripts if any
+    clone.querySelectorAll('script').forEach(s => s.remove());
+
+    var original = document.body.innerHTML;
+    document.body.innerHTML = clone.outerHTML;
+    
+    window.print();
+
+    setTimeout(() => {
+        document.body.innerHTML = original;
+        location.reload();
+    }, 800);
+}
+
+
+// function printPayslip() {
+//     var payslip = document.getElementById('payslipToPrint');
+//     if (!payslip) {
+//         showToast('Payslip not found', 'error');
+//         return;
+//     }
+
+//     // Clone and remove any scripts
+//     var clone = payslip.cloneNode(true);
+//     var scripts = clone.getElementsByTagName('script');
+//     while (scripts.length) scripts[0].remove();
+
+//     // Simple print using existing modal content + CSS @media print
+//     var originalContent = document.body.innerHTML;
+    
+//     document.body.innerHTML = clone.outerHTML;
+    
+//     window.print();
+    
+//     // Restore original page after print
+//     setTimeout(function() {
+//         document.body.innerHTML = originalContent;
+//         location.reload();   // safest way to restore event listeners
+//     }, 500);
+// }
+
+/* ═══════════════════════════════════════════
    UTILITIES
-═══════════════════════════════════════════════════════════════ */
-/** Null-safe number coercion */
-function safe(v){ return (v === null || v === undefined || isNaN(v)) ? 0 : parseFloat(v); }
+═══════════════════════════════════════════ */
+function safe(v)  { return (v===null||v===undefined||isNaN(v))?0:parseFloat(v); }
+function fmt(v)   { return safe(v).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+function esc(s)   { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-/** Format number with Indian locale */
-function fmt(v){ return safe(v).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}); }
-
-/** HTML escape */
-function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-
-/** Status badge CSS class */
-function badgeClass(s){
+function badgeClass(s) {
   switch((s||'').toUpperCase()){
     case 'PROCESSED': return 'badge-processed';
     case 'PAID':      return 'badge-paid';
@@ -1053,44 +1163,42 @@ function badgeClass(s){
   }
 }
 
-/** Convert API month enum → readable label */
-function monthLabel(m){
-  var map = {JANUARY:'January',FEBRUARY:'February',MARCH:'March',APRIL:'April',
-             MAY:'May',JUNE:'June',JULY:'July',AUGUST:'August',
-             SEPTEMBER:'September',OCTOBER:'October',NOVEMBER:'November',DECEMBER:'December'};
-  return map[(m||'').toUpperCase()] || (m || '');
+function monthLabel(m) {
+  var map={JANUARY:'January',FEBRUARY:'February',MARCH:'March',APRIL:'April',
+           MAY:'May',JUNE:'June',JULY:'July',AUGUST:'August',
+           SEPTEMBER:'September',OCTOBER:'October',NOVEMBER:'November',DECEMBER:'December'};
+  return map[(m||'').toUpperCase()]||(m||'');
 }
 
-function numberToWords(num){
+function numberToWords(num) {
   var a=['','One','Two','Three','Four','Five','Six','Seven','Eight','Nine','Ten',
          'Eleven','Twelve','Thirteen','Fourteen','Fifteen','Sixteen','Seventeen','Eighteen','Nineteen'];
   var b=['','','Twenty','Thirty','Forty','Fifty','Sixty','Seventy','Eighty','Ninety'];
   function iW(n){
-    if(n===0) return 'Zero';
-    if(n<20)  return a[n];
-    if(n<100) return b[Math.floor(n/10)]+(n%10?' '+a[n%10]:'');
-    if(n<1000) return a[Math.floor(n/100)]+' Hundred'+(n%100?' '+iW(n%100):'');
-    if(n<100000) return iW(Math.floor(n/1000))+' Thousand'+(n%1000?' '+iW(n%1000):'');
-    if(n<10000000) return iW(Math.floor(n/100000))+' Lakh'+(n%100000?' '+iW(n%100000):'');
+    if(n===0)return 'Zero';
+    if(n<20)return a[n];
+    if(n<100)return b[Math.floor(n/10)]+(n%10?' '+a[n%10]:'');
+    if(n<1000)return a[Math.floor(n/100)]+' Hundred'+(n%100?' '+iW(n%100):'');
+    if(n<100000)return iW(Math.floor(n/1000))+' Thousand'+(n%1000?' '+iW(n%1000):'');
+    if(n<10000000)return iW(Math.floor(n/100000))+' Lakh'+(n%100000?' '+iW(n%100000):'');
     return iW(Math.floor(n/10000000))+' Crore'+(n%10000000?' '+iW(n%10000000):'');
   }
   return iW(num)+' Rupees Only';
 }
 
-function showLoading(on){
-  document.getElementById('tableLoading').classList.toggle('hidden', !on);
+function showLoading(on) {
+  document.getElementById('tableLoading').classList.toggle('hidden',!on);
   if(on) document.getElementById('tableEmpty').classList.add('hidden');
 }
 
-function showToast(msg,type){
+function showToast(msg,type) {
   var t=document.createElement('div');
   t.className='toast '+(type||'info');
   t.textContent=msg;
   document.body.appendChild(t);
-  setTimeout(function(){ t.remove(); },3500);
+  setTimeout(function(){t.style.transition='opacity .3s';t.style.opacity='0';setTimeout(function(){t.remove();},300);},3200);
 }
 
-/* Close modal on backdrop */
 document.getElementById('payslipModal').addEventListener('click', function(e){
   if(e.target===this) closePayslipModal();
 });
