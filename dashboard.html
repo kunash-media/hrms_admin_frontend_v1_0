@@ -19,6 +19,40 @@
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
+
+    <style>
+    /* #sidebar-container {
+      width: 256px;
+      min-width: 256px;
+      flex-shrink: 0;
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      background: #b8cfd7;   
+      overflow: hidden;
+    } */
+    #header-container {
+      position: fixed;
+      top: 0;
+      left: 256px;
+      right: 0;
+      height: 56px;
+      background: #ffffff;
+      border-bottom: 1px solid #3098b5;
+      z-index: 40;
+    }
+    @keyframes shimmer {
+      0%   { background-position: -400px 0; }
+      100% { background-position:  400px 0; }
+    }
+    .skeleton-box {
+      background: linear-gradient(90deg, #c5d9e0 25%, #d8e8ed 50%, #c5d9e0 75%);
+      background-size: 800px 100%;
+      animation: shimmer 1.4s ease-in-out infinite;
+      border-radius: 4px;
+    }
+  </style>
+
     <style>
         * {
             font-family: 'Inter', sans-serif;
@@ -625,9 +659,28 @@
     </div>
 
     <!-- Common JS Files -->
+     <script src="/assets/js/component-loader.js"></script>  <!-- ← ADD THIS LINE -->
     <script src="assets/js/common.js"></script>
     <script src="assets/js/sidebar.js"></script>
     <script src="assets/js/header.js"></script>
+
+    <script>
+    (function() {
+        function onReady() {
+            document.body.classList.add('components-loaded');
+            initCharts();
+            initRealTimeCounter();
+            initChartFilter();
+            initApprovalButtons();
+            setActiveMenu('dashboard');
+        }
+
+        window.loadSidebar();
+        window.loadHeader();
+
+        setTimeout(onReady, 150);   // Safety
+    })();
+</script>
 
     <script>
         // Chart instances for update

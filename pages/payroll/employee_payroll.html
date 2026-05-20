@@ -9,6 +9,30 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
+
+    <style>
+    
+    #header-container {
+      position: fixed;
+      top: 0;
+      left: 256px;
+      right: 0;
+      height: 56px;
+      background: #ffffff;
+      border-bottom: 1px solid #3098b5;
+      z-index: 40;
+    }
+    @keyframes shimmer {
+      0%   { background-position: -400px 0; }
+      100% { background-position:  400px 0; }
+    }
+    .skeleton-box {
+      background: linear-gradient(90deg, #c5d9e0 25%, #d8e8ed 50%, #c5d9e0 75%);
+      background-size: 800px 100%;
+      animation: shimmer 1.4s ease-in-out infinite;
+      border-radius: 4px;
+    }
+  </style>
     <style>
         * { font-family: 'Inter', sans-serif; }
 
@@ -567,6 +591,7 @@
     </div>
 </div>
 
+<script src="/assets/js/component-loader.js"></script>  <!-- ← ADD THIS LINE -->
 <script src="/assets/js/common.js"></script>
 <script src="/assets/js/sidebar.js"></script>
 <script src="/assets/js/header.js"></script>

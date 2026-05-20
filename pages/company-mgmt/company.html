@@ -11,6 +11,32 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
 
+    
+
+    <style>
+  
+    #header-container {
+      position: fixed;
+      top: 0;
+      left: 256px;
+      right: 0;
+      height: 56px;
+      background: #ffffff;
+      border-bottom: 1px solid #3098b5;
+      z-index: 40;
+    }
+    @keyframes shimmer {
+      0%   { background-position: -400px 0; }
+      100% { background-position:  400px 0; }
+    }
+    .skeleton-box {
+      background: linear-gradient(90deg, #c5d9e0 25%, #d8e8ed 50%, #c5d9e0 75%);
+      background-size: 800px 100%;
+      animation: shimmer 1.4s ease-in-out infinite;
+      border-radius: 4px;
+    }
+  </style>
+
     <style>
         * {
             font-family: 'Inter', sans-serif;
@@ -594,39 +620,93 @@
                             </div>
 
                             <h3 class="text-lg font-bold mb-5" style="color: var(--primary);">Company Information</h3>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mb-2">
-                                <div class="form-group"><label>Company Name <span
-                                            class="text-red-500">*</span></label><input type="text" id="comp_name"
-                                        placeholder="e.g., Acme Solutions Pvt Ltd"
-                                        style="padding: 4px 16px ; font-size: 11px;"></div>
-                                <div class="form-group"><label>GST Number</label><input type="text" id="comp_gst"
-                                        placeholder="GSTIN: 22AAAAA0000A1Z"
-                                        style="padding: 4px 16px ; font-size: 11px;"></div>
-                                <div class="form-group"><label>PAN Number</label><input type="text" id="comp_pan"
-                                        placeholder="PAN: AAAPL1234C" style="padding: 4px 16px ; font-size: 11px;">
-                                </div>
-                                <div class="form-group"><label>CIN Number</label><input type="text" id="comp_cin"
-                                        placeholder="CIN: U12345DL2020PTC123456"
-                                        style="padding: 4px 16px ; font-size: 11px;"></div>
-                                <div class="form-group"><label>Email <span class="text-red-500">*</span></label><input
-                                        type="email" id="comp_email" placeholder="contact@company.com"
-                                        style="padding: 4px 16px ; font-size: 11px;"></div>
-                                <div class="form-group"><label>Phone <span class="text-red-500">*</span></label><input
-                                        type="tel" id="comp_phone" placeholder="+91 9876543210"
-                                        style="padding: 4px 16px ; font-size: 11px;"></div>
-                                <div class="form-group"><label>Website</label><input type="url" id="comp_website"
-                                        placeholder="https://www.company.com"
-                                        style="padding: 4px 16px ; font-size: 11px;"></div>
-                                <div class="form-group"><label>Established Year</label><input type="number"
-                                        id="comp_year" placeholder="e.g., 2015"
-                                        style="padding: 4px 16px ; font-size: 11px;"></div>
-                                <div class="form-group md:col-span-2"><label>Address</label><textarea id="comp_address"
-                                        placeholder="Full company address" rows="2"
-                                        style="resize: vertical; padding: 4px 16px ; font-size: 11px;"></textarea></div>
-                                <div class="form-group md:col-span-2"><label>Description</label><textarea id="comp_desc"
-                                        placeholder="Brief description about the company" rows="2"
-                                        style="resize: vertical; padding: 4px 16px ; font-size: 11px;"></textarea></div>
-                            </div>
+                            <!-- Company Information section - Updated grid -->
+                            <!-- Company Information section - WITHOUT Industry Type -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4 mb-2">
+    <div class="form-group">
+        <label>Company Name <span class="text-red-500">*</span></label>
+        <input type="text" id="comp_name" placeholder="e.g., Acme Solutions Pvt Ltd" style="padding: 4px 16px ; font-size: 11px;">
+        <div class="error-message" id="comp_name_error" style="color: red; font-size: 10px; margin-top: 4px; display: none;"></div>
+    </div>
+
+    <div class="form-group">
+        <label>GST Number</label>
+        <input type="text" id="comp_gst" placeholder="22AAAAA0000A1Z" maxlength="15" style="padding: 4px 16px ; font-size: 11px; text-transform: uppercase;">
+        <div class="error-message" id="comp_gst_error" style="color: red; font-size: 10px; margin-top: 4px; display: none;"></div>
+        <small style="color: #666; font-size: 10px;">15 characters (Auto converts to uppercase)</small>
+    </div>
+
+    <div class="form-group">
+        <label>PAN Number</label>
+        <input type="text" id="comp_pan" placeholder="ABCDE1234F" maxlength="10" style="padding: 4px 16px ; font-size: 11px; text-transform: uppercase;">
+        <div class="error-message" id="comp_pan_error" style="color: red; font-size: 10px; margin-top: 4px; display: none;"></div>
+        <small style="color: #666; font-size: 10px;">Format: ABCDE1234F (Auto converts to uppercase)</small>
+    </div>
+
+    <div class="form-group">
+        <label>CIN Number</label>
+        <input type="text" id="comp_cin" placeholder="U12345DL2020PTC123456" maxlength="21" style="padding: 4px 16px ; font-size: 11px; text-transform: uppercase;">
+        <div class="error-message" id="comp_cin_error" style="color: red; font-size: 10px; margin-top: 4px; display: none;"></div>
+        <small style="color: #666; font-size: 10px;">21 characters (Auto converts to uppercase)</small>
+    </div>
+
+    <!-- ONLY Company Type Field (No Industry Type) -->
+    <div class="form-group">
+        <label>Company Type</label>
+        <select id="comp_type" style="padding: 4px 16px ; font-size: 11px;">
+            <option value="">Select Company Type</option>
+            <option value="Private Limited">Private Limited</option>
+            <option value="Public Limited">Public Limited</option>
+            <option value="LLP">Limited Liability Partnership (LLP)</option>
+            <option value="Partnership">Partnership</option>
+            <option value="Proprietorship">Proprietorship</option>
+            <option value="Section 8 Company">Section 8 Company (Non-Profit)</option>
+            <option value="One Person Company">One Person Company (OPC)</option>
+            <option value="Government Company">Government Company</option>
+            <option value="Foreign Company">Foreign Company</option>
+            <option value="Others">Others</option>
+        </select>
+        <div class="error-message" id="comp_type_error" style="color: red; font-size: 10px; margin-top: 4px; display: none;"></div>
+        <small style="color: #666; font-size: 10px;">Select your company registration type</small>
+    </div>
+
+    <div class="form-group">
+        <label>Email <span class="text-red-500">*</span></label>
+        <input type="email" id="comp_email" placeholder="contact@company.com" style="padding: 4px 16px ; font-size: 11px;">
+        <div class="error-message" id="comp_email_error" style="color: red; font-size: 10px; margin-top: 4px; display: none;"></div>
+    </div>
+
+    <div class="form-group">
+        <label>Phone <span class="text-red-500">*</span></label>
+        <input type="tel" id="comp_phone" placeholder="9876543210" maxlength="10" pattern="[0-9]{10}" title="Please enter 10 digit mobile number" style="padding: 4px 16px ; font-size: 11px;">
+        <div class="error-message" id="comp_phone_error" style="color: red; font-size: 10px; margin-top: 4px; display: none;"></div>
+        <small style="color: #666; font-size: 10px;">Enter 10-digit mobile number (e.g., 9876543210)</small>
+    </div>
+
+    <div class="form-group">
+        <label>Website</label>
+        <input type="url" id="comp_website" placeholder="https://www.company.com" style="padding: 4px 16px ; font-size: 11px;">
+        <div class="error-message" id="comp_website_error" style="color: red; font-size: 10px; margin-top: 4px; display: none;"></div>
+    </div>
+
+    <div class="form-group">
+        <label>Established Year</label>
+        <input type="number" id="comp_year" placeholder="e.g., 2015" style="padding: 4px 16px ; font-size: 11px;">
+        <div class="error-message" id="comp_year_error" style="color: red; font-size: 10px; margin-top: 4px; display: none;"></div>
+    </div>
+
+    <div class="form-group md:col-span-2">
+        <label>Address</label>
+        <textarea id="comp_address" placeholder="Full company address" rows="2" style="resize: vertical; padding: 4px 16px ; font-size: 11px;"></textarea>
+        <div class="error-message" id="comp_address_error" style="color: red; font-size: 10px; margin-top: 4px; display: none;"></div>
+    </div>
+
+    <div class="form-group md:col-span-2">
+        <label>Description</label>
+        <textarea id="comp_desc" placeholder="Brief description about the company" rows="2" style="resize: vertical; padding: 4px 16px ; font-size: 11px;"></textarea>
+        <div class="error-message" id="comp_desc_error" style="color: red; font-size: 10px; margin-top: 4px; display: none;"></div>
+    </div>
+</div>
                         </div>
 
                         <!-- SECTION 2: WORKING HOURS -->
@@ -655,60 +735,47 @@
                                 <div class="day-checkbox"><input type="checkbox" id="day_sun"><label
                                         for="day_sun">Sunday</label></div>
                             </div>
+                            <div class="error-message" id="working_days_error"
+                                style="color: red; font-size: 10px; margin-top: 8px; display: none;"></div>
                         </div>
 
-                        <!-- SECTION 3: DEPARTMENTS -->
+                        <!-- DEPARTMENTS SECTION -->
                         <div class="section-card"
                             style="border-radius:0; border-left:none; border-right:none; border-top:none; margin-bottom:0; border-bottom: 1px solid var(--primary-soft);">
-                            <div class="flex justify-between items-center mb-5 flex-wrap gap-3">
-                                <h3 class="text-lg font-bold" style="color: var(--primary);">Departments</h3>
-                                <button type="button" id="addDeptBtn" onclick="openDepartmentModal()"
-                                    class="btn-primary text-sm"><i class="fas fa-plus mr-1"></i> Add Department</button>
+                            <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
+                                <h3 class="text-lg font-bold" style="color: var(--primary);">Departments <span
+                                        class="text-red-500">*</span></h3>
+                                <button type="button" id="addDeptBtn" class="btn-primary text-sm">
+                                    <i class="fas fa-plus mr-1"></i> Add Department
+                                </button>
                             </div>
-                            <div class="mb-4"><input type="text" id="deptSearch" placeholder=" Search department..."
-                                    style="width:280px; height:42px; font-size: 11px;"></div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5" id="departmentsList">
-                            </div>
+                            <div id="departmentsContainer" class="space-y-3"></div>
+                            <div class="error-message" id="departments_error"
+                                style="color: red; font-size: 10px; margin-top: 8px; display: none;"></div>
                         </div>
 
-                        <!-- SECTION 4: DESIGNATIONS -->
+                        <!-- DESIGNATIONS SECTION -->
                         <div class="section-card"
                             style="border-radius:0; border-left:none; border-right:none; border-top:none; margin-bottom:0; border-bottom: 1px solid var(--primary-soft);">
-                            <div class="flex justify-between items-center mb-5 flex-wrap gap-3">
-                                <h3 class="text-lg font-bold" style="color: var(--primary);">Designations</h3>
-                                <button type="button" id="addDesigBtn" onclick="openDesignationModal()"
-                                    class="btn-primary text-sm"><i class="fas fa-plus mr-1"></i> Add
-                                    Designation</button>
+                            <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
+                                <h3 class="text-lg font-bold" style="color: var(--primary);">Designations <span
+                                        class="text-red-500">*</span></h3>
+                                <button type="button" id="addDesigBtn" class="btn-primary text-sm">
+                                    <i class="fas fa-plus mr-1"></i> Add Designation
+                                </button>
                             </div>
-                            <div class="filter-bar flex gap-4 mb-5 flex-wrap">
-                                <input type="text" id="desigSearch" placeholder=" Search designation..."
-                                    style="width:260px; height:42px; font-size: 11px;">
-                                <select id="deptFilterDesignation" style="width:220px; height:42px; font-size: 11px;">
-                                    <option value="all">All Departments</option>
-                                </select>
-                            </div>
-                            <div class="overflow-x-auto">
-                                <table class="w-full" style="border-collapse: separate; border-spacing: 0;">
-                                    <thead>
-                                        <tr style="border-bottom: 1px solid var(--primary-soft); background: #f9fcfd;">
-                                            <th style="padding: 14px 10px;">Designation</th>
-                                            <th>Department</th>
-                                            <th>Level</th>
-                                            <th>Base Salary</th>
-                                            <th style="text-align:center;">Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="designationsList"></tbody>
-                                </table>
-                            </div>
+                            <div id="designationsContainer" class="space-y-3"></div>
+                            <div class="error-message" id="designations_error"
+                                style="color: red; font-size: 10px; margin-top: 8px; display: none;"></div>
                         </div>
 
                         <!-- SUBMIT BUTTON -->
                         <div class="flex justify-end p-6 bg-white" style="border-top: 1px solid var(--primary-soft);">
                             <button type="button" onclick="backToTable()" class="btn-outline mr-4">Cancel</button>
-                            <button type="submit" id="submitBtn" class="btn-success"><i
-                                    class="fas fa-check-circle mr-2"></i> <span id="submitBtnText">Register
-                                    Company</span></button>
+                            <button type="submit" id="submitBtn" class="btn-success">
+                                <i class="fas fa-check-circle mr-2"></i> <span id="submitBtnText">Register
+                                    Company</span>
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -719,70 +786,12 @@
 
     <!-- ============================= MODALS ============================= -->
 
-    <!-- Department Modal -->
-    <div id="departmentModal" class="modal-overlay">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h3>Add / Edit Department</h3>
-                <span class="modal-close" onclick="closeDepartmentModal()">&times;</span>
-            </div>
-            <form id="departmentForm">
-                <input type="hidden" id="deptId">
-                <div class="form-group"><label>Department Name *</label><input type="text" id="deptName" required
-                        placeholder="e.g., Engineering" style="font-size: 11px; padding: 4px 8px;"></div>
-                <div class="form-group"><label>Head of Department</label><input type="text" id="deptHead"
-                        placeholder="HOD name" style="font-size: 11px; padding: 4px 8px;"></div>
-                <div class="flex justify-end gap-2 mt-4">
-                    <button type="button" onclick="closeDepartmentModal()" class="btn-outline">Cancel</button>
-                    <button type="submit" class="btn-primary">Save Department</button>
-                </div>
-            </form>
-        </div>
-    </div>
+
 
     <!-- Custom Department Modal -->
 
 
-    <!-- Designation Modal -->
-    <div id="designationModal" class="modal-overlay">
-        <div class="modal-container">
-            <div class="modal-header">
-                <h3 id="desigModalTitle">Add Designation</h3>
-                <span class="modal-close" onclick="closeDesignationModal()">&times;</span>
-            </div>
-            <form id="designationForm">
-                <input type="hidden" id="desigId">
-                <div class="form-group"><label>Designation Name *</label><input type="text" id="desigName" required
-                        placeholder="e.g., Senior Manager" style="font-size: 11px; padding: 4px 8px;"></div>
-                <div class="form-group">
-                    <label>Department *</label>
-                    <div class="inline-add-wrapper">
-                        <select id="desigDeptSelect" required style="font-size: 11px; padding: 4px 8px;">
-                            <option value="">Select Department</option>
-                        </select>
-                        <!-- <button type="button" onclick="openCustomDepartmentModal()" class="add-custom-btn"><i class="fas fa-plus-circle"></i> New</button> -->
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label>Level</label>
-                    <select id="desigLevel" style="font-size: 11px; padding: 4px 8px;">
-                        <option>Level 1</option>
-                        <option>Level 2</option>
-                        <option>Level 3</option>
-                        <option>Level 4</option>
-                        <option>Level 5</option>
-                    </select>
-                </div>
-                <!-- <div class="form-group"><label>Base Salary (₹)</label><input type="number" id="desigSalary"
-                        placeholder="Amount" step="1000" style="font-size: 11px; padding: 4px 8px;">
-                </div> -->
-                <div class="flex justify-end gap-2 mt-4">
-                    <button type="button" onclick="closeDesignationModal()" class="btn-outline">Cancel</button>
-                    <button type="submit" class="btn-primary">Save Designation</button>
-                </div>
-            </form>
-        </div>
-    </div>
+
 
     <!-- View Company Modal -->
     <div id="viewCompanyModal" class="modal-overlay">
@@ -813,13 +822,13 @@
     </div>
 
 
+    <script src="/assets/js/component-loader.js"></script>  <!-- ← ADD THIS LINE -->
     <script src="/assets/js/common.js"></script>
     <script src="/assets/js/sidebar.js"></script>
     <script src="/assets/js/header.js"></script>
 
     <script>
         // ===== API CONFIG =====
-        // const API_BASE_URL = typeof window.API_BASE_URL !== 'undefined' ? window.API_BASE_URL : 'http://localhost:8086';
         const COMPANY_API_URL = API_BASE_URL + '/api/company';
 
         // ===== STATE =====
@@ -831,7 +840,6 @@
         let currentEditDesigIndex = null;
         let isViewMode = false;
         let isEditMode = false;
-        let savedLogoBase64 = null;
 
         // ===== LOCAL STORAGE KEY =====
         const COMPANY_STORAGE_KEY = 'hrms_company_registered';
@@ -854,10 +862,23 @@
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
         function closeConfirmModal() { closeModal('confirmDeleteModal'); }
-        function openCustomDepartmentModal() { openModal('customDepartmentModal'); }
-        function closeCustomDepartmentModal() { closeModal('customDepartmentModal'); }
-        function closeDepartmentModal() { closeModal('departmentModal'); }
-        function closeDesignationModal() { closeModal('designationModal'); }
+
+        // ===== SIDEBAR LOGO UPDATE FUNCTION =====
+        function updateSidebarLogo() {
+            const logoUrl = localStorage.getItem('companyLogo');
+            const sidebarLogo = document.getElementById('sidebarCompanyLogo');
+
+            if (logoUrl && sidebarLogo) {
+                const fullLogoUrl = logoUrl.startsWith('http') ? logoUrl : API_BASE_URL + logoUrl;
+                sidebarLogo.src = fullLogoUrl;
+                sidebarLogo.onerror = function () {
+                    console.warn('Logo failed to load, using default');
+                    this.src = '/assets/images/logo.png';
+                };
+            } else if (sidebarLogo) {
+                sidebarLogo.src = '/assets/images/logo.png';
+            }
+        }
 
         // ===== LOGO HANDLER =====
         function handleLogoSelection(input) {
@@ -865,7 +886,6 @@
                 selectedLogoFile = input.files[0];
                 const reader = new FileReader();
                 reader.onload = e => {
-                    savedLogoBase64 = e.target.result;
                     document.getElementById('logoPreview').innerHTML = `<img src="${e.target.result}" class="w-full h-full object-cover rounded-2xl">`;
                 };
                 reader.readAsDataURL(selectedLogoFile);
@@ -873,160 +893,413 @@
             }
         }
 
-        // ===== DEPARTMENTS =====
-        function openDepartmentModal(i = null) {
-            currentEditDeptIndex = i;
-            document.getElementById('deptId').value = i !== null ? i : '';
-            document.getElementById('deptName').value = i !== null ? departmentsData[i].departmentName : '';
-            document.getElementById('deptHead').value = i !== null ? (departmentsData[i].headOfDepartment || '') : '';
-            openModal('departmentModal');
-        }
-
-        function editDepartment(i) { openDepartmentModal(i); }
-
-        function confirmDeleteDepartment(i) {
-            showConfirmModal('Delete this department? This may affect designations.', () => {
-                departmentsData.splice(i, 1);
-                renderDepartmentsList();
-                loadDepartmentsIntoSelects();
-                filterDesignations();
-                showToast('Department deleted', 'success');
+        // ===== VALIDATION FUNCTIONS =====
+        function clearErrors() {
+            document.querySelectorAll('.error-message').forEach(el => {
+                el.style.display = 'none';
+                el.innerText = '';
+            });
+            document.querySelectorAll('input, select, textarea').forEach(el => {
+                el.style.borderColor = '';
+                el.style.border = '1px solid var(--primary-soft)';
             });
         }
 
-        function renderDepartmentsList() {
-            const container = document.getElementById('departmentsList');
+        function showError(fieldId, message) {
+            const errorDiv = document.getElementById(`${fieldId}_error`);
+            if (errorDiv) {
+                errorDiv.innerText = message;
+                errorDiv.style.display = 'block';
+            }
+            const inputField = document.getElementById(fieldId);
+            if (inputField) {
+                inputField.style.borderColor = '#dc3545';
+            }
+        }
+
+        function validateCompanyName() {
+            const nameInput = document.getElementById('comp_name');
+            let name = nameInput.value.trim();
+            name = name.replace(/\s+/g, ' ');
+
+            if (!name) {
+                showError('comp_name', 'Company name is required');
+                return false;
+            }
+            if (name.length < 3) {
+                showError('comp_name', 'Company name must be at least 3 characters');
+                return false;
+            }
+            if (name.length > 200) {
+                showError('comp_name', 'Company name must be less than 200 characters');
+                return false;
+            }
+
+            nameInput.value = name;
+            return true;
+        }
+
+        function validateCompanyType() {
+            const companyType = document.getElementById('comp_type').value;
+            if (!companyType) {
+                showError('comp_type', 'Company type is required');
+                return false;
+            }
+            return true;
+        }
+
+        
+
+        function validateEmail() {
+            const emailInput = document.getElementById('comp_email');
+            let email = emailInput.value.trim().toLowerCase();
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+            if (!email) {
+                showError('comp_email', 'Email is required');
+                return false;
+            }
+            if (!emailRegex.test(email)) {
+                showError('comp_email', 'Please enter a valid email address');
+                return false;
+            }
+
+            emailInput.value = email;
+            return true;
+        }
+
+        function validatePhone() {
+            const phoneInput = document.getElementById('comp_phone');
+            let phone = phoneInput.value.trim();
+            phone = phone.replace(/\D/g, '');
+
+            if (!phone) {
+                showError('comp_phone', 'Phone number is required');
+                return false;
+            }
+
+            if (phone.length !== 10) {
+                showError('comp_phone', 'Please enter a valid 10-digit phone number');
+                return false;
+            }
+
+            phoneInput.value = phone;
+            return true;
+        }
+
+        function formatPhoneInput() {
+            const phoneInput = document.getElementById('comp_phone');
+            if (phoneInput) {
+                phoneInput.addEventListener('input', function (e) {
+                    let value = this.value.replace(/\D/g, '');
+                    if (value.length > 10) {
+                        value = value.slice(0, 10);
+                    }
+                    this.value = value;
+                });
+            }
+        }
+
+        function validateGST() {
+            const gstInput = document.getElementById('comp_gst');
+            let gst = gstInput.value.trim();
+
+            if (gst === '') return true;
+
+            gst = gst.toUpperCase();
+            gstInput.value = gst;
+
+            const gstRegex = /^[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[1-9A-Z]{1}Z[0-9A-Z]{1}$/;
+            if (!gstRegex.test(gst)) {
+                showError('comp_gst', 'Please enter a valid GST number (15 characters)');
+                return false;
+            }
+            return true;
+        }
+
+        function validatePAN() {
+            const panInput = document.getElementById('comp_pan');
+            let pan = panInput.value.trim();
+
+            if (pan === '') return true;
+
+            pan = pan.toUpperCase();
+            panInput.value = pan;
+
+            const panRegex = /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/;
+            if (!panRegex.test(pan)) {
+                showError('comp_pan', 'Please enter a valid PAN number (Format: ABCDE1234F)');
+                return false;
+            }
+            return true;
+        }
+
+        function autoCapitalizePAN() {
+            const panInput = document.getElementById('comp_pan');
+            if (panInput) {
+                panInput.addEventListener('input', function (e) {
+                    this.value = this.value.toUpperCase();
+                });
+                panInput.addEventListener('blur', function (e) {
+                    this.value = this.value.toUpperCase();
+                    validatePAN();
+                });
+            }
+        }
+
+        function autoCapitalizeGST() {
+            const gstInput = document.getElementById('comp_gst');
+            if (gstInput) {
+                gstInput.addEventListener('input', function (e) {
+                    this.value = this.value.toUpperCase();
+                });
+            }
+        }
+
+        function autoCapitalizeCIN() {
+            const cinInput = document.getElementById('comp_cin');
+            if (cinInput) {
+                cinInput.addEventListener('input', function (e) {
+                    this.value = this.value.toUpperCase();
+                });
+            }
+        }
+
+        function validateCIN() {
+            const cinInput = document.getElementById('comp_cin');
+            let cin = cinInput.value.trim();
+
+            if (cin === '') return true;
+
+            cin = cin.toUpperCase();
+            cinInput.value = cin;
+
+            const cinRegex = /^[UL][0-9]{5}[A-Z]{2}[0-9]{4}[A-Z]{3}[0-9]{6}$/;
+            if (!cinRegex.test(cin)) {
+                showError('comp_cin', 'Please enter a valid CIN number (21 characters)');
+                return false;
+            }
+            return true;
+        }
+
+        function validateWebsite() {
+            const websiteInput = document.getElementById('comp_website');
+            let website = websiteInput.value.trim();
+
+            if (website === '') return true;
+
+            if (!website.startsWith('http://') && !website.startsWith('https://')) {
+                website = 'https://' + website;
+                websiteInput.value = website;
+            }
+
+            const urlRegex = /^(https?:\/\/)?([\da-z\.-]+)\.([a-z\.]{2,6})([\/\w \.-]*)*\/?$/i;
+            if (!urlRegex.test(website)) {
+                showError('comp_website', 'Please enter a valid website URL');
+                return false;
+            }
+            return true;
+        }
+
+        function validateYear() {
+            const year = document.getElementById('comp_year').value;
+            if (year === '') return true;
+
+            const currentYear = new Date().getFullYear();
+            if (year < 1900 || year > currentYear) {
+                showError('comp_year', `Year must be between 1900 and ${currentYear}`);
+                return false;
+            }
+            return true;
+        }
+
+        function validateDepartments() {
+            // Make departments optional - no validation error if empty
+            return true;
+        }
+
+        function validateDesignations() {
+            // Make designations optional - no validation error if empty
+            return true;
+        }
+
+        function validateWorkingDays() {
+            const anyDaySelected = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'].some(day =>
+                document.getElementById(`day_${day}`).checked
+            );
+            if (!anyDaySelected) {
+                showError('working_days', 'Please select at least one working day');
+                return false;
+            }
+            return true;
+        }
+
+        function initializeAutoFormatting() {
+            formatPhoneInput();
+            autoCapitalizePAN();
+            autoCapitalizeGST();
+            autoCapitalizeCIN();
+
+            const phoneInput = document.getElementById('comp_phone');
+            if (phoneInput) {
+                phoneInput.addEventListener('keypress', function (e) {
+                    const charCode = e.which ? e.which : e.keyCode;
+                    if (charCode < 48 || charCode > 57) {
+                        e.preventDefault();
+                    }
+                });
+            }
+        }
+
+        function attachValidationListeners() {
+            document.getElementById('comp_name')?.addEventListener('blur', validateCompanyName);
+            document.getElementById('comp_name')?.addEventListener('input', () => {
+                document.getElementById('comp_name_error')?.style.setProperty('display', 'none');
+                document.getElementById('comp_name')?.style.setProperty('border-color', '');
+            });
+
+            document.getElementById('comp_email')?.addEventListener('blur', validateEmail);
+            document.getElementById('comp_email')?.addEventListener('input', () => {
+                document.getElementById('comp_email_error')?.style.setProperty('display', 'none');
+                document.getElementById('comp_email')?.style.setProperty('border-color', '');
+            });
+
+            document.getElementById('comp_phone')?.addEventListener('blur', validatePhone);
+            document.getElementById('comp_phone')?.addEventListener('input', () => {
+                document.getElementById('comp_phone_error')?.style.setProperty('display', 'none');
+                document.getElementById('comp_phone')?.style.setProperty('border-color', '');
+            });
+
+            document.getElementById('comp_gst')?.addEventListener('blur', validateGST);
+            document.getElementById('comp_pan')?.addEventListener('blur', validatePAN);
+            document.getElementById('comp_cin')?.addEventListener('blur', validateCIN);
+            document.getElementById('comp_website')?.addEventListener('blur', validateWebsite);
+            document.getElementById('comp_year')?.addEventListener('blur', validateYear);
+        }
+
+        // ========== DEPARTMENT FUNCTIONS ==========
+        function renderDepartments() {
+            const container = document.getElementById('departmentsContainer');
             if (!container) return;
+
             if (departmentsData.length === 0) {
-                container.innerHTML = '<div class="empty-state col-span-3"><i class="fas fa-inbox text-2xl mb-2" style="color:var(--primary-soft);"></i><br>No departments added yet</div>';
+                container.innerHTML = '<div class="empty-state">No departments added. Click "Add Department" to get started.</div>';
                 return;
             }
-            container.innerHTML = departmentsData.map((d, i) => `
-            <div class="dept-card" data-dept-name="${d.departmentName.toLowerCase()}">
-                <div class="flex justify-between items-start">
-                    <div>
-                        <div class="w-10 h-10 rounded-full flex items-center justify-center mb-2" style="background: var(--primary-soft);">
-                            <i class="fas fa-building" style="color:var(--primary);"></i>
-                        </div>
-                        <h4 class="font-bold" style="color: var(--primary);">${escapeHtml(d.departmentName)}</h4>
-                        <p class="text-xs mt-1" style="color: var(--text-light);">HOD: ${escapeHtml(d.headOfDepartment || '—')}</p>
-                    </div>
-                    ${!isViewMode ? `
-                    <div class="flex gap-2">
-                        <button type="button" onclick="editDepartment(${i})" title="Edit" style="background:var(--primary-bg-light); border:none; border-radius:8px; padding:6px 10px; cursor:pointer; color:var(--primary);">
-                            <i class="fas fa-edit" style="font-size:13px;"></i>
-                        </button>
-                        <button type="button" onclick="confirmDeleteDepartment(${i})" title="Delete" style="background:#fde8ea; border:none; border-radius:8px; padding:6px 10px; cursor:pointer; color:#dc3545;">
-                            <i class="fas fa-trash" style="font-size:13px;"></i>
-                        </button>
-                    </div>` : ''}
+
+            container.innerHTML = departmentsData.map((dept, index) => `
+            <div class="department-item flex gap-3 items-center" data-dept-index="${index}">
+                <input type="text" 
+                    class="dept-name-input flex-1" 
+                    value="${escapeHtml(dept.departmentName)}"
+                    placeholder="Department name"
+                    style="font-size:13px; padding:10px 14px; border:1px solid var(--primary-soft); border-radius:10px;">
+                <button type="button" class="remove-dept-btn btn-danger" data-index="${index}">
+                    <i class="fas fa-trash"></i>
+                </button>
+            </div>
+        `).join('');
+
+            document.querySelectorAll('.dept-name-input').forEach((input, idx) => {
+                input.addEventListener('change', (e) => {
+                    departmentsData[idx].departmentName = e.target.value;
+                    renderDesignations();
+                });
+            });
+
+            document.querySelectorAll('.remove-dept-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = parseInt(btn.dataset.index);
+                    deleteDepartment(index);
+                });
+            });
+        }
+
+        function deleteDepartment(index) {
+            const deptName = departmentsData[index].departmentName;
+            designationsData = designationsData.filter(d => d.departmentName !== deptName);
+            departmentsData.splice(index, 1);
+            renderDepartments();
+            renderDesignations();
+            showToast('Department deleted', 'info');
+        }
+
+        function addDepartment() {
+            departmentsData.push({ departmentName: '' });
+            renderDepartments();
+            setTimeout(() => {
+                const inputs = document.querySelectorAll('.dept-name-input');
+                const lastInput = inputs[inputs.length - 1];
+                if (lastInput) lastInput.focus();
+            }, 100);
+        }
+
+        // ========== DESIGNATION FUNCTIONS ==========
+        function renderDesignations() {
+            const container = document.getElementById('designationsContainer');
+            if (!container) return;
+
+            if (designationsData.length === 0) {
+                container.innerHTML = '<div class="empty-state">No designations added. Click "Add Designation" to get started.</div>';
+                return;
+            }
+
+            container.innerHTML = designationsData.map((desig, index) => `
+            <div class="designation-item grid grid-cols-1 md:grid-cols-2 gap-3" data-desig-index="${index}">
+                <input type="text" 
+                    class="desig-name-input" 
+                    value="${escapeHtml(desig.designationName)}"
+                    placeholder="Designation name"
+                    style="font-size:13px; padding:10px 14px; border:1px solid var(--primary-soft); border-radius:10px;">
+                <div class="flex gap-3">
+                    <select class="desig-dept-select flex-1" style="font-size:13px; padding:10px 14px; border:1px solid var(--primary-soft); border-radius:10px;">
+                        <option value="">Select Department</option>
+                        ${departmentsData.map(dept => `
+                            <option value="${escapeHtml(dept.departmentName)}" ${desig.departmentName === dept.departmentName ? 'selected' : ''}>
+                                ${escapeHtml(dept.departmentName)}
+                            </option>
+                        `).join('')}
+                    </select>
+                    <button type="button" class="remove-desig-btn btn-danger" data-index="${index}">
+                        <i class="fas fa-trash"></i>
+                    </button>
                 </div>
             </div>
         `).join('');
-        }
 
-        function filterDepartments() {
-            const s = document.getElementById('deptSearch').value.toLowerCase();
-            document.querySelectorAll('.dept-card').forEach(c => {
-                c.style.display = c.getAttribute('data-dept-name').includes(s) ? '' : 'none';
+            document.querySelectorAll('.desig-name-input').forEach((input, idx) => {
+                input.addEventListener('change', (e) => {
+                    designationsData[idx].designationName = e.target.value;
+                });
+            });
+
+            document.querySelectorAll('.desig-dept-select').forEach((select, idx) => {
+                select.addEventListener('change', (e) => {
+                    designationsData[idx].departmentName = e.target.value;
+                });
+            });
+
+            document.querySelectorAll('.remove-desig-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const index = parseInt(btn.dataset.index);
+                    designationsData.splice(index, 1);
+                    renderDesignations();
+                    showToast('Designation deleted', 'info');
+                });
             });
         }
 
-        // ===== DESIGNATIONS =====
-        function openDesignationModal(i = null) {
-            currentEditDesigIndex = i;
-            loadDepartmentsIntoSelects();
-            document.getElementById('desigModalTitle').innerText = i !== null ? 'Edit Designation' : 'Add Designation';
-            document.getElementById('desigId').value = i !== null ? i : '';
-            document.getElementById('desigName').value = i !== null ? designationsData[i].designationName : '';
-            if (i !== null) document.getElementById('desigDeptSelect').value = designationsData[i].departmentName;
-            document.getElementById('desigLevel').value = i !== null ? (designationsData[i].level || 'Level 1') : 'Level 1';
-            // document.getElementById('desigSalary').value = i !== null ? (designationsData[i].baseSalary || '') : '';
-            openModal('designationModal');
-        }
-
-        function editDesignation(i) { openDesignationModal(i); }
-
-        function confirmDeleteDesignation(i) {
-            showConfirmModal('Delete this designation?', () => {
-                designationsData.splice(i, 1);
-                renderDesignationsList();
-                filterDesignations();
-                showToast('Designation deleted', 'success');
+        function addDesignation() {
+            designationsData.push({
+                designationName: '',
+                departmentName: ''
             });
-        }
-
-        function renderDesignationsList() {
-            const tbody = document.getElementById('designationsList');
-            if (!tbody) return;
-            if (designationsData.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="empty-state"><i class="fas fa-inbox text-2xl mb-2" style="color:var(--primary-soft);"></i><br>No designations added yet</td></tr>`;
-                return;
-            }
-            tbody.innerHTML = designationsData.map((d, i) => `
-            <tr>
-                <td class="font-medium" style="color: var(--primary);">${escapeHtml(d.designationName)}</td>
-                <td><span class="badge-custom">${escapeHtml(d.departmentName)}</span></td>
-                <td style="color: var(--text-light);">${escapeHtml(d.level || '—')}</td>
-                <td style="color: var(--primary);">₹${parseInt(d.baseSalary || 0).toLocaleString()}</td>
-                <td style="text-align:center;">
-                    ${!isViewMode ? `
-                    <div class="action-btn-group justify-center">
-                        <button type="button" onclick="editDesignation(${i})" title="Edit" style="background:var(--primary-bg-light); border:none; border-radius:8px; padding:5px 10px; cursor:pointer; color:var(--primary);">
-                            <i class="fas fa-edit" style="font-size:12px;"></i>
-                        </button>
-                        <button type="button" onclick="confirmDeleteDesignation(${i})" title="Delete" style="background:#fde8ea; border:none; border-radius:8px; padding:5px 10px; cursor:pointer; color:#dc3545;">
-                            <i class="fas fa-trash" style="font-size:12px;"></i>
-                        </button>
-                    </div>` : '<span style="color:var(--text-light); font-size:12px;">—</span>'}
-                </td>
-            </tr>
-        `).join('');
-        }
-
-        function filterDesignations() {
-            const s = document.getElementById('desigSearch')?.value.toLowerCase();
-            const df = document.getElementById('deptFilterDesignation')?.value;
-            let filtered = designationsData;
-            if (s) filtered = filtered.filter(d => d.designationName.toLowerCase().includes(s));
-            if (df && df !== 'all') filtered = filtered.filter(d => d.departmentName === df);
-            const tbody = document.getElementById('designationsList');
-            if (!tbody) return;
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="empty-state">No matching designations</td></tr>`;
-                return;
-            }
-            tbody.innerHTML = filtered.map((d) => {
-                const originalIdx = designationsData.findIndex(orig => orig === d);
-                return `<tr>
-                <td class="font-medium" style="color: var(--primary);">${escapeHtml(d.designationName)}</td>
-                <td><span class="badge-custom">${escapeHtml(d.departmentName)}</span></td>
-                <td style="color: var(--text-light);">${escapeHtml(d.level || '—')}</td>
-                <td style="color: var(--primary);">₹${parseInt(d.baseSalary || 0).toLocaleString()}</td>
-                <td style="text-align:center;">
-                    ${!isViewMode ? `
-                    <div class="action-btn-group justify-center">
-                        <button type="button" onclick="editDesignation(${originalIdx})" style="background:var(--primary-bg-light); border:none; border-radius:8px; padding:5px 10px; cursor:pointer; color:var(--primary);"><i class="fas fa-edit" style="font-size:12px;"></i></button>
-                        <button type="button" onclick="confirmDeleteDesignation(${originalIdx})" style="background:#fde8ea; border:none; border-radius:8px; padding:5px 10px; cursor:pointer; color:#dc3545;"><i class="fas fa-trash" style="font-size:12px;"></i></button>
-                    </div>` : '<span style="color:var(--text-light); font-size:12px;">—</span>'}
-                </td>
-            </tr>`;
-            }).join('');
-        }
-
-        function loadDepartmentsIntoSelects() {
-            const df = document.getElementById('deptFilterDesignation');
-            if (df) {
-                df.innerHTML = '<option value="all">All Departments</option>';
-                departmentsData.forEach(d => df.appendChild(new Option(d.departmentName, d.departmentName)));
-            }
-            const ds = document.getElementById('desigDeptSelect');
-            if (ds) {
-                const cv = ds.value;
-                ds.innerHTML = '<option value="">Select Department</option>';
-                departmentsData.forEach(d => ds.appendChild(new Option(d.departmentName, d.departmentName)));
-                if (cv && departmentsData.some(d => d.departmentName === cv)) ds.value = cv;
-            }
+            renderDesignations();
+            setTimeout(() => {
+                const inputs = document.querySelectorAll('.desig-name-input');
+                const lastInput = inputs[inputs.length - 1];
+                if (lastInput) lastInput.focus();
+            }, 100);
         }
 
         // ===== CONFIRM MODAL =====
@@ -1039,26 +1312,8 @@
             newBtn.addEventListener('click', () => { closeModal('confirmDeleteModal'); if (onConfirm) onConfirm(); });
         }
 
-        // ===== FORM MODE: SHOW / HIDE =====
-        function setViewMode(enabled) {
-            isViewMode = enabled;
-            const form = document.getElementById('companyForm');
-            const inputs = form.querySelectorAll('input:not([type="file"]):not([type="checkbox"]), select, textarea');
-            const checkboxes = form.querySelectorAll('input[type="checkbox"]');
-            inputs.forEach(el => el.disabled = enabled);
-            checkboxes.forEach(el => el.disabled = enabled);
-            document.getElementById('submitBtn').style.display = enabled ? 'none' : '';
-            document.getElementById('uploadLogoBtn').style.display = enabled ? 'none' : '';
-            document.getElementById('addDeptBtn').style.display = enabled ? 'none' : '';
-            document.getElementById('addDesigBtn').style.display = enabled ? 'none' : '';
-            document.getElementById('deptSearch').disabled = enabled;
-            document.getElementById('desigSearch').disabled = enabled;
-            renderDepartmentsList();
-            renderDesignationsList();
-        }
-
+        // ===== FORM MODE FUNCTIONS =====
         function openRegisterForm() {
-            // ONE TIME registration check
             const existing = getStoredCompany();
             if (existing && !isEditMode) {
                 showToast('Company already registered! Use Edit to modify.', 'error');
@@ -1073,7 +1328,6 @@
             document.getElementById('formSection').style.display = 'block';
             document.getElementById('companiesTableSection').style.display = 'none';
             document.getElementById('registerNewBtn').style.display = 'none';
-            setViewMode(false);
             window.scrollTo(0, 0);
         }
 
@@ -1081,14 +1335,13 @@
             isViewMode = false;
             isEditMode = true;
             resetForm();
-            populateForm(companyData);
+            populateFormData(companyData);
             document.getElementById('formTitle').innerText = 'Edit Company';
             document.getElementById('formMode').innerText = 'Editing';
             document.getElementById('submitBtnText').innerText = 'Update Company';
             document.getElementById('formSection').style.display = 'block';
             document.getElementById('companiesTableSection').style.display = 'none';
             document.getElementById('registerNewBtn').style.display = 'none';
-            setViewMode(false);
             window.scrollTo(0, 0);
         }
 
@@ -1096,13 +1349,25 @@
             isViewMode = true;
             isEditMode = false;
             resetForm();
-            populateForm(companyData);
+            populateFormData(companyData);
             document.getElementById('formTitle').innerText = 'View Company Details';
             document.getElementById('formMode').innerText = 'Read Only';
             document.getElementById('formSection').style.display = 'block';
             document.getElementById('companiesTableSection').style.display = 'none';
             document.getElementById('registerNewBtn').style.display = 'none';
-            setViewMode(true);
+
+            const form = document.getElementById('companyForm');
+            const inputs = form.querySelectorAll('input, select, textarea, button');
+            inputs.forEach(el => {
+                if (el.type !== 'button' && el.id !== 'uploadLogoBtn') {
+                    el.disabled = true;
+                }
+            });
+            document.getElementById('submitBtn').style.display = 'none';
+            document.getElementById('uploadLogoBtn').style.display = 'none';
+            document.getElementById('addDeptBtn').style.display = 'none';
+            document.getElementById('addDesigBtn').style.display = 'none';
+
             window.scrollTo(0, 0);
         }
 
@@ -1119,6 +1384,8 @@
         // ===== FORM RESET =====
         function resetForm() {
             document.getElementById('comp_name').value = '';
+            document.getElementById('comp_type').value = ''; 
+            // document.getElementById('comp_industry').value = '';
             document.getElementById('comp_gst').value = '';
             document.getElementById('comp_pan').value = '';
             document.getElementById('comp_cin').value = '';
@@ -1130,27 +1397,31 @@
             document.getElementById('comp_desc').value = '';
             document.getElementById('global_start_time').value = '09:00';
             document.getElementById('global_end_time').value = '18:00';
-            ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'].forEach(d => { const cb = document.getElementById(`day_${d}`); if (cb) cb.checked = true; });
-            const sun = document.getElementById('day_sun'); if (sun) sun.checked = false;
+            ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'].forEach(d => {
+                const cb = document.getElementById(`day_${d}`);
+                if (cb) cb.checked = true;
+            });
+            const sun = document.getElementById('day_sun');
+            if (sun) sun.checked = false;
             document.getElementById('logoPreview').innerHTML = '<i class="fas fa-building text-4xl" style="color: var(--primary-light);"></i>';
             selectedLogoFile = null;
-            currentCompanyId = null;  // ← ADD THIS LINE
-            savedLogoBase64 = null;
+            currentCompanyId = null;
             departmentsData = [];
             designationsData = [];
-            renderDepartmentsList();
-            renderDesignationsList();
-            loadDepartmentsIntoSelects();
+            renderDepartments();
+            renderDesignations();
         }
 
-        // ===== POPULATE FORM =====
-        function populateForm(d) {
-            // CRITICAL: restore real DB id so edit payload sends correct id to backend
+        // ===== POPULATE FORM DATA =====
+        function populateFormData(d) {
             if (d.dbId || d.id) {
                 currentCompanyId = d.dbId || d.id;
-                console.log('[Company] Restored DB id for edit:', currentCompanyId);
+                console.log('[Company] Restored DB id:', currentCompanyId);
             }
+
             document.getElementById('comp_name').value = d.companyName || '';
+            document.getElementById('comp_type').value = d.companyType || '';
+            // document.getElementById('comp_industry').value = d.industryType || '';
             document.getElementById('comp_gst').value = d.gstNumber || '';
             document.getElementById('comp_pan').value = d.panNumber || '';
             document.getElementById('comp_cin').value = d.cinNumber || '';
@@ -1163,7 +1434,8 @@
 
             if (d.workingDays && Array.isArray(d.workingDays)) {
                 d.workingDays.forEach(day => {
-                    const cb = document.getElementById(`day_${day.dayOfWeek.toLowerCase().substring(0, 3)}`);
+                    const dayKey = day.dayOfWeek.toLowerCase().substring(0, 3);
+                    const cb = document.getElementById(`day_${dayKey}`);
                     if (cb) cb.checked = day.active;
                 });
                 if (d.workingDays.length) {
@@ -1172,104 +1444,84 @@
                 }
             }
 
-            departmentsData = Array.isArray(d.departments) ? [...d.departments] : [];
-            designationsData = Array.isArray(d.designations) ? [...d.designations] : [];
+            departmentsData = (d.departments && Array.isArray(d.departments)) ? [...d.departments] : [];
+            designationsData = (d.designations && Array.isArray(d.designations)) ? [...d.designations] : [];
 
-            if (d.logoBase64) {
-                document.getElementById('logoPreview').innerHTML = `<img src="${d.logoBase64}" class="w-full h-full object-cover rounded-2xl">`;
-                savedLogoBase64 = d.logoBase64;
+            renderDepartments();
+            renderDesignations();
+
+            // Load logo from URL if available
+            if (d.logoUrl) {
+                const fullLogoUrl = API_BASE_URL + d.logoUrl;
+                document.getElementById('logoPreview').innerHTML = `<img src="${fullLogoUrl}" class="w-full h-full object-cover rounded-2xl" onerror="this.parentElement.innerHTML='<i class=\'fas fa-building text-4xl\' style=\'color: var(--primary-light);\'></i>'">`;
             }
-
-            renderDepartmentsList();
-            renderDesignationsList();
-            loadDepartmentsIntoSelects();
-            filterDesignations();
         }
-
 
         // ===== FETCH COMPANIES FROM BACKEND =====
-async function fetchCompaniesFromBackend() {
-    try {
-        console.log('[Company] Fetching companies from backend...');
-        const response = await fetch(`${COMPANY_API_URL}/profiles`);
-        
-        if (!response.ok) {
-            console.log('[Company] No companies found or error fetching');
-            return null;
+        async function fetchCompaniesFromBackend() {
+            try {
+                console.log('[Company] Fetching companies from backend...');
+                const response = await fetch(`${COMPANY_API_URL}/profiles`);
+
+                if (!response.ok) {
+                    console.log('[Company] No companies found');
+                    return null;
+                }
+
+                const result = await response.json();
+                console.log('[Company] API response:', result);
+
+                if (result.success && result.data && result.data.length > 0) {
+                    const companyData = result.data[0];
+                    console.log('[Company] Found company:', companyData.companyName);
+
+                    // Store only logo URL in localStorage (not base64)
+                    if (companyData.logoUrl) {
+                        localStorage.setItem('companyLogo', companyData.logoUrl);
+                        setTimeout(() => updateSidebarLogo(), 500);
+                    }
+
+                    const formattedCompany = {
+                        dbId: companyData.id,
+                        companyName: companyData.companyName,
+                        companyType: companyData.companyType,
+                        gstNumber: companyData.gstNumber,
+                        panNumber: companyData.panNumber,
+                        cinNumber: companyData.cinNumber,
+                        email: companyData.email,
+                        phone: companyData.phone,
+                        website: companyData.website,
+                        establishedYear: companyData.establishedYear,
+                        address: companyData.address,
+                        description: companyData.description,
+                        logoUrl: companyData.logoUrl, // Store only URL
+                        workingDays: parseJsonField(companyData.workingDaysJson),
+                        departments: parseJsonField(companyData.departmentsJson),
+                        designations: parseJsonField(companyData.designationsJson),
+                        registeredAt: companyData.createdAt,
+                        updatedAt: companyData.updatedAt
+                    };
+
+                    saveCompanyToStorage(formattedCompany);
+                    currentCompanyId = companyData.id;
+                    return formattedCompany;
+                }
+                return null;
+            } catch (error) {
+                console.error('[Company] Error fetching from backend:', error);
+                return null;
+            }
         }
-        
-        const result = await response.json();
-        console.log('[Company] API response:', result);
-        
-        if (result.success && result.data && result.data.length > 0) {
-            // Get the first company (or you can implement company selection)
-            const companyData = result.data[0];
-            console.log('[Company] Found company:', companyData.companyName);
-            
-            // Convert backend format to frontend format
-            const formattedCompany = {
-                dbId: companyData.id,
-                companyName: companyData.companyName,
-                gstNumber: companyData.gstNumber,
-                panNumber: companyData.panNumber,
-                cinNumber: companyData.cinNumber,
-                email: companyData.email,
-                phone: companyData.phone,
-                website: companyData.website,
-                establishedYear: companyData.establishedYear,
-                address: companyData.address,
-                description: companyData.description,
-                logoBase64: companyData.logoUrl ? await fetchLogoAsBase64(companyData.logoUrl) : null,
-                workingDays: parseJsonField(companyData.workingDaysJson),
-                departments: parseJsonField(companyData.departmentsJson),
-                designations: parseJsonField(companyData.designationsJson),
-                registeredAt: companyData.createdAt,
-                updatedAt: companyData.updatedAt
-            };
-            
-            // Save to localStorage for offline access
-            saveCompanyToStorage(formattedCompany);
-            currentCompanyId = companyData.id;
-            
-            return formattedCompany;
+
+        function parseJsonField(jsonString) {
+            if (!jsonString) return [];
+            try {
+                return JSON.parse(jsonString);
+            } catch (e) {
+                console.warn('Failed to parse JSON:', jsonString);
+                return [];
+            }
         }
-        return null;
-    } catch (error) {
-        console.error('[Company] Error fetching from backend:', error);
-        return null;
-    }
-}
-
-// Helper: Parse JSON fields safely
-function parseJsonField(jsonString) {
-    if (!jsonString) return [];
-    try {
-        return JSON.parse(jsonString);
-    } catch (e) {
-        console.warn('Failed to parse JSON:', jsonString);
-        return [];
-    }
-}
-
-// Helper: Fetch logo as base64
-async function fetchLogoAsBase64(logoUrl) {
-    if (!logoUrl) return null;
-    try {
-        const fullUrl = API_BASE_URL + logoUrl;
-        const response = await fetch(fullUrl);
-        if (!response.ok) return null;
-        const blob = await response.blob();
-        return new Promise((resolve) => {
-            const reader = new FileReader();
-            reader.onloadend = () => resolve(reader.result);
-            reader.readAsDataURL(blob);
-        });
-    } catch (error) {
-        console.error('Failed to fetch logo:', error);
-        return null;
-    }
-}
-
 
         // ===== LOCAL STORAGE =====
         function getStoredCompany() {
@@ -1280,80 +1532,98 @@ async function fetchLogoAsBase64(logoUrl) {
         }
 
         function saveCompanyToStorage(data) {
-            // Always persist the real DB id separately so edit can find it on reload
-            if (currentCompanyId) data.dbId = currentCompanyId;
-            localStorage.setItem(COMPANY_DATA_KEY, JSON.stringify(data));
-            localStorage.setItem(COMPANY_STORAGE_KEY, 'true');
+            try {
+                // Make a copy without any large data
+                const storageData = {
+                    dbId: data.dbId || currentCompanyId,
+                    companyName: data.companyName,
+                    companyType: data.companyType,
+                    gstNumber: data.gstNumber,
+                    panNumber: data.panNumber,
+                    cinNumber: data.cinNumber,
+                    email: data.email,
+                    phone: data.phone,
+                    website: data.website,
+                    establishedYear: data.establishedYear,
+                    address: data.address,
+                    description: data.description,
+                    logoUrl: data.logoUrl, // Store only URL, not base64
+                    workingDays: data.workingDays,
+                    departments: data.departments,
+                    designations: data.designations,
+                    registeredAt: data.registeredAt,
+                    updatedAt: data.updatedAt
+                };
+
+                localStorage.setItem(COMPANY_DATA_KEY, JSON.stringify(storageData));
+                localStorage.setItem(COMPANY_STORAGE_KEY, 'true');
+            } catch (e) {
+                console.error('Failed to save to localStorage:', e);
+                // If quota exceeded, clear old data and try again
+                if (e.name === 'QuotaExceededError') {
+                    localStorage.removeItem(COMPANY_DATA_KEY);
+                    showToast('Storage limit reached. Old data cleared.', 'warning');
+                }
+            }
         }
 
         function deleteCompanyFromStorage() {
             localStorage.removeItem(COMPANY_DATA_KEY);
             localStorage.removeItem(COMPANY_STORAGE_KEY);
+            localStorage.removeItem('companyLogo');
             currentCompanyId = null;
         }
 
         // ===== COMPANIES TABLE =====
         function renderCompaniesTable() {
-            const tbody = document.getElementById('companiesTableBody');
-            const company = getStoredCompany();
-            const registerBtn = document.getElementById('registerNewBtn');
+    const tbody = document.getElementById('companiesTableBody');
+    const company = getStoredCompany();
+    const registerBtn = document.getElementById('registerNewBtn');
 
-            if (!company) {
-                registerBtn.style.display = '';
-                tbody.innerHTML = `
-                <tr>
-                    <td colspan="8">
-                        <div class="empty-state">
-                            <i class="fas fa-building text-4xl mb-3" style="color: var(--primary-soft); display:block;"></i>
-                            <p>No company registered yet. Click <strong>Register Company</strong> to get started.</p>
-                        </div>
-                    </td>
-                </tr>`;
-                return;
-            }
+    if (!company) {
+        registerBtn.style.display = '';
+        tbody.innerHTML = `...`;
+        return;
+    }
 
-            // Company is registered → hide Register button
-            registerBtn.style.display = 'none';
+    registerBtn.style.display = 'none';
+    
+    const logoHtml = company.logoUrl ? 
+        `<img src="${API_BASE_URL + company.logoUrl}" style="width:36px;height:36px;border-radius:8px;object-fit:cover;border:1px solid var(--primary-soft);" onerror="this.style.display='none';this.nextSibling.style.display='flex';">` :
+        `<div style="width:36px;height:36px;border-radius:8px;background:var(--primary-soft);display:flex;align-items:center;justify-content:center;"><i class="fas fa-building" style="color:var(--primary);font-size:16px;"></i></div>`;
 
-            const workingDaysStr = Array.isArray(company.workingDays)
-                ? company.workingDays.filter(d => d.active).map(d => d.dayOfWeek.substring(0, 3)).join(', ')
-                : '—';
-
-            tbody.innerHTML = `
-            <tr>
-                <td class="font-bold" style="color:var(--primary);">1</td>
-                <td>
-                    <div class="flex items-center gap-3">
-                        ${company.logoBase64
-                    ? `<img src="${company.logoBase64}" style="width:36px;height:36px;border-radius:8px;object-fit:cover;border:1px solid var(--primary-soft);">`
-                    : `<div style="width:36px;height:36px;border-radius:8px;background:var(--primary-soft);display:flex;align-items:center;justify-content:center;"><i class="fas fa-building" style="color:var(--primary);font-size:16px;"></i></div>`
-                }
-                        <div>
-                            <div class="font-semibold" style="color:var(--primary);">${escapeHtml(company.companyName)}</div>
-                            <div style="font-size:11px; color:var(--text-light);">${escapeHtml(company.cinNumber || '—')}</div>
-                        </div>
+    tbody.innerHTML = `
+        <tr>
+            <td class="font-bold" style="color:var(--primary);">1</td>
+            <td>
+                <div class="flex items-center gap-3">
+                    ${logoHtml}
+                    <div>
+                        <div class="font-semibold" style="color:var(--primary);">${escapeHtml(company.companyName)}</div>
+                        <div style="font-size:11px; color:var(--text-light);">${escapeHtml(company.companyType || '—')}</div>
                     </div>
-                </td>
-                <td style="color:var(--text-light);">${escapeHtml(company.email)}</td>
-                <td style="color:var(--text-light);">${escapeHtml(company.phone)}</td>
-                <td>${company.gstNumber ? `<span class="badge-custom">${escapeHtml(company.gstNumber)}</span>` : '<span style="color:var(--text-light);">—</span>'}</td>
-                <td style="color:var(--text-light);">${company.establishedYear || '—'}</td>
-                <td><span style="background:#d4edda; color:#155724; padding:4px 12px; border-radius:40px; font-size:12px; font-weight:600;"><i class="fas fa-check-circle mr-1"></i></span></td>
-                <td>
-                    <div class="action-btn-group" style="justify-content:center;">
-                        <button onclick="handleViewCompany()" class="btn-info" title="View">
-                            <i class="fas fa-eye mr-1"></i>
-                        </button>
-                        <button onclick="handleEditCompany()" class="btn-warning" title="Edit">
-                            <i class="fas fa-edit mr-1"></i>
-                        </button>
-                        <button onclick="handleDeleteCompany()" class="btn-danger" title="Delete">
-                            <i class="fas fa-trash mr-1"></i>
-                        </button>
-                    </div>
-                </td>
-            </tr>`;
-        }
+                </div>
+            </td>
+            <td style="color:var(--text-light);">${escapeHtml(company.email)}</td>
+            <td style="color:var(--text-light);">${escapeHtml(company.phone)}</td>
+            <td>${company.gstNumber ? `<span class="badge-custom">${escapeHtml(company.gstNumber)}</span>` : '<span style="color:var(--text-light);">—</span>'}</td>
+            <td style="color:var(--text-light);">${company.establishedYear || '—'}</td>
+            <td><span style="background:#d4edda; color:#155724; padding:4px 12px; border-radius:40px; font-size:12px; font-weight:600;">Active</span></td>
+            <td>
+                <div class="action-btn-group" style="justify-content:center;">
+                    <button onclick="handleViewCompany()" class="btn-info" title="View">
+                        <i class="fas fa-eye mr-1"></i>
+                    </button>
+                    <button onclick="handleEditCompany()" class="btn-warning" title="Edit">
+                        <i class="fas fa-edit mr-1"></i>
+                    </button>
+                    <button onclick="handleDeleteCompany()" class="btn-danger" title="Delete">
+                        <i class="fas fa-trash mr-1"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>`;
+}
 
         // ===== ACTION HANDLERS =====
         function handleViewCompany() {
@@ -1373,17 +1643,16 @@ async function fetchLogoAsBase64(logoUrl) {
                 const stored = getStoredCompany();
                 const dbId = stored?.dbId || currentCompanyId;
 
-                // Call backend DELETE API if we have a real DB id
                 if (dbId) {
                     try {
                         const resp = await fetch(`${COMPANY_API_URL}/profile/${dbId}`, {
                             method: 'DELETE',
                             headers: { 'Content-Type': 'application/json' }
                         });
-                        const result = await resp.json().catch(() => ({}));
                         if (!resp.ok) {
+                            const result = await resp.json().catch(() => ({}));
                             showToast(result.message || 'Failed to delete from server', 'error');
-                            return; // Do NOT clear localStorage if backend delete failed
+                            return;
                         }
                         console.log('[Company] Deleted from DB, id:', dbId);
                     } catch (err) {
@@ -1398,9 +1667,49 @@ async function fetchLogoAsBase64(logoUrl) {
             });
         }
 
-        // ===== FORM SUBMIT =====
+        // ===== FORM SUBMIT HANDLER =====
         document.getElementById('companyForm').addEventListener('submit', async function (e) {
             e.preventDefault();
+
+            const panInput = document.getElementById('comp_pan');
+            if (panInput && panInput.value) {
+                panInput.value = panInput.value.toUpperCase();
+            }
+
+            const gstInput = document.getElementById('comp_gst');
+            if (gstInput && gstInput.value) {
+                gstInput.value = gstInput.value.toUpperCase();
+            }
+
+            const cinInput = document.getElementById('comp_cin');
+            if (cinInput && cinInput.value) {
+                cinInput.value = cinInput.value.toUpperCase();
+            }
+
+            clearErrors();
+
+            const isValid = validateCompanyName() &&
+                validateEmail() &&
+                validatePhone() &&
+                validateCompanyType() &&  // ADD THIS
+              
+                validateGST() &&
+                validatePAN() &&
+                validateCIN() &&
+                validateWebsite() &&
+                validateYear() &&
+                validateDepartments() &&
+                validateDesignations() &&
+                validateWorkingDays();
+
+            if (!isValid) {
+                const firstError = document.querySelector('.error-message[style*="display: block"]');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                showToast('Please fix the errors before submitting', 'error');
+                return;
+            }
 
             const btn = document.getElementById('submitBtn');
             const origHTML = btn.innerHTML;
@@ -1412,9 +1721,11 @@ async function fetchLogoAsBase64(logoUrl) {
                 const email = document.getElementById('comp_email').value.trim();
                 const phone = document.getElementById('comp_phone').value.trim();
 
-                if (!name) throw new Error('Company Name is required');
-                if (!email) throw new Error('Email is required');
-                if (!phone) throw new Error('Phone is required');
+                const validDepartments = departmentsData.filter(dept => dept.departmentName && dept.departmentName.trim() !== '');
+                const validDesignations = designationsData.filter(desig =>
+                    desig.designationName && desig.designationName.trim() !== '' &&
+                    desig.departmentName && desig.departmentName.trim() !== ''
+                );
 
                 const days = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
                 const dayNames = { mon: 'Mon', tue: 'Tue', wed: 'Wed', thu: 'Thu', fri: 'Fri', sat: 'Sat', sun: 'Sun' };
@@ -1425,12 +1736,12 @@ async function fetchLogoAsBase64(logoUrl) {
                     endTime: document.getElementById('global_end_time').value
                 }));
 
-                // Use the real DB id for edit; null for new registration
-                const dbIdForPayload = isEditMode ? currentCompanyId : null;
-
-                const companyObj = {
-                    dbId: dbIdForPayload,          // real DB primary key — used by backend
+                // In your form submit handler, add these lines to the payload:
+                const payload = {
+                    id: isEditMode ? currentCompanyId : null,
                     companyName: name,
+                    companyType: document.getElementById('comp_type').value || null,  // ADD THIS
+                     // ADD THIS
                     gstNumber: document.getElementById('comp_gst').value.trim() || null,
                     panNumber: document.getElementById('comp_pan').value.trim() || null,
                     cinNumber: document.getElementById('comp_cin').value.trim() || null,
@@ -1440,70 +1751,76 @@ async function fetchLogoAsBase64(logoUrl) {
                     establishedYear: document.getElementById('comp_year').value ? parseInt(document.getElementById('comp_year').value) : null,
                     address: document.getElementById('comp_address').value.trim() || null,
                     description: document.getElementById('comp_desc').value.trim() || null,
-                    workingDays: workingDays,
-                    departments: [...departmentsData],
-                    designations: [...designationsData],
-                    logoBase64: savedLogoBase64 || null,
-                    registeredAt: isEditMode ? getStoredCompany()?.registeredAt : new Date().toISOString(),
-                    updatedAt: new Date().toISOString()
+                    workingDays: JSON.stringify(workingDays),
+                    breakTimings: JSON.stringify({ lunchStart: "13:00", lunchEnd: "14:00" }),
+                    holidays: "[]",
+                    departments: JSON.stringify(validDepartments),
+                    designations: JSON.stringify(validDesignations),
+                    socialMedia: "[]",
+                    contactPersons: "[]",
+                    bankDetails: "[]"
                 };
 
-                // Try API save
-                try {
-                    const payload = {
-                        id: dbIdForPayload,        // null = INSERT, real id = UPDATE
-                        companyName: companyObj.companyName,
-                        gstNumber: companyObj.gstNumber,
-                        panNumber: companyObj.panNumber,
-                        cinNumber: companyObj.cinNumber,
-                        email: companyObj.email,
-                        phone: companyObj.phone,
-                        website: companyObj.website,
-                        establishedYear: companyObj.establishedYear,
-                        address: companyObj.address,
-                        description: companyObj.description,
-                        workingDays: JSON.stringify(workingDays),
-                        breakTimings: JSON.stringify({ lunchStart: "13:00", lunchEnd: "14:00" }),
-                        holidays: "[]",
-                        departments: JSON.stringify(departmentsData),
-                        designations: JSON.stringify(designationsData),
-                        socialMedia: "[]",
-                        contactPersons: "[]",
-                        bankDetails: "[]"
-                    };
+                const resp = await fetch(`${COMPANY_API_URL}/profile`, {
+                    method: isEditMode ? 'PATCH' : 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
 
-                    console.log('[Company] Sending to API. isEdit:', isEditMode, 'id:', payload.id);
-
-                    const resp = await fetch(`${COMPANY_API_URL}/profile`, {
-                        method: isEditMode ? 'PATCH' : 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-
-                    if (resp.ok) {
-                        const result = await resp.json();
-                        if (result.success && result.data?.id) {
-                            currentCompanyId = result.data.id;
-                            companyObj.dbId = currentCompanyId;
-                            console.log('[Company] API success. DB id:', currentCompanyId);
-                            if (selectedLogoFile) {
-                                const fd = new FormData();
-                                fd.append('file', selectedLogoFile);
-                                await fetch(`${COMPANY_API_URL}/logo/${currentCompanyId}`, { method: 'POST', body: fd });
-                            }
-                        }
-                    } else {
-                        const errBody = await resp.json().catch(() => ({}));
-                        throw new Error(errBody.message || `API error ${resp.status}`);
-                    }
-                } catch (apiErr) {
-                    console.warn('[Company] API call failed:', apiErr.message);
-                    // Re-throw so the user sees the real error instead of silently failing
-                    throw apiErr;
+                if (!resp.ok) {
+                    const errBody = await resp.json().catch(() => ({}));
+                    throw new Error(errBody.message || `API error ${resp.status}`);
                 }
 
-                // Always save to localStorage
-                saveCompanyToStorage(companyObj);
+                const result = await resp.json();
+
+                if (result.success && result.data?.id) {
+                    currentCompanyId = result.data.id;
+
+                    let logoRelativeUrl = null;
+
+                    if (selectedLogoFile) {
+                        const fd = new FormData();
+                        fd.append('file', selectedLogoFile);
+
+                        const uploadResp = await fetch(`${COMPANY_API_URL}/logo/${currentCompanyId}`, {
+                            method: 'POST',
+                            body: fd
+                        });
+
+                        if (uploadResp.ok) {
+                            const uploadResult = await uploadResp.json();
+                            if (uploadResult.success) {
+                                logoRelativeUrl = `/api/company/logo/${currentCompanyId}`;
+                                localStorage.setItem('companyLogo', logoRelativeUrl);
+                                updateSidebarLogo();
+                                showToast('Logo uploaded successfully');
+                            }
+                        }
+                    }
+
+                    // Save to localStorage without base64
+                    const companyObj = {
+                        dbId: currentCompanyId,
+                        companyName: name,
+                        gstNumber: payload.gstNumber,
+                        panNumber: payload.panNumber,
+                        cinNumber: payload.cinNumber,
+                        email: email,
+                        phone: phone,
+                        website: payload.website,
+                        establishedYear: payload.establishedYear,
+                        address: payload.address,
+                        description: payload.description,
+                        workingDays: workingDays,
+                        departments: validDepartments,
+                        designations: validDesignations,
+                        logoUrl: logoRelativeUrl || (result.data.logoUrl ? result.data.logoUrl : null),
+                        registeredAt: isEditMode ? getStoredCompany()?.registeredAt : new Date().toISOString(),
+                        updatedAt: new Date().toISOString()
+                    };
+                    saveCompanyToStorage(companyObj);
+                }
 
                 showToast(isEditMode ? 'Company updated successfully!' : 'Company registered successfully!', 'success');
 
@@ -1519,92 +1836,35 @@ async function fetchLogoAsBase64(logoUrl) {
             }
         });
 
-        // ===== DEPT FORM =====
-        document.getElementById('departmentForm')?.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const n = document.getElementById('deptName').value.trim();
-            if (!n) { showToast('Department name required', 'error'); return; }
-            const d = { departmentName: n, headOfDepartment: document.getElementById('deptHead').value.trim() };
-            if (currentEditDeptIndex !== null && document.getElementById('deptId').value !== '') {
-                departmentsData[currentEditDeptIndex] = d;
+        // ========== INITIALIZE ==========
+        document.addEventListener('DOMContentLoaded', async function () {
+            if (typeof loadSidebar === 'function') loadSidebar();
+            if (typeof loadHeader === 'function') loadHeader();
+
+            initializeAutoFormatting();
+            attachValidationListeners();
+
+            document.getElementById('addDeptBtn')?.addEventListener('click', addDepartment);
+            document.getElementById('addDesigBtn')?.addEventListener('click', addDesignation);
+
+            const backendCompany = await fetchCompaniesFromBackend();
+
+            if (backendCompany) {
+                departmentsData = backendCompany.departments || [];
+                designationsData = backendCompany.designations || [];
+                renderDepartments();
+                renderDesignations();
             } else {
-                departmentsData.push(d);
+                renderDepartments();
+                renderDesignations();
             }
-            renderDepartmentsList();
-            loadDepartmentsIntoSelects();
-            closeDepartmentModal();
-            showToast('Department saved', 'success');
-            currentEditDeptIndex = null;
+
+            renderCompaniesTable();
+
+            setTimeout(() => {
+                updateSidebarLogo();
+            }, 1000);
         });
-
-        // ===== DESIG FORM =====
-        document.getElementById('designationForm')?.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const n = document.getElementById('desigName').value.trim();
-            const dept = document.getElementById('desigDeptSelect').value;
-            if (!n) { showToast('Designation name required', 'error'); return; }
-            if (!dept) { showToast('Select department', 'error'); return; }
-            const d = {
-                designationName: n,
-                departmentName: dept,
-                level: document.getElementById('desigLevel').value,
-                // baseSalary: parseFloat(document.getElementById('desigSalary').value) || 0
-            };
-            if (currentEditDesigIndex !== null && document.getElementById('desigId').value !== '') {
-                designationsData[currentEditDesigIndex] = d;
-            } else {
-                designationsData.push(d);
-            }
-            renderDesignationsList();
-            filterDesignations();
-            closeDesignationModal();
-            showToast('Designation saved', 'success');
-            currentEditDesigIndex = null;
-        });
-
-        // ===== CUSTOM DEPT FORM =====
-        document.getElementById('customDepartmentForm')?.addEventListener('submit', function (e) {
-            e.preventDefault();
-            const n = document.getElementById('customDeptName').value.trim();
-            if (!n) { showToast('Department name required', 'error'); return; }
-            if (!departmentsData.some(d => d.departmentName === n)) {
-                departmentsData.push({ departmentName: n, headOfDepartment: document.getElementById('customDeptHead').value.trim() || '' });
-                renderDepartmentsList();
-                loadDepartmentsIntoSelects();
-                showToast(`Department "${n}" added`, 'success');
-                closeCustomDepartmentModal();
-                const ds = document.getElementById('desigDeptSelect');
-                if (ds) ds.value = n;
-            } else {
-                showToast('Department already exists', 'error');
-            }
-        });
-
-        // ===== INITIALIZE - UPDATED =====
-document.addEventListener('DOMContentLoaded', async function () {
-    if (typeof loadSidebar === 'function') loadSidebar();
-    if (typeof loadHeader === 'function') loadHeader();
-
-    // First try to fetch from backend
-    const backendCompany = await fetchCompaniesFromBackend();
-    
-    if (!backendCompany) {
-        // If no backend data, check localStorage
-        const stored = getStoredCompany();
-        if (stored && stored.dbId) {
-            currentCompanyId = stored.dbId;
-            console.log('[Company] Restored from localStorage:', currentCompanyId);
-        }
-    } else {
-        console.log('[Company] Loaded from backend');
-    }
-
-    renderDepartmentsList();
-    renderDesignationsList();
-    loadDepartmentsIntoSelects();
-    renderCompaniesTable();
-});
     </script>
 </body>
-
 </html>

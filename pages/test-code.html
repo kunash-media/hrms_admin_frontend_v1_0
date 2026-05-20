@@ -162,8 +162,8 @@
         select,
         textarea {
             border: 1px solid var(--primary-soft);
-            border-radius: 16px;
-            padding: 4px 14px;
+            border-radius: 12px;
+            padding: 10px 14px;
             width: 100%;
             font-size: 13px;
             transition: 0.2s;
@@ -641,6 +641,41 @@
             }
         }
 
+        /* Fix for promotion modal button positioning */
+#promotionModal .modal-container {
+    max-width: 550px;
+    overflow-y: visible;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    padding: 0 !important;
+}
+
+#promotionModal .modal-header {
+    padding: 18px 22px;
+    flex-shrink: 0;
+}
+
+#promotionModal form {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+#promotionModal .form-content {
+    padding: 0 22px;
+    flex: 1;
+}
+
+#promotionModal .button-container {
+    padding: 16px 22px;
+    background: white;
+    border-radius: 0 0 24px 24px;
+    border-top: 1px solid var(--primary-soft);
+    margin-top: auto;
+    flex-shrink: 0;
+}
+
         .main-content {
             margin-top: 64px;
         }
@@ -916,7 +951,7 @@
         .form-group textarea {
             width: 100%;
             padding: 10px 12px;
-            border-radius: 16px;
+            border-radius: 6px;
             border: 1px solid var(--primary-soft);
             font-size: 13px;
             color: var(--text-dark);
@@ -1077,11 +1112,11 @@
                                 <div class="sec-title"><i class="fas fa-id-card"></i> Personal Information</div>
                                 <div class="grid-4 mb-4">
                                     <div class="form-group"><label>First Name <span class="req">*</span></label><input
-                                            id="fFN" placeholder="e.g. Arjun" required></div>
+                                            id="fFN" placeholder="e.g. Arjun" ></div>
                                     <div class="form-group"><label>Middle Name</label><input id="fMN"
                                             placeholder="e.g. Kumar"></div>
                                     <div class="form-group"><label>Last Name <span class="req">*</span></label><input
-                                            id="fLN" placeholder="e.g. Sharma" required></div>
+                                            id="fLN" placeholder="e.g. Sharma" ></div>
                                     <div class="form-group"><label>Employee ID</label><input id="fEID" class="mono"
                                             readonly
                                             style="background:var(--primary-bg-light);color:var(--primary);font-weight:700;">
@@ -1092,7 +1127,7 @@
                                     </div>
                                     <div class="form-group">
                                         <label>Gender <span class="req">*</span></label>
-                                        <select id="fGender" required>
+                                        <select id="fGender" >
                                             <option value="">Select Gender</option>
                                             <option>Male</option>
                                             <option>Female</option>
@@ -1355,6 +1390,20 @@
                                             placeholder="House/Flat No, Street, Area, Landmark (e.g., 12B, Shanti Nagar, Near City Mall)"></textarea>
                                     </div>
 
+
+                                    <!-- ✅ CHECKBOX: Same as Current Address -->
+                                    <div class="mb-3"
+                                        style="display: flex; align-items: center; gap: 10px; margin-bottom: 16px;">
+                                        <input type="checkbox" id="sameAsCurrentCheckbox"
+                                            onchange="copyCurrentToPermanent()"
+                                            style="width: 18px; height: 18px; margin: 0; cursor: pointer;">
+                                        <label for="sameAsCurrentCheckbox"
+                                            style="margin: 0; cursor: pointer; font-weight: 500; color: var(--primary);">
+                                            <i class="fas fa-copy mr-1"></i> Same as current address
+                                        </label>
+                                    </div>
+
+
                                     <div class="grid-4">
                                         <div class="form-group">
                                             <label>City</label>
@@ -1466,7 +1515,8 @@
                                     <button type="reset" class="btn-outline">Reset</button>
                                     <button type="button" id="nextBtn" class="btn-primary" onclick="nextStep()">Next <i
                                             class="fas fa-arrow-right ml-1"></i></button>
-                                    <button type="submit" id="saveBtn" class="btn-success" style="display:none;">Save Employee</button>
+                                    <button type="submit" id="saveBtn" class="btn-success" style="display:none;"><i
+                                            class="fas fa-save mr-1"></i>Save Employee</button>
                                 </div>
                             </div>
                         </form>
@@ -1567,71 +1617,92 @@
                     </div>
                 </div>
 
-                <!-- ==================== ADD/EDIT PROMOTION MODAL ==================== -->
-                <div id="promotionModal" class="modal-overlay">
-                    <div class="modal-container" style="max-width: 550px;">
+<!-- ==================== ADD/EDIT PROMOTION MODAL ==================== -->
+<div id="promotionModal" class="modal-overlay">
+    <div class="modal-container" style="max-width: 550px; overflow-y: visible; height: auto; display: flex; flex-direction: column;">
+        <div class="modal-header">
+            <h3 id="promotionModalTitle">Add Promotion</h3>
+            <span class="modal-close" onclick="closePromotionModal()">&times;</span>
+        </div>
+        <form id="promotionForm" onsubmit="savePromotion(event)" style="flex: 1; display: flex; flex-direction: column;">
+            <div class="h-[350px] overflow-auto" style="padding: 0 22px;">
+                <input type="hidden" id="promotionId">
+                <input type="hidden" id="promoEmployeeId">
+                <input type="hidden" id="promoEmployeePrimeId">
+
+                <!-- Selected Employee Display -->
+                <div class="form-group" style="background: var(--primary-bg-light); border-radius: 10px; padding: 12px; margin-bottom: 16px;">
+                    <label style="margin-bottom: 4px;">Selected Employee</label>
+                    <div style="font-weight: 700; color: var(--primary); font-size: 14px;" id="selectedEmployeeName">-</div>
+                </div>
+
+                <div class="grid-2 mb-3">
+                    <div class="form-group">
+                        <label>Previous Designation</label>
+                        <input type="text" id="prevDesig" placeholder="e.g., Software Engineer" readonly
+                            style="background:#f5f5f5;">
+                    </div>
+                    <div class="form-group">
+                        <label>New Designation <span class="req">*</span></label>
+                        <input type="text" id="newDesig" placeholder="e.g., Senior Software Engineer"
+                            required>
+                    </div>
+                </div>
+
+                <div class="grid-2 mb-3">
+                    <div class="form-group">
+                        <label>Previous Salary (₹)</label>
+                        <input type="number" id="prevSalary" class="mono" placeholder="0.00" readonly
+                            style="background:#f5f5f5;">
+                    </div>
+                    <div class="form-group">
+                        <label>New Salary (₹)</label>
+                        <input type="number" id="newSalary" class="mono" placeholder="0.00">
+                    </div>
+                </div>
+
+                <div class="grid-2 mb-3">
+                    <div class="form-group">
+                        <label>Promotion Date <span class="req"></span></label>
+                        <input type="date" id="promoDate" >
+                    </div>
+                    <div class="form-group">
+                        <label>Effective From</label>
+                        <input type="date" id="effectiveFrom">
+                        <div class="fhint">Leave blank to use Promotion Date</div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Remarks</label>
+                    <textarea id="remarks" rows="3"
+                        placeholder="Additional notes about the promotion..."></textarea>
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-3 mt-4 pt-3 border-t"
+                style="border-color: var(--primary-soft); padding: 16px 22px; background: white; border-radius: 0 0 24px 24px; margin-top: auto;">
+                <button type="button" class="btn-outline" onclick="closePromotionModal()">Cancel</button>
+                <button type="submit" class="btn-success">Save Promotion</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+                <!-- ==================== VIEW PROMOTION MODAL ==================== -->
+                <div id="viewPromotionModal" class="modal-overlay">
+                    <div class="modal-container" style="max-width: 500px;">
                         <div class="modal-header">
-                            <h3 id="promotionModalTitle">Add Promotion</h3>
-                            <span class="modal-close" onclick="closePromotionModal()">&times;</span>
+                            <h3 style="color: var(--primary);">Promotion Details</h3>
+                            <span class="modal-close" onclick="closeViewPromotionModal()">&times;</span>
                         </div>
-                        <form id="promotionForm" onsubmit="savePromotion(event)">
-                            <input type="hidden" id="promotionId">
-
-                            <div class="form-group">
-                                <label>Employee <span class="req">*</span></label>
-                                <select id="promoEmployeeId" required>
-                                    <option value="">Select Employee</option>
-                                </select>
-                            </div>
-
-                            <div class="grid-2 mb-3">
-                                <div class="form-group">
-                                    <label>Previous Designation</label>
-                                    <input type="text" id="prevDesig" placeholder="e.g., Software Engineer">
-                                </div>
-                                <div class="form-group">
-                                    <label>New Designation <span class="req">*</span></label>
-                                    <input type="text" id="newDesig" placeholder="e.g., Senior Software Engineer"
-                                        required>
-                                </div>
-                            </div>
-
-                            <div class="grid-2 mb-3">
-                                <div class="form-group">
-                                    <label>Previous Salary (₹)</label>
-                                    <input type="number" id="prevSalary" class="mono" placeholder="0.00">
-                                </div>
-                                <div class="form-group">
-                                    <label>New Salary (₹)</label>
-                                    <input type="number" id="newSalary" class="mono" placeholder="0.00">
-                                </div>
-                            </div>
-
-                            <div class="grid-2 mb-3">
-                                <div class="form-group">
-                                    <label>Promotion Date <span class="req">*</span></label>
-                                    <input type="date" id="promoDate" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>Effective From</label>
-                                    <input type="date" id="effectiveFrom">
-                                    <div class="fhint">Leave blank to use Promotion Date</div>
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Remarks</label>
-                                <textarea id="remarks" rows="3"
-                                    placeholder="Additional notes about the promotion..."></textarea>
-                            </div>
-
-                            <div class="flex justify-end gap-3 mt-4 pt-3 border-t"
-                                style="border-color: var(--primary-soft);">
-                                <button type="button" class="btn-outline"
-                                    onclick="closePromotionModal()">Cancel</button>
-                                <button type="submit" class="btn-success">Save Promotion</button>
-                            </div>
-                        </form>
+                        <div id="viewPromotionContent" style="padding: 10px 0;">
+                            <!-- Content will be populated dynamically -->
+                        </div>
+                        <div class="flex justify-end gap-3 mt-4 pt-3 border-t"
+                            style="border-color: var(--primary-soft);">
+                            <button type="button" class="btn-outline" onclick="closeViewPromotionModal()">Close</button>
+                        </div>
                     </div>
                 </div>
 
@@ -1648,11 +1719,11 @@
                 </div>
             </main>
 
-            <!-- ==================== PATCH 2: QUICK ADD MEMBER MODAL ==================== -->
-            <!-- Lightweight 5-field employee registration overlay.
-                Uses existing .modal-overlay / .modal-container pattern from company.html.
-                On success: shows credential card with Copy-to-Clipboard.
-                On close/re-open: fully resets to registration form (no stale state). -->
+            
+            <!-- =========================================================================== -->
+            <!-- ==================== QUICK ADD MEMBER MODAL (UPDATED) ==================== -->
+            <!-- =========================================================================== -->
+             
             <div id="quickAddMemberModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="quickAddModalTitle">
                 <div class="modal-container" style="width:480px;max-width:95%;">
 
@@ -1664,16 +1735,13 @@
                         <span class="modal-close" onclick="closeQuickAddModal()" title="Close">&times;</span>
                     </div>
 
-                    <!-- ── PHASE A: Registration Form ── -->
+                    <!-- Registration Form Phase -->
                     <div id="quickAddFormPhase">
                         <p style="font-size:12px;color:var(--text-light);margin-bottom:18px;">
-                            Quick-register an employee with essential details. The employee can complete their full profile later.
+                            Quick-register an employee. A temporary password will be auto-generated and sent to their email.
                         </p>
 
-                        <!-- Inline error banner (hidden by default) -->
-                        <div id="quickAddErrorBanner"
-                            style="display:none;background:#f8d7da;border:1px solid #f5c6cb;color:#721c24;
-                                padding:10px 14px;border-radius:10px;font-size:12px;margin-bottom:14px;">
+                        <div id="quickAddErrorBanner" style="display:none;background:#f8d7da;border:1px solid #f5c6cb;color:#721c24;padding:10px 14px;border-radius:10px;font-size:12px;margin-bottom:14px;">
                         </div>
 
                         <form id="quickAddMemberForm" autocomplete="off" onsubmit="submitQuickAddMember(event)">
@@ -1681,54 +1749,31 @@
                             <div class="grid-2" style="margin-bottom:14px;">
                                 <div class="form-group">
                                     <label>First Name <span class="req">*</span></label>
-                                    <input type="text" id="qFN" placeholder="e.g. Sundar" maxlength="50"
-                                        autocomplete="given-name">
+                                    <input type="text" id="qFN" placeholder="e.g. Sumer" maxlength="50">
                                 </div>
                                 <div class="form-group">
                                     <label>Last Name <span class="req">*</span></label>
-                                    <input type="text" id="qLN" placeholder="e.g. Pichai" maxlength="50"
-                                        autocomplete="family-name">
+                                    <input type="text" id="qLN" placeholder="e.g. Khan" maxlength="50">
                                 </div>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom:14px;">
+                                <label>Personal Email <span class="req">*</span></label>
+                                <input type="email" id="qEmail" placeholder="employee@example.com" maxlength="120">
                             </div>
 
                             <div class="form-group" style="margin-bottom:14px;">
                                 <label>Department <span class="req">*</span></label>
-                                <input type="text" id="qDept" placeholder="e.g. Engineering, HR, Finance"
-                                    maxlength="100" autocomplete="off">
+                                <input type="text" id="qDept" placeholder="e.g. IT, HR, Finance" maxlength="100">
                             </div>
 
                             <div class="form-group" style="margin-bottom:14px;">
                                 <label>Designation <span class="req">*</span></label>
-                                <input type="text" id="qDesig" placeholder="e.g. Senior Developer, HR Manager"
-                                    maxlength="100" autocomplete="off">
+                                <input type="text" id="qDesig" placeholder="e.g. Software Engineer" maxlength="100">
                             </div>
 
-                            <div class="form-group" style="margin-bottom:6px;">
-                                <label>Password <span class="req">*</span></label>
-                                <div style="position:relative;">
-                                    <input type="password" id="qPass" placeholder="Min. 6 characters"
-                                        maxlength="64" autocomplete="new-password"
-                                        style="padding-right:44px;">
-                                    <!-- Toggle password visibility button -->
-                                    <button type="button"
-                                        onclick="toggleQuickPassVisibility()"
-                                        id="qPassToggleBtn"
-                                        title="Show/hide password"
-                                        style="position:absolute;right:10px;top:50%;transform:translateY(-50%);
-                                            background:none;border:none;cursor:pointer;color:var(--text-light);
-                                            padding:4px;font-size:13px;width:auto;">
-                                        <i id="qPassToggleIcon" class="fas fa-eye"></i>
-                                    </button>
-                                </div>
-                                <div class="fhint">This will be the employee's login password.</div>
-                            </div>
-
-                            <!-- Form Actions -->
-                            <div style="display:flex;justify-content:flex-end;gap:10px;
-                                        margin-top:22px;padding-top:16px;border-top:2px solid var(--primary-soft);">
-                                <button type="button" class="btn-outline" onclick="closeQuickAddModal()">
-                                    Cancel
-                                </button>
+                            <div style="display:flex;justify-content:flex-end;gap:10px;margin-top:22px;padding-top:16px;border-top:2px solid var(--primary-soft);">
+                                <button type="button" class="btn-outline" onclick="closeQuickAddModal()">Cancel</button>
                                 <button type="submit" id="quickAddSubmitBtn" class="btn-primary">
                                     <i class="fas fa-save mr-1"></i>Register Employee
                                 </button>
@@ -1736,106 +1781,64 @@
                         </form>
                     </div>
 
-                    <!-- ── PHASE B: Success Credential Card (hidden until API success) ── -->
+                    <!-- Success Phase -->
                     <div id="quickAddSuccessPhase" style="display:none;">
-
-                        <!-- Success banner -->
-                        <div style="display:flex;align-items:center;gap:12px;
-                                    background:rgba(43,122,62,0.1);border:1px solid rgba(43,122,62,0.3);
-                                    border-radius:12px;padding:14px 16px;margin-bottom:20px;">
-                            <div style="width:38px;height:38px;border-radius:50%;background:#2b7a3e;
-                                        display:flex;align-items:center;justify-content:center;flex-shrink:0;">
+                        <div style="display:flex;align-items:center;gap:12px;background:rgba(43,122,62,0.1);border:1px solid rgba(43,122,62,0.3);border-radius:12px;padding:14px 16px;margin-bottom:20px;">
+                            <div style="width:38px;height:38px;border-radius:50%;background:#2b7a3e;display:flex;align-items:center;justify-content:center;flex-shrink:0;">
                                 <i class="fas fa-check" style="color:white;font-size:16px;"></i>
                             </div>
                             <div>
-                                <div style="font-size:13px;font-weight:700;color:#155724;">Employee Registered!</div>
+                                <div style="font-size:13px;font-weight:700;color:#155724;">Employee Registered Successfully!</div>
                                 <div id="qSuccessSubtitle" style="font-size:12px;color:#2b7a3e;margin-top:2px;"></div>
                             </div>
                         </div>
 
-                        <!-- Credential Card -->
-                        <div style="background:var(--primary-bg-light);border:1px solid var(--primary-soft);
-                                    border-radius:14px;padding:18px;margin-bottom:18px;">
-                            <div style="font-size:12px;font-weight:700;color:var(--primary);
-                                        margin-bottom:14px;display:flex;align-items:center;gap:8px;">
+                        <div style="background:var(--primary-bg-light);border:1px solid var(--primary-soft);border-radius:14px;padding:18px;margin-bottom:18px;">
+                            <div style="font-size:12px;font-weight:700;color:var(--primary);margin-bottom:14px;display:flex;align-items:center;gap:8px;">
                                 <i class="fas fa-key"></i> Login Credentials
-                                <span style="font-size:11px;font-weight:400;color:var(--text-light);margin-left:4px;">
-                                    — share securely with the employee
-                                </span>
                             </div>
 
-                            <!-- Employee ID row -->
-                            <div style="display:flex;justify-content:space-between;align-items:center;
-                                        background:white;border:1px solid var(--primary-soft);border-radius:10px;
-                                        padding:10px 14px;margin-bottom:10px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;background:white;border:1px solid var(--primary-soft);border-radius:10px;padding:10px 14px;margin-bottom:10px;">
                                 <div>
-                                    <div style="font-size:11px;color:var(--text-light);margin-bottom:2px;">
-                                        <i class="fas fa-id-badge mr-1"></i>Employee ID
-                                    </div>
-                                    <div id="qResultEmployeeId"
-                                        style="font-family:monospace;font-size:15px;font-weight:700;
-                                                color:var(--primary);letter-spacing:0.5px;"></div>
+                                    <div style="font-size:11px;color:var(--text-light);margin-bottom:2px;">Employee ID</div>
+                                    <div id="qResultEmployeeId" style="font-family:monospace;font-size:15px;font-weight:700;color:var(--primary);"></div>
                                 </div>
-                                <button onclick="copyToClipboard('qResultEmployeeId', 'empIdCopyBtn')"
-                                        id="empIdCopyBtn"
-                                        class="btn-outline btn-sm"
-                                        style="white-space:nowrap;min-width:72px;">
+                                <button onclick="copyToClipboard('qResultEmployeeId', 'empIdCopyBtn')" id="empIdCopyBtn" class="btn-outline btn-sm">
                                     <i class="fas fa-copy mr-1"></i>Copy
                                 </button>
                             </div>
 
-                            <!-- Password row -->
-                            <div style="display:flex;justify-content:space-between;align-items:center;
-                                        background:white;border:1px solid var(--primary-soft);border-radius:10px;
-                                        padding:10px 14px;margin-bottom:10px;">
+                            <div style="display:flex;justify-content:space-between;align-items:center;background:white;border:1px solid var(--primary-soft);border-radius:10px;padding:10px 14px;margin-bottom:10px;">
                                 <div>
-                                    <div style="font-size:11px;color:var(--text-light);margin-bottom:2px;">
-                                        <i class="fas fa-lock mr-1"></i>Password
-                                    </div>
-                                    <div id="qResultPassword"
-                                        style="font-family:monospace;font-size:15px;font-weight:700;
-                                                color:var(--primary);letter-spacing:0.5px;"></div>
+                                    <div style="font-size:11px;color:var(--text-light);margin-bottom:2px;">Temporary Password</div>
+                                    <div id="qResultPassword" style="font-family:monospace;font-size:15px;font-weight:700;color:var(--primary);"></div>
                                 </div>
-                                <button onclick="copyToClipboard('qResultPassword', 'passCopyBtn')"
-                                        id="passCopyBtn"
-                                        class="btn-outline btn-sm"
-                                        style="white-space:nowrap;min-width:72px;">
+                                <button onclick="copyToClipboard('qResultPassword', 'passCopyBtn')" id="passCopyBtn" class="btn-outline btn-sm">
                                     <i class="fas fa-copy mr-1"></i>Copy
                                 </button>
                             </div>
 
-                            <!-- Copy both at once -->
-                            <button onclick="copyBothCredentials()"
-                                    id="copyBothBtn"
-                                    class="btn-primary"
-                                    style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;margin-top:4px;">
+                            <button onclick="copyBothCredentials()" id="copyBothBtn" class="btn-primary" style="width:100%;margin-top:8px;">
                                 <i class="fas fa-clipboard"></i> Copy Both Credentials
                             </button>
                         </div>
 
-                        <!-- Employee summary info -->
                         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:20px;">
                             <div style="background:white;border:1px solid var(--primary-soft);border-radius:8px;padding:10px 12px;">
                                 <div style="font-size:10px;color:var(--text-light);">Department</div>
-                                <div id="qResultDept" style="font-size:12px;font-weight:600;color:var(--primary);margin-top:2px;"></div>
+                                <div id="qResultDept" style="font-size:12px;font-weight:600;color:var(--primary);"></div>
                             </div>
                             <div style="background:white;border:1px solid var(--primary-soft);border-radius:8px;padding:10px 12px;">
                                 <div style="font-size:10px;color:var(--text-light);">Designation</div>
-                                <div id="qResultDesig" style="font-size:12px;font-weight:600;color:var(--primary);margin-top:2px;"></div>
+                                <div id="qResultDesig" style="font-size:12px;font-weight:600;color:var(--primary);"></div>
                             </div>
                         </div>
 
-                        <!-- Action buttons -->
-                        <div style="display:flex;justify-content:space-between;align-items:center;
-                                    padding-top:14px;border-top:2px solid var(--primary-soft);gap:10px;flex-wrap:wrap;">
-                            <button onclick="registerAnotherMember()"
-                                    class="btn-outline"
-                                    style="display:flex;align-items:center;gap:6px;">
+                        <div style="display:flex;justify-content:space-between;gap:10px;">
+                            <button onclick="registerAnotherMember()" class="btn-outline">
                                 <i class="fas fa-user-plus"></i> Add Another
                             </button>
-                            <button onclick="closeQuickAddModal()"
-                                    class="btn-primary"
-                                    style="display:flex;align-items:center;gap:6px;">
+                            <button onclick="closeQuickAddModal()" class="btn-primary">
                                 <i class="fas fa-check"></i> Done
                             </button>
                         </div>
@@ -1843,7 +1846,8 @@
 
                 </div>
             </div>
-            <!-- ==================== END PATCH 2 ==================== -->
+            <!-- ===================================================== -->
+            <!-- ==================== END PATCH ===================== -->
         </div>
     </div>
 
@@ -1887,6 +1891,7 @@
             const toast = document.createElement('div');
             toast.className = `toast ${type}`;
             toast.innerHTML = message;
+            toast.style.zIndex = '9999';
             document.body.appendChild(toast);
             setTimeout(() => toast.remove(), 3000);
         }
@@ -2217,7 +2222,7 @@
             showEditOverlay(result.data.data, false, employeePrimeId);
         }
 
-        function showEditOverlay(emp, loading, employeePrimeId) {
+       function showEditOverlay(emp, loading, employeePrimeId) {
             let overlay = document.getElementById('editEmployeeOverlay');
             if (!overlay) { overlay = document.createElement('div'); overlay.id = 'editEmployeeOverlay'; document.body.appendChild(overlay); }
 
@@ -2250,6 +2255,7 @@
             </div>
             <form id="editEmployeeForm" onsubmit="submitEditEmployee(event, ${employeePrimeId})">
                 <div style="padding:24px;overflow-y:auto;max-height:calc(100vh - 250px);">
+
                     <!-- TAB 0: Personal -->
                     <div id="editSt0">
                         <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-id-card mr-2"></i>Personal Information</div>
@@ -2266,9 +2272,11 @@
                             ${editField('Nationality', 'efNat', emp.nationality || 'Indian')}${editField('Religion', 'efRel', emp.religion)}${editField("Father's / Spouse Name", 'efFatherName', emp.fatherSpouseName)}
                         </div>
                         <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px;">
-                            ${editField('LinkedIn Profile', 'efLI', emp.linkedinProfile)}${editField('Employee Status', 'efStatus', emp.status)}
+                           ${editField('LinkedIn Profile', 'efLI', emp.linkedinProfile)}<div class="form-group"><label>Employee Status</label><div style="padding:8px 12px; background:var(--primary-bg-light); border-radius:8px; font-size:12px; color:${emp.status === 'Active' ? '#2b7a3e' : '#dc3545'}; font-weight:600;">${emp.status || 'Active'}</div>
+                           </div>
                         </div>
                     </div>
+
                     <!-- TAB 1: Job Details -->
                     <div id="editSt1" style="display:none;">
                         <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-briefcase mr-2"></i>Job Details</div>
@@ -2289,21 +2297,18 @@
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
                             ${editField('Bank Name', 'efBank', emp.bankName)}${editField('Account Number', 'efAccNo', emp.accountNumber)}${editField('IFSC Code', 'efIFSC', emp.ifscCode)}
                         </div>
-                            <!-- 🔴🔴🔴 YAHAN PE ADD KARO (Bank Details ke BAAD) 🔴🔴🔴 -->
-    <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;margin-top:16px;"><i class="fas fa-lock mr-2"></i>Login Credentials</div>
-    <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
-        <div>
-            <label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">New Password</label>
-            <input type="password" id="efPassword" placeholder="Leave blank to keep current" style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
-            <div style="font-size:10px;color:var(--text-light);margin-top:3px;">Minimum 6 characters</div>
-        </div>
-        <div>
-            <label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">Confirm New Password</label>
-            <input type="password" id="efConfirmPassword" placeholder="Re-enter new password" style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
-        </div>
-    </div>
-    <!-- 🔴🔴🔴 ADD KARNA YAHAN TAK 🔴🔴🔴 -->
-
+                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;margin-top:16px;"><i class="fas fa-lock mr-2"></i>Login Credentials</div>
+                        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
+                            <div>
+                                <label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">New Password</label>
+                                <input type="password" id="efPassword" placeholder="Leave blank to keep current" style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
+                                <div style="font-size:10px;color:var(--text-light);margin-top:3px;">Minimum 6 characters</div>
+                            </div>
+                            <div>
+                                <label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">Confirm New Password</label>
+                                <input type="password" id="efConfirmPassword" placeholder="Re-enter new password" style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
+                            </div>
+                        </div>
                     </div>
 
                     <!-- TAB 2: Contact & Address -->
@@ -2344,6 +2349,7 @@
                         <div id="editExpList"></div>
                         <button type="button" onclick="addEditExpRow()" class="btn-outline btn-sm"><i class="fas fa-plus mr-1"></i> Add Experience</button>
                     </div>
+
                     <!-- TAB 4: Documents -->
                     <div id="editSt4" style="display:none;">
                         <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-folder mr-2"></i>Upload / Replace Documents</div>
@@ -2357,6 +2363,7 @@
                             ${editFileField('Profile Photo', 'efProfilePhoto', !!(emp.profilePhotoUrl || emp.profilePhotoImage), `${API_BASE}/${emp.employeeId}/profile-image`)}
                         </div>
                     </div>
+
                 </div>
                 <div style="padding:16px 24px;border-top:1px solid #1B738C;display:flex;justify-content:space-between;align-items:center;background:var(--primary-bg-light);">
                     <span style="font-size:11px;color:var(--text-light);"><i class="fas fa-info-circle mr-1"></i>Fields marked with * are required</span>
@@ -2368,29 +2375,81 @@
             </form>
         </div>`;
 
-            try { if (emp.education) { JSON.parse(emp.education).forEach(e => addEditEduRow(e.degree, e.institution, e.year)); } } catch (e) { }
-            try { if (emp.family) { JSON.parse(emp.family).forEach(f => addEditFamRow(f.name, f.relationship, f.occupation)); } } catch (e) { }
-            try { if (emp.workExperience) { JSON.parse(emp.workExperience).forEach(x => addEditExpRow(x.company, x.designation, x.years)); } } catch (e) { }
+            // Populate Education
+            const editEduList = document.getElementById('editEduList');
+            if (editEduList) editEduList.innerHTML = '';
+            try {
+                if (emp.education) {
+                    const eduData = typeof emp.education === 'string' ? JSON.parse(emp.education) : emp.education;
+                    if (Array.isArray(eduData) && eduData.length) {
+                        eduData.forEach(e => addEditEduRow(e.degree || '', e.institution || '', e.year || ''));
+                    }
+                }
+            } catch (e) { console.error('Error parsing education:', e); }
+
+            // Populate Family
+            const editFamList = document.getElementById('editFamList');
+            if (editFamList) editFamList.innerHTML = '';
+            try {
+                if (emp.family) {
+                    const famData = typeof emp.family === 'string' ? JSON.parse(emp.family) : emp.family;
+                    if (Array.isArray(famData) && famData.length) {
+                        famData.forEach(f => addEditFamRow(f.name || '', f.relationship || '', f.occupation || ''));
+                    }
+                }
+            } catch (e) { console.error('Error parsing family:', e); }
+
+            // Populate Experience
+            const editExpList = document.getElementById('editExpList');
+            if (editExpList) editExpList.innerHTML = '';
+            try {
+                if (emp.workExperience) {
+                    const expData = typeof emp.workExperience === 'string' ? JSON.parse(emp.workExperience) : emp.workExperience;
+                    if (Array.isArray(expData) && expData.length) {
+                        expData.forEach(x => addEditExpRow(x.company || '', x.designation || '', x.years || ''));
+                    }
+                }
+            } catch (e) { console.error('Error parsing experience:', e); }
 
             overlay.addEventListener('click', function (e) { if (e.target === overlay) closeEditOverlay(); });
         }
-
+        // function editField(label, id, value, type = 'text', required = false) {
+        //     const req = required ? 'required' : '';
+        //     // Handle null/undefined values
+        //     const val = (value !== null && value !== undefined) ? value : '';
+        //     return `<div>
+        // <label style="font-size:11px;font-weight:600; color: #1B738C; display:block;margin-bottom:4px;">${label} ${required ? '<span class="req">*</span>' : ''}</label>
+        // <input type="${type}" id="${id}" name="${id}" value="${String(val).replace(/"/g, '&quot;')}" ${req}
+        //         style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
+        // </div>`;
+        // }
+        
+        
         function editField(label, id, value, type = 'text', required = false) {
-            const req = required ? 'required' : '';
             // Handle null/undefined values
             const val = (value !== null && value !== undefined) ? value : '';
             return `<div>
-        <label style="font-size:11px;font-weight:600; color: #1B738C; display:block;margin-bottom:4px;">${label} ${required ? '<span class="req">*</span>' : ''}</label>
-        <input type="${type}" id="${id}" value="${String(val).replace(/"/g, '&quot;')}" ${req}
-            style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
-    </div>`;
+                <label style="font-size:11px;font-weight:600; color: #1B738C; display:block;margin-bottom:4px;">${label} ${required ? '<span class="req">*</span>' : ''}</label>
+                <input type="${type}" id="${id}" name="${id}" value="${String(val).replace(/"/g, '&quot;')}"
+                        style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
+                </div>`;
         }
+        
+        
+        // function editSelectField(label, id, options, selected, required = false) {
+        //     const opts = options.map(o => `<option value="${o}" ${o === selected ? 'selected' : ''}>${o}</option>`).join('');
+        //     return `<div><label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">${label}</label><select id="${id}" name="${id}" ${required ? 'required' : ''} style="border:1px solid #1B738C; border-radius:10px;padding:8px 12px;width:100%;font-size:12px;box-sizing:border-box;color:var(--text-dark);"><option value="">Select</option>${opts}</select></div>`;
+        // }
+        
         function editSelectField(label, id, options, selected, required = false) {
-            const opts = options.map(o => `<option value="${o}" ${o === selected ? 'selected' : ''}>${o}</option>`).join('');
-            return `<div><label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">${label}</label><select id="${id}" ${required ? 'required' : ''} style="border:1px solid #1B738C; border-radius:10px;padding:8px 12px;width:100%;font-size:12px;box-sizing:border-box;color:var(--text-dark);"><option value="">Select</option>${opts}</select></div>`;
-        }
+    const opts = options.map(o => `<option value="${o}" ${o === selected ? 'selected' : ''}>${o}</option>`).join('');
+    return `<div><label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">${label}</label><select id="${id}" name="${id}" style="border:1px solid #1B738C; border-radius:10px;padding:8px 12px;width:100%;font-size:12px;box-sizing:border-box;color:var(--text-dark);"><option value="">Select</option>${opts}</select></div>`;
+}
+        
+        
+        
         function editTextareaField(label, id, value) {
-            return `<div><label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">${label}</label><textarea id="${id}" rows="2" style="border:1px solid #1B738C; border-radius:10px;padding:8px 12px;width:100%;font-size:12px;box-sizing:border-box;resize:vertical;color:var(--text-dark);">${value || ''}</textarea></div>`;
+            return `<div><label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">${label}</label><textarea id="${id}" name="${id}" rows="2" style="border:1px solid #1B738C; border-radius:10px;padding:8px 12px;width:100%;font-size:12px;box-sizing:border-box;resize:vertical;color:var(--text-dark);">${value || ''}</textarea></div>`;
         }
         function editFileField(label, id, hasDoc, viewUrl) {
             return `<div style="background:var(--primary-bg-light);border-radius:10px;padding:12px;border:1px solid #1B738C;">
@@ -2411,27 +2470,49 @@
         }
 
         function addEditEduRow(degree = '', institution = '', year = '') {
+            const container = document.getElementById('editEduList');
+            if (!container) return;
+
             const row = document.createElement('div');
             row.className = 'edit-edu-row';
             row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr 32px;gap:8px;margin-bottom:8px;align-items:end;';
-            row.innerHTML = `<input placeholder="Degree" value="${degree}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Institution" value="${institution}" style="border:1px solid #1B738C; border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Year" value="${year}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
-            document.getElementById('editEduList').appendChild(row);
+            row.innerHTML = `<input type="text" placeholder="Degree" value="${degree.replace(/"/g, '&quot;')}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;">
+                     <input type="text" placeholder="Institution" value="${institution.replace(/"/g, '&quot;')}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;">
+                     <input type="text" placeholder="Year" value="${year}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;">
+                     <button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
+            container.appendChild(row);
         }
+
         function addEditFamRow(name = '', relationship = '', occupation = '') {
+            const container = document.getElementById('editFamList');
+            if (!container) return;
+
             const row = document.createElement('div');
             row.className = 'edit-fam-row';
             row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr 32px;gap:8px;margin-bottom:8px;align-items:end;';
-            row.innerHTML = `<input placeholder="Name" value="${name}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Relationship" value="${relationship}" style="border:1px solid #1B738C; border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Occupation" value="${occupation}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
-            document.getElementById('editFamList').appendChild(row);
+            row.innerHTML = `<input type="text" placeholder="Name" value="${name.replace(/"/g, '&quot;')}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;">
+                     <input type="text" placeholder="Relationship" value="${relationship.replace(/"/g, '&quot;')}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;">
+                     <input type="text" placeholder="Occupation" value="${occupation.replace(/"/g, '&quot;')}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;">
+                     <button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
+            container.appendChild(row);
         }
+
         function addEditExpRow(company = '', designation = '', years = '') {
+            const container = document.getElementById('editExpList');
+            if (!container) return;
+
             const row = document.createElement('div');
             row.className = 'edit-exp-row';
             row.style.cssText = 'display:grid;grid-template-columns:1fr 1fr 1fr 32px;gap:8px;margin-bottom:8px;align-items:end;';
-            row.innerHTML = `<input placeholder="Company" value="${company}" style="border:1px solid #1B738C; border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Designation" value="${designation}" style="border:1px solid #1B738C; border-radius:10px;padding:7px 10px;font-size:12px;"><input placeholder="Years" value="${years}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;"><button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
-            document.getElementById('editExpList').appendChild(row);
+            row.innerHTML = `<input type="text" placeholder="Company" value="${company.replace(/"/g, '&quot;')}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;">
+                     <input type="text" placeholder="Designation" value="${designation.replace(/"/g, '&quot;')}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;">
+                     <input type="text" placeholder="Years" value="${years}" style="border:1px solid #1B738C;border-radius:10px;padding:7px 10px;font-size:12px;">
+                     <button type="button" onclick="this.parentElement.remove()" class="btn-danger" style="padding:0;width:32px;height:34px;border-radius:8px;font-size:11px;"><i class="fas fa-trash"></i></button>`;
+            container.appendChild(row);
         }
 
+
+        // ==================== EDIT FORM COLLECTION FUNCTIONS ====================
         function collectEditEducation() {
             const rows = document.querySelectorAll('#editEduList .edit-edu-row');
             const result = [];
@@ -2445,14 +2526,293 @@
                     });
                 }
             });
-            return result.length ? JSON.stringify(result) : null;  // Return null, not empty string
-        } function collectEditFamily() { const rows = document.querySelectorAll('#editFamList .edit-fam-row'); const result = []; rows.forEach(row => { const inputs = row.querySelectorAll('input'); if (inputs[0]?.value.trim()) result.push({ name: inputs[0].value, relationship: inputs[1].value, occupation: inputs[2].value }); }); return result.length ? JSON.stringify(result) : null; }
-        function collectEditExperience() { const rows = document.querySelectorAll('#editExpList .edit-exp-row'); const result = []; rows.forEach(row => { const inputs = row.querySelectorAll('input'); if (inputs[0]?.value.trim()) result.push({ company: inputs[0].value, designation: inputs[1].value, years: inputs[2].value }); }); return result.length ? JSON.stringify(result) : null; }
+            return result.length ? JSON.stringify(result) : null;
+        }
+
+        function collectEditFamily() {
+            const rows = document.querySelectorAll('#editFamList .edit-fam-row');
+            const result = [];
+            rows.forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                if (inputs[0]?.value.trim()) {
+                    result.push({
+                        name: inputs[0].value,
+                        relationship: inputs[1].value,
+                        occupation: inputs[2].value
+                    });
+                }
+            });
+            return result.length ? JSON.stringify(result) : null;
+        }
+
+        function collectEditExperience() {
+            const rows = document.querySelectorAll('#editExpList .edit-exp-row');
+            const result = [];
+            rows.forEach(row => {
+                const inputs = row.querySelectorAll('input');
+                if (inputs[0]?.value.trim()) {
+                    result.push({
+                        company: inputs[0].value,
+                        designation: inputs[1].value,
+                        years: inputs[2].value
+                    });
+                }
+            });
+            return result.length ? JSON.stringify(result) : null;
+        }
+
+        // View Promotion Details
+        async function viewPromotion(promotionId) {
+            try {
+                const result = await fetch(`${PROMOTION_API_BASE}/${promotionId}`);
+                const response = await result.json();
+
+                if (result.ok && response.success) {
+                    const promo = response.data;
+                    const content = document.getElementById('viewPromotionContent');
+                    content.innerHTML = `
+                <div style="background: var(--primary-bg-light); border-radius: 12px; padding: 16px; margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--primary-soft);">
+                        <span style="font-weight: 600; color: var(--primary);">Employee:</span>
+                        <span style="color: var(--text-dark);">${promo.employeeName || '-'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--primary-soft);">
+                        <span style="font-weight: 600; color: var(--primary);">Employee ID:</span>
+                        <span style="color: var(--text-dark);">${promo.employeeId || '-'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--primary-soft);">
+                        <span style="font-weight: 600; color: var(--primary);">Previous Designation:</span>
+                        <span style="color: var(--text-dark);">${promo.previousDesignation || '-'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--primary-soft);">
+                        <span style="font-weight: 600; color: var(--primary);">New Designation:</span>
+                        <span style="color: var(--primary); font-weight: 600;">${promo.newDesignation || '-'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--primary-soft);">
+                        <span style="font-weight: 600; color: var(--primary);">Previous Salary:</span>
+                        <span style="color: var(--text-dark);">${promo.previousSalary ? '₹' + Number(promo.previousSalary).toLocaleString('en-IN') : '-'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--primary-soft);">
+                        <span style="font-weight: 600; color: var(--primary);">New Salary:</span>
+                        <span style="color: var(--primary); font-weight: 500;">${promo.newSalary ? '₹' + Number(promo.newSalary).toLocaleString('en-IN') : '-'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--primary-soft);">
+                        <span style="font-weight: 600; color: var(--primary);">Promotion Date:</span>
+                        <span style="color: var(--text-dark);">${formatDate(promo.promotionDate)}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--primary-soft);">
+                        <span style="font-weight: 600; color: var(--primary);">Effective From:</span>
+                        <span style="color: var(--text-dark);">${formatDate(promo.effectiveFrom) || '-'}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-weight: 600; color: var(--primary);">Remarks:</span>
+                        <span style="color: var(--text-dark); text-align: right; max-width: 300px;">${promo.remarks || '-'}</span>
+                    </div>
+                </div>
+            `;
+                    document.getElementById('viewPromotionModal').classList.add('active');
+                } else {
+                    showToast(response.message || 'Failed to load promotion details', 'error');
+                }
+            } catch (error) {
+                showToast('Network error: ' + error.message, 'error');
+            }
+        }
+
+        function closeViewPromotionModal() {
+            document.getElementById('viewPromotionModal').classList.remove('active');
+        }
+
+// Edit Promotion
+async function editPromotion(promotionId) {
+    try {
+        const result = await fetch(`${PROMOTION_API_BASE}/${promotionId}`);
+        const response = await result.json();
+        
+        if (result.ok && response.success) {
+            const promo = response.data;
+            
+            // Get employee name
+            const employeeName = promo.employeeName || currentSelectedEmployeeForPromo?.fullName || 'Employee';
+            
+            // Populate form for editing
+            document.getElementById('promotionId').value = promo.id;
+            document.getElementById('promoEmployeeId').value = promo.employeeId || currentSelectedEmployeeForPromo?.employeeId || '';
+            document.getElementById('promoEmployeePrimeId').value = promo.employeePrimeId || currentSelectedEmployeeForPromo?.employeePrimeId || '';
+            document.getElementById('prevDesig').value = promo.previousDesignation || '';
+            document.getElementById('newDesig').value = promo.newDesignation || '';
+            document.getElementById('prevSalary').value = promo.previousSalary || '';
+            document.getElementById('newSalary').value = promo.newSalary || '';
+            document.getElementById('promoDate').value = promo.promotionDate || '';
+            document.getElementById('effectiveFrom').value = promo.effectiveFrom || '';
+            document.getElementById('remarks').value = promo.remarks || '';
+            
+            // Update employee name display
+            const employeeNameDisplay = document.getElementById('selectedEmployeeName');
+            if (employeeNameDisplay) {
+                employeeNameDisplay.innerText = employeeName;
+            }
+            
+            document.getElementById('promotionModalTitle').innerHTML = `Edit Promotion for <span style="color: var(--primary-light);">${employeeName}</span>`;
+            document.getElementById('promotionModal').classList.add('active');
+        } else {
+            showToast(response.message || 'Failed to load promotion details', 'error');
+        }
+    } catch (error) {
+        showToast('Network error: ' + error.message, 'error');
+    }
+}
+
+        // Update savePromotion function to handle both Create and Update
+        async function savePromotion(event) {
+            event.preventDefault();
+
+            const promotionId = document.getElementById('promotionId').value;
+            const employeePrimeId = document.getElementById('promoEmployeeId').value;
+            const previousDesignation = document.getElementById('prevDesig').value;
+            const newDesignation = document.getElementById('newDesig').value.trim();
+            const previousSalary = document.getElementById('prevSalary').value ? parseFloat(document.getElementById('prevSalary').value) : null;
+            const newSalary = document.getElementById('newSalary').value ? parseFloat(document.getElementById('newSalary').value) : null;
+            const promotionDate = document.getElementById('promoDate').value;
+            const effectiveFrom = document.getElementById('effectiveFrom').value || promotionDate;
+            const remarks = document.getElementById('remarks').value;
+
+            if (!employeePrimeId) {
+                showToast('Please select an employee first', 'error');
+                return;
+            }
+
+            if (!newDesignation) {
+                showToast('Please enter new designation', 'error');
+                return;
+            }
+
+            if (!promotionDate) {
+                showToast('Please select promotion date', 'error');
+                return;
+            }
+
+            const payload = {
+                employeePrimeId: parseInt(employeePrimeId),
+                previousDesignation: previousDesignation || null,
+                newDesignation: newDesignation,
+                promotionDate: promotionDate,
+                previousSalary: previousSalary,
+                newSalary: newSalary,
+                effectiveFrom: effectiveFrom,
+                remarks: remarks || null
+            };
+
+            const saveBtn = event.submitter;
+            const originalText = saveBtn.innerHTML;
+            saveBtn.disabled = true;
+            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Saving...';
+
+            try {
+                let url = `${PROMOTION_API_BASE}/create`;
+                let method = 'POST';
+
+                if (promotionId) {
+                    // For update, many backends don't support PUT, so we'll do DELETE + CREATE
+                    // Or if your backend supports PUT, use this:
+                    // url = `${PROMOTION_API_BASE}/update/${promotionId}`;
+                    // method = 'PUT';
+
+                    // Alternative: Show message that update is not supported
+                    showToast('Edit functionality: Please delete and create new promotion record', 'info');
+                    saveBtn.disabled = false;
+                    saveBtn.innerHTML = originalText;
+                    return;
+                }
+
+                const result = await fetch(url, {
+                    method: method,
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                const response = await result.json();
+
+                if (result.ok && response.success) {
+                    showToast(promotionId ? 'Promotion updated successfully!' : 'Promotion added successfully!', 'success');
+                    closePromotionModal();
+                    await loadEmployeePromotions();
+                    await fetchAndRenderEmployees();
+                } else {
+                    showToast(response.message || 'Failed to save promotion', 'error');
+                }
+            } catch (error) {
+                showToast('Network error: ' + error.message, 'error');
+            } finally {
+                saveBtn.disabled = false;
+                saveBtn.innerHTML = originalText;
+            }
+        }
+
+// Open Add Promotion Modal
+async function openAddPromotionModal() {
+    const employeeSelect = document.getElementById('promotionEmployeeSelect');
+    const employeeId = employeeSelect?.value;
+
+    if (!employeeId) {
+        showToast('Please select an employee first', 'error');
+        return;
+    }
+
+    // Get employee details
+    const result = await apiFetch(`${API_BASE}/get-employee-by-employeeId/${employeeId}`);
+    if (!result.ok || !result.data?.data) {
+        showToast('Could not fetch employee details', 'error');
+        return;
+    }
+
+    const employee = result.data.data;
+    currentSelectedEmployeeForPromo = employee;
+    
+    // Get the employee name
+    const employeeName = employee.fullName || `${employee.firstName || ''} ${employee.lastName || ''}`.trim();
+
+    // Reset form
+    document.getElementById('promotionId').value = '';
+    document.getElementById('promoEmployeeId').value = employee.employeeId || '';
+    document.getElementById('promoEmployeePrimeId').value = employee.employeePrimeId || '';
+    document.getElementById('prevDesig').value = employee.designation || '';
+    document.getElementById('newDesig').value = '';
+    document.getElementById('prevSalary').value = employee.basicSalary || '';
+    document.getElementById('newSalary').value = '';
+    document.getElementById('promoDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('effectiveFrom').value = '';
+    document.getElementById('remarks').value = '';
+
+    // Set modal title with employee name
+    document.getElementById('promotionModalTitle').innerHTML = `Add Promotion for <span style="color: var(--primary-light);">${employeeName}</span>`;
+    
+    // Optional: Add a hidden or display field to show employee name in the form
+    // You can also add a readonly field in the modal body to show the employee name
+    document.getElementById('promotionModal').classList.add('active');
+}
+
+        // Update closePromotionModal function
+        function closePromotionModal() {
+            document.getElementById('promotionModal').classList.remove('active');
+            // Reset form
+            document.getElementById('promotionId').value = '';
+            document.getElementById('promoEmployeeId').value = '';
+            document.getElementById('prevDesig').value = '';
+            document.getElementById('newDesig').value = '';
+            document.getElementById('prevSalary').value = '';
+            document.getElementById('newSalary').value = '';
+            document.getElementById('promoDate').value = '';
+            document.getElementById('effectiveFrom').value = '';
+            document.getElementById('remarks').value = '';
+        }
 
         async function submitEditEmployee(e, employeePrimeId) {
             e.preventDefault();
 
-            // Validation
+            console.log('Submitting edit for employee:', employeePrimeId);
+
+            // Get form values correctly
             const firstName = document.getElementById('efFN')?.value.trim();
             const lastName = document.getElementById('efLN')?.value.trim();
             const email = document.getElementById('efPEmail')?.value.trim();
@@ -2464,20 +2824,91 @@
             const ecName = document.getElementById('efECName')?.value.trim();
             const ecPhone = document.getElementById('efECPhone')?.value.trim();
 
+            // Validation
             if (!firstName || !lastName) { showToast('Please enter First Name and Last Name', 'error'); switchEditTab(0); return; }
             if (!email || !mobile) { showToast('Please enter Email and Mobile number', 'error'); switchEditTab(2); return; }
             if (!dept || !desig) { showToast('Please select Department and Designation', 'error'); switchEditTab(1); return; }
             if (!joiningDate || !basicSalary) { showToast('Please enter Joining Date and Basic Salary', 'error'); switchEditTab(1); return; }
             if (!ecName || !ecPhone) { showToast('Please enter Emergency Contact details', 'error'); switchEditTab(2); return; }
 
-            // Helper function to convert empty string to null
-            const toNull = (val) => (val === undefined || val === null || val === '') ? null : val;
+            // Get password values (optional)
+            const password = document.getElementById('efPassword')?.value.trim();
+            const confirmPassword = document.getElementById('efConfirmPassword')?.value.trim();
 
-const employeePayload = { firstName, middleName: document.getElementById('fMN').value.trim(), lastName, password: password, dateOfBirth: document.getElementById('fDOB').value || null, gender: document.getElementById('fGender').value, maritalStatus: document.getElementById('fMarital').value, bloodGroup: document.getElementById('fBlood').value, panNumber: document.getElementById('fPAN').value.trim().toUpperCase(), aadhaarNumber: document.getElementById('fAAD').value.trim(), nationality: document.getElementById('fNat').value.trim(), religion: document.getElementById('fRel').value.trim(), linkedinProfile: document.getElementById('fLI').value.trim(), fatherSpouseName: document.getElementById('fFatherName').value.trim(), isPhysicallyChallenged: pwdToggle, disabilityType: pwdToggle ? document.getElementById('fPWDType').value : null, disabilityPercentage: pwdToggle ? (parseInt(document.getElementById('fPWDPct').value) || null) : null, certificateNumber: pwdToggle ? document.getElementById('fPWDCert').value.trim() : null, department: dept, subDepartment: document.getElementById('fSubDept').value.trim(), designation: desig, employeeGrade: document.getElementById('fGrade').value, employmentType: document.getElementById('fEmpType').value, joiningDate, probationEndDate: document.getElementById('fProbEnd').value || null, reportingManager: document.getElementById('fMgr').value.trim(), hrBusinessPartner: document.getElementById('fHRBP').value.trim(), workLocation: document.getElementById('fWL').value, basicSalary: parseFloat(basicSalary) || null, shift: document.getElementById('fShift').value, costCentre: document.getElementById('fCC').value.trim(), bankName: document.getElementById('fBank').value.trim(), accountNumber: document.getElementById('fAccNo').value.trim(), ifscCode: document.getElementById('fIFSC').value.trim().toUpperCase(), personalEmail: email, workEmail: document.getElementById('fWEmail').value.trim(), mobileNumber: mobile, alternateNumber: document.getElementById('fAlt').value.trim(), currentStreet: document.getElementById('fCAddr').value.trim(), currentCity: document.getElementById('fCity').value.trim(), currentState: document.getElementById('fState').value.trim(), currentPincode: document.getElementById('fPIN').value.trim(), currentCountry: document.getElementById('fCountry').value.trim(), permanentStreet: document.getElementById('fPAddr').value.trim(), permanentCity: document.getElementById('fPCity').value.trim(), permanentState: document.getElementById('fPState').value.trim(), permanentPincode: document.getElementById('fPPIN').value.trim(), permanentCountry: document.getElementById('fPCountry').value.trim(), emergencyName: ecName, emergencyRelationship: document.getElementById('fECRel').value, emergencyPhone: ecPhone, education: collectEducation(), family: collectFamily(), workExperience: collectExperience() };
+            // Validate password if provided
+            if (password && password !== confirmPassword) {
+                showToast('Passwords do not match', 'error');
+                return;
+            }
+            if (password && password.length < 6) {
+                showToast('Password must be at least 6 characters', 'error');
+                return;
+            }
+
+            // Build payload WITHOUT status field
+            const employeePayload = {
+                firstName: firstName,
+                middleName: document.getElementById('efMN')?.value.trim() || null,
+                lastName: lastName,
+                dateOfBirth: document.getElementById('efDOB')?.value || null,
+                gender: document.getElementById('efGender')?.value,
+                maritalStatus: document.getElementById('efMarital')?.value,
+                bloodGroup: document.getElementById('efBlood')?.value,
+                panNumber: document.getElementById('efPAN')?.value.trim().toUpperCase() || null,
+                aadhaarNumber: document.getElementById('efAAD')?.value.trim() || null,
+                nationality: document.getElementById('efNat')?.value.trim() || 'Indian',
+                religion: document.getElementById('efRel')?.value.trim() || null,
+                linkedinProfile: document.getElementById('efLI')?.value.trim() || null,
+                fatherSpouseName: document.getElementById('efFatherName')?.value.trim() || null,
+                department: dept,
+                subDepartment: document.getElementById('efSubDept')?.value.trim() || null,
+                designation: desig,
+                employeeGrade: document.getElementById('efGrade')?.value,
+                employmentType: document.getElementById('efEmpType')?.value,
+                joiningDate: joiningDate,
+                probationEndDate: document.getElementById('efProbEnd')?.value || null,
+                reportingManager: document.getElementById('efMgr')?.value.trim() || null,
+                hrBusinessPartner: document.getElementById('efHRBP')?.value.trim() || null,
+                workLocation: document.getElementById('efWL')?.value,
+                basicSalary: parseFloat(basicSalary) || null,
+                shift: document.getElementById('efShift')?.value,
+                costCentre: document.getElementById('efCC')?.value.trim() || null,
+                bankName: document.getElementById('efBank')?.value.trim() || null,
+                accountNumber: document.getElementById('efAccNo')?.value.trim() || null,
+                ifscCode: document.getElementById('efIFSC')?.value.trim().toUpperCase() || null,
+                personalEmail: email,
+                workEmail: document.getElementById('efWEmail')?.value.trim() || null,
+                mobileNumber: mobile,
+                alternateNumber: document.getElementById('efAlt')?.value.trim() || null,
+                currentStreet: document.getElementById('efCAddr')?.value.trim() || null,
+                currentCity: document.getElementById('efCity')?.value.trim() || null,
+                currentState: document.getElementById('efState')?.value.trim() || null,
+                currentPincode: document.getElementById('efPIN')?.value.trim() || null,
+                currentCountry: document.getElementById('efCountry')?.value.trim() || 'India',
+                permanentStreet: document.getElementById('efPAddr')?.value.trim() || null,
+                permanentCity: document.getElementById('efPCity')?.value.trim() || null,
+                permanentState: document.getElementById('efPState')?.value.trim() || null,
+                permanentPincode: document.getElementById('efPPIN')?.value.trim() || null,
+                permanentCountry: document.getElementById('efPCountry')?.value.trim() || 'India',
+                emergencyName: ecName,
+                emergencyRelationship: document.getElementById('efECRel')?.value,
+                emergencyPhone: ecPhone,
+                education: collectEditEducation(),
+                family: collectEditFamily(),
+                workExperience: collectEditExperience()
+            };
+
+            // Add password only if provided
+            if (password) {
+                employeePayload.password = password;
+            }
+
+            console.log('Sending payload:', employeePayload);
+
             const formData = new FormData();
             formData.append('employee', JSON.stringify(employeePayload));
 
-            // Append new document files if selected
+            // Append document files if selected
             const docFieldMap = {
                 'efAadhaar': 'aadhaarDocument',
                 'efPAN_doc': 'panDocument',
@@ -2584,6 +3015,62 @@ const employeePayload = { firstName, middleName: document.getElementById('fMN').
             if (toggle.checked) { details.style.display = 'block'; label.innerText = 'Yes'; }
             else { details.style.display = 'none'; label.innerText = 'No'; }
         }
+
+        // ==================== COPY CURRENT ADDRESS TO PERMANENT ====================
+        function copyCurrentToPermanent() {
+            const isChecked = document.getElementById('sameAsCurrentCheckbox').checked;
+
+            if (isChecked) {
+                // Get current address values
+                const currentStreet = document.getElementById('fCAddr').value;
+                const currentCity = document.getElementById('fCity').value;
+                const currentState = document.getElementById('fState').value;
+                const currentPin = document.getElementById('fPIN').value;
+                const currentCountry = document.getElementById('fCountry').value;
+
+                // Copy to permanent address fields
+                document.getElementById('fPAddr').value = currentStreet;
+                document.getElementById('fPCity').value = currentCity;
+                document.getElementById('fPState').value = currentState;
+                document.getElementById('fPPIN').value = currentPin;
+                document.getElementById('fPCountry').value = currentCountry;
+
+                // Optional: Show a small visual feedback
+                showToast('Permanent address copied from current address', 'info');
+            } else {
+                // Optionally clear fields when unchecked? 
+                // Better to leave as is - user might want to modify only some fields
+                // If you want to clear when unchecked, uncomment below:
+                /*
+                document.getElementById('fPAddr').value = '';
+                document.getElementById('fPCity').value = '';
+                document.getElementById('fPState').value = '';
+                document.getElementById('fPPIN').value = '';
+                document.getElementById('fPCountry').value = 'India';
+                */
+            }
+        }
+
+        // Add this function to sync addresses in real-time when checkbox is checked
+        function setupAddressSync() {
+            const currentFields = ['fCAddr', 'fCity', 'fState', 'fPIN', 'fCountry'];
+            const permanentFields = ['fPAddr', 'fPCity', 'fPState', 'fPPIN', 'fPCountry'];
+
+            currentFields.forEach((currId, idx) => {
+                const currField = document.getElementById(currId);
+                if (currField) {
+                    currField.addEventListener('input', function () {
+                        const isChecked = document.getElementById('sameAsCurrentCheckbox')?.checked;
+                        if (isChecked) {
+                            document.getElementById(permanentFields[idx]).value = this.value;
+                        }
+                    });
+                }
+            });
+        }
+
+        // Call this function after DOM is loaded (add inside DOMContentLoaded)
+        // setupAddressSync();
 
         // ==================== DYNAMIC ROWS ====================
         function addEduRow() {
@@ -2745,7 +3232,7 @@ const employeePayload = { firstName, middleName: document.getElementById('fMN').
             if (!ecName || !ecPhone) { showToast('Please enter Emergency Contact details', 'error'); return; }
 
             const pwdToggle = document.getElementById('fPWDToggle').checked;
-const employeePayload = { firstName, middleName: document.getElementById('fMN').value.trim(), lastName, password: password, dateOfBirth: document.getElementById('fDOB').value || null, gender: document.getElementById('fGender').value, maritalStatus: document.getElementById('fMarital').value, bloodGroup: document.getElementById('fBlood').value, panNumber: document.getElementById('fPAN').value.trim().toUpperCase(), aadhaarNumber: document.getElementById('fAAD').value.trim(), nationality: document.getElementById('fNat').value.trim(), religion: document.getElementById('fRel').value.trim(), linkedinProfile: document.getElementById('fLI').value.trim(), fatherSpouseName: document.getElementById('fFatherName').value.trim(), isPhysicallyChallenged: pwdToggle, disabilityType: pwdToggle ? document.getElementById('fPWDType').value : null, disabilityPercentage: pwdToggle ? (parseInt(document.getElementById('fPWDPct').value) || null) : null, certificateNumber: pwdToggle ? document.getElementById('fPWDCert').value.trim() : null, department: dept, subDepartment: document.getElementById('fSubDept').value.trim(), designation: desig, employeeGrade: document.getElementById('fGrade').value, employmentType: document.getElementById('fEmpType').value, joiningDate, probationEndDate: document.getElementById('fProbEnd').value || null, reportingManager: document.getElementById('fMgr').value.trim(), hrBusinessPartner: document.getElementById('fHRBP').value.trim(), workLocation: document.getElementById('fWL').value, basicSalary: parseFloat(basicSalary) || null, shift: document.getElementById('fShift').value, costCentre: document.getElementById('fCC').value.trim(), bankName: document.getElementById('fBank').value.trim(), accountNumber: document.getElementById('fAccNo').value.trim(), ifscCode: document.getElementById('fIFSC').value.trim().toUpperCase(), personalEmail: email, workEmail: document.getElementById('fWEmail').value.trim(), mobileNumber: mobile, alternateNumber: document.getElementById('fAlt').value.trim(), currentStreet: document.getElementById('fCAddr').value.trim(), currentCity: document.getElementById('fCity').value.trim(), currentState: document.getElementById('fState').value.trim(), currentPincode: document.getElementById('fPIN').value.trim(), currentCountry: document.getElementById('fCountry').value.trim(), permanentStreet: document.getElementById('fPAddr').value.trim(), permanentCity: document.getElementById('fPCity').value.trim(), permanentState: document.getElementById('fPState').value.trim(), permanentPincode: document.getElementById('fPPIN').value.trim(), permanentCountry: document.getElementById('fPCountry').value.trim(), emergencyName: ecName, emergencyRelationship: document.getElementById('fECRel').value, emergencyPhone: ecPhone, education: collectEducation(), family: collectFamily(), workExperience: collectExperience() };
+            const employeePayload = { firstName, middleName: document.getElementById('fMN').value.trim(), lastName, password: password, dateOfBirth: document.getElementById('fDOB').value || null, gender: document.getElementById('fGender').value, maritalStatus: document.getElementById('fMarital').value, bloodGroup: document.getElementById('fBlood').value, panNumber: document.getElementById('fPAN').value.trim().toUpperCase(), aadhaarNumber: document.getElementById('fAAD').value.trim(), nationality: document.getElementById('fNat').value.trim(), religion: document.getElementById('fRel').value.trim(), linkedinProfile: document.getElementById('fLI').value.trim(), fatherSpouseName: document.getElementById('fFatherName').value.trim(), isPhysicallyChallenged: pwdToggle, disabilityType: pwdToggle ? document.getElementById('fPWDType').value : null, disabilityPercentage: pwdToggle ? (parseInt(document.getElementById('fPWDPct').value) || null) : null, certificateNumber: pwdToggle ? document.getElementById('fPWDCert').value.trim() : null, department: dept, subDepartment: document.getElementById('fSubDept').value.trim(), designation: desig, employeeGrade: document.getElementById('fGrade').value, employmentType: document.getElementById('fEmpType').value, joiningDate, probationEndDate: document.getElementById('fProbEnd').value || null, reportingManager: document.getElementById('fMgr').value.trim(), hrBusinessPartner: document.getElementById('fHRBP').value.trim(), workLocation: document.getElementById('fWL').value, basicSalary: parseFloat(basicSalary) || null, shift: document.getElementById('fShift').value, costCentre: document.getElementById('fCC').value.trim(), bankName: document.getElementById('fBank').value.trim(), accountNumber: document.getElementById('fAccNo').value.trim(), ifscCode: document.getElementById('fIFSC').value.trim().toUpperCase(), personalEmail: email, workEmail: document.getElementById('fWEmail').value.trim(), mobileNumber: mobile, alternateNumber: document.getElementById('fAlt').value.trim(), currentStreet: document.getElementById('fCAddr').value.trim(), currentCity: document.getElementById('fCity').value.trim(), currentState: document.getElementById('fState').value.trim(), currentPincode: document.getElementById('fPIN').value.trim(), currentCountry: document.getElementById('fCountry').value.trim(), permanentStreet: document.getElementById('fPAddr').value.trim(), permanentCity: document.getElementById('fPCity').value.trim(), permanentState: document.getElementById('fPState').value.trim(), permanentPincode: document.getElementById('fPPIN').value.trim(), permanentCountry: document.getElementById('fPCountry').value.trim(), emergencyName: ecName, emergencyRelationship: document.getElementById('fECRel').value, emergencyPhone: ecPhone, education: collectEducation(), family: collectFamily(), workExperience: collectExperience() };
             const formData = new FormData();
             formData.append('employee', JSON.stringify(employeePayload));
             const docKeyMap = { 'Aadhaar Card': 'aadhaarDocument', 'PAN Card': 'panDocument', 'Degree Certificate': 'degreeDocument', 'Experience Letter': 'experienceDocument' };
@@ -2755,7 +3242,7 @@ const employeePayload = { firstName, middleName: document.getElementById('fMN').
             saveBtn.disabled = true; saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
 
             let result, resData;
-            try { result = await fetch(`${API_BASE}/create-employee`, { method: 'POST', body: formData }); resData = await result.json(); } catch (err) { saveBtn.disabled = false; saveBtn.innerHTML = 'Save Employee'; showToast('Network error.', 'error'); return; }
+            try { result = await fetch(`${API_BASE}/create-employee`, { method: 'POST', body: formData }); resData = await result.json(); } catch (err) { saveBtn.disabled = false; saveBtn.innerHTML = '<i class="fas fa-save mr-1"></i>Save Employee'; showToast('Network error.', 'error'); return; }
 
             saveBtn.disabled = false; saveBtn.innerHTML = '<i class="fas fa-save mr-1"></i>Save Employee';
             if (result.ok && resData.success) {
@@ -2906,38 +3393,47 @@ const employeePayload = { firstName, middleName: document.getElementById('fMN').
             renderPromotionsTable(promotions);
         }
 
-        // Render promotions table
+        // Render promotions table with Edit and View buttons
         function renderPromotionsTable(promotions) {
             const tbody = document.getElementById('promotionsList');
 
             if (!promotions || promotions.length === 0) {
                 tbody.innerHTML = `
-                <tr><td colspan="9" class="py-8 text-center" style="color:var(--text-light);">
-                    <i class="fas fa-info-circle mr-2"></i>No promotion records found for this employee
-                </td></tr>`;
+        <tr><td colspan="10" class="py-8 text-center" style="color:var(--text-light);">
+            <i class="fas fa-info-circle mr-2"></i>No promotion records found for this employee
+        </td></tr>`;
                 return;
             }
 
             let html = '';
             promotions.forEach(promo => {
                 html += `
-                <tr class="border-b data-row" style="border-color:#1B738C;">
-                    <td class="py-3 text-sm" style="color:var(--text-light);">${promo.id || '-'}</td>
-                    <td class="py-3 text-sm" style="color:var(--text-light);">${promo.previousDesignation || '-'}</td>
-                    <td class="py-3 text-sm" style="color:var(--primary); font-weight:600;">${promo.newDesignation || '-'}</td>
-                    <td class="py-3 text-sm" style="color:var(--text-light);">${promo.previousSalary ? '₹' + Number(promo.previousSalary).toLocaleString('en-IN') : '-'}</td>
-                    <td class="py-3 text-sm" style="color:var(--primary); font-weight:500;">${promo.newSalary ? '₹' + Number(promo.newSalary).toLocaleString('en-IN') : '-'}</td>
-                    <td class="py-3 text-sm" style="color:var(--text-light);">${formatDate(promo.promotionDate)}</td>
-                    <td class="py-3 text-sm" style="color:var(--text-light);">${formatDate(promo.effectiveFrom) || '-'}</td>
-                    <td class="py-3 text-sm" style="color:var(--text-light); max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${promo.remarks || '-'}</td>
-                    <td class="py-3">
-                        <button onclick="deletePromotionRecord(${promo.id})" title="Delete"
-                            style="background:rgba(220,53,69,0.1); border:1px solid #dc3545; padding:5px 9px; border-radius:6px; cursor:pointer; font-size:12px; color:#dc3545;">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </td>
-                </tr>
-            `;
+        <tr class="border-b data-row" style="border-color:#1B738C;">
+            <td class="py-3 text-sm" style="color:var(--text-light);">${promo.id || '-'}</td>
+            <td class="py-3 text-sm" style="color:var(--text-light);">${promo.previousDesignation || '-'}</td>
+            <td class="py-3 text-sm" style="color:var(--primary); font-weight:600;">${promo.newDesignation || '-'}</td>
+            <td class="py-3 text-sm" style="color:var(--text-light);">${promo.previousSalary ? '₹' + Number(promo.previousSalary).toLocaleString('en-IN') : '-'}</td>
+            <td class="py-3 text-sm" style="color:var(--primary); font-weight:500;">${promo.newSalary ? '₹' + Number(promo.newSalary).toLocaleString('en-IN') : '-'}</td>
+            <td class="py-3 text-sm" style="color:var(--text-light);">${formatDate(promo.promotionDate)}</td>
+            <td class="py-3 text-sm" style="color:var(--text-light);">${formatDate(promo.effectiveFrom) || '-'}</td>
+            <td class="py-3 text-sm" style="color:var(--text-light); max-width:200px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">${promo.remarks || '-'}</td>
+            <td class="py-3">
+                <div style="display:flex; gap:6px; align-items:center;">
+                    <button onclick="viewPromotion(${promo.id})" title="View"
+                        style="background:var(--primary-bg-light); border:1px solid #1B738C; padding:5px 9px; border-radius:6px; cursor:pointer; font-size:12px; color:var(--primary);">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    <button onclick="editPromotion(${promo.id})" title="Edit"
+                        style="background:var(--primary-bg-light); border:1px solid #1B738C; padding:5px 9px; border-radius:6px; cursor:pointer; font-size:12px; color:var(--primary);">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button onclick="deletePromotionRecord(${promo.id})" title="Delete"
+                        style="background:rgba(220,53,69,0.1); border:1px solid #dc3545; padding:5px 9px; border-radius:6px; cursor:pointer; font-size:12px; color:#dc3545;">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            </td>
+        </tr>`;
             });
             tbody.innerHTML = html;
         }
@@ -2949,133 +3445,161 @@ const employeePayload = { firstName, middleName: document.getElementById('fMN').
             return date.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
         }
 
-        // Open Add Promotion Modal
-        async function openAddPromotionModal() {
-            const employeeSelect = document.getElementById('promotionEmployeeSelect');
-            const employeeId = employeeSelect?.value;
+// Open Add Promotion Modal
+async function openAddPromotionModal() {
+    const employeeSelect = document.getElementById('promotionEmployeeSelect');
+    const employeeId = employeeSelect?.value;
 
-            if (!employeeId) {
-                showToast('Please select an employee first', 'error');
-                return;
-            }
+    if (!employeeId) {
+        showToast('Please select an employee first', 'error');
+        return;
+    }
 
-            // Get employee details
-            const result = await apiFetch(`${API_BASE}/get-employee-by-employeeId/${employeeId}`);
-            if (!result.ok || !result.data?.data) {
-                showToast('Could not fetch employee details', 'error');
-                return;
-            }
+    // Get employee details
+    const result = await apiFetch(`${API_BASE}/get-employee-by-employeeId/${employeeId}`);
+    if (!result.ok || !result.data?.data) {
+        showToast('Could not fetch employee details', 'error');
+        return;
+    }
 
-            const employee = result.data.data;
-            currentSelectedEmployee = employee;
+    const employee = result.data.data;
+    
+    // Get the employee name
+    const employeeName = employee.fullName || `${employee.firstName || ''} ${employee.lastName || ''}`.trim();
 
-            // Reset form
-            document.getElementById('promotionId').value = '';
-            document.getElementById('prevDesig').value = employee.designation || '';
-            document.getElementById('newDesig').value = '';
-            document.getElementById('prevSalary').value = employee.basicSalary || '';
-            document.getElementById('newSalary').value = '';
-            document.getElementById('promoDate').value = new Date().toISOString().split('T')[0];
-            document.getElementById('effectiveFrom').value = '';
-            document.getElementById('remarks').value = '';
+    // Debug logs
+    console.log('Employee object:', employee);
+    console.log('employeePrimeId:', employee.employeePrimeId);
+    console.log('employeeId:', employee.employeeId);
 
-            // Set employee dropdown value
-            const promoEmployeeSelect = document.getElementById('promoEmployeeId');
-            promoEmployeeSelect.value = employee.employeePrimeId;
-            promoEmployeeSelect.disabled = true;
+    // Reset form
+    document.getElementById('promotionId').value = '';
+    document.getElementById('promoEmployeePrimeId').value = employee.employeePrimeId || '';  // ← This is the numeric ID
+    document.getElementById('promoEmployeeId').value = employee.employeeId || '';  // ← This is the string ID
+    document.getElementById('prevDesig').value = employee.designation || '';
+    document.getElementById('newDesig').value = '';
+    document.getElementById('prevSalary').value = employee.basicSalary || '';
+    document.getElementById('newSalary').value = '';
+    document.getElementById('promoDate').value = new Date().toISOString().split('T')[0];
+    document.getElementById('effectiveFrom').value = '';
+    document.getElementById('remarks').value = '';
 
-            document.getElementById('promotionModalTitle').innerText = 'Add Promotion';
-            document.getElementById('promotionModal').classList.add('active');
-        }
+    // Update the employee name display
+    const employeeNameDisplay = document.getElementById('selectedEmployeeName');
+    if (employeeNameDisplay) {
+        employeeNameDisplay.innerText = employeeName;
+    }
 
-        // Close Promotion Modal
-        function closePromotionModal() {
-            document.getElementById('promotionModal').classList.remove('active');
-            const promoEmployeeSelect = document.getElementById('promoEmployeeId');
-            promoEmployeeSelect.disabled = false;
-            promoEmployeeSelect.value = '';
-        }
+    document.getElementById('promotionModalTitle').innerHTML = `Add Promotion for <span style="color: var(--primary-light);">${employeeName}</span>`;
+    document.getElementById('promotionModal').classList.add('active');
+}
+
+
+// Close Promotion Modal
+function closePromotionModal() {
+    document.getElementById('promotionModal').classList.remove('active');
+    // Reset form
+    document.getElementById('promotionId').value = '';
+    document.getElementById('promoEmployeeId').value = '';
+    document.getElementById('promoEmployeePrimeId').value = '';
+    document.getElementById('prevDesig').value = '';
+    document.getElementById('newDesig').value = '';
+    document.getElementById('prevSalary').value = '';
+    document.getElementById('newSalary').value = '';
+    document.getElementById('promoDate').value = '';
+    document.getElementById('effectiveFrom').value = '';
+    document.getElementById('remarks').value = '';
+    
+    // Clear employee name display
+    const employeeNameDisplay = document.getElementById('selectedEmployeeName');
+    if (employeeNameDisplay) {
+        employeeNameDisplay.innerText = '-';
+    }
+    
+    // Reset modal title
+    document.getElementById('promotionModalTitle').innerHTML = 'Add Promotion';
+}
 
         // Save Promotion (Create/Update)
         async function savePromotion(event) {
-            event.preventDefault();
+    event.preventDefault();
 
-            const employeePrimeId = document.getElementById('promoEmployeeId').value;
-            const promotionId = document.getElementById('promotionId').value;
-            const previousDesignation = document.getElementById('prevDesig').value;
-            const newDesignation = document.getElementById('newDesig').value.trim();
-            const previousSalary = document.getElementById('prevSalary').value ? parseFloat(document.getElementById('prevSalary').value) : null;
-            const newSalary = document.getElementById('newSalary').value ? parseFloat(document.getElementById('newSalary').value) : null;
-            const promotionDate = document.getElementById('promoDate').value;
-            const effectiveFrom = document.getElementById('effectiveFrom').value || promotionDate;
-            const remarks = document.getElementById('remarks').value;
+    // IMPORTANT: Use the correct element ID
+    const employeePrimeId = document.getElementById('promoEmployeePrimeId').value;  // ← FIXED: Use PrimeId
+    const promotionId = document.getElementById('promotionId').value;
+    
+    const previousDesignation = document.getElementById('prevDesig').value;
+    const newDesignation = document.getElementById('newDesig').value.trim();
+    const previousSalary = document.getElementById('prevSalary').value ? parseFloat(document.getElementById('prevSalary').value) : null;
+    const newSalary = document.getElementById('newSalary').value ? parseFloat(document.getElementById('newSalary').value) : null;
+    const promotionDate = document.getElementById('promoDate').value;
+    const effectiveFrom = document.getElementById('effectiveFrom').value || promotionDate;
+    const remarks = document.getElementById('remarks').value;
 
-            if (!employeePrimeId) {
-                showToast('Please select an employee', 'error');
-                return;
-            }
+    console.log('employeePrimeId value:', employeePrimeId);  // Debug log
 
-            if (!newDesignation) {
-                showToast('Please enter new designation', 'error');
-                return;
-            }
+    if (!employeePrimeId || employeePrimeId === '') {
+        showToast('Please select an employee first', 'error');
+        return;
+    }
 
-            if (!promotionDate) {
-                showToast('Please select promotion date', 'error');
-                return;
-            }
+    if (!newDesignation) {
+        showToast('Please enter new designation', 'error');
+        return;
+    }
 
-            const payload = {
-                employeePrimeId: parseInt(employeePrimeId),
-                previousDesignation: previousDesignation || null,
-                newDesignation: newDesignation,
-                promotionDate: promotionDate,
-                previousSalary: previousSalary,
-                newSalary: newSalary,
-                effectiveFrom: effectiveFrom,
-                remarks: remarks || null
-            };
+    if (!promotionDate) {
+        showToast('Please select promotion date', 'error');
+        return;
+    }
 
-            const saveBtn = event.submitter;
-            const originalText = saveBtn.innerHTML;
-            saveBtn.disabled = true;
-            saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Saving...';
+    const payload = {
+        employeePrimeId: parseInt(employeePrimeId),
+        previousDesignation: previousDesignation || null,
+        newDesignation: newDesignation,
+        promotionDate: promotionDate,
+        previousSalary: previousSalary,
+        newSalary: newSalary,
+        effectiveFrom: effectiveFrom,
+        remarks: remarks || null
+    };
 
-            try {
-                let result;
-                if (promotionId) {
-                    // Update not implemented in controller, but we can do delete+create or just show error
-                    showToast('Update not supported. Please delete and create new.', 'error');
-                    saveBtn.disabled = false;
-                    saveBtn.innerHTML = originalText;
-                    return;
-                } else {
-                    result = await fetch(`${PROMOTION_API_BASE}/create`, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                }
+    console.log('Sending payload:', payload);
 
-                const response = await result.json();
+    const saveBtn = event.submitter;
+    const originalText = saveBtn.innerHTML;
+    saveBtn.disabled = true;
+    saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Saving...';
 
-                if (result.ok && response.success) {
-                    showToast('Promotion added successfully!', 'success');
-                    closePromotionModal();
-                    // Refresh promotions list
-                    await loadEmployeePromotions();
-                    // Also refresh employee list to show updated designation
-                    await fetchAndRenderEmployees();
-                } else {
-                    showToast(response.message || 'Failed to save promotion', 'error');
-                }
-            } catch (error) {
-                showToast('Network error: ' + error.message, 'error');
-            } finally {
-                saveBtn.disabled = false;
-                saveBtn.innerHTML = originalText;
-            }
+    try {
+        const result = await fetch(`${PROMOTION_API_BASE}/create`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload)
+        });
+
+        const response = await result.json();
+        console.log('Server response:', response);
+
+        if (result.ok && response.success) {
+            showToast('Promotion added successfully!', 'success');
+            closePromotionModal();
+            await loadEmployeePromotions();
+            await fetchAndRenderEmployees();
+        } else {
+            showToast(response.message || 'Failed to save promotion', 'error');
         }
+    } catch (error) {
+        showToast('Network error: ' + error.message, 'error');
+        console.error('Fetch error:', error);
+    } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = originalText;
+    }
+}
+
+
+
 
         // Delete Promotion
         let deletePromoIdLocal = null;
@@ -3140,367 +3664,338 @@ const employeePayload = { firstName, middleName: document.getElementById('fMN').
             });
         }
 
+    // ==================== PATCH 3: QUICK ADD MEMBER — JS (UPDATED) ====================
+    // Production-grade implementation with Email instead of Password
+    // Changes: Removed password input, added personalEmail, backend generates temp password
 
-        // ==================== PATCH 3: QUICK ADD MEMBER — JS ====================
-// Production-grade implementation:
-//  - Debounced submit prevention (disables btn, re-enables on all exit paths)
-//  - Inline error surfacing (no toast-only errors for form issues)
-//  - Clipboard API with execCommand fallback for older browsers/mobile
-//  - Full state reset on re-open ("Add Another" or re-clicking btn)
-//  - Backdrop click closes modal only from registration phase
-//    (prevents accidental loss of credentials on success phase)
-//  - Stores entered password in closure-scoped variable — never re-fetched
-//    from DOM after success render (avoids stale input reference)
-// =========================================================================
+    // Closure-scoped state for this feature — isolated from rest of page globals
+    const quickAddState = {
+        submitting: false,        // prevents double-submit
+        generatedPassword: ''     // password received from backend
+    };
 
-// Closure-scoped state for this feature — isolated from rest of page globals
-const quickAddState = {
-    submitting: false,      // prevents double-submit
-    enteredPassword: ''     // stored at submit time, shown in success card
-};
-
-// ── Open modal ──────────────────────────────────────────────────────────────
-function openQuickAddModal() {
-    resetQuickAddModal();
-    document.getElementById('quickAddMemberModal').classList.add('active');
-    // Focus first input on next tick (after display:flex kicks in)
-    setTimeout(() => document.getElementById('qFN')?.focus(), 50);
-}
-
-// ── Close modal ─────────────────────────────────────────────────────────────
-function closeQuickAddModal() {
-    document.getElementById('quickAddMemberModal').classList.remove('active');
-    // Delay reset so the closing animation doesn't flicker back to form
-    setTimeout(resetQuickAddModal, 200);
-}
-
-// ── Full state reset (called on open, close, "Add Another") ─────────────────
-function resetQuickAddModal() {
-    // Reset form fields
-    const form = document.getElementById('quickAddMemberForm');
-    if (form) form.reset();
-
-    // Clear error banner
-    const errBanner = document.getElementById('quickAddErrorBanner');
-    if (errBanner) { errBanner.style.display = 'none'; errBanner.textContent = ''; }
-
-    // Reset password toggle to hidden
-    const passField = document.getElementById('qPass');
-    const passIcon  = document.getElementById('qPassToggleIcon');
-    if (passField) passField.type = 'password';
-    if (passIcon)  { passIcon.className = 'fas fa-eye'; }
-
-    // Re-enable submit button (covers case where network error left it disabled)
-    const submitBtn = document.getElementById('quickAddSubmitBtn');
-    if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fas fa-save mr-1"></i>Register Employee';
+    // ── Open modal ──────────────────────────────────────────────────────────────
+    function openQuickAddModal() {
+        resetQuickAddModal();
+        document.getElementById('quickAddMemberModal').classList.add('active');
+        // Focus first input on next tick
+        setTimeout(() => document.getElementById('qFN')?.focus(), 50);
     }
 
-    // Reset clipboard buttons
-    resetCopyBtn('empIdCopyBtn');
-    resetCopyBtn('passCopyBtn');
-    resetCopyBtn('copyBothBtn');
-
-    // Reset copy-both button label
-    const copyBoth = document.getElementById('copyBothBtn');
-    if (copyBoth) {
-        copyBoth.innerHTML = '<i class="fas fa-clipboard"></i> Copy Both Credentials';
+    // ── Close modal ─────────────────────────────────────────────────────────────
+    function closeQuickAddModal() {
+        document.getElementById('quickAddMemberModal').classList.remove('active');
+        // Delay reset so the closing animation doesn't flicker back to form
+        setTimeout(resetQuickAddModal, 200);
     }
 
-    // Show form, hide success card
-    const formPhase    = document.getElementById('quickAddFormPhase');
-    const successPhase = document.getElementById('quickAddSuccessPhase');
-    if (formPhase)    formPhase.style.display    = 'block';
-    if (successPhase) successPhase.style.display = 'none';
+    // ── Full state reset (called on open, close, "Add Another") ─────────────────
+    function resetQuickAddModal() {
+        // Reset form fields
+        const form = document.getElementById('quickAddMemberForm');
+        if (form) form.reset();
 
-    // Reset submitting flag and stored password
-    quickAddState.submitting     = false;
-    quickAddState.enteredPassword = '';
-}
+        // Clear error banner
+        const errBanner = document.getElementById('quickAddErrorBanner');
+        if (errBanner) { errBanner.style.display = 'none'; errBanner.textContent = ''; }
 
-// ── Toggle password visibility ───────────────────────────────────────────────
-function toggleQuickPassVisibility() {
-    const field = document.getElementById('qPass');
-    const icon  = document.getElementById('qPassToggleIcon');
-    if (!field || !icon) return;
-    const isHidden = field.type === 'password';
-    field.type     = isHidden ? 'text' : 'password';
-    icon.className = isHidden ? 'fas fa-eye-slash' : 'fas fa-eye';
-}
-
-// ── Inline error display ─────────────────────────────────────────────────────
-function showQuickAddError(msg) {
-    const banner = document.getElementById('quickAddErrorBanner');
-    if (!banner) return;
-    banner.innerHTML = `<i class="fas fa-exclamation-circle mr-2"></i>${msg}`;
-    banner.style.display = 'block';
-    banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-}
-function hideQuickAddError() {
-    const banner = document.getElementById('quickAddErrorBanner');
-    if (banner) { banner.style.display = 'none'; banner.textContent = ''; }
-}
-
-// ── Form submit handler ──────────────────────────────────────────────────────
-async function submitQuickAddMember(event) {
-    event.preventDefault();
-
-    // Guard: prevent concurrent submits
-    if (quickAddState.submitting) return;
-
-    hideQuickAddError();
-
-    // ── Collect & validate ────────────────────────────────────────────────────
-    const firstName   = (document.getElementById('qFN')?.value   || '').trim();
-    const lastName    = (document.getElementById('qLN')?.value    || '').trim();
-    const department  = (document.getElementById('qDept')?.value  || '').trim();
-    const designation = (document.getElementById('qDesig')?.value || '').trim();
-    const password    = (document.getElementById('qPass')?.value  || '').trim();
-
-    if (!firstName)   { showQuickAddError('First name is required.'); document.getElementById('qFN')?.focus(); return; }
-    if (!lastName)    { showQuickAddError('Last name is required.'); document.getElementById('qLN')?.focus(); return; }
-    if (!department)  { showQuickAddError('Department is required.'); document.getElementById('qDept')?.focus(); return; }
-    if (!designation) { showQuickAddError('Designation is required.'); document.getElementById('qDesig')?.focus(); return; }
-    if (!password)    { showQuickAddError('Password is required.'); document.getElementById('qPass')?.focus(); return; }
-    if (password.length < 6) { showQuickAddError('Password must be at least 6 characters.'); document.getElementById('qPass')?.focus(); return; }
-
-    // Store password before DOM gets touched
-    quickAddState.enteredPassword = password;
-
-    // ── Lock UI ───────────────────────────────────────────────────────────────
-    quickAddState.submitting = true;
-    const submitBtn = document.getElementById('quickAddSubmitBtn');
-    if (submitBtn) {
-        submitBtn.disabled = true;
-        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Registering...';
-    }
-
-    // ── API call ──────────────────────────────────────────────────────────────
-    try {
-        const response = await fetch(`${API_BASE}/register`, {
-            method : 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body   : JSON.stringify({ firstName, lastName, password, department, designation })
-        });
-
-        // Handle non-JSON responses gracefully (e.g. 502/503 HTML error pages)
-        let resData;
-        const contentType = response.headers.get('content-type') || '';
-        if (contentType.includes('application/json')) {
-            resData = await response.json();
-        } else {
-            const rawText = await response.text();
-            console.error('Non-JSON response from /register:', rawText);
-            throw new Error(`Server returned HTTP ${response.status}. Please try again.`);
+        // Re-enable submit button
+        const submitBtn = document.getElementById('quickAddSubmitBtn');
+        if (submitBtn) {
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fas fa-save mr-1"></i>Register Employee';
         }
 
-        if (response.ok && resData.success !== false) {
-            // ── Success path ──────────────────────────────────────────────────
-            const emp = resData.data || resData; // handle both {success,data:{...}} and flat responses
+        // Reset clipboard buttons
+        resetCopyBtn('empIdCopyBtn');
+        resetCopyBtn('passCopyBtn');
+        resetCopyBtn('copyBothBtn');
 
-            renderQuickAddSuccess({
-                employeeId  : emp.employeeId   || '—',
-                firstName   : emp.firstName    || firstName,
-                lastName    : emp.lastName     || lastName,
-                department  : emp.department   || department,
-                designation : emp.designation  || designation,
-                password    : quickAddState.enteredPassword
+        // Reset copy-both button label
+        const copyBoth = document.getElementById('copyBothBtn');
+        if (copyBoth) {
+            copyBoth.innerHTML = '<i class="fas fa-clipboard"></i> Copy Both Credentials';
+        }
+
+        // Show form, hide success card
+        const formPhase    = document.getElementById('quickAddFormPhase');
+        const successPhase = document.getElementById('quickAddSuccessPhase');
+        if (formPhase)    formPhase.style.display    = 'block';
+        if (successPhase) successPhase.style.display = 'none';
+
+        // Reset submitting flag and stored password
+        quickAddState.submitting = false;
+        quickAddState.generatedPassword = '';
+    }
+
+    // ── Inline error display ─────────────────────────────────────────────────────
+    function showQuickAddError(msg) {
+        const banner = document.getElementById('quickAddErrorBanner');
+        if (!banner) return;
+        banner.innerHTML = `<i class="fas fa-exclamation-circle mr-2"></i>${msg}`;
+        banner.style.display = 'block';
+        banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function hideQuickAddError() {
+        const banner = document.getElementById('quickAddErrorBanner');
+        if (banner) { banner.style.display = 'none'; banner.textContent = ''; }
+    }
+
+    // ── Form submit handler ──────────────────────────────────────────────────────
+    async function submitQuickAddMember(event) {
+        event.preventDefault();
+
+        // Guard: prevent concurrent submits
+        if (quickAddState.submitting) return;
+
+        hideQuickAddError();
+
+        // ── Collect & validate ────────────────────────────────────────────────────
+        const firstName    = (document.getElementById('qFN')?.value    || '').trim();
+        const lastName     = (document.getElementById('qLN')?.value    || '').trim();
+        const personalEmail = (document.getElementById('qEmail')?.value || '').trim();
+        const department   = (document.getElementById('qDept')?.value  || '').trim();
+        const designation  = (document.getElementById('qDesig')?.value || '').trim();
+
+        if (!firstName)    { showQuickAddError('First name is required.'); document.getElementById('qFN')?.focus(); return; }
+        if (!lastName)     { showQuickAddError('Last name is required.'); document.getElementById('qLN')?.focus(); return; }
+        if (!personalEmail){ showQuickAddError('Personal Email is required.'); document.getElementById('qEmail')?.focus(); return; }
+        if (!department)   { showQuickAddError('Department is required.'); document.getElementById('qDept')?.focus(); return; }
+        if (!designation)  { showQuickAddError('Designation is required.'); document.getElementById('qDesig')?.focus(); return; }
+
+        // ── Lock UI with better loading message ───────────────────────────────────
+        quickAddState.submitting = true;
+        const submitBtn = document.getElementById('quickAddSubmitBtn');
+        if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-1"></i>Registering & Sending Email...';
+        }
+
+        // ── API call ──────────────────────────────────────────────────────────────
+        try {
+            const response = await fetch(`${API_BASE}/register`, {
+                method : 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body   : JSON.stringify({ 
+                    firstName, 
+                    lastName, 
+                    personalEmail, 
+                    department, 
+                    designation 
+                })
             });
 
-            // Refresh the main employees table in background (non-blocking)
-            fetchAndRenderEmployees().catch(err => console.warn('Background refresh failed:', err));
+            // Handle non-JSON responses gracefully
+            let resData;
+            const contentType = response.headers.get('content-type') || '';
+            if (contentType.includes('application/json')) {
+                resData = await response.json();
+            } else {
+                const rawText = await response.text();
+                console.error('Non-JSON response from /register:', rawText);
+                throw new Error(`Server returned HTTP ${response.status}. Please try again.`);
+            }
 
-        } else {
-            // ── API-level error (e.g. duplicate employee, validation) ──────────
-            const errMsg = resData.message || 'Registration failed. Please check the details and try again.';
-            showQuickAddError(errMsg);
+            if (response.ok && resData.success !== false) {
+                // ── Success path ──────────────────────────────────────────────────
+                const emp = resData.data || resData;
 
-            // Re-enable submit
+                // Get password generated by backend
+                quickAddState.generatedPassword = emp.temporaryPassword || emp.password || 'Generated';
+
+                renderQuickAddSuccess({
+                    employeeId  : emp.employeeId   || '—',
+                    firstName   : emp.firstName    || firstName,
+                    lastName    : emp.lastName     || lastName,
+                    department  : emp.department   || department,
+                    designation : emp.designation  || designation,
+                    password    : quickAddState.generatedPassword
+                });
+
+                // Refresh the main employees table in background
+                if (typeof fetchAndRenderEmployees === 'function') {
+                    fetchAndRenderEmployees().catch(err => console.warn('Background refresh failed:', err));
+                }
+
+            } else {
+                // ── API-level error ───────────────────────────────────────────────
+                const errMsg = resData.message || 'Registration failed. Please check the details and try again.';
+                showQuickAddError(errMsg);
+
+                // Re-enable submit
+                quickAddState.submitting = false;
+                if (submitBtn) {
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = '<i class="fas fa-save mr-1"></i>Register Employee';
+                }
+            }
+
+        } catch (err) {
+            // ── Network / parse error ─────────────────────────────────────────────
+            console.error('Quick add member error:', err);
+            showQuickAddError(err.message || 'Network error. Please check your connection and try again.');
+
             quickAddState.submitting = false;
             if (submitBtn) {
                 submitBtn.disabled = false;
                 submitBtn.innerHTML = '<i class="fas fa-save mr-1"></i>Register Employee';
             }
         }
+    }
 
-    } catch (err) {
-        // ── Network / parse error ─────────────────────────────────────────────
-        console.error('Quick add member error:', err);
-        showQuickAddError(err.message || 'Network error. Please check your connection and try again.');
+    // ── Render success credential card ───────────────────────────────────────────
+    function renderQuickAddSuccess({ employeeId, firstName, lastName, department, designation, password }) {
+        document.getElementById('qSuccessSubtitle').textContent =
+            `${firstName} ${lastName} has been registered successfully.`;
 
+        document.getElementById('qResultEmployeeId').textContent = employeeId;
+        document.getElementById('qResultPassword').textContent   = password;
+        document.getElementById('qResultDept').textContent       = department;
+        document.getElementById('qResultDesig').textContent      = designation;
+
+        // Swap phases
+        document.getElementById('quickAddFormPhase').style.display    = 'none';
+        document.getElementById('quickAddSuccessPhase').style.display = 'block';
+
+        // Update modal title
+        document.getElementById('quickAddModalTitle').innerHTML =
+            '<i class="fas fa-check-circle mr-2" style="color:#2b7a3e;font-size:16px;"></i>Registration Complete';
+    }
+
+    // ── "Add Another" button handler ─────────────────────────────────────────────
+    function registerAnotherMember() {
         quickAddState.submitting = false;
+        quickAddState.generatedPassword = '';
+
+        // Reset form fields
+        ['qFN', 'qLN', 'qEmail', 'qDept', 'qDesig'].forEach(id => {
+            const el = document.getElementById(id);
+            if (el) el.value = '';
+        });
+
+        // Reset submit btn
+        const submitBtn = document.getElementById('quickAddSubmitBtn');
         if (submitBtn) {
             submitBtn.disabled = false;
             submitBtn.innerHTML = '<i class="fas fa-save mr-1"></i>Register Employee';
         }
+
+        // Reset clipboard buttons
+        resetCopyBtn('empIdCopyBtn');
+        resetCopyBtn('passCopyBtn');
+        resetCopyBtn('copyBothBtn');
+        const copyBoth = document.getElementById('copyBothBtn');
+        if (copyBoth) copyBoth.innerHTML = '<i class="fas fa-clipboard"></i> Copy Both Credentials';
+
+        // Clear error banner
+        hideQuickAddError();
+
+        // Reset modal title
+        document.getElementById('quickAddModalTitle').innerHTML =
+            '<i class="fas fa-user-plus mr-2" style="font-size:16px;"></i>Add Member';
+
+        // Swap phases back
+        document.getElementById('quickAddSuccessPhase').style.display = 'none';
+        document.getElementById('quickAddFormPhase').style.display    = 'block';
+
+        // Focus first field
+        setTimeout(() => document.getElementById('qFN')?.focus(), 50);
     }
-}
 
-// ── Render success credential card ───────────────────────────────────────────
-function renderQuickAddSuccess({ employeeId, firstName, lastName, department, designation, password }) {
-    // Populate fields
-    document.getElementById('qSuccessSubtitle').textContent =
-        `${firstName} ${lastName} has been registered successfully.`;
-    document.getElementById('qResultEmployeeId').textContent = employeeId;
-    document.getElementById('qResultPassword').textContent   = password;
-    document.getElementById('qResultDept').textContent       = department;
-    document.getElementById('qResultDesig').textContent      = designation;
+    // ── Copy to Clipboard (with execCommand fallback) ────────────────────────────
+    async function copyToClipboard(elementId, btnId) {
+        const text = document.getElementById(elementId)?.textContent?.trim();
+        const btn  = document.getElementById(btnId);
+        if (!text || !btn) return;
 
-    // Swap phases
-    document.getElementById('quickAddFormPhase').style.display    = 'none';
-    document.getElementById('quickAddSuccessPhase').style.display = 'block';
+        try {
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(text);
+            } else {
+                const tempInput = document.createElement('input');
+                tempInput.value = text;
+                tempInput.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0;';
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                tempInput.setSelectionRange(0, 99999);
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+            }
 
-    // Update modal title
-    document.getElementById('quickAddModalTitle').innerHTML =
-        '<i class="fas fa-check-circle mr-2" style="color:#2b7a3e;font-size:16px;"></i>Registration Complete';
-}
+            const originalHTML = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-check mr-1" style="color:#2b7a3e;"></i>Copied!';
+            btn.style.borderColor = '#2b7a3e';
+            btn.style.color = '#2b7a3e';
 
-// ── "Add Another" button handler ─────────────────────────────────────────────
-function registerAnotherMember() {
-    quickAddState.submitting      = false;
-    quickAddState.enteredPassword = '';
+            setTimeout(() => {
+                btn.innerHTML = originalHTML;
+                btn.style.borderColor = '';
+                btn.style.color = '';
+            }, 2000);
 
-    // Reset form and fields manually (form.reset() won't help since form is in other phase)
-    ['qFN', 'qLN', 'qDept', 'qDesig', 'qPass'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = '';
+        } catch (err) {
+            console.error('Clipboard copy failed:', err);
+            showToast('Could not copy to clipboard. Please copy manually.', 'error');
+        }
+    }
+
+    // ── Copy both credentials together ───────────────────────────────────────────
+    async function copyBothCredentials() {
+        const empId = document.getElementById('qResultEmployeeId')?.textContent?.trim() || '';
+        const pass  = document.getElementById('qResultPassword')?.textContent?.trim()   || '';
+        const text  = `Employee ID: ${empId}\nPassword: ${pass}`;
+        const btn   = document.getElementById('copyBothBtn');
+
+        try {
+            if (navigator.clipboard && window.isSecureContext) {
+                await navigator.clipboard.writeText(text);
+            } else {
+                const tempInput = document.createElement('textarea');
+                tempInput.value = text;
+                tempInput.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0;';
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+            }
+
+            if (btn) {
+                const original = btn.innerHTML;
+                btn.innerHTML = '<i class="fas fa-check mr-1"></i>Both Copied!';
+                setTimeout(() => { btn.innerHTML = original; }, 2000);
+            }
+            showToast('Both credentials copied to clipboard!', 'success');
+
+        } catch (err) {
+            console.error('Copy both failed:', err);
+            showToast('Could not copy. Please copy each field manually.', 'error');
+        }
+    }
+
+    // ── Reset a copy button to its original state ────────────────────────────────
+    function resetCopyBtn(btnId) {
+        const btn = document.getElementById(btnId);
+        if (!btn) return;
+        btn.style.borderColor = '';
+        btn.style.color = '';
+        if (btnId === 'empIdCopyBtn' || btnId === 'passCopyBtn') {
+            btn.innerHTML = '<i class="fas fa-copy mr-1"></i>Copy';
+        }
+    }
+
+    // ── Backdrop click: close only from form phase ───────────────────────────────
+    document.addEventListener('DOMContentLoaded', function () {
+        const modal = document.getElementById('quickAddMemberModal');
+        if (!modal) return;
+        modal.addEventListener('click', function (e) {
+            if (e.target !== modal) return;
+            const successPhase = document.getElementById('quickAddSuccessPhase');
+            if (successPhase && successPhase.style.display !== 'none') return;
+            closeQuickAddModal();
+        });
     });
-
-    // Reset password visibility
-    const passField = document.getElementById('qPass');
-    const passIcon  = document.getElementById('qPassToggleIcon');
-    if (passField) passField.type = 'password';
-    if (passIcon)  passIcon.className = 'fas fa-eye';
-
-    // Reset submit btn
-    const submitBtn = document.getElementById('quickAddSubmitBtn');
-    if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fas fa-save mr-1"></i>Register Employee';
-    }
-
-    // Reset clipboard buttons
-    resetCopyBtn('empIdCopyBtn');
-    resetCopyBtn('passCopyBtn');
-    resetCopyBtn('copyBothBtn');
-    const copyBoth = document.getElementById('copyBothBtn');
-    if (copyBoth) copyBoth.innerHTML = '<i class="fas fa-clipboard"></i> Copy Both Credentials';
-
-    // Clear error banner
-    hideQuickAddError();
-
-    // Reset modal title
-    document.getElementById('quickAddModalTitle').innerHTML =
-        '<i class="fas fa-user-plus mr-2" style="font-size:16px;"></i>Add Member';
-
-    // Swap phases back
-    document.getElementById('quickAddSuccessPhase').style.display = 'none';
-    document.getElementById('quickAddFormPhase').style.display    = 'block';
-
-    // Focus first field
-    setTimeout(() => document.getElementById('qFN')?.focus(), 50);
-}
-
-// ── Copy to Clipboard (with execCommand fallback) ────────────────────────────
-async function copyToClipboard(elementId, btnId) {
-    const text = document.getElementById(elementId)?.textContent?.trim();
-    const btn  = document.getElementById(btnId);
-    if (!text || !btn) return;
-
-    try {
-        if (navigator.clipboard && window.isSecureContext) {
-            // Modern Clipboard API (HTTPS or localhost)
-            await navigator.clipboard.writeText(text);
-        } else {
-            // Fallback: create temp input, select, execCommand
-            const tempInput = document.createElement('input');
-            tempInput.value = text;
-            tempInput.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0;';
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            tempInput.setSelectionRange(0, 99999); // mobile support
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
-        }
-
-        // Visual feedback
-        const originalHTML = btn.innerHTML;
-        btn.innerHTML = '<i class="fas fa-check mr-1" style="color:#2b7a3e;"></i>Copied!';
-        btn.style.borderColor = '#2b7a3e';
-        btn.style.color = '#2b7a3e';
-
-        setTimeout(() => {
-            btn.innerHTML = originalHTML;
-            btn.style.borderColor = '';
-            btn.style.color = '';
-        }, 2000);
-
-    } catch (err) {
-        console.error('Clipboard copy failed:', err);
-        showToast('Could not copy to clipboard. Please copy manually.', 'error');
-    }
-}
-
-// ── Copy both credentials together ───────────────────────────────────────────
-async function copyBothCredentials() {
-    const empId = document.getElementById('qResultEmployeeId')?.textContent?.trim() || '';
-    const pass  = document.getElementById('qResultPassword')?.textContent?.trim()   || '';
-    const text  = `Employee ID: ${empId}\nPassword: ${pass}`;
-    const btn   = document.getElementById('copyBothBtn');
-
-    try {
-        if (navigator.clipboard && window.isSecureContext) {
-            await navigator.clipboard.writeText(text);
-        } else {
-            const tempInput = document.createElement('textarea');
-            tempInput.value = text;
-            tempInput.style.cssText = 'position:fixed;top:-9999px;left:-9999px;opacity:0;';
-            document.body.appendChild(tempInput);
-            tempInput.select();
-            document.execCommand('copy');
-            document.body.removeChild(tempInput);
-        }
-
-        if (btn) {
-            const original = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-check mr-1"></i>Both Copied!';
-            setTimeout(() => { btn.innerHTML = original; }, 2000);
-        }
-        showToast('Both credentials copied to clipboard!', 'success');
-
-    } catch (err) {
-        console.error('Copy both failed:', err);
-        showToast('Could not copy. Please copy each field manually.', 'error');
-    }
-}
-
-// ── Reset a copy button to its original state ────────────────────────────────
-function resetCopyBtn(btnId) {
-    const btn = document.getElementById(btnId);
-    if (!btn) return;
-    btn.style.borderColor = '';
-    btn.style.color = '';
-    // Restore correct label per button
-    if (btnId === 'empIdCopyBtn' || btnId === 'passCopyBtn') {
-        btn.innerHTML = '<i class="fas fa-copy mr-1"></i>Copy';
-    }
-}
-
-// ── Backdrop click: close only from form phase (not success phase) ────────────
-// Prevents accidental loss of credentials when user clicks outside
-document.addEventListener('DOMContentLoaded', function () {
-    const modal = document.getElementById('quickAddMemberModal');
-    if (!modal) return;
-    modal.addEventListener('click', function (e) {
-        if (e.target !== modal) return; // only direct backdrop clicks
-        const successPhase = document.getElementById('quickAddSuccessPhase');
-        // If success phase is visible, don't close on backdrop (protect credentials)
-        if (successPhase && successPhase.style.display !== 'none') return;
-        closeQuickAddModal();
-    });
-});
-// ==================== END PATCH 3 ====================
+    // ==================== END PATCH 3 ====================
     </script>
 </body>
 

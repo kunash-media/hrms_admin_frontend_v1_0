@@ -11,6 +11,31 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
         rel="stylesheet">
 
+
+    <style>
+   
+    #header-container {
+      position: fixed;
+      top: 0;
+      left: 256px;
+      right: 0;
+      height: 56px;
+      background: #ffffff;
+      border-bottom: 1px solid #3098b5;
+      z-index: 40;
+    }
+    @keyframes shimmer {
+      0%   { background-position: -400px 0; }
+      100% { background-position:  400px 0; }
+    }
+    .skeleton-box {
+      background: linear-gradient(90deg, #c5d9e0 25%, #d8e8ed 50%, #c5d9e0 75%);
+      background-size: 800px 100%;
+      animation: shimmer 1.4s ease-in-out infinite;
+      border-radius: 4px;
+    }
+  </style>
+
     <style>
         * {
             font-family: 'Inter', sans-serif;
@@ -975,6 +1000,86 @@
             border-color: var(--primary);
             box-shadow: 0 0 0 2px rgba(27, 115, 140, 0.1);
         }
+
+        /* Validation Styles */
+.validation-error {
+    color: #dc3545;
+    font-size: 11px;
+    margin-top: 4px;
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+input.error, select.error, textarea.error {
+    border-color: #dc3545 !important;
+    background-color: #fff8f8 !important;
+}
+
+input.valid, select.valid, textarea.valid {
+    border-color: #28a745 !important;
+}
+
+/* Password strength animation */
+.password-strength {
+    transition: all 0.3s ease;
+}
+
+/* Form field focus validation feedback */
+input:focus, select:focus, textarea:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(27, 115, 140, 0.1);
+}
+
+input.error:focus, select.error:focus, textarea.error:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1);
+}
+
+/* Success indicator for valid fields */
+input.valid:focus, select.valid:focus, textarea.valid:focus {
+    border-color: #28a745;
+    box-shadow: 0 0 0 3px rgba(40, 167, 69, 0.1);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Edit form validation specific styles */
+.edit-validation-error {
+    color: #dc3545;
+    font-size: 10px;
+    margin-top: 4px;
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+#editEmployeeOverlay input.error,
+#editEmployeeOverlay select.error,
+#editEmployeeOverlay textarea.error {
+    border-color: #dc3545 !important;
+    background-color: #fff8f8 !important;
+}
+
+#editEmployeeOverlay input.valid,
+#editEmployeeOverlay select.valid,
+#editEmployeeOverlay textarea.valid {
+    border-color: #28a745 !important;
+}
+
+/* Required field indicator */
+.form-group .req-star {
+    color: #dc3545;
+    font-size: 12px;
+    margin-left: 2px;
+}
     </style>
 </head>
 
@@ -1719,7 +1824,6 @@
                 </div>
             </main>
 
-            
             <!-- =========================================================================== -->
             <!-- ==================== QUICK ADD MEMBER MODAL (UPDATED) ==================== -->
             <!-- =========================================================================== -->
@@ -1847,8 +1951,7 @@
                 </div>
             </div>
             <!-- ===================================================== -->
-            <!-- ==================== END PATCH ===================== - ->
-            <!-- =================================================== -->
+            <!-- ==================== END PATCH ===================== -->
         </div>
     </div>
 
@@ -1864,6 +1967,7 @@
         </div>
     </div>
 
+    <script src="/assets/js/component-loader.js"></script>  <!-- ← ADD THIS LINE -->
     <script src="/assets/js/common.js"></script>
     <script src="/assets/js/sidebar.js"></script>
     <script src="/assets/js/header.js"></script>
@@ -1871,6 +1975,1599 @@
     <script>
         // ==================== CONFIG ====================
         const API_BASE = 'http://localhost:8086/api/employees';
+
+
+        // ==================== VALIDATION SYSTEM ====================
+
+// Validation Rules & Patterns
+const VALIDATION = {
+    // Name validation (only letters, spaces, dots, hyphens)
+    name: {
+        pattern: /^[A-Za-z][A-Za-z\s\.\-]{1,49}$/,
+        message: 'Name must start with a letter and contain only letters, spaces, dots, or hyphens (2-50 characters)'
+    },
+    
+    // Email validation
+    email: {
+        pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+        message: 'Please enter a valid email address (e.g., name@domain.com)'
+    },
+    
+    // Mobile number (Indian format)
+    mobile: {
+        pattern: /^[6-9]\d{9}$/,
+        message: 'Please enter a valid 10-digit mobile number starting with 6,7,8, or 9'
+    },
+    
+    // Phone with country code
+    phoneWithCode: {
+        pattern: /^(\+91[\-\s]?)?[6-9]\d{9}$/,
+        message: 'Please enter a valid phone number (e.g., 9876543210 or +91 9876543210)'
+    },
+    
+    // PAN Card (Indian format)
+    pan: {
+        pattern: /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,
+        message: 'Please enter a valid PAN card number (5 letters, 4 digits, 1 letter - e.g., ABCDE1234F)'
+    },
+    
+    // Aadhaar (16 digits with optional spaces)
+    aadhaar: {
+        pattern: /^[2-9]{1}[0-9]{3}\s?[0-9]{4}\s?[0-9]{4}$/,
+        message: 'Please enter a valid 12-digit Aadhaar number (starting with 2-9)'
+    },
+    
+    // PIN Code (Indian)
+    pincode: {
+        pattern: /^[1-9][0-9]{5}$/,
+        message: 'Please enter a valid 6-digit PIN code'
+    },
+    
+    // IFSC Code
+    ifsc: {
+        pattern: /^[A-Z]{4}0[A-Z0-9]{6}$/,
+        message: 'Please enter a valid IFSC code (e.g., HDFC0001234)'
+    },
+    
+    // Account Number (generic)
+    accountNumber: {
+        pattern: /^[0-9]{9,18}$/,
+        message: 'Please enter a valid account number (9-18 digits)'
+    },
+    
+    // Salary/Basic Amount
+    salary: {
+        pattern: /^[0-9]+(\.[0-9]{1,2})?$/,
+        message: 'Please enter a valid amount (numbers only, up to 2 decimal places)',
+        min: 0,
+        max: 100000000
+    },
+    
+    // Password
+    password: {
+        pattern: /^.{6,}$/,
+        message: 'Password must be at least 6 characters long',
+        strength: {
+            weak: /^.{6,}$/,
+            medium: /^(?=.*[A-Za-z])(?=.*\d).{6,}$/,
+            strong: /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*#?&]).{8,}$/
+        }
+    },
+    
+    // Percentage (0-100)
+    percentage: {
+        pattern: /^(100(\.0{1,2})?|[0-9]{1,2}(\.[0-9]{1,2})?)$/,
+        message: 'Please enter a valid percentage between 0 and 100',
+        min: 0,
+        max: 100
+    },
+    
+    // Year (1900- current year)
+    year: {
+        pattern: /^(19|20)\d{2}$/,
+        message: `Please enter a valid year (1900-${new Date().getFullYear()})`,
+        min: 1900,
+        max: new Date().getFullYear()
+    },
+    
+    // LinkedIn URL
+    linkedin: {
+        pattern: /^(https?:\/\/)?(www\.)?linkedin\.com\/(in|company)\/[a-zA-Z0-9\-_]+$/,
+        message: 'Please enter a valid LinkedIn profile URL'
+    },
+    
+    // Date validation (not future)
+    dateNotFuture: {
+        message: 'Date cannot be in the future'
+    },
+    
+    // Joining date (can't be too far in past or future)
+    joiningDate: {
+        message: 'Joining date cannot be more than 10 years in the past or future'
+    }
+};
+
+// ==================== EDIT EMPLOYEE FORM VALIDATIONS ====================
+
+// Real-time input filters for edit form fields
+function setupEditFormFilters() {
+    // Name fields - block numbers
+    const editNameFields = ['efFN', 'efLN', 'efMN', 'efFatherName', 'efECName'];
+    editNameFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.addEventListener('input', function(e) {
+                this.value = this.value.replace(/[0-9]/g, '').replace(/[^A-Za-z\s\.\-]/g, '');
+                if (this.value.trim()) {
+                    const isValid = /^[A-Za-z]{1,50}$/.test(this.value.trim());
+                    if (!isValid && this.value.trim().length > 0) {
+                        showEditFieldError(fieldId, 'Only letters allowed (A-Z, a-z)');
+                    } else {
+                        clearEditFieldError(fieldId);
+                    }
+                } else if (fieldId === 'efFN' || fieldId === 'efLN') {
+                    if (this.value === '') showEditFieldError(fieldId, 'This field is required');
+                } else {
+                    clearEditFieldError(fieldId);
+                }
+            });
+        }
+    });
+
+    // Email validation for edit form
+    const editEmail = document.getElementById('efPEmail');
+    if (editEmail) {
+        editEmail.addEventListener('blur', function() {
+            const email = this.value.trim();
+            if (email && !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+                showEditFieldError('efPEmail', 'Enter a valid email address (e.g., name@company.com)');
+            } else if (!email) {
+                showEditFieldError('efPEmail', 'Email is required');
+            } else {
+                clearEditFieldError('efPEmail');
+            }
+        });
+        editEmail.addEventListener('input', function() {
+            clearEditFieldError('efPEmail');
+        });
+    }
+
+    // Mobile number validation for edit form
+    const editMobile = document.getElementById('efMob');
+    if (editMobile) {
+        editMobile.addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
+            if (this.value.length === 10 && /^[6-9][0-9]{9}$/.test(this.value)) {
+                clearEditFieldError('efMob');
+            } else if (this.value.length > 0 && this.value.length < 10) {
+                showEditFieldError('efMob', 'Mobile number must be 10 digits');
+            } else if (this.value.length === 10 && !/^[6-9]/.test(this.value)) {
+                showEditFieldError('efMob', 'Mobile number must start with 6,7,8, or 9');
+            } else if (!this.value && document.activeElement === this) {
+                showEditFieldError('efMob', 'Mobile number is required');
+            } else {
+                clearEditFieldError('efMob');
+            }
+        });
+        editMobile.addEventListener('blur', function() {
+            if (!this.value.trim()) {
+                showEditFieldError('efMob', 'Mobile number is required');
+            }
+        });
+    }
+
+    // PAN Card validation for edit form
+    const editPan = document.getElementById('efPAN');
+    if (editPan) {
+        editPan.addEventListener('input', function(e) {
+            this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10);
+            if (this.value.length === 10 && /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(this.value)) {
+                clearEditFieldError('efPAN');
+            } else if (this.value.length > 0 && this.value.length < 10) {
+                showEditFieldError('efPAN', 'PAN must be exactly 10 characters');
+            } else if (this.value.length === 10 && !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(this.value)) {
+                showEditFieldError('efPAN', 'Invalid PAN format (e.g., ABCDE1234F)');
+            } else {
+                clearEditFieldError('efPAN');
+            }
+        });
+    }
+
+    // Aadhaar validation for edit form
+    const editAadhaar = document.getElementById('efAAD');
+    if (editAadhaar) {
+        editAadhaar.addEventListener('input', function(e) {
+            let value = this.value.replace(/\s/g, '');
+            value = value.replace(/\D/g, '').slice(0, 12);
+            let formatted = '';
+            for (let i = 0; i < value.length; i++) {
+                if (i === 4 || i === 8) formatted += ' ';
+                formatted += value[i];
+            }
+            this.value = formatted;
+            
+            if (value.length === 12 && /^[2-9][0-9]{11}$/.test(value)) {
+                clearEditFieldError('efAAD');
+            } else if (value.length > 0 && value.length < 12) {
+                showEditFieldError('efAAD', 'Aadhaar must be 12 digits');
+            } else if (value.length === 12 && !/^[2-9]/.test(value)) {
+                showEditFieldError('efAAD', 'Aadhaar must start with 2-9');
+            } else {
+                clearEditFieldError('efAAD');
+            }
+        });
+    }
+
+    // PIN Code validations for edit form
+    const editPinFields = ['efPIN', 'efPPIN'];
+    editPinFields.forEach(fieldId => {
+        const field = document.getElementById(fieldId);
+        if (field) {
+            field.addEventListener('input', function(e) {
+                this.value = this.value.replace(/\D/g, '').slice(0, 6);
+                if (this.value.length === 6 && /^[1-9][0-9]{5}$/.test(this.value)) {
+                    clearEditFieldError(fieldId);
+                } else if (this.value.length > 0 && this.value.length < 6) {
+                    showEditFieldError(fieldId, 'PIN code must be 6 digits');
+                } else {
+                    clearEditFieldError(fieldId);
+                }
+            });
+        }
+    });
+
+    // IFSC Code validation for edit form
+    const editIfsc = document.getElementById('efIFSC');
+    if (editIfsc) {
+        editIfsc.addEventListener('input', function(e) {
+            this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 11);
+            if (this.value.length === 11 && /^[A-Z]{4}0[A-Z0-9]{6}$/.test(this.value)) {
+                clearEditFieldError('efIFSC');
+            } else if (this.value.length > 0 && this.value.length < 11) {
+                showEditFieldError('efIFSC', 'IFSC must be 11 characters');
+            } else if (this.value.length === 11 && !/^[A-Z]{4}0/.test(this.value)) {
+                showEditFieldError('efIFSC', 'Invalid IFSC format (e.g., HDFC0001234)');
+            } else {
+                clearEditFieldError('efIFSC');
+            }
+        });
+    }
+
+    // Account Number validation for edit form
+    const editAccount = document.getElementById('efAccNo');
+    if (editAccount) {
+        editAccount.addEventListener('input', function(e) {
+            this.value = this.value.replace(/\D/g, '').slice(0, 18);
+            if (this.value.length >= 9 && this.value.length <= 18) {
+                clearEditFieldError('efAccNo');
+            } else if (this.value.length > 0 && this.value.length < 9) {
+                showEditFieldError('efAccNo', 'Account number must be 9-18 digits');
+            } else {
+                clearEditFieldError('efAccNo');
+            }
+        });
+    }
+
+    // Salary validation for edit form
+    const editSalary = document.getElementById('efBasic');
+    if (editSalary) {
+        editSalary.addEventListener('input', function(e) {
+            let value = this.value.replace(/[^0-9.]/g, '');
+            const parts = value.split('.');
+            if (parts.length > 2) value = parts[0] + '.' + parts.slice(1).join('');
+            if (parts[1] && parts[1].length > 2) value = parts[0] + '.' + parts[1].slice(0, 2);
+            this.value = value;
+            
+            if (value && parseFloat(value) > 0 && parseFloat(value) <= 100000000) {
+                clearEditFieldError('efBasic');
+            } else if (value && parseFloat(value) <= 0) {
+                showEditFieldError('efBasic', 'Salary must be greater than 0');
+            } else if (!value) {
+                showEditFieldError('efBasic', 'Basic salary is required');
+            } else {
+                clearEditFieldError('efBasic');
+            }
+        });
+    }
+
+    // Date validations for edit form
+    const editJoiningDate = document.getElementById('efJD');
+    const editDob = document.getElementById('efDOB');
+    
+    if (editJoiningDate) {
+        editJoiningDate.addEventListener('change', function() {
+            if (!this.value) {
+                showEditFieldError('efJD', 'Joining date is required');
+            } else {
+                clearEditFieldError('efJD');
+            }
+            
+            // Validate age if DOB is also present
+            if (editDob && editDob.value && this.value) {
+                validateAgeForEdit(editDob.value, this.value);
+            }
+        });
+    }
+    
+    if (editDob) {
+        editDob.addEventListener('change', function() {
+            if (editJoiningDate && editJoiningDate.value && this.value) {
+                validateAgeForEdit(this.value, editJoiningDate.value);
+            }
+        });
+    }
+
+    // Emergency Contact validations
+    const editEcName = document.getElementById('efECName');
+    const editEcPhone = document.getElementById('efECPhone');
+    
+    if (editEcPhone) {
+        editEcPhone.addEventListener('input', function(e) {
+            this.value = this.value.replace(/[^0-9]/g, '').slice(0, 10);
+            if (this.value.length === 10 && /^[6-9][0-9]{9}$/.test(this.value)) {
+                clearEditFieldError('efECPhone');
+            } else if (this.value.length > 0 && this.value.length < 10) {
+                showEditFieldError('efECPhone', 'Emergency phone must be 10 digits');
+            } else if (!this.value && editEcName && editEcName.value.trim()) {
+                showEditFieldError('efECPhone', 'Emergency phone is required when name is provided');
+            } else {
+                clearEditFieldError('efECPhone');
+            }
+        });
+    }
+    
+    if (editEcName) {
+        editEcName.addEventListener('input', function() {
+            this.value = this.value.replace(/[0-9]/g, '').replace(/[^A-Za-z\s\.\-]/g, '');
+            if (editEcPhone && editEcPhone.value && !this.value.trim()) {
+                showEditFieldError('efECName', 'Emergency name is required when phone is provided');
+            } else if (this.value.trim() && !editEcPhone.value) {
+                showEditFieldError('efECPhone', 'Emergency phone is required when name is provided');
+            } else {
+                clearEditFieldError('efECName');
+                if (editEcPhone) clearEditFieldError('efECPhone');
+            }
+        });
+    }
+}
+
+// Helper function to show error on edit form
+function showEditFieldError(fieldId, message) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+    
+    field.classList.add('error');
+    field.style.borderColor = '#dc3545';
+    field.style.backgroundColor = '#fff8f8';
+    
+    let errorDiv = field.parentElement.querySelector('.edit-validation-error');
+    if (!errorDiv) {
+        errorDiv = document.createElement('div');
+        errorDiv.className = 'edit-validation-error validation-error';
+        field.parentElement.appendChild(errorDiv);
+    }
+    errorDiv.textContent = message;
+    errorDiv.style.display = 'block';
+}
+
+// Helper function to clear error on edit form
+function clearEditFieldError(fieldId) {
+    const field = document.getElementById(fieldId);
+    if (!field) return;
+    
+    field.classList.remove('error');
+    field.style.borderColor = '';
+    field.style.backgroundColor = '';
+    
+    const errorDiv = field.parentElement.querySelector('.edit-validation-error');
+    if (errorDiv) {
+        errorDiv.style.display = 'none';
+        errorDiv.textContent = '';
+    }
+}
+
+// Validate age for edit form
+function validateAgeForEdit(dob, joiningDate) {
+    const birthDate = new Date(dob);
+    const joinDate = new Date(joiningDate);
+    const ageAtJoining = joinDate.getFullYear() - birthDate.getFullYear();
+    const monthDiff = joinDate.getMonth() - birthDate.getMonth();
+    
+    if (ageAtJoining < 18 || (ageAtJoining === 18 && monthDiff < 0)) {
+        showEditFieldError('efDOB', 'Employee must be at least 18 years old at joining');
+        return false;
+    }
+    
+    if (joinDate < birthDate) {
+        showEditFieldError('efJD', 'Joining date cannot be before date of birth');
+        return false;
+    }
+    
+    clearEditFieldError('efDOB');
+    clearEditFieldError('efJD');
+    return true;
+}
+
+// Comprehensive edit form validation before submit
+function validateEditFormBeforeSubmit() {
+    let isValid = true;
+    const errors = [];
+    
+    // Required field validations
+    const firstName = document.getElementById('efFN')?.value.trim();
+    if (!firstName) {
+        showEditFieldError('efFN', 'First name is required');
+        isValid = false;
+        errors.push('First name is required');
+    } else if (!/^[A-Za-z]{1,50}$/.test(firstName)) {
+        showEditFieldError('efFN', 'First name must contain only letters');
+        isValid = false;
+        errors.push('Invalid first name');
+    }
+    
+    const lastName = document.getElementById('efLN')?.value.trim();
+    if (!lastName) {
+        showEditFieldError('efLN', 'Last name is required');
+        isValid = false;
+        errors.push('Last name is required');
+    } else if (!/^[A-Za-z]{1,50}$/.test(lastName)) {
+        showEditFieldError('efLN', 'Last name must contain only letters');
+        isValid = false;
+        errors.push('Invalid last name');
+    }
+    
+    const email = document.getElementById('efPEmail')?.value.trim();
+    if (!email) {
+        showEditFieldError('efPEmail', 'Email is required');
+        isValid = false;
+        errors.push('Email is required');
+    } else if (!/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(email)) {
+        showEditFieldError('efPEmail', 'Enter a valid email address');
+        isValid = false;
+        errors.push('Invalid email format');
+    }
+    
+    const mobile = document.getElementById('efMob')?.value.trim();
+    if (!mobile) {
+        showEditFieldError('efMob', 'Mobile number is required');
+        isValid = false;
+        errors.push('Mobile number is required');
+    } else if (!/^[6-9][0-9]{9}$/.test(mobile)) {
+        showEditFieldError('efMob', 'Enter a valid 10-digit mobile number starting with 6-9');
+        isValid = false;
+        errors.push('Invalid mobile number');
+    }
+    
+    const department = document.getElementById('efDept')?.value;
+    if (!department) {
+        showEditFieldError('efDept', 'Department is required');
+        isValid = false;
+        errors.push('Department is required');
+    }
+    
+    const designation = document.getElementById('efDesig')?.value.trim();
+    if (!designation) {
+        showEditFieldError('efDesig', 'Designation is required');
+        isValid = false;
+        errors.push('Designation is required');
+    }
+    
+    const joiningDate = document.getElementById('efJD')?.value;
+    if (!joiningDate) {
+        showEditFieldError('efJD', 'Joining date is required');
+        isValid = false;
+        errors.push('Joining date is required');
+    }
+    
+    const basicSalary = document.getElementById('efBasic')?.value;
+    if (!basicSalary) {
+        showEditFieldError('efBasic', 'Basic salary is required');
+        isValid = false;
+        errors.push('Basic salary is required');
+    } else if (parseFloat(basicSalary) <= 0) {
+        showEditFieldError('efBasic', 'Salary must be greater than 0');
+        isValid = false;
+        errors.push('Invalid salary amount');
+    }
+    
+    const ecName = document.getElementById('efECName')?.value.trim();
+    const ecPhone = document.getElementById('efECPhone')?.value.trim();
+    
+    if (!ecName && ecPhone) {
+        showEditFieldError('efECName', 'Emergency contact name is required when phone is provided');
+        isValid = false;
+        errors.push('Emergency name required');
+    }
+    if (ecName && !ecPhone) {
+        showEditFieldError('efECPhone', 'Emergency contact phone is required when name is provided');
+        isValid = false;
+        errors.push('Emergency phone required');
+    }
+    if (ecPhone && !/^[6-9][0-9]{9}$/.test(ecPhone)) {
+        showEditFieldError('efECPhone', 'Enter a valid 10-digit emergency phone number');
+        isValid = false;
+        errors.push('Invalid emergency phone');
+    }
+    
+    // PAN validation (if provided)
+    const pan = document.getElementById('efPAN')?.value.trim();
+    if (pan && !/^[A-Z]{5}[0-9]{4}[A-Z]{1}$/.test(pan)) {
+        showEditFieldError('efPAN', 'Invalid PAN format (e.g., ABCDE1234F)');
+        isValid = false;
+        errors.push('Invalid PAN number');
+    }
+    
+    // Aadhaar validation (if provided)
+    const aadhaar = document.getElementById('efAAD')?.value.trim().replace(/\s/g, '');
+    if (aadhaar && !/^[2-9][0-9]{11}$/.test(aadhaar)) {
+        showEditFieldError('efAAD', 'Invalid Aadhaar number (12 digits, starts with 2-9)');
+        isValid = false;
+        errors.push('Invalid Aadhaar number');
+    }
+    
+    // Password validation (if provided)
+    const password = document.getElementById('efPassword')?.value;
+    const confirmPassword = document.getElementById('efConfirmPassword')?.value;
+    
+    if (password && password.length < 6) {
+        showEditFieldError('efPassword', 'Password must be at least 6 characters');
+        isValid = false;
+        errors.push('Password too short');
+    }
+    if (password && password !== confirmPassword) {
+        showEditFieldError('efConfirmPassword', 'Passwords do not match');
+        isValid = false;
+        errors.push('Passwords do not match');
+    }
+    
+    if (!isValid && errors.length > 0) {
+        showToast('Please fix the following: ' + errors.slice(0, 3).join(', '), 'error');
+    }
+    
+    return isValid;
+}
+
+// Override the submitEditEmployee function with validation
+const originalSubmitEditEmployee = window.submitEditEmployee;
+window.submitEditEmployee = async function(e, employeePrimeId) {
+    e.preventDefault();
+    
+    // Run validation first
+    if (!validateEditFormBeforeSubmit()) {
+        // Scroll to first error
+        const firstError = document.querySelector('#editEmployeeOverlay .error');
+        if (firstError) {
+            firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+        return;
+    }
+    
+    // Call original function
+    if (originalSubmitEditEmployee) {
+        await originalSubmitEditEmployee(e, employeePrimeId);
+    }
+};
+
+// Initialize edit form validations when edit overlay opens
+const originalShowEditOverlay = window.showEditOverlay;
+if (originalShowEditOverlay) {
+    window.showEditOverlay = function(emp, loading, employeePrimeId) {
+        originalShowEditOverlay(emp, loading, employeePrimeId);
+        if (!loading) {
+            setTimeout(() => {
+                setupEditFormFilters();
+            }, 100);
+        }
+    };
+}
+// ==================== HELPER FUNCTIONS ====================
+
+// Add error message element to a field
+function addErrorElement(inputId) {
+    const input = document.getElementById(inputId);
+    if (!input) return null;
+    
+    // Check if error element already exists
+    let errorDiv = input.parentElement.querySelector('.validation-error');
+    if (!errorDiv) {
+        errorDiv = document.createElement('div');
+        errorDiv.className = 'validation-error';
+        errorDiv.style.cssText = 'color: #dc3545; font-size: 11px; margin-top: 4px; display: none;';
+        input.parentElement.appendChild(errorDiv);
+    }
+    return errorDiv;
+}
+
+// Show error for a field
+function showFieldError(inputId, message) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    
+    input.style.borderColor = '#dc3545';
+    input.style.backgroundColor = '#fff8f8';
+    
+    const errorDiv = input.parentElement.querySelector('.validation-error');
+    if (errorDiv) {
+        errorDiv.textContent = message;
+        errorDiv.style.display = 'block';
+    }
+}
+
+// Clear error for a field
+function clearFieldError(inputId) {
+    const input = document.getElementById(inputId);
+    if (!input) return;
+    
+    input.style.borderColor = '';
+    input.style.backgroundColor = '';
+    
+    const errorDiv = input.parentElement.querySelector('.validation-error');
+    if (errorDiv) {
+        errorDiv.style.display = 'none';
+        errorDiv.textContent = '';
+    }
+}
+
+// Validate a single field
+function validateField(fieldId, rules) {
+    const input = document.getElementById(fieldId);
+    if (!input) return true;
+    
+    const value = input.value.trim();
+    
+    // Skip validation if field is not required and empty
+    if (!rules.required && value === '') {
+        clearFieldError(fieldId);
+        return true;
+    }
+    
+    // Check required
+    if (rules.required && value === '') {
+        showFieldError(fieldId, rules.requiredMessage || 'This field is required');
+        return false;
+    }
+    
+    // Check pattern
+    if (rules.pattern && value !== '') {
+        if (!rules.pattern.test(value)) {
+            showFieldError(fieldId, rules.message);
+            return false;
+        }
+    }
+    
+    // Check min/max for numbers
+    if (rules.type === 'number' && value !== '') {
+        const numValue = parseFloat(value);
+        if (rules.min !== undefined && numValue < rules.min) {
+            showFieldError(fieldId, `Minimum value is ${rules.min}`);
+            return false;
+        }
+        if (rules.max !== undefined && numValue > rules.max) {
+            showFieldError(fieldId, `Maximum value is ${rules.max}`);
+            return false;
+        }
+    }
+    
+    // Check date not future
+    if (rules.noFuture && value !== '') {
+        const date = new Date(value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        if (date > today) {
+            showFieldError(fieldId, VALIDATION.dateNotFuture.message);
+            return false;
+        }
+    }
+    
+    clearFieldError(fieldId);
+    return true;
+}
+
+// ==================== FIELD VALIDATION RULES ====================
+
+const VALIDATION_RULES = {
+    // Personal Info Fields - STRICT: No numbers allowed
+    fFN: {
+        required: true,
+        pattern: /^[A-Za-z]{1,50}$/,  // Only letters, no spaces even
+        message: 'First name must contain only letters (A-Z, a-z)',
+        requiredMessage: 'First name is required'
+    },
+    fLN: {
+        required: true,
+        pattern: /^[A-Za-z]{1,50}$/,
+        message: 'Last name must contain only letters (A-Z, a-z)',
+        requiredMessage: 'Last name is required'
+    },
+    fMN: {
+        required: false,
+        pattern: /^[A-Za-z]{0,50}$/,
+        message: 'Middle name must contain only letters'
+    },
+    
+    // Contact Fields
+    fPEmail: {
+        required: true,
+        pattern: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+        message: 'Enter a valid email (e.g., name@company.com)',
+        requiredMessage: 'Email is required'
+    },
+    
+    fMob: {
+        required: true,
+        pattern: /^[6-9][0-9]{9}$/,  // Exactly 10 digits starting with 6-9
+        message: 'Enter a valid 10-digit mobile number starting with 6,7,8, or 9',
+        requiredMessage: 'Mobile number is required'
+    },
+
+    fAlt: {
+        required: false,
+        pattern: VALIDATION.phoneWithCode.pattern,
+        message: VALIDATION.phoneWithCode.message
+    },
+    
+    // ID Documents
+    fPAN: {
+        required: false,
+        pattern: /^[A-Z]{5}[0-9]{4}[A-Z]{1}$/,
+        message: 'Enter a valid PAN (5 letters, 4 digits, 1 letter) - e.g., ABCDE1234F'
+    },
+    fAAD: {
+        required: false,
+        pattern: /^[2-9][0-9]{3}\s[0-9]{4}\s[0-9]{4}$/,  // Format: XXXX XXXX XXXX
+        message: 'Enter a valid 12-digit Aadhaar number (XXXX XXXX XXXX)'
+    },
+    
+    // Address Fields (Current)
+    fPIN: {
+        required: false,
+        pattern: /^[1-9][0-9]{5}$/,
+        message: 'Enter a valid 6-digit PIN code'
+    },
+
+    fPPIN: {
+        required: false,
+        pattern: VALIDATION.pincode.pattern,
+        message: VALIDATION.pincode.message
+    },
+    
+    // Bank Details
+    fIFSC: {
+        required: false,
+        pattern: VALIDATION.ifsc.pattern,
+        message: VALIDATION.ifsc.message
+    },
+    fAccNo: {
+        required: false,
+        pattern: VALIDATION.accountNumber.pattern,
+        message: VALIDATION.accountNumber.message
+    },
+    
+    // Job Details
+    fBasic: {
+        required: true,
+        type: 'number',
+        pattern: VALIDATION.salary.pattern,
+        message: VALIDATION.salary.message,
+        requiredMessage: 'Basic salary is required',
+        min: 0,
+        max: 100000000
+    },
+    fJD: {
+        required: true,
+        noFuture: true,
+        requiredMessage: 'Joining date is required'
+    },
+    fDOB: {
+        required: false,
+        noFuture: true
+    },
+    fProbEnd: {
+        required: false,
+        noFuture: false  // Can be future
+    },
+    
+    // Password
+    fPassword: {
+        required: true,
+        pattern: VALIDATION.password.pattern,
+        message: VALIDATION.password.message,
+        requiredMessage: 'Password is required'
+    },
+    fConfirmPassword: {
+        required: true,
+        requiredMessage: 'Please confirm your password'
+    },
+    
+    // PwD Fields
+    fPWDPct: {
+        required: false,
+        type: 'number',
+        pattern: VALIDATION.percentage.pattern,
+        message: VALIDATION.percentage.message,
+        min: 0,
+        max: 100
+    },
+    
+    // LinkedIn
+    fLI: {
+        required: false,
+        pattern: VALIDATION.linkedin.pattern,
+        message: VALIDATION.linkedin.message
+    },
+    
+    // Emergency Contact
+    fECName: {
+        required: true,
+        pattern: VALIDATION.name.pattern,
+        message: VALIDATION.name.message,
+        requiredMessage: 'Emergency contact name is required'
+    },
+    fECPhone: {
+        required: true,
+        pattern: VALIDATION.phoneWithCode.pattern,
+        message: VALIDATION.phoneWithCode.message,
+        requiredMessage: 'Emergency contact phone is required'
+    },
+    
+    // Department & Designation (required in Add form)
+    fDept: {
+        required: true,
+        requiredMessage: 'Please select a department'
+    },
+    fDesig: {
+        required: true,
+        requiredMessage: 'Designation is required'
+    }
+};
+
+// ==================== REAL-TIME VALIDATION SETUP ====================
+
+function setupRealTimeValidation() {
+    // Setup validation for all fields with rules
+    for (const [fieldId, rules] of Object.entries(VALIDATION_RULES)) {
+        const input = document.getElementById(fieldId);
+        if (input) {
+            // Add blur event listener
+            input.addEventListener('blur', function() {
+                validateField(fieldId, rules);
+            });
+            
+            // Add input event listener to clear error while typing
+            input.addEventListener('input', function() {
+                clearFieldError(fieldId);
+            });
+        }
+    }
+    
+    // Special validation for Confirm Password
+    const confirmPass = document.getElementById('fConfirmPassword');
+    const password = document.getElementById('fPassword');
+    
+    if (confirmPass && password) {
+        confirmPass.addEventListener('blur', function() {
+            if (password.value !== confirmPass.value) {
+                showFieldError('fConfirmPassword', 'Passwords do not match');
+            } else {
+                clearFieldError('fConfirmPassword');
+            }
+        });
+        
+        password.addEventListener('input', function() {
+            if (confirmPass.value && password.value !== confirmPass.value) {
+                showFieldError('fConfirmPassword', 'Passwords do not match');
+            } else if (confirmPass.value) {
+                clearFieldError('fConfirmPassword');
+            }
+        });
+    }
+    
+    // Aadhaar number formatting (add spaces)
+    const aadhaarInput = document.getElementById('fAAD');
+    if (aadhaarInput) {
+        aadhaarInput.addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\s/g, '');
+            if (value.length > 12) value = value.slice(0, 12);
+            if (value.length > 8) {
+                value = value.slice(0, 8) + ' ' + value.slice(8);
+            }
+            if (value.length > 4) {
+                value = value.slice(0, 4) + ' ' + value.slice(4);
+            }
+            e.target.value = value;
+        });
+    }
+    
+    // PAN number uppercase and formatting
+    const panInput = document.getElementById('fPAN');
+    if (panInput) {
+        panInput.addEventListener('input', function(e) {
+            e.target.value = e.target.value.toUpperCase();
+        });
+    }
+    
+    // Mobile number - restrict to digits only
+    const mobileInput = document.getElementById('fMob');
+    if (mobileInput) {
+        mobileInput.addEventListener('input', function(e) {
+            e.target.value = e.target.value.replace(/[^0-9+]/g, '');
+        });
+    }
+    
+    // Salary field - restrict format
+    const salaryInput = document.getElementById('fBasic');
+    if (salaryInput) {
+        salaryInput.addEventListener('input', function(e) {
+            let value = e.target.value;
+            if (value.includes('.')) {
+                const parts = value.split('.');
+                if (parts[1] && parts[1].length > 2) {
+                    e.target.value = parts[0] + '.' + parts[1].slice(0, 2);
+                }
+            }
+        });
+    }
+}
+
+// ==================== PASSWORD STRENGTH INDICATOR ====================
+
+function addPasswordStrengthIndicator() {
+    const passwordInput = document.getElementById('fPassword');
+    if (!passwordInput) return;
+    
+    // Create strength indicator element
+    let strengthDiv = passwordInput.parentElement.querySelector('.password-strength');
+    if (!strengthDiv) {
+        strengthDiv = document.createElement('div');
+        strengthDiv.className = 'password-strength';
+        strengthDiv.style.cssText = 'margin-top: 6px; font-size: 11px;';
+        passwordInput.parentElement.appendChild(strengthDiv);
+    }
+    
+    passwordInput.addEventListener('input', function() {
+        const password = this.value;
+        let strength = 0;
+        let strengthText = '';
+        let strengthColor = '';
+        
+        if (password.length >= 6) strength++;
+        if (password.length >= 8) strength++;
+        if (/[A-Z]/.test(password)) strength++;
+        if (/[a-z]/.test(password)) strength++;
+        if (/[0-9]/.test(password)) strength++;
+        if (/[^A-Za-z0-9]/.test(password)) strength++;
+        
+        if (password.length === 0) {
+            strengthText = '';
+            strengthColor = '';
+        } else if (strength <= 2) {
+            strengthText = 'Weak password';
+            strengthColor = '#dc3545';
+        } else if (strength <= 4) {
+            strengthText = 'Medium password';
+            strengthColor = '#ffc107';
+        } else {
+            strengthText = 'Strong password';
+            strengthColor = '#28a745';
+        }
+        
+        strengthDiv.innerHTML = strengthText ? `<span style="color: ${strengthColor};">🔒 ${strengthText}</span>` : '';
+    });
+}
+
+// ==================== FORM SUBMISSION VALIDATION ====================
+
+// Validate entire Add Employee form before submission
+function validateAddEmployeeForm() {
+    let isValid = true;
+    
+    // Validate all fields with rules
+    for (const [fieldId, rules] of Object.entries(VALIDATION_RULES)) {
+        const input = document.getElementById(fieldId);
+        
+        // Skip fields that are not in the current wizard step? 
+        // We'll validate all but only show errors for visible required fields
+        if (input && input.offsetParent !== null) { // Check if visible
+            const fieldValid = validateField(fieldId, rules);
+            if (!fieldValid) isValid = false;
+        }
+    }
+    
+    // Special validation for Confirm Password
+    const password = document.getElementById('fPassword');
+    const confirmPass = document.getElementById('fConfirmPassword');
+    if (password && confirmPass && password.offsetParent !== null) {
+        if (password.value !== confirmPass.value) {
+            showFieldError('fConfirmPassword', 'Passwords do not match');
+            isValid = false;
+        }
+    }
+    
+    // Validate dynamic education rows (at least one if any filled)
+    const eduRows = document.querySelectorAll('.dynamic-row');
+    let hasPartialEdu = false;
+    eduRows.forEach(row => {
+        const inputs = row.querySelectorAll('input');
+        let hasValue = false;
+        inputs.forEach(input => {
+            if (input.value.trim()) hasValue = true;
+        });
+        if (hasValue) {
+            inputs.forEach(input => {
+                if (!input.value.trim()) hasPartialEdu = true;
+            });
+        }
+    });
+    
+    if (hasPartialEdu) {
+        showToast('Please complete all education fields or remove incomplete entries', 'error');
+        isValid = false;
+    }
+    
+    // Validate dates (joining date > date of birth + 18 years)
+    const dob = document.getElementById('fDOB')?.value;
+    const joiningDate = document.getElementById('fJD')?.value;
+    
+    if (dob && joiningDate) {
+        const birthDate = new Date(dob);
+        const joinDate = new Date(joiningDate);
+        const ageAtJoining = joinDate.getFullYear() - birthDate.getFullYear();
+        const monthDiff = joinDate.getMonth() - birthDate.getMonth();
+        
+        if (ageAtJoining < 18 || (ageAtJoining === 18 && monthDiff < 0)) {
+            showToast('Employee must be at least 18 years old at time of joining', 'error');
+            isValid = false;
+        }
+        
+        if (joinDate < birthDate) {
+            showToast('Joining date cannot be before date of birth', 'error');
+            isValid = false;
+        }
+    }
+    
+    return isValid;
+}
+
+// Enhanced form submission with validation
+function enhanceFormSubmission() {
+    const form = document.getElementById('addEmployeeForm');
+    if (!form) return;
+    
+    const originalSubmit = form.onsubmit;
+    
+    form.addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        // Run validation
+        if (!validateAddEmployeeForm()) {
+            // Scroll to first error
+            const firstError = document.querySelector('.validation-error[style*="display: block"]');
+            if (firstError) {
+                firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+            showToast('Please fix the validation errors before submitting', 'error');
+            return;
+        }
+        
+        // If validation passes, proceed with original submit
+        if (originalSubmit) {
+            await originalSubmit.call(this, e);
+        } else {
+            // Trigger the existing form submission logic
+            const saveBtn = document.getElementById('saveBtn');
+            if (saveBtn && !saveBtn.disabled) {
+                saveBtn.click();
+            }
+        }
+    });
+}
+
+// ==================== EDIT FORM VALIDATION ====================
+
+function validateEditEmployeeForm() {
+    let isValid = true;
+    
+    // Basic validation for edit form fields
+    const editValidations = [
+        { id: 'efFN', required: true, name: 'First Name', pattern: VALIDATION.name.pattern },
+        { id: 'efLN', required: true, name: 'Last Name', pattern: VALIDATION.name.pattern },
+        { id: 'efPEmail', required: true, name: 'Email', pattern: VALIDATION.email.pattern },
+        { id: 'efMob', required: true, name: 'Mobile', pattern: VALIDATION.phoneWithCode.pattern },
+        { id: 'efDept', required: true, name: 'Department' },
+        { id: 'efDesig', required: true, name: 'Designation' },
+        { id: 'efJD', required: true, name: 'Joining Date' },
+        { id: 'efBasic', required: true, name: 'Basic Salary', type: 'number', min: 0 },
+        { id: 'efECName', required: true, name: 'Emergency Contact Name', pattern: VALIDATION.name.pattern },
+        { id: 'efECPhone', required: true, name: 'Emergency Contact Phone', pattern: VALIDATION.phoneWithCode.pattern }
+    ];
+    
+    for (const field of editValidations) {
+        const input = document.getElementById(field.id);
+        if (input && input.offsetParent !== null) {
+            const value = input.value.trim();
+            
+            if (field.required && !value) {
+                showFieldError(field.id, `${field.name} is required`);
+                isValid = false;
+            } else if (value && field.pattern && !field.pattern.test(value)) {
+                const message = field.name === 'Email' ? VALIDATION.email.message :
+                               field.name === 'Mobile' ? VALIDATION.mobile.message :
+                               `${field.name} is invalid`;
+                showFieldError(field.id, message);
+                isValid = false;
+            } else {
+                clearFieldError(field.id);
+            }
+        }
+    }
+    
+    // Password validation (only if provided)
+    const password = document.getElementById('efPassword');
+    const confirmPassword = document.getElementById('efConfirmPassword');
+    
+    if (password && password.value.trim()) {
+        if (password.value.length < 6) {
+            showFieldError('efPassword', 'Password must be at least 6 characters');
+            isValid = false;
+        } else if (password.value !== confirmPassword?.value) {
+            showFieldError('efConfirmPassword', 'Passwords do not match');
+            isValid = false;
+        }
+    }
+    
+    return isValid;
+}
+
+// ==================== QUICK ADD FORM VALIDATION ====================
+
+function validateQuickAddForm() {
+    const firstName = document.getElementById('qFN')?.value.trim() || '';
+    const lastName = document.getElementById('qLN')?.value.trim() || '';
+    const department = document.getElementById('qDept')?.value.trim() || '';
+    const designation = document.getElementById('qDesig')?.value.trim() || '';
+    const password = document.getElementById('qPass')?.value || '';
+    
+    // Name validation
+    if (!firstName) {
+        showQuickAddError('First name is required');
+        return false;
+    }
+    if (!VALIDATION.name.pattern.test(firstName)) {
+        showQuickAddError(VALIDATION.name.message);
+        return false;
+    }
+    
+    if (!lastName) {
+        showQuickAddError('Last name is required');
+        return false;
+    }
+    if (!VALIDATION.name.pattern.test(lastName)) {
+        showQuickAddError(VALIDATION.name.message);
+        return false;
+    }
+    
+    // Department & Designation
+    if (!department) {
+        showQuickAddError('Department is required');
+        return false;
+    }
+    if (!designation) {
+        showQuickAddError('Designation is required');
+        return false;
+    }
+    
+  
+    
+    return true;
+}
+
+// Override the original submitQuickAddMember
+const originalSubmitQuickAdd = window.submitQuickAddMember;
+window.submitQuickAddMember = async function(event) {
+    event.preventDefault();
+    
+    if (!validateQuickAddForm()) {
+        return;
+    }
+    
+    if (originalSubmitQuickAdd) {
+        await originalSubmitQuickAdd(event);
+    }
+};
+
+// ==================== INITIALIZE VALIDATIONS ====================
+
+function initializeValidations() {
+    // Setup real-time validation for Add Employee form
+    setupRealTimeValidation();
+    
+    // Add password strength indicator
+    addPasswordStrengthIndicator();
+    
+    // Enhance form submission
+    enhanceFormSubmission();
+    
+    // Override edit employee submission
+    const originalEditSubmit = window.submitEditEmployee;
+    if (originalEditSubmit) {
+        window.submitEditEmployee = async function(e, employeePrimeId) {
+            e.preventDefault();
+            
+            if (!validateEditEmployeeForm()) {
+                const firstError = document.querySelector('#editEmployeeOverlay .validation-error[style*="display: block"]');
+                if (firstError) {
+                    firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+                showToast('Please fix the validation errors before saving', 'error');
+                return;
+            }
+            
+            await originalEditSubmit(e, employeePrimeId);
+        };
+    }
+    
+    // Add format restrictions for numeric fields
+    const numericFields = ['fBasic', 'fPWDPct', 'efBasic'];
+    numericFields.forEach(fieldId => {
+        const input = document.getElementById(fieldId);
+        if (input) {
+            input.addEventListener('input', function() {
+                this.value = this.value.replace(/[^0-9.]/g, '');
+                const parts = this.value.split('.');
+                if (parts.length > 2) this.value = parts[0] + '.' + parts.slice(1).join('');
+            });
+        }
+    });
+}
+
+// Call initialization when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    initializeValidations();
+    
+    // Also setup validation for department and designation selects
+    const deptSelect = document.getElementById('fDept');
+    const desigInput = document.getElementById('fDesig');
+    
+    if (deptSelect) {
+        deptSelect.addEventListener('change', function() {
+            if (!this.value) {
+                showFieldError('fDept', 'Please select a department');
+            } else {
+                clearFieldError('fDept');
+            }
+        });
+    }
+    
+    if (desigInput) {
+        desigInput.addEventListener('blur', function() {
+            if (!this.value.trim()) {
+                showFieldError('fDesig', 'Designation is required');
+            } else {
+                clearFieldError('fDesig');
+            }
+        });
+    }
+});
+
+
+// ==================== REAL-TIME INPUT FILTERING ====================
+
+// Block numbers in name fields
+function blockNumbersInName(inputElement) {
+    if (!inputElement) return;
+    
+    inputElement.addEventListener('input', function(e) {
+        // Remove any digits from the input
+        let newValue = this.value.replace(/[0-9]/g, '');
+        
+        // Also prevent special characters except space, dot, hyphen
+        newValue = newValue.replace(/[^A-Za-z\s\.\-]/g, '');
+        
+        if (this.value !== newValue) {
+            this.value = newValue;
+            // Show a quick visual feedback
+            this.style.borderColor = '#dc3545';
+            setTimeout(() => {
+                if (!this.classList.contains('error')) {
+                    this.style.borderColor = '';
+                }
+            }, 500);
+        }
+    });
+    
+    // Also prevent paste of invalid characters
+    inputElement.addEventListener('paste', function(e) {
+        e.preventDefault();
+        const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+        const cleanedText = pastedText.replace(/[0-9]/g, '').replace(/[^A-Za-z\s\.\-]/g, '');
+        this.value = cleanedText;
+    });
+}
+
+// Allow only digits for Aadhaar
+function allowOnlyDigitsForAadhaar(inputElement) {
+    if (!inputElement) return;
+    
+    inputElement.addEventListener('input', function(e) {
+        let cursorPosition = this.selectionStart;
+        let originalLength = this.value.length;
+        
+        // Remove all non-digits
+        let digitsOnly = this.value.replace(/\D/g, '');
+        
+        // Limit to 12 digits
+        if (digitsOnly.length > 12) {
+            digitsOnly = digitsOnly.slice(0, 12);
+        }
+        
+        // Format with spaces (XXXX XXXX XXXX)
+        let formatted = '';
+        for (let i = 0; i < digitsOnly.length; i++) {
+            if (i === 4 || i === 8) {
+                formatted += ' ';
+            }
+            formatted += digitsOnly[i];
+        }
+        
+        if (this.value !== formatted) {
+            this.value = formatted;
+            // Adjust cursor position
+            let newPosition = cursorPosition;
+            if (formatted.length > originalLength) {
+                newPosition = cursorPosition + Math.floor(cursorPosition / 5);
+            }
+            this.setSelectionRange(newPosition, newPosition);
+        }
+    });
+    
+    // Block paste of non-digits
+    inputElement.addEventListener('paste', function(e) {
+        e.preventDefault();
+        const pastedText = (e.clipboardData || window.clipboardData).getData('text');
+        const digitsOnly = pastedText.replace(/\D/g, '').slice(0, 12);
+        
+        let formatted = '';
+        for (let i = 0; i < digitsOnly.length; i++) {
+            if (i === 4 || i === 8) formatted += ' ';
+            formatted += digitsOnly[i];
+        }
+        this.value = formatted;
+    });
+}
+
+// Allow only digits and + for phone numbers
+function formatPhoneNumber(inputElement) {
+    if (!inputElement) return;
+    
+    inputElement.addEventListener('input', function(e) {
+        let cursorPosition = this.selectionStart;
+        
+        // Allow only digits and plus sign at beginning
+        let cleaned = '';
+        let hasPlus = false;
+        
+        for (let i = 0; i < this.value.length; i++) {
+            const char = this.value[i];
+            if (char === '+' && i === 0 && !hasPlus) {
+                cleaned += '+';
+                hasPlus = true;
+            } else if (char >= '0' && char <= '9') {
+                cleaned += char;
+            }
+        }
+        
+        // Limit to 15 characters (max phone length)
+        if (cleaned.length > 15) {
+            cleaned = cleaned.slice(0, 15);
+        }
+        
+        if (this.value !== cleaned) {
+            this.value = cleaned;
+            this.setSelectionRange(cursorPosition, cursorPosition);
+        }
+    });
+    
+    inputElement.addEventListener('paste', function(e) {
+        e.preventDefault();
+        let pastedText = (e.clipboardData || window.clipboardData).getData('text');
+        let cleaned = '';
+        let hasPlus = false;
+        
+        for (let i = 0; i < pastedText.length; i++) {
+            const char = pastedText[i];
+            if (char === '+' && i === 0 && !hasPlus) {
+                cleaned += '+';
+                hasPlus = true;
+            } else if (char >= '0' && char <= '9') {
+                cleaned += char;
+            }
+        }
+        
+        if (cleaned.length > 15) cleaned = cleaned.slice(0, 15);
+        this.value = cleaned;
+    });
+}
+
+// PAN Card - uppercase and block invalid chars
+function formatPANCard(inputElement) {
+    if (!inputElement) return;
+    
+    inputElement.addEventListener('input', function(e) {
+        let cursorPosition = this.selectionStart;
+        
+        // Convert to uppercase
+        let upper = this.value.toUpperCase();
+        
+        // Allow only letters and digits
+        let cleaned = '';
+        for (let i = 0; i < upper.length && cleaned.length < 10; i++) {
+            const char = upper[i];
+            if ((char >= 'A' && char <= 'Z') || (char >= '0' && char <= '9')) {
+                cleaned += char;
+            }
+        }
+        
+        if (this.value !== cleaned) {
+            this.value = cleaned;
+            this.setSelectionRange(cursorPosition, cursorPosition);
+        }
+    });
+    
+    inputElement.addEventListener('paste', function(e) {
+        e.preventDefault();
+        let pastedText = (e.clipboardData || window.clipboardData).getData('text');
+        let cleaned = pastedText.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 10);
+        this.value = cleaned;
+    });
+}
+
+// PIN Code - allow only 6 digits
+function formatPINCode(inputElement) {
+    if (!inputElement) return;
+    
+    inputElement.addEventListener('input', function(e) {
+        let digitsOnly = this.value.replace(/\D/g, '').slice(0, 6);
+        if (this.value !== digitsOnly) {
+            this.value = digitsOnly;
+        }
+    });
+    
+    inputElement.addEventListener('paste', function(e) {
+        e.preventDefault();
+        let pastedText = (e.clipboardData || window.clipboardData).getData('text');
+        let digitsOnly = pastedText.replace(/\D/g, '').slice(0, 6);
+        this.value = digitsOnly;
+    });
+}
+
+// Block special characters in general text fields
+function blockSpecialChars(inputElement) {
+    if (!inputElement) return;
+    
+    inputElement.addEventListener('input', function(e) {
+        // Allow letters, numbers, spaces, and basic punctuation
+        let cleaned = this.value.replace(/[^A-Za-z0-9\s\-\.\,\/]/g, '');
+        if (this.value !== cleaned) {
+            this.value = cleaned;
+        }
+    });
+}
+
+// Allow only numbers for salary/amount fields
+function allowOnlyNumbers(inputElement, allowDecimal = true) {
+    if (!inputElement) return;
+    
+    inputElement.addEventListener('input', function(e) {
+        let cursorPosition = this.selectionStart;
+        let value = this.value;
+        
+        let cleaned;
+        if (allowDecimal) {
+            // Allow digits and one decimal point
+            cleaned = value.replace(/[^0-9.]/g, '');
+            const parts = cleaned.split('.');
+            if (parts.length > 2) {
+                cleaned = parts[0] + '.' + parts.slice(1).join('');
+            }
+            // Limit to 2 decimal places
+            if (parts[1] && parts[1].length > 2) {
+                cleaned = parts[0] + '.' + parts[1].slice(0, 2);
+            }
+        } else {
+            cleaned = value.replace(/\D/g, '');
+        }
+        
+        if (value !== cleaned) {
+            this.value = cleaned;
+            this.setSelectionRange(cursorPosition, cursorPosition);
+        }
+    });
+    
+    inputElement.addEventListener('paste', function(e) {
+        e.preventDefault();
+        let pastedText = (e.clipboardData || window.clipboardData).getData('text');
+        let cleaned;
+        if (allowDecimal) {
+            cleaned = pastedText.replace(/[^0-9.]/g, '');
+            const parts = cleaned.split('.');
+            if (parts.length > 2) cleaned = parts[0] + '.' + parts.slice(1).join('');
+        } else {
+            cleaned = pastedText.replace(/\D/g, '');
+        }
+        this.value = cleaned;
+    });
+}
+
+// ==================== APPLY FILTERS TO ALL FIELDS ====================
+
+function applyInputFilters() {
+    // Name fields (block numbers)
+    const nameFields = ['fFN', 'fLN', 'fMN', 'fFatherName', 'fECName', 
+                        'efFN', 'efLN', 'efMN', 'efFatherName', 'efECName',
+                        'qFN', 'qLN'];
+    nameFields.forEach(fieldId => {
+        const element = document.getElementById(fieldId);
+        if (element) blockNumbersInName(element);
+    });
+    
+    // Aadhaar fields (digits only with auto-format)
+    const aadhaarFields = ['fAAD', 'efAAD'];
+    aadhaarFields.forEach(fieldId => {
+        const element = document.getElementById(fieldId);
+        if (element) allowOnlyDigitsForAadhaar(element);
+    });
+    
+    // Phone number fields
+    const phoneFields = ['fMob', 'fAlt', 'fECPhone', 'efMob', 'efAlt', 'efECPhone'];
+    phoneFields.forEach(fieldId => {
+        const element = document.getElementById(fieldId);
+        if (element) formatPhoneNumber(element);
+    });
+    
+    // PAN Card fields
+    const panFields = ['fPAN', 'efPAN'];
+    panFields.forEach(fieldId => {
+        const element = document.getElementById(fieldId);
+        if (element) formatPANCard(element);
+    });
+    
+    // PIN Code fields
+    const pinFields = ['fPIN', 'fPPIN', 'efPIN', 'efPPIN'];
+    pinFields.forEach(fieldId => {
+        const element = document.getElementById(fieldId);
+        if (element) formatPINCode(element);
+    });
+    
+    // Salary/Amount fields
+    const salaryFields = ['fBasic', 'fPWDPct', 'efBasic'];
+    salaryFields.forEach(fieldId => {
+        const element = document.getElementById(fieldId);
+        if (element) allowOnlyNumbers(element, true);
+    });
+    
+    // IFSC Code fields (uppercase alphanumeric)
+    const ifscFields = ['fIFSC', 'efIFSC'];
+    ifscFields.forEach(fieldId => {
+        const element = document.getElementById(fieldId);
+        if (element) {
+            element.addEventListener('input', function() {
+                this.value = this.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 11);
+            });
+        }
+    });
+    
+    // Account number fields (digits only)
+    const accountFields = ['fAccNo', 'efAccNo'];
+    accountFields.forEach(fieldId => {
+        const element = document.getElementById(fieldId);
+        if (element) allowOnlyNumbers(element, false);
+    });
+}
+
+// Call this when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    applyInputFilters();
+});
 
         // ==================== GLOBAL VARIABLES ====================
         let currentPage = 0;
@@ -2122,13 +3819,14 @@
 
             const empId = emp.employeeId || '';
             const docLinks = [
-                { label: 'Aadhaar', icon: 'fa-id-card', endpoint: `${API_BASE}/${empId}/aadhaar-image`, hasDoc: !!(emp.aadhaarDocumentUrl || emp.aadhaarDocumentImage) },
-                { label: 'PAN Card', icon: 'fa-address-card', endpoint: `${API_BASE}/${empId}/pan-image`, hasDoc: !!(emp.panDocumentUrl || emp.panDocumentImage) },
-                { label: 'Degree', icon: 'fa-graduation-cap', endpoint: `${API_BASE}/${empId}/degree-image`, hasDoc: !!(emp.degreeDocumentUrl || emp.degreeDocumentImage) },
-                { label: 'Experience', icon: 'fa-file-alt', endpoint: `${API_BASE}/${empId}/experience-image`, hasDoc: !!(emp.experienceDocumentUrl || emp.experienceDocumentImage) },
-                { label: 'Offer Letter', icon: 'fa-envelope-open-text', endpoint: `${API_BASE}/${empId}/offer-letter`, hasDoc: !!(emp.offerLetterUrl || emp.offerLetterImage) },
-                { label: 'Profile Photo', icon: 'fa-user-circle', endpoint: `${API_BASE}/${empId}/profile-image`, hasDoc: !!(emp.profilePhotoUrl || emp.profilePhotoImage) },
+                { label: 'Aadhaar',      icon: 'fa-id-card',           endpoint: `${API_BASE}/${empId}/aadhaar-image`,    hasDoc: !!emp.aadhaarDocumentUrl },
+                { label: 'PAN Card',     icon: 'fa-address-card',       endpoint: `${API_BASE}/${empId}/pan-image`,        hasDoc: !!emp.panDocumentUrl },
+                { label: 'Degree',       icon: 'fa-graduation-cap',     endpoint: `${API_BASE}/${empId}/degree-image`,     hasDoc: !!emp.degreeDocumentUrl },
+                { label: 'Experience',   icon: 'fa-file-alt',           endpoint: `${API_BASE}/${empId}/experience-image`, hasDoc: !!emp.experienceDocumentUrl },
+                { label: 'Offer Letter', icon: 'fa-envelope-open-text', endpoint: `${API_BASE}/${empId}/offer-image`,      hasDoc: !!emp.offerLetterUrl },
+                { label: 'Profile Photo',icon: 'fa-user-circle',        endpoint: `${API_BASE}/${empId}/profile-image`,    hasDoc: !!emp.profilePhotoUrl },
             ];
+
             const docHtml = docLinks.map(d => `
         <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--primary-bg-light);border-radius:8px;margin-bottom:6px;border:1px solid var(--primary-soft);">
             <span style="font-size:12px;color:var(--primary);"><i class="fas ${d.icon} mr-2"></i>${d.label}</span>
@@ -2285,7 +3983,7 @@
                             ${editSelectField('Department ', 'efDept', ['Information Technology', 'Human Resources', 'Sales & Marketing', 'Finance & Accounts', 'Operations'], emp.department, true)}${editField('Sub-Department', 'efSubDept', emp.subDepartment)}${editField('Designation ', 'efDesig', emp.designation, 'text', true)}
                         </div>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
-                            ${editSelectField('Employee Grade', 'efGrade', ['L1', 'L2', 'L3', 'L4', 'L5', 'M1', 'M2'], emp.employeeGrade)}${editSelectField('Employment Type', 'efEmpType', ['Full-Time', 'Part-Time', 'Contract', 'Intern'], emp.employmentType)}${editField('Joining Date', 'efJD', emp.joiningDate, 'date', true)}
+                            ${editSelectField('Employee Grade', 'efGrade', ['L1', 'L2', 'L3', 'L4', 'L5', 'M1', 'M2'], emp.employeeGrade)}${editSelectField('Employment Type', 'efEmpType', ['Regular', 'Part-Time', 'Contract', 'Intern'], emp.employmentType)}${editField('Joining Date', 'efJD', emp.joiningDate, 'date', true)}
                         </div>
                         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
                             ${editField('Probation End Date', 'efProbEnd', emp.probationEndDate, 'date')}${editField('Reporting Manager', 'efMgr', emp.reportingManager)}${editField('HR Business Partner', 'efHRBP', emp.hrBusinessPartner)}
@@ -3665,7 +5363,8 @@ function closePromotionModal() {
             });
         }
 
-    // ==================== PATCH 3: QUICK ADD MEMBER — JS (UPDATED) ====================
+        // ==================== PATCH 3: QUICK ADD MEMBER — JS ====================
+// ==================== PATCH 3: QUICK ADD MEMBER — JS (UPDATED) ====================
     // Production-grade implementation with Email instead of Password
     // Changes: Removed password input, added personalEmail, backend generates temp password
 

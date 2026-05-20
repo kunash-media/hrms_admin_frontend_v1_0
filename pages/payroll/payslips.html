@@ -11,6 +11,30 @@
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script> -->
      <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 
+     <style>
+ 
+    #header-container {
+      position: fixed;
+      top: 0;
+      left: 256px;
+      right: 0;
+      height: 56px;
+      background: #ffffff;
+      border-bottom: 1px solid #3098b5;
+      z-index: 40;
+    }
+    @keyframes shimmer {
+      0%   { background-position: -400px 0; }
+      100% { background-position:  400px 0; }
+    }
+    .skeleton-box {
+      background: linear-gradient(90deg, #c5d9e0 25%, #d8e8ed 50%, #c5d9e0 75%);
+      background-size: 800px 100%;
+      animation: shimmer 1.4s ease-in-out infinite;
+      border-radius: 4px;
+    }
+  </style>
+
   <style>
     * { font-family: 'Inter', sans-serif; }
     :root {
@@ -410,9 +434,10 @@
   </div>
 </div>
 
-<script src="../../assets/js/common.js"></script>
-<script src="../../assets/js/sidebar.js"></script>
-<script src="../../assets/js/header.js"></script>
+<script src="/assets/js/component-loader.js"></script>  <!-- ← ADD THIS LINE -->
+<script src="/assets/js/common.js"></script>
+<script src="/assets/js/sidebar.js"></script>
+<script src="/assets/js/header.js"></script>
 
 <script>
 'use strict';
@@ -1118,32 +1143,6 @@ function printPayslip() {
     }, 800);
 }
 
-
-// function printPayslip() {
-//     var payslip = document.getElementById('payslipToPrint');
-//     if (!payslip) {
-//         showToast('Payslip not found', 'error');
-//         return;
-//     }
-
-//     // Clone and remove any scripts
-//     var clone = payslip.cloneNode(true);
-//     var scripts = clone.getElementsByTagName('script');
-//     while (scripts.length) scripts[0].remove();
-
-//     // Simple print using existing modal content + CSS @media print
-//     var originalContent = document.body.innerHTML;
-    
-//     document.body.innerHTML = clone.outerHTML;
-    
-//     window.print();
-    
-//     // Restore original page after print
-//     setTimeout(function() {
-//         document.body.innerHTML = originalContent;
-//         location.reload();   // safest way to restore event listeners
-//     }, 500);
-// }
 
 /* ═══════════════════════════════════════════
    UTILITIES
