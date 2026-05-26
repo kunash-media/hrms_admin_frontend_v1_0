@@ -4,309 +4,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | HRMS Admin</title>
+    <title>Dashboard</title>
 
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-
     <!-- Font Awesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
-
     <style>
-    /* #sidebar-container {
-      width: 256px;
-      min-width: 256px;
-      flex-shrink: 0;
-      height: 100vh;
-      position: sticky;
-      top: 0;
-      background: #b8cfd7;   
-      overflow: hidden;
-    } */
-    #header-container {
-      position: fixed;
-      top: 0;
-      left: 256px;
-      right: 0;
-      height: 56px;
-      background: #ffffff;
-      border-bottom: 1px solid #3098b5;
-      z-index: 40;
-    }
-    @keyframes shimmer {
-      0%   { background-position: -400px 0; }
-      100% { background-position:  400px 0; }
-    }
-    .skeleton-box {
-      background: linear-gradient(90deg, #c5d9e0 25%, #d8e8ed 50%, #c5d9e0 75%);
-      background-size: 800px 100%;
-      animation: shimmer 1.4s ease-in-out infinite;
-      border-radius: 4px;
-    }
-  </style>
-
-    <style>
-        * {
-            font-family: 'Inter', sans-serif;
+        #header-container {
+            position: fixed; top: 0; left: 256px; right: 0;
+            height: 56px; background: #ffffff;
+            border-bottom: 1px solid #3098b5; z-index: 40;
         }
+        @keyframes shimmer {
+            0%   { background-position: -400px 0; }
+            100% { background-position:  400px 0; }
+        }
+        .skeleton-box {
+            background: linear-gradient(90deg, #c5d9e0 25%, #d8e8ed 50%, #c5d9e0 75%);
+            background-size: 800px 100%;
+            animation: shimmer 1.4s ease-in-out infinite;
+            border-radius: 4px;
+        }
+    </style>
 
-        
-
-        /* Primary Color Variables */
+    <style>
+        * { font-family: 'Inter', sans-serif; }
         :root {
             --primary: #1B738C;
-            /* --secondary: #92487A;
-            --sidebar-bg: #f1e9ea; */
             --page-bg: #f4edee;
             --border-color: #1B738C;
             --button-bg: #1B738C;
             --button-hover: #166278;
         }
-
-        /* Card Styles */
         .stat-card {
-            background: white;
-            border-radius: 12px;
-            border: 1px solid #3098b5;
-            transition: all 0.3s ease;
-            padding: 14px 18px;
+            background: white; border-radius: 12px;
+            border: 1px solid #3098b5; transition: all 0.3s ease; padding: 14px 18px;
         }
-
         .stat-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px -5px #a6dff1;
-            border-color: #62C9EA;
+            box-shadow: 0 8px 20px -5px #a6dff1; border-color: #62C9EA;
         }
-
-        /* Section Card Styles */
         .section-card {
-            background: white;
-            border-radius: 12px;
-            border: 1px solid #3098b5;
-            padding: 16px 20px;
+            background: white; border-radius: 12px;
+            border: 1px solid #3098b5; padding: 16px 20px;
         }
-
-        /* Button Styles */
         .btn-primary {
-            background-color: #1B738C;
-            transition: all 0.3s ease;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 8px;
+            background-color: #1B738C; transition: all 0.3s ease;
+            color: white; padding: 8px 16px; border-radius: 8px;
         }
-
-        .btn-primary:hover {
-            background-color: #1B738C;
-            transform: translateY(-1px);
-        }
-
+        .btn-primary:hover { background-color: #1B738C; transform: translateY(-1px); }
         .btn-outline {
-            border: 1px solid #62C9EA;
-            color: #1B738C;
-            transition: all 0.3s ease;
-            background: transparent;
-            padding: 8px 16px;
-            border-radius: 8px;
+            border: 1px solid #62C9EA; color: #1B738C;
+            transition: all 0.3s ease; background: transparent;
+            padding: 8px 16px; border-radius: 8px;
         }
-
-        .btn-outline:hover {
-            background-color: #1B738C;
-            color: white;
-        }
-
-        /* Main content adjustment */
-        .main-content {
-            margin-top: 64px;
-        }
-
-        /* Real-time indicator */
-        .real-time-dot {
-            animation: pulse 2s infinite;
-            background-color: #1B738C;
-        }
-
+        .btn-outline:hover { background-color: #1B738C; color: white; }
+        .main-content { margin-top: 64px; }
+        .real-time-dot { animation: pulse 2s infinite; background-color: #1B738C; }
         @keyframes pulse {
-            0% {
-                opacity: 1;
-                transform: scale(1);
-            }
-
-            50% {
-                opacity: 0.6;
-                transform: scale(1.1);
-            }
-
-            100% {
-                opacity: 1;
-                transform: scale(1);
-            }
+            0%   { opacity: 1; transform: scale(1); }
+            50%  { opacity: 0.6; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
         }
-
-        /* Activity item */
-        .activity-item {
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .activity-item:hover {
-            /* background-color: #eaeff0; */
-            transform: translateX(3px);
-        }
-
-        /* Custom scrollbar */
-        ::-webkit-scrollbar {
-            width: 5px;
-            height: 5px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: #f3eeef;
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: #BDE4EE;
-            border-radius: 10px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: #62C9EA;
-        }
-
-        /* Table hover effect */
-        .data-row:hover {
-            background-color: #62C9EA;
-        }
-
-        /* Badge styles */
-        .badge-primary {
-            background-color: #edf4f5;
-            color: #1B738C;
-            padding: 2px 8px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 500;
-        }
-
-        .badge-secondary {
-            background-color: #edf4f5;
-            color: #1B738C;
-            padding: 2px 8px;
-            border-radius: 20px;
-            font-size: 10px;
-            font-weight: 500;
-        }
-
-        /* Input focus */
-        input:focus,
-        select:focus,
-        textarea:focus {
-            outline: none;
-            border-color: #62C9EA !important;
+        .activity-item { transition: all 0.3s ease; cursor: pointer; }
+        .activity-item:hover { transform: translateX(3px); }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: #f3eeef; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #BDE4EE; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #62C9EA; }
+        .data-row:hover { background-color: #62C9EA; }
+        .badge-primary { background-color: #edf4f5; color: #1B738C; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 500; }
+        .badge-secondary { background-color: #edf4f5; color: #1B738C; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 500; }
+        input:focus, select:focus, textarea:focus {
+            outline: none; border-color: #62C9EA !important;
             box-shadow: 0 0 0 2px #edf4f5 !important;
         }
-
-        /* Link styles */
-        a {
-            color: #1B738C;
-            transition: all 0.3s ease;
-        }
-
-        a:hover {
-            color: #1B738C;
-        }
-
-        /* Heading colors */
-        h1,
-        h2,
-        h3,
-        h4,
-        h5,
-        h6 {
-            color: #1B738C;
-        }
-
-        /* Border utility */
-        .border-theme {
-            border-color: #62C9EA;
-        }
-
-        /* Progress bar styles */
-        .progress-bar {
-            height: 6px;
-            border-radius: 10px;
-            background-color: #e5e7eb;
-            overflow: hidden;
-        }
-
-        .progress-fill {
-            height: 100%;
-            border-radius: 10px;
-            background-color: #62C9EA;
-            transition: width 0.5s ease;
-        }
-
-        /* Loading spinner */
+        a { color: #1B738C; transition: all 0.3s ease; }
+        a:hover { color: #1B738C; }
+        h1, h2, h3, h4, h5, h6 { color: #1B738C; }
+        .border-theme { border-color: #62C9EA; }
+        .progress-bar { height: 6px; border-radius: 10px; background-color: #e5e7eb; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 10px; background-color: #62C9EA; transition: width 0.5s ease; }
         .loading-spinner {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 2px solid #f3f3f3;
-            border-top: 2px solid #62C9EA;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+            display: inline-block; width: 20px; height: 20px;
+            border: 2px solid #f3f3f3; border-top: 2px solid #62C9EA;
+            border-radius: 50%; animation: spin 1s linear infinite;
         }
-
-        @keyframes spin {
-            0% {
-                transform: rotate(0deg);
-            }
-
-            100% {
-                transform: rotate(360deg);
-            }
-        }
-
-        /* Mobile responsive adjustments */
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
         @media (max-width: 768px) {
-            .stat-card {
-                padding: 10px 14px;
-            }
-
-            .section-card {
-                padding: 12px 16px;
-            }
-
-            .main-content {
-                padding: 12px;
-            }
+            .stat-card { padding: 10px 14px; }
+            .section-card { padding: 12px 16px; }
+            .main-content { padding: 12px; }
         }
     </style>
 </head>
 
 <body class="bg-[#EBF4F6]">
-
-    <!-- Main Container -->
     <div class="flex h-screen overflow-hidden">
-
-        <!-- Sidebar Container -->
         <div id="sidebar-container"></div>
-
-        <!-- Main Content Area -->
         <div class="flex-1 flex flex-col overflow-hidden">
-
-            <!-- Header Container -->
             <div id="header-container"></div>
-
-            <!-- Page Content -->
             <main class="flex-1 overflow-y-auto p-5 main-content">
 
                 <!-- Welcome Section -->
@@ -318,71 +121,74 @@
                 <!-- Stats Cards Row -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
 
-                    <!-- Total Workforce Card -->
+                    <!-- Total Workforce -->
                     <div class="stat-card">
                         <div class="flex items-center justify-between mb-2">
-                            <div class="w-8 h-8 rounded-lg flex items-center justify-center"
-                                style="background-color: #BDE4EE;">
+                            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: #BDE4EE;">
                                 <i class="fas fa-users text-sm" style="color: #1B738C;"></i>
                             </div>
                             <span class="badge-secondary">All Depts</span>
                         </div>
                         <p class="text-[11px] mb-0.5" style="color: #1B738C;">TOTAL WORKFORCE</p>
-                        <p class="text-2xl font-bold" style="color: #1B738C;" id="totalWorkforce">1,248</p>
+                        <p class="text-2xl font-bold" style="color: #1B738C;" id="totalWorkforce">
+                            <span class="skeleton-box inline-block w-16 h-7 align-middle"></span>
+                        </p>
                         <div class="mt-2 flex items-center gap-1.5">
                             <i class="fas fa-arrow-up text-[10px]" style="color: #28a745;"></i>
-                            <span class="text-[10px]" style="color: #28a745;">+12%</span>
-                            <span class="text-[10px]" style="color: #1B738C;">vs last month</span>
+                            <span class="text-[10px]" style="color: #28a745;">Active</span>
+                            <span class="text-[10px]" style="color: #1B738C;">employees</span>
                         </div>
                     </div>
 
-                    <!-- Present Today Card -->
+                    <!-- Present Today -->
                     <div class="stat-card">
                         <div class="flex items-center justify-between mb-2">
-                            <div class="w-8 h-8 rounded-lg flex items-center justify-center"
-                                style="background-color: #BDE4EE">
+                            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: #BDE4EE">
                                 <i class="fas fa-clock text-sm" style="color: #1B738C;"></i>
                             </div>
                             <span class="badge-primary">Today</span>
                         </div>
                         <p class="text-[11px] mb-0.5" style="color: #1B738C;">PRESENT TODAY</p>
-                        <p class="text-2xl font-bold" style="color: #1B738C;" id="presentToday">942</p>
+                        <p class="text-2xl font-bold" style="color: #1B738C;" id="presentToday">
+                            <span class="skeleton-box inline-block w-16 h-7 align-middle"></span>
+                        </p>
                         <div class="mt-2 flex items-center gap-1.5">
                             <div class="w-1.5 h-1.5 rounded-full real-time-dot"></div>
-                            <span class="text-[10px]" style="color: #1B738C;">REAL-TIME</span>
-                            <span class="text-[10px]" style="color: #1B738C;" id="realTimeCount">24 checking in</span>
+                            <span class="text-[10px]" style="color: #1B738C;">LIVE</span>
+                            <span class="text-[10px]" style="color: #1B738C;" id="realTimeCount">updating...</span>
                         </div>
                     </div>
 
-                    <!-- Attendance Rate Card -->
+                    <!-- Attendance Rate -->
                     <div class="stat-card">
                         <div class="flex items-center justify-between mb-2">
-                            <div class="w-8 h-8 rounded-lg flex items-center justify-center"
-                                style="background-color: #BDE4EE">
+                            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: #BDE4EE">
                                 <i class="fas fa-chart-line text-sm" style="color: #1B738C;"></i>
                             </div>
                         </div>
                         <p class="text-[11px] mb-0.5" style="color: #1B738C;">ATTENDANCE RATE</p>
-                        <p class="text-2xl font-bold" style="color: #1B738C;" id="attendanceRate">75.5%</p>
+                        <p class="text-2xl font-bold" style="color: #1B738C;" id="attendanceRate">
+                            <span class="skeleton-box inline-block w-16 h-7 align-middle"></span>
+                        </p>
                         <div class="mt-2 progress-bar">
-                            <div class="progress-fill" style="width: 75.5%" id="attendanceProgress"></div>
+                            <div class="progress-fill" style="width: 0%" id="attendanceProgress"></div>
                         </div>
                     </div>
 
-                    <!-- On Leave Card -->
+                    <!-- On Leave -->
                     <div class="stat-card">
                         <div class="flex items-center justify-between mb-2">
-                            <div class="w-8 h-8 rounded-lg flex items-center justify-center"
-                                style="background-color: #BDE4EE">
+                            <div class="w-8 h-8 rounded-lg flex items-center justify-center" style="background-color: #BDE4EE">
                                 <i class="fas fa-calendar-alt text-sm" style="color: #1B738C;"></i>
                             </div>
                         </div>
                         <p class="text-[11px] mb-0.5" style="color: #1B738C;">ON LEAVE</p>
-                        <p class="text-2xl font-bold" style="color: #1B738C;" id="onLeave">28</p>
+                        <p class="text-2xl font-bold" style="color: #1B738C;" id="onLeave">
+                            <span class="skeleton-box inline-block w-12 h-7 align-middle"></span>
+                        </p>
                         <div class="mt-2 flex items-center gap-1.5">
                             <i class="fas fa-clock text-[10px]" style="color: #1B738C;"></i>
-                            <span class="text-[10px]" style="color: #1B738C;" id="pendingLeaves">12 pending
-                                approvals</span>
+                            <span class="text-[10px]" style="color: #1B738C;" id="pendingLeaves">loading...</span>
                         </div>
                     </div>
                 </div>
@@ -397,9 +203,7 @@
                                 <h3 class="text-sm font-semibold" style="color: #1B738C;">Attendance Overview</h3>
                                 <p class="text-[10px] mt-0.5" style="color: #1B738C;">Weekly attendance trend</p>
                             </div>
-                            <select id="attendanceChartFilter"
-                                class="px-2 py-1 text-xs rounded-lg border focus:outline-none"
-                                style="border-color: #1B738C; color: #1B738C;">
+                            <select id="attendanceChartFilter" class="px-2 py-1 text-xs rounded-lg border focus:outline-none" style="border-color: #1B738C; color: #1B738C;">
                                 <option value="week">This Week</option>
                                 <option value="month">This Month</option>
                             </select>
@@ -417,123 +221,37 @@
                             <i class="fas fa-clock text-sm" style="color: #1B738C;"></i>
                         </div>
 
-                        <div class="space-y-2" id="pendingApprovalsList">
-                            <!-- Leave Request -->
-                            <div class="flex items-center justify-between p-2 rounded-lg"
-                                style="background-color: #e9f2f4">
+                        <!-- Skeleton loaders for pending approvals -->
+                        <div class="space-y-2 h-[300px] overflow-auto" id="pendingApprovalsList">
+                            <div class="flex items-center justify-between p-2 rounded-lg" style="background-color: #e9f2f4">
                                 <div class="flex items-center gap-2">
-                                    <div class="w-7 h-7 rounded-full flex items-center justify-center"
-                                        style="background-color: #BDE4EE">
-                                        <i class="fas fa-calendar-alt text-[10px]" style="color: #1B738C;"></i>
-                                    </div>
+                                    <div class="skeleton-box w-7 h-7 rounded-full"></div>
                                     <div>
-                                        <p class="font-semibold text-xs" style="color: #1B738C;">Elena Rodriguez</p>
-                                        <p class="text-[10px]" style="color: #1B738C;">Annual Leave • 5 Days</p>
+                                        <div class="skeleton-box w-28 h-3 mb-1"></div>
+                                        <div class="skeleton-box w-36 h-2"></div>
                                     </div>
                                 </div>
                                 <div class="flex gap-1.5">
-                                    <button
-                                        class="w-6 h-6 rounded-full text-white flex items-center justify-center transition-all hover:scale-110"
-                                        style="background-color: #1B738C;">
-                                        <i class="fas fa-check text-[9px]"></i>
-                                    </button>
-                                    <button
-                                        class="w-6 h-6 rounded-full border flex items-center justify-center transition-all hover:scale-110"
-                                        style="border-color: #1B738C; color: #1B738C;">
-                                        <i class="fas fa-times text-[9px]"></i>
-                                    </button>
+                                    <div class="skeleton-box w-6 h-6 rounded-full"></div>
+                                    <div class="skeleton-box w-6 h-6 rounded-full"></div>
                                 </div>
                             </div>
-
-                            <!-- Expense Claim -->
-                            <div class="flex items-center justify-between p-2 rounded-lg"
-                                style="background-color: #e9f2f4">
+                            <div class="flex items-center justify-between p-2 rounded-lg" style="background-color: #e9f2f4">
                                 <div class="flex items-center gap-2">
-                                    <div class="w-7 h-7 rounded-full flex items-center justify-center"
-                                        style="background-color: #BDE4EE">
-                                        <i class="fas fa-wallet text-[10px]" style="color: #1B738C;"></i>
-                                    </div>
+                                    <div class="skeleton-box w-7 h-7 rounded-full"></div>
                                     <div>
-                                        <p class="font-semibold text-xs" style="color: #1B738C;">Michael Chen</p>
-                                        <p class="text-[10px]" style="color: #1B738C;">Travel Expense • ₹36,000</p>
+                                        <div class="skeleton-box w-24 h-3 mb-1"></div>
+                                        <div class="skeleton-box w-32 h-2"></div>
                                     </div>
                                 </div>
                                 <div class="flex gap-1.5">
-                                    <button
-                                        class="w-6 h-6 rounded-full text-white flex items-center justify-center transition-all hover:scale-110"
-                                        style="background-color: #1B738C;">
-                                        <i class="fas fa-check text-[9px]"></i>
-                                    </button>
-                                    <button
-                                        class="w-6 h-6 rounded-full border flex items-center justify-center transition-all hover:scale-110"
-                                        style="border-color: #1B738C; color: #1B738C;">
-                                        <i class="fas fa-times text-[9px]"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Asset Request -->
-                            <div class="flex items-center justify-between p-2 rounded-lg"
-                                style="background-color: #e9f2f4">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-7 h-7 rounded-full flex items-center justify-center"
-                                        style="background-color: #BDE4EE">
-                                        <i class="fas fa-laptop text-[10px]" style="color: #1B738C;"></i>
-                                    </div>
-                                    <div>
-                                        <p class="font-semibold text-xs" style="color: #1B738C;">David Kim</p>
-                                        <p class="text-[10px]" style="color: #1B738C;">Laptop Request • MacBook Pro</p>
-                                    </div>
-                                </div>
-                                <div class="flex gap-1.5">
-                                    <button
-                                        class="w-6 h-6 rounded-full text-white flex items-center justify-center transition-all hover:scale-110"
-                                        style="background-color: #1B738C;">
-                                        <i class="fas fa-check text-[9px]"></i>
-                                    </button>
-                                    <button
-                                        class="w-6 h-6 rounded-full border flex items-center justify-center transition-all hover:scale-110"
-                                        style="border-color: #1B738C; color: #1B738C;">
-                                        <i class="fas fa-times text-[9px]"></i>
-                                    </button>
-                                </div>
-                            </div>
-
-                            <!-- Onboarding Task -->
-                            <div class="flex items-center justify-between p-2 rounded-lg"
-                                style="background-color: #e9f2f4;">
-                                <div class="flex items-center gap-2">
-                                    <div class="w-7 h-7 rounded-full flex items-center justify-center"
-                                        style="background-color: #BDE4EE;">
-                                        <i class="fas fa-user-plus text-[10px]" style="color: #1B738C;"></i>
-                                    </div>
-                                    <div>
-                                        <p class="font-semibold text-xs" style="color: #1B738C;">Sara Jenkins</p>
-                                        <p class="text-[10px]" style="color: #1B738C;">Document Pending</p>
-                                    </div>
-                                </div>
-                                <div class="flex gap-1.5">
-                                    <button
-                                        class="w-6 h-6 rounded-full text-white flex items-center justify-center transition-all hover:scale-110"
-                                        style="background-color: #1B738C;">
-                                        <i class="fas fa-check text-[9px]"></i>
-                                    </button>
-                                    <button
-                                        class="w-6 h-6 rounded-full border flex items-center justify-center transition-all hover:scale-110"
-                                        style="border-color: #1B738C; color: #1B738C;">
-                                        <i class="fas fa-times text-[9px]"></i>
-                                    </button>
+                                    <div class="skeleton-box w-6 h-6 rounded-full"></div>
+                                    <div class="skeleton-box w-6 h-6 rounded-full"></div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="mt-3 pt-2 border-t" style="border-color: #1B738C;">
-                            <a href="#"
-                                class="text-[11px] font-medium flex items-center justify-center gap-1 transition-all hover:gap-2">
-                                <span>View All Requests</span>
-                                <i class="fas fa-arrow-right text-[9px]"></i>
-                            </a>
-                        </div>
+                      
                     </div>
                 </div>
 
@@ -550,67 +268,27 @@
                             <i class="fas fa-history text-sm" style="color: #1B738C;"></i>
                         </div>
 
-                        <div class="space-y-2" id="recentActivitiesList">
+                        <!-- Skeleton loaders for recent activities -->
+                        <div class="space-y-2 h-[520px] overflow-auto" id="recentActivitiesList">
                             <div class="activity-item flex items-center gap-2 p-2 rounded-lg">
-                                <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
-                                    style="background-color: #eaeff0">
-                                    <i class="fas fa-user-plus text-[10px]" style="color: #1B738C;"></i>
-                                </div>
+                                <div class="skeleton-box w-7 h-7 rounded-full flex-shrink-0"></div>
                                 <div class="flex-1 p-4 rounded-md" style="background-color: #eaeff0">
-                                    <p class="text-xs font-semibold" style="color: #1B738C; ">New hire onboarding</p>
-                                    <p class="text-[10px]" style="color: #1B738C;">Sara Jenkins • Design Department</p>
-                                    <p class="text-[10px] mt-0.5" style="color: #1B738C;">2 hours ago</p>
+                                    <div class="skeleton-box w-32 h-3 mb-1"></div>
+                                    <div class="skeleton-box w-40 h-2 mb-1"></div>
+                                    <div class="skeleton-box w-20 h-2"></div>
                                 </div>
-                                <i class="fas fa-chevron-right text-[9px]" style="color: #1B738C;"></i>
                             </div>
-
                             <div class="activity-item flex items-center gap-2 p-2 rounded-lg">
-                                <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
-                                    style="background-color: #eaeff0">
-                                    <i class="fas fa-calendar-check text-[10px]" style="color: #1B738C;"></i>
-                                </div>
+                                <div class="skeleton-box w-7 h-7 rounded-full flex-shrink-0"></div>
                                 <div class="flex-1 p-4 rounded-md" style="background-color: #eaeff0">
-                                    <p class="text-xs font-semibold" style="color: #1B738C;">Leave approved</p>
-                                    <p class="text-[10px]" style="color: #1B738C;">Emma Watson • 3 days sick leave</p>
-                                    <p class="text-[10px] mt-0.5" style="color: #1B738C;">5 hours ago</p>
+                                    <div class="skeleton-box w-28 h-3 mb-1"></div>
+                                    <div class="skeleton-box w-36 h-2 mb-1"></div>
+                                    <div class="skeleton-box w-16 h-2"></div>
                                 </div>
-                                <i class="fas fa-chevron-right text-[9px]" style="color: #1B738C;"></i>
-                            </div>
-
-                            <div class="activity-item flex items-center gap-2 p-2 rounded-lg">
-                                <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
-                                    style="background-color: #eaeff0">
-                                    <i class="fas fa-rupee-sign text-[10px]" style="color: #1B738C;"></i>
-                                </div>
-                                <div class="flex-1 p-4 rounded-md" style="background-color: #eaeff0">
-                                    <p class="text-xs font-semibold" style="color: #1B738C;">Payroll processed</p>
-                                    <p class="text-[10px]" style="color: #1B738C;">March 2024 payroll completed</p>
-                                    <p class="text-[10px] mt-0.5" style="color: #1B738C;">Yesterday</p>
-                                </div>
-                                <i class="fas fa-chevron-right text-[9px]" style="color: #1B738C;"></i>
-                            </div>
-
-                            <div class="activity-item flex items-center gap-2 p-2 rounded-lg">
-                                <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0"
-                                    style="background-color: #eaeff0">
-                                    <i class="fas fa-chart-line text-[10px]" style="color: #1B738C;"></i>
-                                </div>
-                                <div class="flex-1 p-4 rounded-md" style="background-color: #eaeff0">
-                                    <p class="text-xs font-semibold" style="color: #1B738C;">Performance review</p>
-                                    <p class="text-[10px]" style="color: #1B738C;">Q1 2024 reviews completed</p>
-                                    <p class="text-[10px] mt-0.5" style="color: #1B738C;">Yesterday</p>
-                                </div>
-                                <i class="fas fa-chevron-right text-[9px]" style="color: #1B738C;"></i>
                             </div>
                         </div>
 
-                        <div class="mt-3 pt-2 border-t" style="border-color: #1B738C;">
-                            <a href="#"
-                                class="text-[11px] font-medium flex items-center justify-center gap-1 transition-all hover:gap-2">
-                                <span>View All Activities</span>
-                                <i class="fas fa-arrow-right text-[9px]"></i>
-                            </a>
-                        </div>
+                        <!-- <div class="mt-3 pt-2 border-t" style="border-color: #1B738C;"></div> -->
                     </div>
 
                     <!-- Department Distribution -->
@@ -623,33 +301,8 @@
                             <i class="fas fa-chart-pie text-sm" style="color: #1B738C;"></i>
                         </div>
                         <canvas id="departmentChart" height="180"></canvas>
-
-                        <div class="grid grid-cols-2 gap-2 mt-4 pt-3 border-t" style="border-color: #1B738C;">
-                            <div class="flex items-center gap-1.5">
-                                <div class="w-2.5 h-2.5 rounded-full" style="background-color: #1B738C;"></div>
-                                <span class="text-[10px]" style="color: #1B738C;">Engineering (320)</span>
-                            </div>
-                            <div class="flex items-center gap-1.5">
-                                <div class="w-2.5 h-2.5 rounded-full" style="background-color: #1B738C;"></div>
-                                <span class="text-[10px]" style="color: #1B738C;">Sales (245)</span>
-                            </div>
-                            <div class="flex items-center gap-1.5">
-                                <div class="w-2.5 h-2.5 rounded-full" style="background-color: #1B738C;"></div>
-                                <span class="text-[10px]" style="color: #1B738C;">HR (128)</span>
-                            </div>
-                            <div class="flex items-center gap-1.5">
-                                <div class="w-2.5 h-2.5 rounded-full"
-                                    style="background-color: #1B738C; border: 1px solid #1B738C;"></div>
-                                <span class="text-[10px]" style="color: #1B738C;">Finance (95)</span>
-                            </div>
-                            <div class="flex items-center gap-1.5">
-                                <div class="w-2.5 h-2.5 rounded-full" style="background-color: #1B738C;"></div>
-                                <span class="text-[10px]" style="color: #1B738C;">Marketing (87)</span>
-                            </div>
-                            <div class="flex items-center gap-1.5">
-                                <div class="w-2.5 h-2.5 rounded-full" style="background-color: #1B738C;"></div>
-                                <span class="text-[10px]" style="color: #1B738C;">Operations (73)</span>
-                            </div>
+                        <div class="grid grid-cols-2 gap-2 mt-4 pt-3 border-t" style="border-color: #1B738C;" id="deptLegend">
+                            <!-- Populated dynamically -->
                         </div>
                     </div>
                 </div>
@@ -659,316 +312,407 @@
     </div>
 
     <!-- Common JS Files -->
-     <script src="/assets/js/component-loader.js"></script>  <!-- ← ADD THIS LINE -->
-    <script src="assets/js/common.js"></script>
-    <script src="assets/js/sidebar.js"></script>
-    <script src="assets/js/header.js"></script>
+    <script src="/assets/js/component-loader.js"></script>
+    <script src="/assets/js/common.js"></script>
+    <script src="/assets/js/sidebar.js"></script>
+    <script src="/assets/js/header.js"></script>
 
     <script>
-    (function() {
+    // ============================================================
+    //  DASHBOARD API INTEGRATION
+    // ============================================================
+
+    const API_BASE_DASHBOARD = 'http://localhost:8086/api/dashboard';
+
+    // chart color palette — index-based, consistent with backend order
+    const DEPT_COLORS = ['#1B738C','#62C9EA','#BDE4EE','#166278','#0F4C5C','#8ED1E6',
+                         '#2A9D8F','#E9C46A','#F4A261','#E76F51','#264653','#A8DADC'];
+
+    let attendanceChartInstance = null;
+    let departmentChartInstance = null;
+    let currentRange = 'week';
+
+    // ── initialise on load ──────────────────────────────────────
+    (function () {
         function onReady() {
             document.body.classList.add('components-loaded');
-            initCharts();
-            initRealTimeCounter();
+            loadDashboard();
             initChartFilter();
-            initApprovalButtons();
+            initRealTimeCounter();
             setActiveMenu('dashboard');
         }
 
-        window.loadSidebar();
-        window.loadHeader();
-
-        setTimeout(onReady, 150);   // Safety
+        window.loadSidebar?.();
+        window.loadHeader?.();
+        setTimeout(onReady, 150);
     })();
-</script>
 
-    <script>
-        // Chart instances for update
-        let attendanceChartInstance = null;
-        let departmentChartInstance = null;
+    // Also fire on DOMContentLoaded as a safety net
+    document.addEventListener('DOMContentLoaded', function () {
+        loadSidebar?.();
+        loadHeader?.();
+    });
 
-        // Load sidebar and header when page loads
-        document.addEventListener('DOMContentLoaded', function () {
-            loadSidebar();
-            loadHeader();
-            initCharts();
-            initRealTimeCounter();
-            initChartFilter();
-            initApprovalButtons();
-            setActiveMenu('dashboard');
-        });
+    // ── auto-refresh every 60 s (not 30 — DB round-trip is heavier than random()) ──
+    setInterval(loadDashboard, 60000);
 
-        // Initialize charts
-        function initCharts() {
-            // Attendance Chart
-            const attendanceCtx = document.getElementById('attendanceChart').getContext('2d');
-            attendanceChartInstance = new Chart(attendanceCtx, {
-                type: 'line',
-                data: {
-                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
-                    datasets: [{
-                        label: 'Present',
-                        data: [890, 920, 945, 910, 942, 850],
-                        borderColor: '#1B738C',
-                        backgroundColor: 'rgba(27, 115, 140, 0.08)',
-                        tension: 0.4,
-                        fill: true,
-                        pointBackgroundColor: '#1B738C',
-                        pointBorderColor: 'white',
-                        pointRadius: 4,
-                        pointHoverRadius: 6
-                    }, {
-                        label: 'Absent',
-                        data: [120, 95, 85, 110, 80, 95],
-                        borderColor: '#62C9EA',
-                        backgroundColor: 'rgba(98, 201, 234, 0.08)',
-                        tension: 0.4,
-                        fill: true,
-                        pointBackgroundColor: '#62C9EA',
-                        pointBorderColor: 'white',
-                        pointRadius: 4,
-                        pointHoverRadius: 6
-                    }]
+    // ============================================================
+    //  MAIN DATA LOADER
+    // ============================================================
+    async function loadDashboard(range) {
+        range = range || currentRange;
+        try {
+            const res = await fetch(`${API_BASE_DASHBOARD}?range=${range}`);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+
+            renderStats(data.stats);
+            renderAttendanceChart(data.attendanceChart);
+            renderDepartmentChart(data.departmentDistribution);
+            renderPendingApprovals(data.pendingApprovals);
+            renderRecentActivities(data.recentActivities);
+
+        } catch (err) {
+            console.error('Dashboard load failed:', err);
+            showToast('Failed to load dashboard data. Retrying...', 'error');
+        }
+    }
+
+    // ============================================================
+    //  STATS CARDS
+    // ============================================================
+    function renderStats(stats) {
+        if (!stats) return;
+
+        setText('totalWorkforce', stats.totalWorkforce?.toLocaleString() ?? '--');
+        setText('presentToday',   stats.presentToday?.toLocaleString()   ?? '--');
+        setText('onLeave',        stats.onLeave?.toLocaleString()         ?? '--');
+
+        const rate = stats.attendanceRate ?? 0;
+        setText('attendanceRate', `${rate}%`);
+        const progress = document.getElementById('attendanceProgress');
+        if (progress) progress.style.width = `${rate}%`;
+
+        const pending = stats.pendingApprovalCount ?? 0;
+        setText('pendingLeaves', `${pending} pending approval${pending !== 1 ? 's' : ''}`);
+    }
+
+    // ============================================================
+    //  ATTENDANCE CHART
+    // ============================================================
+    function renderAttendanceChart(chartData) {
+        if (!chartData) return;
+        const ctx = document.getElementById('attendanceChart').getContext('2d');
+
+        if (attendanceChartInstance) {
+            // update existing instance — avoids canvas flicker
+            attendanceChartInstance.data.labels = chartData.labels;
+            attendanceChartInstance.data.datasets[0].data = chartData.present;
+            attendanceChartInstance.data.datasets[1].data = chartData.absent;
+            attendanceChartInstance.update();
+            return;
+        }
+
+        attendanceChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: chartData.labels,
+                datasets: [{
+                    label: 'Present',
+                    data: chartData.present,
+                    borderColor: '#1B738C',
+                    backgroundColor: 'rgba(27, 115, 140, 0.08)',
+                    tension: 0.4, fill: true,
+                    pointBackgroundColor: '#1B738C', pointBorderColor: 'white',
+                    pointRadius: 4, pointHoverRadius: 6
+                }, {
+                    label: 'Absent',
+                    data: chartData.absent,
+                    borderColor: '#62C9EA',
+                    backgroundColor: 'rgba(98, 201, 234, 0.08)',
+                    tension: 0.4, fill: true,
+                    pointBackgroundColor: '#62C9EA', pointBorderColor: 'white',
+                    pointRadius: 4, pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { usePointStyle: true, boxWidth: 8, font: { size: 10, family: 'Inter' }, color: '#1B738C' }
+                    },
+                    tooltip: { backgroundColor: '#1B738C', titleColor: 'white', bodyColor: '#e6f4f7', cornerRadius: 8, padding: 8 }
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                usePointStyle: true,
-                                boxWidth: 8,
-                                font: { size: 10, family: 'Inter' },
-                                color: '#1B738C'
-                            }
-                        },
-                        tooltip: {
-                            backgroundColor: '#1B738C',
-                            titleColor: 'white',
-                            bodyColor: '#e6f4f7',
-                            cornerRadius: 8,
-                            padding: 8
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: { color: '#E6F4F7' },   // softer theme grid
-                            ticks: {
-                                font: { size: 10 },
-                                color: '#1B738C'
-                            }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: {
-                                font: { size: 10 },
-                                color: '#1B738C'   // ✅ theme color
-                            }
-                        }
-                    },
-                    interaction: {
-                        intersect: false,
-                        mode: 'index'
-                    }
-                }
-            });
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#E6F4F7' }, ticks: { font: { size: 10 }, color: '#1B738C' } },
+                    x: { grid: { display: false }, ticks: { font: { size: 10 }, color: '#1B738C' } }
+                },
+                interaction: { intersect: false, mode: 'index' }
+            }
+        });
+    }
 
-            // Department Chart
-            const deptCtx = document.getElementById('departmentChart').getContext('2d');
-            departmentChartInstance = new Chart(deptCtx, {
+    // ============================================================
+    //  DEPARTMENT CHART  (doughnut)
+    // ============================================================
+    function renderDepartmentChart(depts) {
+        if (!depts || depts.length === 0) return;
+
+        const labels = depts.map(d => d.department);
+        const values = depts.map(d => d.count);
+        const colors = depts.map((_, i) => DEPT_COLORS[i % DEPT_COLORS.length]);
+
+        const ctx = document.getElementById('departmentChart').getContext('2d');
+
+        if (departmentChartInstance) {
+            departmentChartInstance.data.labels = labels;
+            departmentChartInstance.data.datasets[0].data = values;
+            departmentChartInstance.data.datasets[0].backgroundColor = colors;
+            departmentChartInstance.update();
+        } else {
+            departmentChartInstance = new Chart(ctx, {
                 type: 'doughnut',
                 data: {
-                    labels: ['Engineering', 'Sales', 'HR', 'Finance', 'Marketing', 'Operations'],
-                    datasets: [{
-                        data: [320, 245, 128, 95, 87, 73],
-                        backgroundColor: ['#1B738C',
-                            '#62C9EA',
-                            '#BDE4EE',
-                            '#166278',
-                            '#0F4C5C',
-                            '#8ED1E6'
-                        ],
-                        borderColor: 'white',
-                        borderWidth: 2,
-                        hoverOffset: 10,
-                        hoverBorderWidth: 3
-                    }]
+                    labels,
+                    datasets: [{ data: values, backgroundColor: colors, borderColor: 'white', borderWidth: 2, hoverOffset: 10, hoverBorderWidth: 3 }]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
+                    responsive: true, maintainAspectRatio: true,
                     plugins: {
                         legend: { display: false },
                         tooltip: {
-                            backgroundColor: '#1B738C',
-                            titleColor: 'white',
-                            bodyColor: '#e6f4f7',
-                            cornerRadius: 8,
-                            padding: 8,
+                            backgroundColor: '#1B738C', titleColor: 'white', bodyColor: '#e6f4f7',
+                            cornerRadius: 8, padding: 8,
                             callbacks: {
-                                label: function (context) {
-                                    const label = context.label || '';
-                                    const value = context.raw || 0;
-                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
-                                    const percentage = ((value / total) * 100).toFixed(1);
-                                    return `${label}: ${value} (${percentage}%)`;
+                                label: function (ctx) {
+                                    const total = ctx.dataset.data.reduce((a, b) => a + b, 0);
+                                    return `${ctx.label}: ${ctx.raw} (${((ctx.raw / total) * 100).toFixed(1)}%)`;
                                 }
                             }
                         }
                     },
-                    cutout: '60%',
-                    layout: {
-                        padding: 10
-                    }
+                    cutout: '60%', layout: { padding: 10 }
                 }
             });
         }
 
-        // Chart filter functionality
-        function initChartFilter() {
-            const filterSelect = document.getElementById('attendanceChartFilter');
-            if (filterSelect) {
-                filterSelect.addEventListener('change', function () {
-                    const value = this.value;
-                    let newData = [];
-                    let newLabels = [];
+        // legend
+        const legend = document.getElementById('deptLegend');
+        if (legend) {
+            legend.innerHTML = depts.map((d, i) => `
+                <div class="flex items-center gap-1.5">
+                    <div class="w-2.5 h-2.5 rounded-full" style="background-color: ${DEPT_COLORS[i % DEPT_COLORS.length]};"></div>
+                    <span class="text-[10px]" style="color: #1B738C;">${d.department} (${d.count})</span>
+                </div>
+            `).join('');
+        }
+    }
 
-                    if (value === 'week') {
-                        newLabels = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-                        newData = [890, 920, 945, 910, 942, 850];
-                    } else {
-                        newLabels = ['Week 1', 'Week 2', 'Week 3', 'Week 4'];
-                        newData = [3420, 3580, 3650, 3480];
-                    }
+    // ============================================================
+    //  PENDING APPROVALS
+    // ============================================================
+    function renderPendingApprovals(approvals) {
+        const container = document.getElementById('pendingApprovalsList');
+        if (!container) return;
 
-                    if (attendanceChartInstance) {
-                        attendanceChartInstance.data.labels = newLabels;
-                        attendanceChartInstance.data.datasets[0].data = newData;
-                        attendanceChartInstance.update();
-                    }
-                });
-            }
+        if (!approvals || approvals.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-4">
+                    <i class="fas fa-check-circle text-2xl mb-2" style="color: #1B738C;"></i>
+                    <p class="text-xs" style="color: #1B738C;">All caught up! No pending approvals.</p>
+                </div>`;
+            return;
         }
 
-        // Approval button handlers
-        function initApprovalButtons() {
-            document.querySelectorAll('#pendingApprovalsList button').forEach(btn => {
-                btn.addEventListener('click', function (e) {
-                    e.stopPropagation();
-                    const parentDiv = this.closest('.flex.items-center.justify-between');
-                    const requestText = parentDiv.querySelector('.font-semibold')?.innerText || 'Request';
+        container.innerHTML = approvals.map(item => `
+            <div class="flex items-center justify-between p-2 rounded-lg" style="background-color: #e9f2f4"
+                 id="approval-${item.type}-${item.id}">
+                <div class="flex items-center gap-2 cursor-pointer flex-1"
+                     onclick="window.location.href='${escapeHtml(item.redirectUrl)}'">
+                    <div class="w-7 h-7 rounded-full flex items-center justify-center" style="background-color: #BDE4EE">
+                        <i class="fas ${escapeHtml(item.icon)} text-[10px]" style="color: #1B738C;"></i>
+                    </div>
+                    <div>
+                        <p class="font-semibold text-xs" style="color: #1B738C;">${escapeHtml(item.employeeName)}</p>
+                        <p class="text-[10px]" style="color: #1B738C;">${escapeHtml(item.subTitle)}</p>
+                    </div>
+                </div>
+                <div class="flex gap-1.5 flex-shrink-0">
+                    <button onclick="quickApprove('${escapeHtml(item.type)}', ${item.id})"
+                            title="Approve"
+                            class="w-6 h-6 rounded-full text-white flex items-center justify-center transition-all hover:scale-110"
+                            style="background-color: #1B738C;">
+                        <i class="fas fa-check text-[9px]"></i>
+                    </button>
+                    <button onclick="window.location.href='${escapeHtml(item.redirectUrl)}'"
+                            title="View Details"
+                            class="w-6 h-6 rounded-full border flex items-center justify-center transition-all hover:scale-110"
+                            style="border-color: #1B738C; color: #1B738C;">
+                        <i class="fas fa-arrow-right text-[9px]"></i>
+                    </button>
+                </div>
+            </div>
+        `).join('');
+    }
 
-                    if (this.classList.contains('bg-[#540863]') || this.style.backgroundColor === '#540863') {
-                        showToast(`${requestText} approved successfully!`, 'success');
-                    } else {
-                        showToast(`${requestText} rejected!`, 'error');
-                    }
-                    parentDiv.style.opacity = '0.5';
-                    parentDiv.style.pointerEvents = 'none';
-                    setTimeout(() => {
-                        parentDiv.remove();
-                        updatePendingCount();
-                    }, 1000);
-                });
+    // ============================================================
+    //  RECENT ACTIVITIES
+    // ============================================================
+    function renderRecentActivities(activities) {
+        const container = document.getElementById('recentActivitiesList');
+        if (!container) return;
+
+        if (!activities || activities.length === 0) {
+            container.innerHTML = `
+                <div class="text-center py-4">
+                    <p class="text-xs" style="color: #1B738C;">No recent activity in the last 7 days.</p>
+                </div>`;
+            return;
+        }
+
+        container.innerHTML = activities.map(item => `
+            <div class="activity-item flex items-center gap-2 p-2 rounded-lg"
+                 onclick="window.location.href='${escapeHtml(item.redirectUrl)}'">
+                <div class="w-7 h-7 rounded-full flex items-center justify-center flex-shrink-0" style="background-color: #eaeff0">
+                    <i class="fas ${escapeHtml(item.icon)} text-[10px]" style="color: #1B738C;"></i>
+                </div>
+                <div class="flex-1 p-4 rounded-md" style="background-color: #eaeff0">
+                    <p class="text-xs font-semibold" style="color: #1B738C;">${escapeHtml(item.title)}</p>
+                    <p class="text-[10px]" style="color: #1B738C;">${escapeHtml(item.subTitle)}</p>
+                    <p class="text-[10px] mt-0.5" style="color: #1B738C;">${escapeHtml(item.timeAgo)}</p>
+                </div>
+                <i class="fas fa-chevron-right text-[9px]" style="color: #1B738C;"></i>
+            </div>
+        `).join('');
+    }
+
+    // ============================================================
+    //  QUICK APPROVE (inline from dashboard widget)
+    // ============================================================
+    async function quickApprove(type, id) {
+        const actionBy = localStorage.getItem('hrms_firstName') + ' ' +
+                         localStorage.getItem('hrms_lastName') || 'HR Admin';
+        const cardId = `approval-${type}-${id}`;
+        const card   = document.getElementById(cardId);
+        if (card) { card.style.opacity = '0.5'; card.style.pointerEvents = 'none'; }
+
+        try {
+            const res = await fetch(`${API_BASE_DASHBOARD}/approve`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ type, id, actionBy })
             });
-        }
+            const data = await res.json();
 
-        // Update pending approvals count
-        function updatePendingCount() {
-            const remainingItems = document.querySelectorAll('#pendingApprovalsList > div').length;
-            const pendingSpan = document.getElementById('pendingLeaves');
-            if (pendingSpan) {
-                pendingSpan.textContent = `${remainingItems} pending approvals`;
+            if (data.success) {
+                showToast(data.message || 'Approved successfully!', 'success');
+                if (card) {
+                    card.style.transition = 'opacity 0.4s, max-height 0.4s';
+                    card.style.maxHeight  = '0';
+                    card.style.overflow   = 'hidden';
+                    setTimeout(() => { card.remove(); updatePendingBadge(); }, 400);
+                }
+            } else {
+                showToast(data.message || 'Approval failed.', 'error');
+                if (card) { card.style.opacity = '1'; card.style.pointerEvents = 'auto'; }
             }
+        } catch (err) {
+            showToast('Network error. Please try again.', 'error');
+            if (card) { card.style.opacity = '1'; card.style.pointerEvents = 'auto'; }
         }
+    }
 
-        // Real-time counter
-        function initRealTimeCounter() {
-            let count = 24;
-            const element = document.getElementById('realTimeCount');
-            setInterval(() => {
-                count = Math.floor(Math.random() * (35 - 18 + 1) + 18);
-                if (element) element.textContent = `${count} checking in`;
-            }, 10000);
-        }
+    function updatePendingBadge() {
+        const remaining = document.querySelectorAll('#pendingApprovalsList > div[id^="approval-"]').length;
+        const el = document.getElementById('pendingLeaves');
+        if (el) el.textContent = `${remaining} pending approval${remaining !== 1 ? 's' : ''}`;
+    }
 
-        // Show toast notification
-        function showToast(message, type = 'success') {
-            const toast = document.createElement('div');
-            const bgColor = type === 'success' ? '#28a745' : '#dc3545';
-            toast.className = `fixed bottom-4 right-4 text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-all duration-300 flex items-center gap-2 text-sm`;
-            toast.style.backgroundColor = bgColor;
-            toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i><span>${message}</span>`;
-            document.body.appendChild(toast);
+    // ============================================================
+    //  CHART FILTER  (only calls chart endpoint — lighter)
+    // ============================================================
+    function initChartFilter() {
+        const sel = document.getElementById('attendanceChartFilter');
+        if (!sel) return;
+        sel.addEventListener('change', async function () {
+            currentRange = this.value;
+            try {
+                const res  = await fetch(`${API_BASE_DASHBOARD}/chart?range=${currentRange}`);
+                const data = await res.json();
+                renderAttendanceChart(data);
+            } catch (err) {
+                console.error('Chart filter fetch failed:', err);
+            }
+        });
+    }
 
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateX(100px)';
-                setTimeout(() => {
-                    toast.remove();
-                }, 300);
-            }, 3000);
-        }
-
-        // Set active menu in sidebar
-        function setActiveMenu(moduleName) {
-            setTimeout(() => {
-                const allNavLinks = document.querySelectorAll('.nav-link');
-                allNavLinks.forEach(link => {
-                    link.classList.remove('active');
-                    if (link.getAttribute('data-module') === moduleName) {
-                        link.classList.add('active');
-                    }
-                });
-            }, 500);
-        }
-
-        // Refresh data function (can be called periodically)
-        function refreshDashboardData() {
-            // Simulate data refresh
-            const newPresent = Math.floor(Math.random() * (980 - 900 + 1) + 900);
-            const newOnLeave = Math.floor(Math.random() * (35 - 20 + 1) + 20);
-            const newAttendanceRate = ((newPresent / 1248) * 100).toFixed(1);
-
-            const presentElement = document.getElementById('presentToday');
-            const onLeaveElement = document.getElementById('onLeave');
-            const attendanceRateElement = document.getElementById('attendanceRate');
-            const attendanceProgress = document.getElementById('attendanceProgress');
-
-            if (presentElement) presentElement.textContent = newPresent;
-            if (onLeaveElement) onLeaveElement.textContent = newOnLeave;
-            if (attendanceRateElement) attendanceRateElement.textContent = `${newAttendanceRate}%`;
-            if (attendanceProgress) attendanceProgress.style.width = `${newAttendanceRate}%`;
-        }
-
-        // Auto refresh every 30 seconds
+    // ============================================================
+    //  REAL-TIME CHECK-IN COUNTER  (cosmetic — no API needed)
+    // ============================================================
+    function initRealTimeCounter() {
+        let count = 24;
+        const el  = document.getElementById('realTimeCount');
         setInterval(() => {
-            refreshDashboardData();
-        }, 30000);
+            count = Math.floor(Math.random() * (35 - 18 + 1) + 18);
+            if (el) el.textContent = `${count} checking in`;
+        }, 10000);
+    }
+
+    // ============================================================
+    //  TOAST NOTIFICATION
+    // ============================================================
+    function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        const bg    = type === 'success' ? '#28a745' : '#dc3545';
+        toast.className = 'fixed bottom-4 right-4 text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-all duration-300 flex items-center gap-2 text-sm';
+        toast.style.backgroundColor = bg;
+        toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i><span>${message}</span>`;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity   = '0';
+            toast.style.transform = 'translateX(100px)';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    // ============================================================
+    //  UTILITIES
+    // ============================================================
+    function setText(id, value) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g,  '&amp;')
+            .replace(/</g,  '&lt;')
+            .replace(/>/g,  '&gt;')
+            .replace(/"/g,  '&quot;')
+            .replace(/'/g,  '&#039;');
+    }
+
+    function setActiveMenu(moduleName) {
+        setTimeout(() => {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-module') === moduleName) link.classList.add('active');
+            });
+        }, 500);
+    }
     </script>
 
     <script>
-        // Authentication Check for Dashboard
-        (function () {
-            const isLoggedIn = localStorage.getItem('hrms_logged_in');
-
-            console.log('Dashboard Auth Check:');
-            console.log('  hrms_logged_in:', isLoggedIn);
-            console.log('  hrms_firstName:', localStorage.getItem('hrms_firstName'));
-            console.log('  hrms_lastName:', localStorage.getItem('hrms_lastName'));
-            console.log('  hrms_role:', localStorage.getItem('hrms_role'));
-
-            if (isLoggedIn !== 'true') {
-                console.warn('Not logged in - redirecting to login');
-                window.location.href = 'index.html';
-                return;
-            }
-
-            console.log('✅ User is logged in, proceeding to dashboard');
-        })();
+    // Authentication Check
+    (function () {
+        const isLoggedIn = localStorage.getItem('hrms_logged_in');
+        if (isLoggedIn !== 'true') {
+            console.warn('Not logged in - redirecting to login');
+            window.location.href = 'index.html';
+        }
+    })();
     </script>
 </body>
-
 </html>

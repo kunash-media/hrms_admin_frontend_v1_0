@@ -64,6 +64,7 @@
             padding: 24px;
             margin-bottom: 24px;
             box-shadow: 0 2px 8px rgba(27, 115, 140, 0.04);
+           
         }
 
         /* ===== BUTTONS (matching company.html exactly) ===== */
@@ -74,7 +75,7 @@
             padding: 10px 26px;
             border-radius: 12px;
             cursor: pointer;
-            font-weight: 600;
+            font-weight: 500;
             border: none;
             font-size: 13px;
         }
@@ -1081,6 +1082,271 @@ input.valid:focus, select.valid:focus, textarea.valid:focus {
     margin-left: 2px;
 }
     </style>
+
+ <style>
+    /* ── Overlay Backdrop (Fixed for Clickability) ── */
+    .overlay-backdrop {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.65);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 99999;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .overlay-backdrop.active,
+    .overlay-backdrop.show {
+        display: flex;
+        opacity: 1;
+    }
+
+    .overlay-panel {
+        background: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.3);
+        width: 100%;
+        max-width: 480px;
+        margin: 20px;
+        z-index: 100000;
+        position: relative;
+        pointer-events: all;
+        overflow: hidden;
+    }
+
+    /* Ensure all content inside panel is clickable */
+    .overlay-panel * {
+        pointer-events: auto;
+    }
+
+    .overlay-panel button,
+    .overlay-panel input,
+    .upload-zone {
+        position: relative;
+        z-index: 2;
+    }
+
+    /* ── Progress bar (Google/MS style) ── */
+    .bulk-progress-bar-track {
+        width: 100%;
+        height: 3px;
+        background: #E8E7DA;
+        border-radius: 99px;
+        overflow: hidden;
+        position: relative;
+    }
+    .bulk-progress-bar-fill {
+        height: 100%;
+        background: linear-gradient(90deg, var(--primary) 0%, #D89F34 60%, #957A54 100%);
+        border-radius: 99px;
+        transition: width 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        width: 0%;
+        position: relative;
+    }
+    .bulk-progress-bar-fill::after {
+        content: '';
+        position: absolute;
+        top: 0; right: 0;
+        width: 40px; height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+        animation: barGlint 1.2s ease-in-out infinite;
+    }
+    @keyframes barGlint {
+        0%   { transform: translateX(-40px); opacity: 0; }
+        40%  { opacity: 1; }
+        100% { transform: translateX(40px); opacity: 0; }
+    }
+
+    /* ── Phase label ── */
+    .bulk-phase-label {
+        font-family: 'DM Sans', sans-serif;
+        font-size: 12px;
+        font-weight: 500;
+        color: var(--text-dark);
+        transition: opacity 0.2s;
+    }
+    .bulk-percent-label {
+        font-family: 'DM Mono', monospace;
+        font-size: 11.5px;
+        font-weight: 500;
+        color: var(--text-light);
+        min-width: 34px;
+        text-align: right;
+    }
+
+    /* ── Upload state panels ── */
+    .bulk-state { 
+        display: none; 
+    }
+    .bulk-state.active { 
+        display: block; 
+    }
+
+    /* ── Result cards ── */
+    .bulk-result-card {
+        border-radius: 10px;
+        padding: 13px 14px;
+        display: flex;
+        align-items: flex-start;
+        gap: 11px;
+    }
+    .bulk-result-card.success {
+        background: #E6F4EC;
+        border: 1px solid #A8D8B9;
+    }
+    .bulk-result-card.partial {
+        background: #FFF3DC;
+        border: 1px solid #F0D18A;
+    }
+    .bulk-result-card.error {
+        background: #FCEAEA;
+        border: 1px solid #F5BABA;
+    }
+    .bulk-result-icon {
+        width: 32px; height: 32px;
+        border-radius: 8px;
+        display: flex; align-items: center; justify-content: center;
+        flex-shrink: 0;
+        font-size: 14px;
+    }
+    .bulk-result-card.success .bulk-result-icon { background: #C3EBCF; color: #1A6B3A; }
+    .bulk-result-card.partial .bulk-result-icon { background: #FFE9B0; color: #9A6200; }
+    .bulk-result-card.error   .bulk-result-icon { background: #F8CCCC; color: #B02A2A; }
+
+    /* ── Skipped reasons list ── */
+    .bulk-skip-list {
+        max-height: 130px;
+        overflow-y: auto;
+        margin-top: 8px;
+        border-radius: 7px;
+        border: 1.5px solid #b99f61;
+        background: #FAFAF5;
+    }
+    .bulk-skip-list-item {
+        font-size: 12px;
+        color: #df3f3f;
+        padding: 7px 11px;
+        border-bottom: 1px solid #EBEBDF;
+        font-family: 'DM Sans', sans-serif;
+        line-height: 1.45;
+        display: flex;
+        gap: 7px;
+        align-items: flex-start;
+    }
+    .bulk-skip-list-item:last-child { border-bottom: none; }
+    .bulk-skip-list-item::before {
+        content: '▸';
+        color: #D89F34;
+        font-size: 10px;
+        margin-top: 2px;
+        flex-shrink: 0;
+    }
+
+    /* ── Stat chips ── */
+    .bulk-stat-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 12.5px;
+        font-weight: 600;
+        font-family: 'DM Mono', monospace;
+    }
+    .bulk-stat-chip.uploaded { background: #E6F4EC; color: #1A6B3A; border: 1px solid #A8D8B9; }
+    .bulk-stat-chip.skipped  { background: #FFF3DC; color: #9A6200;  border: 1px solid #F0D18A; }
+
+    /* ── Toast (rich) ── */
+    .rich-toast {
+        position: fixed;
+        bottom: 24px; right: 24px;
+        z-index: 999999;
+        min-width: 300px; max-width: 420px;
+        border-radius: 14px;
+        box-shadow: 0 12px 36px rgba(27,115,140,0.25), 0 2px 8px rgba(27,115,140,0.1);
+        font-family: 'DM Sans', sans-serif;
+        overflow: hidden;
+        transform: translateY(20px) scale(0.97);
+        opacity: 0;
+        transition: all 0.35s cubic-bezier(0.34,1.56,0.64,1);
+        pointer-events: none;
+    }
+    .rich-toast.show {
+        transform: translateY(0) scale(1);
+        opacity: 1;
+        pointer-events: all;
+    }
+    .rich-toast-bar {
+        height: 3px;
+        width: 100%;
+        background: linear-gradient(90deg, var(--primary), #D89F34);
+        animation: toastCountdown linear forwards;
+    }
+    .rich-toast-body {
+        padding: 13px 15px 14px;
+        display: flex;
+        gap: 11px;
+        align-items: flex-start;
+    }
+    .rich-toast-icon {
+        width: 34px; height: 34px;
+        border-radius: 9px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 15px;
+        flex-shrink: 0;
+    }
+    .rich-toast-title {
+        font-size: 13.5px;
+        font-weight: 600;
+        line-height: 1.3;
+        margin-bottom: 3px;
+    }
+    .rich-toast-sub {
+        font-size: 12px;
+        line-height: 1.45;
+        opacity: 0.82;
+    }
+
+    @keyframes toastCountdown {
+        from { width: 100%; }
+        to   { width: 0%; }
+    }
+
+    /* Toast Variants */
+    .rich-toast.toast-success { background: var(--primary); color: #fff; }
+    .rich-toast.toast-success .rich-toast-icon { background: rgba(216,159,52,0.2); color: #D89F34; }
+    .rich-toast.toast-success .rich-toast-bar { background: linear-gradient(90deg, #D89F34, #957A54); }
+
+    .rich-toast.toast-partial { background: #2C2C24; color: #fff; }
+    .rich-toast.toast-partial .rich-toast-icon { background: rgba(216,159,52,0.2); color: #D89F34; }
+    .rich-toast.toast-partial .rich-toast-bar { background: linear-gradient(90deg, #D89F34, #9A6200); }
+
+    .rich-toast.toast-error { background: #2C1010; color: #fff; }
+    .rich-toast.toast-error .rich-toast-icon { background: rgba(176,42,42,0.3); color: #F87171; }
+    .rich-toast.toast-error .rich-toast-bar { background: linear-gradient(90deg, #B02A2A, #D89F34); }
+
+    .export-btn:hover { 
+        background: #C08A25; 
+        transform: translateY(-1px); 
+    }
+
+    @keyframes pulseRing {
+        0%   { transform: scale(0.95); opacity: 0.6; }
+        50%  { transform: scale(1.08); opacity: 0.25; }
+        100% { transform: scale(0.95); opacity: 0.6; }
+    }
+
+    /* Extra Safety for Clickable Elements */
+    .upload-zone, button, .btn-primary, .btn-outline {
+        cursor: pointer;
+    }
+</style>
+
 </head>
 
 <body>
@@ -1101,13 +1367,22 @@ input.valid:focus, select.valid:focus, textarea.valid:focus {
                             documents, and history</p>
                     </div>
                     <!-- PATCH 1: Quick register button — lightweight 5-field onboarding -->
-                    <button
-                        id="quickAddMemberBtn"
-                        onclick="openQuickAddModal()"
-                        class="btn-primary"
-                        style="display:inline-flex;align-items:center;gap:8px;white-space:nowrap;">
-                        <i class="fas fa-user-plus"></i> Add Member
-                    </button>
+                     <div>
+                         <button
+                            id="quickAddMemberBtn"
+                            onclick="openQuickAddModal()"
+                            class="btn-primary"
+                            style="display:inline-flex;align-items:center;gap:8px;white-space:nowrap;">
+                            <i class="fas fa-user-plus"></i> Add Member
+                        </button>
+
+                        <!-- PATCH : Upload Bulk btn -->
+                        <button class="btn-primary" onclick="openBulkEmployeeUpload()">
+                            <i class="fas fa-layer-group text-[12px]"></i>
+                            Bulk Upload
+                        </button>
+                     </div>
+                   
                 </div>
 
                 <div id="errorContainer" class="error-message"></div>
@@ -1138,10 +1413,10 @@ input.valid:focus, select.valid:focus, textarea.valid:focus {
                             </div>
                         </div>
 
-                        <div class="overflow-x-auto">
+                        <div class="h-[400px] overflow-auto">
                             <table>
-                                <thead class="border border-gray-400">
-                                    <tr class="" style="border-color: #1B738C;">
+                                <thead class="border border-[#1B738C]">
+                                    <tr class="border border-[#1B738C] sticky top-0 bg-white">
                                         <th style="color:var(--primary);">Employee</th>
                                         <th style="color:var(--primary);">ID</th>
                                         <th style="color:var(--primary);">Department</th>
@@ -1327,8 +1602,21 @@ input.valid:focus, select.valid:focus, textarea.valid:focus {
                                         </select></div>
                                     <div class="form-group"><label>Sub-Department</label><input id="fSubDept"
                                             placeholder="Optional"></div>
-                                    <div class="form-group"><label>Designation <span class="req">*</span></label><input
-                                            id="fDesig" placeholder="e.g. Senior Developer"></div>
+
+                                    <!-- <div class="form-group"><label>Designation <span class="req">*</span></label><input
+                                            id="fDesig" placeholder="e.g. Senior Developer"></div> -->
+
+                                    <!-- patch : surgical changes only. -->       
+                                    <div class="form-group">
+                                        <label>Designation <span class="req">*</span></label>
+                                        <select id="fDesig" onchange="handleDesigChange('fDesig','fDesigCustomWrap')">
+                                            <option value="">Select Designation</option>
+                                        </select>
+                                        <div id="fDesigCustomWrap" style="display:none; margin-top:8px;">
+                                            <input id="fDesigCustom" placeholder="Enter designation manually" 
+                                                style="border:1px solid var(--primary-soft);border-radius:12px;padding:10px 14px;width:100%;font-size:13px;">
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <!-- ✅ ADD THIS PASSWORD FIELD ROW -->
@@ -1952,6 +2240,154 @@ input.valid:focus, select.valid:focus, textarea.valid:focus {
             </div>
             <!-- ===================================================== -->
             <!-- ==================== END PATCH ===================== -->
+
+            <!--====================================================== BULK EMPLOYEE UPLOAD OVERLAY ====================================================== -->
+<div class="overlay-backdrop" id="bulkOverlay">
+    <div class="overlay-panel" style="max-width:480px;">
+        <!-- Header -->
+        <div class="px-6 pt-5 pb-4 border-b border-[#EBEBDF] flex items-center justify-between">
+            <div>
+                <h2 class="text-[16px] font-semibold text-[var(--text-dark)]">Bulk Employee Upload</h2>
+                <p class="text-[12.5px] text-[var(--text-light)] mt-0.5">Import employees via Excel file</p>
+            </div>
+            <button onclick="closeBulkOverlay()" class="w-8 h-8 rounded-lg flex items-center justify-center text-[var(--text-light)] hover:bg-[#F2F2E8] transition-colors">
+                <i class="fas fa-xmark text-[15px]"></i>
+            </button>
+        </div>
+
+        <!-- STATE: FORM -->
+        <div id="bulkStateForm" class="bulk-state active">
+            <div class="px-6 py-5 space-y-5">
+                <!-- Excel upload -->
+                <div>
+                    <label class="block text-[13px] font-medium text-[var(--text-dark)] mb-2">
+                        <i class="fas fa-file-excel text-[#1A6B3A] mr-1.5"></i>
+                        Employee Data — Excel File <span class="text-[#D89F34]">*</span>
+                    </label>
+                    <div class="mb-2">
+                        <a href="/assets/files/BulkEmployee_Upload_Template.xlsx" class="text-[12.5px] text-[#D89F34] hover:underline font-medium">
+                            <i class="fas fa-download text-[11px] mr-1"></i> Download Template
+                        </a>
+                    </div>
+                    <div class="upload-zone" id="excelZone" 
+                        onclick="document.getElementById('excelInput').click()"
+                        ondragover="handleDragOver(event,'excelZone')"
+                        ondragleave="handleDragLeave('excelZone')"
+                        ondrop="handleDrop(event,'excelInput','excelZone',['xlsx','xls'])">
+
+                        <!-- Hidden File Input -->
+                        <input type="file" 
+                            id="excelInput" 
+                            accept=".xlsx,.xls" 
+                            style="display: none;" 
+                            onchange="handleFileSelect(this,'excelZone','excelFileName',['xlsx','xls'])">
+
+                        <div id="excelPlaceholder" class="border border-dashed border-gray-600 rounded-lg p-4">
+                            <div class="w-10 h-10 mx-auto rounded-xl bg-[#E6F4EC] flex items-center justify-center mb-2.5">
+                                <i class="fas fa-arrow-up-from-bracket text-[#1A6B3A] text-[16px]"></i>
+                            </div>
+                            <p class="text-[13.5px] font-medium text-[var(--text-dark)]">Click or drag & drop Excel file</p>
+                            <p class="text-[12px] text-[var(--text-light)] mt-1">Accepts .xlsx, .xls — max 5MB</p>
+                        </div>
+
+                        <div id="excelFileInfo" class="hidden items-center gap-3 justify-center">
+                            <div class="w-8 h-8 rounded-lg bg-[#E6F4EC] flex items-center justify-center flex-shrink-0">
+                                <i class="fas fa-file-excel text-[#1A6B3A]"></i>
+                            </div>
+                            <div class="text-left">
+                                <p class="text-[13px] font-medium text-[var(--text-dark)]" id="excelFileName">—</p>
+                                <p class="text-[11.5px] text-[var(--text-light)]">Excel file selected</p>
+                            </div>
+                            <button class="ml-2 text-[var(--text-light)] hover:text-[#B02A2A]" 
+                                    onclick="clearFile(event,'excelInput','excelZone')">
+                                <i class="fas fa-xmark text-[13px]"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="excelError" class="hidden text-[12px] text-[#B02A2A] mt-1.5 flex items-center gap-1">
+                        <i class="fas fa-triangle-exclamation"></i><span></span>
+                    </div>
+                </div>
+
+                <!-- Info tip -->
+                <div class="bg-[#EDF3F6] border border-[#C2D6DF] rounded-lg px-3.5 py-3 flex gap-2.5">
+                    <i class="fas fa-circle-info text-[var(--text-dark)] text-[12px] mt-0.5 flex-shrink-0"></i>
+                    <p class="text-[12.5px] text-[var(--text-dark)] leading-relaxed">
+                        Filenames must match the template. All mandatory columns must be filled.
+                        click on "Download Template" to get template.
+                    </p>
+                </div>
+            </div>
+
+            <div class="px-6 pb-5 flex justify-between items-center">
+                <button class="btn-outline" onclick="closeBulkOverlay()">Cancel</button>
+                <button class="btn-primary" id="bulkUploadBtn" onclick="handleBulkEmployeeUpload()">
+                    <i class="fas fa-cloud-arrow-up text-[11px]"></i> Upload Employees
+                </button>
+            </div>
+        </div>
+
+        <!-- STATE: UPLOADING -->
+        <div id="bulkStateLoading" class="bulk-state">
+            <div class="px-6 py-8 space-y-6">
+                <div class="flex flex-col items-center gap-3">
+                    <div style="position:relative;width:60px;height:60px;">
+                        <div style="width:60px;height:60px;border-radius:16px;background:#EDF3F6;border:1.5px solid #C2D6DF; display:flex;align-items:center;justify-content:center;">
+                            <i class="fas fa-file-arrow-up text-[var(--text-dark)] text-[24px]" id="bulkLoadingIcon"></i>
+                        </div>
+                        <div style="position:absolute;inset:-6px;border-radius:22px;border:2px solid #D89F34; animation:pulseRing 1.8s ease-in-out infinite;opacity:0.5;"></div>
+                    </div>
+                    <div class="text-center">
+                        <p class="text-[14px] font-semibold text-[var(--text-dark)]" id="bulkPhaseTitle">Preparing upload…</p>
+                        <p class="text-[12.5px] text-[var(--text-light)] mt-0.5" id="bulkPhaseSubtitle">Getting things ready</p>
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <div class="flex items-center justify-between">
+                        <span class="bulk-phase-label" id="bulkPhaseLabel">Uploading file</span>
+                        <span class="bulk-percent-label" id="bulkPercentLabel">0%</span>
+                    </div>
+                    <div class="bulk-progress-bar-track">
+                        <div class="bulk-progress-bar-fill" id="bulkProgressFill"></div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-center gap-2" id="bulkStepDots">
+                    <div class="flex items-center gap-2" id="bulkDot1">
+                        <div style="width:8px;height:8px;border-radius:50%;background:#D89F34;"></div>
+                        <span style="font-size:11.5px;color:var(--text-dark);font-weight:500;">Sending</span>
+                    </div>
+                    <div style="width:18px;height:1px;background:#DDD9C8;"></div>
+                    <div class="flex items-center gap-2 opacity-40" id="bulkDot2">
+                        <div style="width:8px;height:8px;border-radius:50%;background:#957A54;"></div>
+                        <span style="font-size:11.5px;color:#957A54;font-weight:500;">Processing</span>
+                    </div>
+                    <div style="width:18px;height:1px;background:#DDD9C8;"></div>
+                    <div class="flex items-center gap-2 opacity-40" id="bulkDot3">
+                        <div style="width:8px;height:8px;border-radius:50%;background:#957A54;"></div>
+                        <span style="font-size:11.5px;color:#957A54;font-weight:500;">Complete</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- STATE: RESULT -->
+        <div id="bulkStateResult" class="bulk-state">
+            <div class="px-6 py-5 space-y-4" id="bulkResultContent"></div>
+            <div class="px-6 pb-5 flex justify-end gap-2">
+                <button class="btn-outline" onclick="closeBulkOverlay()">Close</button>
+                <button class="btn-primary" onclick="resetBulkEmployeeUpload()" id="bulkActionBtn">
+                    <i class="fas fa-rotate-left text-[11px]"></i> Upload More
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
         </div>
     </div>
 
@@ -1972,10 +2408,31 @@ input.valid:focus, select.valid:focus, textarea.valid:focus {
     <script src="/assets/js/sidebar.js"></script>
     <script src="/assets/js/header.js"></script>
 
+
+    <script>
+        function handleDesigChange(selectId, wrapId) {
+            const select = document.getElementById(selectId);
+            const wrap   = document.getElementById(wrapId);
+            if (!select || !wrap) return;
+            if (select.value === '__other__') {
+                wrap.style.display = 'block';
+                const customInputId = selectId === 'fDesig' ? 'fDesigCustom' : 'efDesigCustom';
+                document.getElementById(customInputId)?.focus();
+            } else {
+                wrap.style.display = 'none';
+                const customInputId = selectId === 'fDesig' ? 'fDesigCustom' : 'efDesigCustom';
+                const customInput = document.getElementById(customInputId);
+                if (customInput) customInput.value = '';
+            }
+        }
+    </script>
+
+
     <script>
         // ==================== CONFIG ====================
         const API_BASE = 'http://localhost:8086/api/employees';
 
+        const COMPANY_API_BASE = 'http://localhost:8086/api/company';
 
         // ==================== VALIDATION SYSTEM ====================
 
@@ -2086,6 +2543,73 @@ const VALIDATION = {
         message: 'Joining date cannot be more than 10 years in the past or future'
     }
 };
+
+
+async function loadDepartmentsAndDesignations() {
+    try {
+        const [deptRes, desigRes] = await Promise.all([
+            apiFetch(`${COMPANY_API_BASE}/departments`),
+            apiFetch(`${COMPANY_API_BASE}/designations`)
+        ]);
+
+        const departments  = deptRes.ok  ? (deptRes.data?.data?.departments  || []) : [];
+        const designations = desigRes.ok ? (desigRes.data?.data?.designations || []) : [];
+
+        window._departments  = departments;
+        window._designations = designations;
+
+        populateDeptDropdowns(departments);
+        populateDesigInputs(designations);
+    } catch (err) {
+        console.warn('Could not load departments/designations:', err);
+    }
+}
+
+function populateDeptDropdowns(departments) {
+    const ids = ['fDept', 'efDept'];
+    ids.forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        const current = el.value;
+        el.innerHTML = '<option value="">Select</option>' +
+            departments.map(d => `<option value="${d}" ${d === current ? 'selected' : ''}>${d}</option>`).join('');
+    });
+}
+
+
+
+// function populateDesigInputs(designations) {
+//     // Add datalist to designation text inputs for autocomplete
+//     let dl = document.getElementById('designationDatalist');
+//     if (!dl) {
+//         dl = document.createElement('datalist');
+//         dl.id = 'designationDatalist';
+//         document.body.appendChild(dl);
+//     }
+//     dl.innerHTML = designations.map(d => `<option value="${d}">`).join('');
+
+//     const ids = ['fDesig', 'efDesig'];
+//     ids.forEach(id => {
+//         const el = document.getElementById(id);
+//         if (el) el.setAttribute('list', 'designationDatalist');
+//     });
+// }
+
+function populateDesigInputs(designations) {
+    // Populate Add Employee dropdown
+    const fDesig = document.getElementById('fDesig');
+    if (fDesig) {
+        const current = fDesig.value;
+        fDesig.innerHTML = '<option value="">Select Designation</option>' +
+            designations.map(d =>
+                `<option value="${d}" ${d === current ? 'selected' : ''}>${d}</option>`
+            ).join('') +
+            '<option value="__other__">Other</option>';
+    }
+    // Remove old datalist if it exists
+    document.getElementById('designationDatalist')?.remove();
+}
+
 
 // ==================== EDIT EMPLOYEE FORM VALIDATIONS ====================
 
@@ -3904,12 +4428,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-
         function viewRow(label, value) {
             return `<div style="display:flex;justify-content:space-between;align-items:flex-start;padding:4px 0;border-bottom:1px solid #62C9EA;">
-        <span style="font-size:11px;color:var(--text-light);min-width:120px;">${label}</span>
-        <span style="font-size:12px;color:var(--text-dark);font-weight:500;text-align:right;">${value}</span>
-    </div>`;
+                        <span style="font-size:11px;color:var(--text-light);min-width:120px;">${label}</span>
+                        <span style="font-size:12px;color:var(--text-dark);font-weight:500;text-align:right;">${value}</span>
+                    </div>`;
         }
         function closeViewOverlay() { const o = document.getElementById('viewEmployeeOverlay'); if (o) o.remove(); }
 
@@ -3936,143 +4459,143 @@ document.addEventListener('DOMContentLoaded', function() {
             const initial = name.charAt(0).toUpperCase();
 
             overlay.innerHTML = `
-        <div style="background:white;border-radius:16px;width:100%;max-width:860px;margin:auto;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.2);border:1px solid #1B738C;">
-            <div style="background:var(--primary);padding:20px 24px;display:flex;justify-content:space-between;align-items:center;">
-                <div style="display:flex;align-items:center;gap:14px;">
-                    <div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;color:white;font-size:20px;font-weight:700;">${initial}</div>
-                    <div>
-                        <div style="font-size:16px;font-weight:700;color:white;">Edit Employee</div>
-                        <div style="font-size:12px;color:rgba(255,255,255,0.75);">${name} &nbsp;·&nbsp; ${emp.employeeId || ''}</div>
-                    </div>
-                </div>
-                <button onclick="closeEditOverlay()" style="background:rgba(255,255,255,0.2);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;">&times;</button>
-            </div>
-            <div style="display:flex;border-bottom:2px solid #1B738C;background:var(--primary-bg-light);padding:0 24px;overflow-x:auto;">
-                ${['Personal', 'Job Details', 'Contact & Address', 'Education & Family', 'Documents'].map((tab, i) =>
-                `<button onclick="switchEditTab(${i})" id="editTab${i}" style="padding:12px 16px;border:none;background:none;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;color:${i === 0 ? 'var(--primary)' : 'var(--text-light)'};border-bottom-color:${i === 0 ? 'var(--primary)' : 'transparent'};">${tab}</button>`
-            ).join('')}
-            </div>
-            <form id="editEmployeeForm" onsubmit="submitEditEmployee(event, ${employeePrimeId})">
-                <div style="padding:24px;overflow-y:auto;max-height:calc(100vh - 250px);">
-
-                    <!-- TAB 0: Personal -->
-                    <div id="editSt0">
-                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-id-card mr-2"></i>Personal Information</div>
-                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
-                            ${editField('First Name', 'efFN', emp.firstName, 'text', true)}${editField('Middle Name', 'efMN', emp.middleName)}${editField('Last Name ', 'efLN', emp.lastName, 'text', true)}
-                        </div>
-                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
-                            ${editField('Date of Birth', 'efDOB', emp.dateOfBirth, 'date')}${editSelectField('Gender', 'efGender', ['Male', 'Female', 'Other'], emp.gender)}${editSelectField('Marital Status', 'efMarital', ['Single', 'Married', 'Divorced', 'Widowed'], emp.maritalStatus)}
-                        </div>
-                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
-                            ${editSelectField('Blood Group', 'efBlood', ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'], emp.bloodGroup)}${editField('PAN Number', 'efPAN', emp.panNumber)}${editField('Aadhaar Number', 'efAAD', emp.aadhaarNumber)}
-                        </div>
-                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
-                            ${editField('Nationality', 'efNat', emp.nationality || 'Indian')}${editField('Religion', 'efRel', emp.religion)}${editField("Father's / Spouse Name", 'efFatherName', emp.fatherSpouseName)}
-                        </div>
-                        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px;">
-                           ${editField('LinkedIn Profile', 'efLI', emp.linkedinProfile)}<div class="form-group"><label>Employee Status</label><div style="padding:8px 12px; background:var(--primary-bg-light); border-radius:8px; font-size:12px; color:${emp.status === 'Active' ? '#2b7a3e' : '#dc3545'}; font-weight:600;">${emp.status || 'Active'}</div>
-                           </div>
-                        </div>
-                    </div>
-
-                    <!-- TAB 1: Job Details -->
-                    <div id="editSt1" style="display:none;">
-                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-briefcase mr-2"></i>Job Details</div>
-                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
-                            ${editSelectField('Department ', 'efDept', ['Information Technology', 'Human Resources', 'Sales & Marketing', 'Finance & Accounts', 'Operations'], emp.department, true)}${editField('Sub-Department', 'efSubDept', emp.subDepartment)}${editField('Designation ', 'efDesig', emp.designation, 'text', true)}
-                        </div>
-                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
-                            ${editSelectField('Employee Grade', 'efGrade', ['L1', 'L2', 'L3', 'L4', 'L5', 'M1', 'M2'], emp.employeeGrade)}${editSelectField('Employment Type', 'efEmpType', ['Regular', 'Part-Time', 'Contract', 'Intern'], emp.employmentType)}${editField('Joining Date', 'efJD', emp.joiningDate, 'date', true)}
-                        </div>
-                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
-                            ${editField('Probation End Date', 'efProbEnd', emp.probationEndDate, 'date')}${editField('Reporting Manager', 'efMgr', emp.reportingManager)}${editField('HR Business Partner', 'efHRBP', emp.hrBusinessPartner)}
-                        </div>
-                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
-                            ${editSelectField('Work Location', 'efWL', ['Mumbai HQ', 'Delhi Branch', 'Remote', 'Hybrid'], emp.workLocation)}${editField('Basic Salary (₹)', 'efBasic', emp.basicSalary, 'number', true)}${editSelectField('Shift', 'efShift', ['General (9AM-6PM)', 'Morning (7AM-4PM)', 'Evening (2PM-11PM)', 'Night (10PM-7AM)'], emp.shift)}
-                        </div>
-                        <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:12px;">${editField('Cost Centre', 'efCC', emp.costCentre)}</div>
-                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;margin-top:16px;"><i class="fas fa-building mr-2"></i>Bank Details</div>
-                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
-                            ${editField('Bank Name', 'efBank', emp.bankName)}${editField('Account Number', 'efAccNo', emp.accountNumber)}${editField('IFSC Code', 'efIFSC', emp.ifscCode)}
-                        </div>
-                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;margin-top:16px;"><i class="fas fa-lock mr-2"></i>Login Credentials</div>
-                        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
+                <div style="background:white;border-radius:16px;width:100%;max-width:860px;margin:auto;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,0.2);border:1px solid #1B738C;">
+                    <div style="background:var(--primary);padding:20px 24px;display:flex;justify-content:space-between;align-items:center;">
+                        <div style="display:flex;align-items:center;gap:14px;">
+                            <div style="width:48px;height:48px;border-radius:50%;background:rgba(255,255,255,0.2);border:2px solid rgba(255,255,255,0.5);display:flex;align-items:center;justify-content:center;color:white;font-size:20px;font-weight:700;">${initial}</div>
                             <div>
-                                <label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">New Password</label>
-                                <input type="password" id="efPassword" placeholder="Leave blank to keep current" style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
-                                <div style="font-size:10px;color:var(--text-light);margin-top:3px;">Minimum 6 characters</div>
-                            </div>
-                            <div>
-                                <label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">Confirm New Password</label>
-                                <input type="password" id="efConfirmPassword" placeholder="Re-enter new password" style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
+                                <div style="font-size:16px;font-weight:700;color:white;">Edit Employee</div>
+                                <div style="font-size:12px;color:rgba(255,255,255,0.75);">${name} &nbsp;·&nbsp; ${emp.employeeId || ''}</div>
                             </div>
                         </div>
+                        <button onclick="closeEditOverlay()" style="background:rgba(255,255,255,0.2);border:none;color:white;width:32px;height:32px;border-radius:50%;cursor:pointer;font-size:16px;">&times;</button>
                     </div>
+                    <div style="display:flex;border-bottom:2px solid #1B738C;background:var(--primary-bg-light);padding:0 24px;overflow-x:auto;">
+                        ${['Personal', 'Job Details', 'Contact & Address', 'Education & Family', 'Documents'].map((tab, i) =>
+                        `<button onclick="switchEditTab(${i})" id="editTab${i}" style="padding:12px 16px;border:none;background:none;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;color:${i === 0 ? 'var(--primary)' : 'var(--text-light)'};border-bottom-color:${i === 0 ? 'var(--primary)' : 'transparent'};">${tab}</button>`
+                    ).join('')}
+                    </div>
+                    <form id="editEmployeeForm" onsubmit="submitEditEmployee(event, ${employeePrimeId})">
+                        <div style="padding:24px;overflow-y:auto;max-height:calc(100vh - 250px);">
 
-                    <!-- TAB 2: Contact & Address -->
-                    <div id="editSt2" style="display:none;">
-                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-address-book mr-2"></i>Contact Information</div>
-                        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:12px;">
-                            ${editField('Personal Email', 'efPEmail', emp.personalEmail, 'email', true)}${editField('Work Email', 'efWEmail', emp.workEmail, 'email')}${editField('Mobile *', 'efMob', emp.mobileNumber, 'text', true)}${editField('Alternate Phone', 'efAlt', emp.alternateNumber)}
-                        </div>
-                        <div style="font-size:12px;font-weight:700;color:var(--text-light);margin-bottom:10px;margin-top:6px;">Current Address</div>
-                        <div style="background:var(--primary-bg-light);border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid #1B738C;">
-                            ${editTextareaField('Street Address', 'efCAddr', emp.currentStreet)}
-                            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px;">
-                                ${editField('City', 'efCity', emp.currentCity)}${editField('State', 'efState', emp.currentState)}${editField('PIN Code', 'efPIN', emp.currentPincode)}${editField('Country', 'efCountry', emp.currentCountry || 'India')}
+                            <!-- TAB 0: Personal -->
+                            <div id="editSt0">
+                                <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-id-card mr-2"></i>Personal Information</div>
+                                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
+                                    ${editField('First Name', 'efFN', emp.firstName, 'text', true)}${editField('Middle Name', 'efMN', emp.middleName)}${editField('Last Name ', 'efLN', emp.lastName, 'text', true)}
+                                </div>
+                                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
+                                    ${editField('Date of Birth', 'efDOB', emp.dateOfBirth, 'date')}${editSelectField('Gender', 'efGender', ['Male', 'Female', 'Other'], emp.gender)}${editSelectField('Marital Status', 'efMarital', ['Single', 'Married', 'Divorced', 'Widowed'], emp.maritalStatus)}
+                                </div>
+                                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
+                                    ${editSelectField('Blood Group', 'efBlood', ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'], emp.bloodGroup)}${editField('PAN Number', 'efPAN', emp.panNumber)}${editField('Aadhaar Number', 'efAAD', emp.aadhaarNumber)}
+                                </div>
+                                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+                                    ${editField('Nationality', 'efNat', emp.nationality || 'Indian')}${editField('Religion', 'efRel', emp.religion)}${editField("Father's / Spouse Name", 'efFatherName', emp.fatherSpouseName)}
+                                </div>
+                                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px;">
+                                ${editField('LinkedIn Profile', 'efLI', emp.linkedinProfile)}<div class="form-group"><label>Employee Status</label><div style="padding:8px 12px; background:var(--primary-bg-light); border-radius:8px; font-size:12px; color:${emp.status === 'Active' ? '#2b7a3e' : '#dc3545'}; font-weight:600;">${emp.status || 'Active'}</div>
+                                </div>
+                                </div>
                             </div>
-                        </div>
-                        <div style="font-size:12px;font-weight:700;color:var(--text-light);margin-bottom:10px;">Permanent Address</div>
-                        <div style="background:var(--primary-bg-light);border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid #1B738C;">
-                            ${editTextareaField('Street Address', 'efPAddr', emp.permanentStreet)}
-                            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px;">
-                                ${editField('City', 'efPCity', emp.permanentCity)}${editField('State', 'efPState', emp.permanentState)}${editField('PIN Code', 'efPPIN', emp.permanentPincode)}${editField('Country', 'efPCountry', emp.permanentCountry || 'India')}
+
+                            <!-- TAB 1: Job Details -->
+                            <div id="editSt1" style="display:none;">
+                                <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-briefcase mr-2"></i>Job Details</div>
+                                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
+                                    ${editSelectField('Department ', 'efDept', ['Information Technology', 'Human Resources', 'Sales & Marketing', 'Finance & Accounts', 'Operations'], emp.department, true)}${editField('Sub-Department', 'efSubDept', emp.subDepartment)}  ${editDesigField(emp.designation)}
+                                </div>
+                                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
+                                    ${editSelectField('Employee Grade', 'efGrade', ['L1', 'L2', 'L3', 'L4', 'L5', 'M1', 'M2'], emp.employeeGrade)}${editSelectField('Employment Type', 'efEmpType', ['Regular', 'Part-Time', 'Contract', 'Intern'], emp.employmentType)}${editField('Joining Date', 'efJD', emp.joiningDate, 'date', true)}
+                                </div>
+                                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
+                                    ${editField('Probation End Date', 'efProbEnd', emp.probationEndDate, 'date')}${editField('Reporting Manager', 'efMgr', emp.reportingManager)}${editField('HR Business Partner', 'efHRBP', emp.hrBusinessPartner)}
+                                </div>
+                                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
+                                    ${editSelectField('Work Location', 'efWL', ['Mumbai HQ', 'Delhi Branch', 'Remote', 'Hybrid'], emp.workLocation)}${editField('Basic Salary (₹)', 'efBasic', emp.basicSalary, 'number', true)}${editSelectField('Shift', 'efShift', ['General (9AM-6PM)', 'Morning (7AM-4PM)', 'Evening (2PM-11PM)', 'Night (10PM-7AM)'], emp.shift)}
+                                </div>
+                                <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:12px;">${editField('Cost Centre', 'efCC', emp.costCentre)}</div>
+                                <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;margin-top:16px;"><i class="fas fa-building mr-2"></i>Bank Details</div>
+                                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+                                    ${editField('Bank Name', 'efBank', emp.bankName)}${editField('Account Number', 'efAccNo', emp.accountNumber)}${editField('IFSC Code', 'efIFSC', emp.ifscCode)}
+                                </div>
+                                <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;margin-top:16px;"><i class="fas fa-lock mr-2"></i>Login Credentials</div>
+                                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
+                                    <div>
+                                        <label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">New Password</label>
+                                        <input type="password" id="efPassword" placeholder="Leave blank to keep current" style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
+                                        <div style="font-size:10px;color:var(--text-light);margin-top:3px;">Minimum 6 characters</div>
+                                    </div>
+                                    <div>
+                                        <label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">Confirm New Password</label>
+                                        <input type="password" id="efConfirmPassword" placeholder="Re-enter new password" style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                        <div style="font-size:12px;font-weight:700;color:var(--text-light);margin-bottom:10px;">Emergency Contact</div>
-                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
-                            ${editField('Name ', 'efECName', emp.emergencyName, 'text', true)}${editSelectField('Relationship', 'efECRel', ['Spouse', 'Father', 'Mother', 'Sibling'], emp.emergencyRelationship)}${editField('Phone ', 'efECPhone', emp.emergencyPhone, 'text', true)}
-                        </div>
-                    </div>
 
-                    <!-- TAB 3: Education & Family -->
-                    <div id="editSt3" style="display:none;">
-                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-graduation-cap mr-2"></i>Education Details</div>
-                        <div id="editEduList"></div>
-                        <button type="button" onclick="addEditEduRow()" class="btn-outline btn-sm" style="margin-bottom:16px;"><i class="fas fa-plus mr-1"></i> Add Education</button>
-                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-users mr-2"></i>Family Details</div>
-                        <div id="editFamList"></div>
-                        <button type="button" onclick="addEditFamRow()" class="btn-outline btn-sm" style="margin-bottom:16px;"><i class="fas fa-plus mr-1"></i> Add Family Member</button>
-                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-briefcase mr-2"></i>Work Experience</div>
-                        <div id="editExpList"></div>
-                        <button type="button" onclick="addEditExpRow()" class="btn-outline btn-sm"><i class="fas fa-plus mr-1"></i> Add Experience</button>
-                    </div>
+                            <!-- TAB 2: Contact & Address -->
+                            <div id="editSt2" style="display:none;">
+                                <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-address-book mr-2"></i>Contact Information</div>
+                                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:12px;">
+                                    ${editField('Personal Email', 'efPEmail', emp.personalEmail, 'email', true)}${editField('Work Email', 'efWEmail', emp.workEmail, 'email')}${editField('Mobile *', 'efMob', emp.mobileNumber, 'text', true)}${editField('Alternate Phone', 'efAlt', emp.alternateNumber)}
+                                </div>
+                                <div style="font-size:12px;font-weight:700;color:var(--text-light);margin-bottom:10px;margin-top:6px;">Current Address</div>
+                                <div style="background:var(--primary-bg-light);border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid #1B738C;">
+                                    ${editTextareaField('Street Address', 'efCAddr', emp.currentStreet)}
+                                    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px;">
+                                        ${editField('City', 'efCity', emp.currentCity)}${editField('State', 'efState', emp.currentState)}${editField('PIN Code', 'efPIN', emp.currentPincode)}${editField('Country', 'efCountry', emp.currentCountry || 'India')}
+                                    </div>
+                                </div>
+                                <div style="font-size:12px;font-weight:700;color:var(--text-light);margin-bottom:10px;">Permanent Address</div>
+                                <div style="background:var(--primary-bg-light);border-radius:10px;padding:14px;margin-bottom:12px;border:1px solid #1B738C;">
+                                    ${editTextareaField('Street Address', 'efPAddr', emp.permanentStreet)}
+                                    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:10px;">
+                                        ${editField('City', 'efPCity', emp.permanentCity)}${editField('State', 'efPState', emp.permanentState)}${editField('PIN Code', 'efPPIN', emp.permanentPincode)}${editField('Country', 'efPCountry', emp.permanentCountry || 'India')}
+                                    </div>
+                                </div>
+                                <div style="font-size:12px;font-weight:700;color:var(--text-light);margin-bottom:10px;">Emergency Contact</div>
+                                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+                                    ${editField('Name ', 'efECName', emp.emergencyName, 'text', true)}${editSelectField('Relationship', 'efECRel', ['Spouse', 'Father', 'Mother', 'Sibling'], emp.emergencyRelationship)}${editField('Phone ', 'efECPhone', emp.emergencyPhone, 'text', true)}
+                                </div>
+                            </div>
 
-                    <!-- TAB 4: Documents -->
-                    <div id="editSt4" style="display:none;">
-                        <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-folder mr-2"></i>Upload / Replace Documents</div>
-                        <p style="font-size:12px;color:var(--text-light);margin-bottom:14px;">Upload a new file to replace the existing document. Leave blank to keep existing.</p>
-                        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
-                            ${editFileField('Aadhaar Card', 'efAadhaar', !!(emp.aadhaarDocumentUrl || emp.aadhaarDocumentImage), `${API_BASE}/${emp.employeeId}/aadhaar-image`)}
-                            ${editFileField('PAN Card', 'efPAN_doc', !!(emp.panDocumentUrl || emp.panDocumentImage), `${API_BASE}/${emp.employeeId}/pan-image`)}
-                            ${editFileField('Degree Certificate', 'efDegree', !!(emp.degreeDocumentUrl || emp.degreeDocumentImage), `${API_BASE}/${emp.employeeId}/degree-image`)}
-                            ${editFileField('Experience Letter', 'efExpDoc', !!(emp.experienceDocumentUrl || emp.experienceDocumentImage), `${API_BASE}/${emp.employeeId}/experience-image`)}
-                            ${editFileField('Offer Letter', 'efOfferLetter', !!(emp.offerLetterUrl || emp.offerLetterImage), `${API_BASE}/${emp.employeeId}/offer-letter`)}
-                            ${editFileField('Profile Photo', 'efProfilePhoto', !!(emp.profilePhotoUrl || emp.profilePhotoImage), `${API_BASE}/${emp.employeeId}/profile-image`)}
+                            <!-- TAB 3: Education & Family -->
+                            <div id="editSt3" style="display:none;">
+                                <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-graduation-cap mr-2"></i>Education Details</div>
+                                <div id="editEduList"></div>
+                                <button type="button" onclick="addEditEduRow()" class="btn-outline btn-sm" style="margin-bottom:16px;"><i class="fas fa-plus mr-1"></i> Add Education</button>
+                                <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-users mr-2"></i>Family Details</div>
+                                <div id="editFamList"></div>
+                                <button type="button" onclick="addEditFamRow()" class="btn-outline btn-sm" style="margin-bottom:16px;"><i class="fas fa-plus mr-1"></i> Add Family Member</button>
+                                <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-briefcase mr-2"></i>Work Experience</div>
+                                <div id="editExpList"></div>
+                                <button type="button" onclick="addEditExpRow()" class="btn-outline btn-sm"><i class="fas fa-plus mr-1"></i> Add Experience</button>
+                            </div>
+
+                            <!-- TAB 4: Documents -->
+                            <div id="editSt4" style="display:none;">
+                                <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;"><i class="fas fa-folder mr-2"></i>Upload / Replace Documents</div>
+                                <p style="font-size:12px;color:var(--text-light);margin-bottom:14px;">Upload a new file to replace the existing document. Leave blank to keep existing.</p>
+                                <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
+                                    ${editFileField('Aadhaar Card', 'efAadhaar', !!(emp.aadhaarDocumentUrl || emp.aadhaarDocumentImage), `${API_BASE}/${emp.employeeId}/aadhaar-image`)}
+                                    ${editFileField('PAN Card', 'efPAN_doc', !!(emp.panDocumentUrl || emp.panDocumentImage), `${API_BASE}/${emp.employeeId}/pan-image`)}
+                                    ${editFileField('Degree Certificate', 'efDegree', !!(emp.degreeDocumentUrl || emp.degreeDocumentImage), `${API_BASE}/${emp.employeeId}/degree-image`)}
+                                    ${editFileField('Experience Letter', 'efExpDoc', !!(emp.experienceDocumentUrl || emp.experienceDocumentImage), `${API_BASE}/${emp.employeeId}/experience-image`)}
+                                    ${editFileField('Offer Letter', 'efOfferLetter', !!(emp.offerLetterUrl || emp.offerLetterImage), `${API_BASE}/${emp.employeeId}/offer-letter`)}
+                                    ${editFileField('Profile Photo', 'efProfilePhoto', !!(emp.profilePhotoUrl || emp.profilePhotoImage), `${API_BASE}/${emp.employeeId}/profile-image`)}
+                                </div>
+                            </div>
+
                         </div>
-                    </div>
-
-                </div>
-                <div style="padding:16px 24px;border-top:1px solid #1B738C;display:flex;justify-content:space-between;align-items:center;background:var(--primary-bg-light);">
-                    <span style="font-size:11px;color:var(--text-light);"><i class="fas fa-info-circle mr-1"></i>Fields marked with * are required</span>
-                    <div style="display:flex;gap:10px;">
-                        <button type="button" onclick="closeEditOverlay()" class="btn-outline btn-sm">Cancel</button>
-                        <button type="submit" id="editSaveBtn" class="btn-success btn-sm"><i class="fas fa-save mr-1"></i>Save Changes</button>
-                    </div>
-                </div>
-            </form>
-        </div>`;
+                            <div style="padding:16px 24px;border-top:1px solid #1B738C;display:flex;justify-content:space-between;align-items:center;background:var(--primary-bg-light);">
+                                <span style="font-size:11px;color:var(--text-light);"><i class="fas fa-info-circle mr-1"></i>Fields marked with * are required</span>
+                                <div style="display:flex;gap:10px;">
+                                    <button type="button" onclick="closeEditOverlay()" class="btn-outline btn-sm">Cancel</button>
+                                    <button type="submit" id="editSaveBtn" class="btn-success btn-sm"><i class="fas fa-save mr-1"></i>Save Changes</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>`;
 
             // Populate Education
             const editEduList = document.getElementById('editEduList');
@@ -4111,19 +4634,39 @@ document.addEventListener('DOMContentLoaded', function() {
             } catch (e) { console.error('Error parsing experience:', e); }
 
             overlay.addEventListener('click', function (e) { if (e.target === overlay) closeEditOverlay(); });
+
+
+            // Re-populate dept dropdown with API values after overlay renders
+if (!loading) {
+    setTimeout(() => {
+        if (window._departments?.length) {
+            const efDept = document.getElementById('efDept');
+            if (efDept) {
+                const current = efDept.value || emp?.department || '';
+                efDept.innerHTML = '<option value="">Select</option>' +
+                    window._departments.map(d =>
+                        `<option value="${d}" ${d === current ? 'selected' : ''}>${d}</option>`
+                    ).join('');
+            }
         }
-        // function editField(label, id, value, type = 'text', required = false) {
-        //     const req = required ? 'required' : '';
-        //     // Handle null/undefined values
-        //     const val = (value !== null && value !== undefined) ? value : '';
-        //     return `<div>
-        // <label style="font-size:11px;font-weight:600; color: #1B738C; display:block;margin-bottom:4px;">${label} ${required ? '<span class="req">*</span>' : ''}</label>
-        // <input type="${type}" id="${id}" name="${id}" value="${String(val).replace(/"/g, '&quot;')}" ${req}
-        //         style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
-        // </div>`;
-        // }
-        
-        
+        if (window._designations?.length) {
+            let dl = document.getElementById('designationDatalist');
+            if (!dl) {
+                dl = document.createElement('datalist');
+                dl.id = 'designationDatalist';
+                document.body.appendChild(dl);
+            }
+            dl.innerHTML = window._designations.map(d => `<option value="${d}">`).join('');
+            const efDesig = document.getElementById('efDesig');
+            if (efDesig) efDesig.setAttribute('list', 'designationDatalist');
+        }
+    }, 50);
+}
+        }
+
+
+
+       
         function editField(label, id, value, type = 'text', required = false) {
             // Handle null/undefined values
             const val = (value !== null && value !== undefined) ? value : '';
@@ -4133,30 +4676,51 @@ document.addEventListener('DOMContentLoaded', function() {
                         style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
                 </div>`;
         }
+
+
+
+        function editDesigField(currentValue) {
+            const isOther = currentValue && window._designations?.length 
+                            && !window._designations.includes(currentValue);
+            return `<div>
+                <label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">
+                    Designation <span class="req">*</span>
+                </label>
+                <select id="efDesig" onchange="handleDesigChange('efDesig','efDesigCustomWrap')"
+                    style="border:1px solid #1B738C;border-radius:10px;padding:8px 12px;width:100%;font-size:12px;box-sizing:border-box;color:var(--text-dark);">
+                    <option value="">Select Designation</option>
+                    ${(window._designations || []).map(d =>
+                        `<option value="${d}" ${d === currentValue ? 'selected' : ''}>${d}</option>`
+                    ).join('')}
+                    <option value="__other__" ${isOther ? 'selected' : ''}>Other</option>
+                </select>
+                <div id="efDesigCustomWrap" style="display:${isOther ? 'block' : 'none'};margin-top:6px;">
+                    <input id="efDesigCustom" value="${isOther ? (currentValue || '') : ''}"
+                        placeholder="Enter designation manually"
+                        style="border:1px solid #1B738C;border-radius:8px;padding:7px 10px;width:100%;font-size:12px;box-sizing:border-box;">
+                </div>
+            </div>`;
+        }
         
-        
-        // function editSelectField(label, id, options, selected, required = false) {
-        //     const opts = options.map(o => `<option value="${o}" ${o === selected ? 'selected' : ''}>${o}</option>`).join('');
-        //     return `<div><label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">${label}</label><select id="${id}" name="${id}" ${required ? 'required' : ''} style="border:1px solid #1B738C; border-radius:10px;padding:8px 12px;width:100%;font-size:12px;box-sizing:border-box;color:var(--text-dark);"><option value="">Select</option>${opts}</select></div>`;
-        // }
+    
         
         function editSelectField(label, id, options, selected, required = false) {
-    const opts = options.map(o => `<option value="${o}" ${o === selected ? 'selected' : ''}>${o}</option>`).join('');
-    return `<div><label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">${label}</label><select id="${id}" name="${id}" style="border:1px solid #1B738C; border-radius:10px;padding:8px 12px;width:100%;font-size:12px;box-sizing:border-box;color:var(--text-dark);"><option value="">Select</option>${opts}</select></div>`;
-}
-        
-        
+            const opts = options.map(o => `<option value="${o}" ${o === selected ? 'selected' : ''}>${o}</option>`).join('');
+            return `<div><label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">${label}</label><select id="${id}" name="${id}" style="border:1px solid #1B738C; border-radius:10px;padding:8px 12px;width:100%;font-size:12px;box-sizing:border-box;color:var(--text-dark);"><option value="">Select</option>${opts}</select></div>`;
+        }
+                
+
         
         function editTextareaField(label, id, value) {
             return `<div><label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">${label}</label><textarea id="${id}" name="${id}" rows="2" style="border:1px solid #1B738C; border-radius:10px;padding:8px 12px;width:100%;font-size:12px;box-sizing:border-box;resize:vertical;color:var(--text-dark);">${value || ''}</textarea></div>`;
         }
         function editFileField(label, id, hasDoc, viewUrl) {
-            return `<div style="background:var(--primary-bg-light);border-radius:10px;padding:12px;border:1px solid #1B738C;">
-        <label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:6px;">${label}</label>
-        ${hasDoc ? `<div style="margin-bottom:6px;"><a href="${viewUrl}" target="_blank" style="font-size:11px;color:#2b7a3e;font-weight:600;"><i class="fas fa-check-circle mr-1"></i>Current file — View</a></div>` : `<div style="margin-bottom:6px;font-size:11px;color:#dc3545;"><i class="fas fa-times-circle mr-1"></i>Not uploaded</div>`}
-        <input type="file" id="${id}" accept=".pdf,.jpg,.png" style="border:1px solid #1B738C;border-radius:8px;padding:5px;width:100%;font-size:11px;box-sizing:border-box;">
-        <div style="font-size:10px;color:var(--text-light);margin-top:3px;">Leave blank to keep existing</div>
-    </div>`;
+                return `<div style="background:var(--primary-bg-light);border-radius:10px;padding:12px;border:1px solid #1B738C;">
+                            <label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:6px;">${label}</label>
+                            ${hasDoc ? `<div style="margin-bottom:6px;"><a href="${viewUrl}" target="_blank" style="font-size:11px;color:#2b7a3e;font-weight:600;"><i class="fas fa-check-circle mr-1"></i>Current file — View</a></div>` : `<div style="margin-bottom:6px;font-size:11px;color:#dc3545;"><i class="fas fa-times-circle mr-1"></i>Not uploaded</div>`}
+                            <input type="file" id="${id}" accept=".pdf,.jpg,.png" style="border:1px solid #1B738C;border-radius:8px;padding:5px;width:100%;font-size:11px;box-sizing:border-box;">
+                            <div style="font-size:10px;color:var(--text-light);margin-top:3px;">Leave blank to keep existing</div>
+                        </div>`;
         }
 
         function switchEditTab(idx) {
@@ -4517,7 +5081,14 @@ async function openAddPromotionModal() {
             const email = document.getElementById('efPEmail')?.value.trim();
             const mobile = document.getElementById('efMob')?.value.trim();
             const dept = document.getElementById('efDept')?.value;
-            const desig = document.getElementById('efDesig')?.value.trim();
+
+            const efDesigSel = document.getElementById('efDesig')?.value || '';
+            const desig = efDesigSel === '__other__'
+                ? (document.getElementById('efDesigCustom')?.value.trim() || '')
+                : efDesigSel;
+
+            // const desig = document.getElementById('efDesig')?.value.trim();
+
             const joiningDate = document.getElementById('efJD')?.value;
             const basicSalary = document.getElementById('efBasic')?.value;
             const ecName = document.getElementById('efECName')?.value.trim();
@@ -4907,7 +5478,25 @@ async function openAddPromotionModal() {
         // ==================== FORM SUBMIT ====================
         document.getElementById('addEmployeeForm')?.addEventListener('submit', async function (e) {
             e.preventDefault();
-            const firstName = document.getElementById('fFN').value.trim(), lastName = document.getElementById('fLN').value.trim(), email = document.getElementById('fPEmail').value.trim(), mobile = document.getElementById('fMob').value.trim(), dept = document.getElementById('fDept').value, desig = document.getElementById('fDesig').value.trim(), joiningDate = document.getElementById('fJD').value, basicSalary = document.getElementById('fBasic').value, ecName = document.getElementById('fECName').value.trim(), ecPhone = document.getElementById('fECPhone').value.trim();
+            
+            // const firstName = document.getElementById('fFN').value.trim(), 
+            //                 lastName = document.getElementById('fLN').value.trim(), 
+            //                 email = document.getElementById('fPEmail').value.trim(), 
+            //                 mobile = document.getElementById('fMob').value.trim(), 
+            //                 dept = document.getElementById('fDept').value, 
+            //                 desig = document.getElementById('fDesig').value.trim(), 
+            //                 joiningDate = document.getElementById('fJD').value, 
+            //                 basicSalary = document.getElementById('fBasic').value, 
+            //                 ecName = document.getElementById('fECName').value.trim(), 
+            //                 ecPhone = document.getElementById('fECPhone').value.trim();
+
+            const firstName = document.getElementById('fFN').value.trim(), lastName = document.getElementById('fLN').value.trim(), email = document.getElementById('fPEmail').value.trim(), mobile = document.getElementById('fMob').value.trim(), dept = document.getElementById('fDept').value, joiningDate = document.getElementById('fJD').value, basicSalary = document.getElementById('fBasic').value, ecName = document.getElementById('fECName').value.trim(), ecPhone = document.getElementById('fECPhone').value.trim();
+            const fDesigSel = document.getElementById('fDesig').value;
+            const desig = fDesigSel === '__other__'
+                ? (document.getElementById('fDesigCustom')?.value.trim() || '')
+                : fDesigSel;
+
+
             // Password validation
             const password = document.getElementById('fPassword').value.trim();
             const confirmPassword = document.getElementById('fConfirmPassword').value.trim();
@@ -5001,6 +5590,9 @@ async function openAddPromotionModal() {
 
         // Replace the existing populateDropdowns function with this:
         async function populateDropdowns() {
+            
+            await loadDepartmentsAndDesignations();   // ← ADD THIS LINE (keeps dropdowns fresh)
+
             const result = await apiFetch(`${API_BASE}/all-employees`);
             const employees = result.ok ? (result.data || []) : [];
 
@@ -5047,6 +5639,7 @@ async function openAddPromotionModal() {
             initTabs();
             updateWizardUI();
             renderCustomFields();
+            await loadDepartmentsAndDesignations();   // ← ADD THIS LINE
             await fetchAndRenderEmployees();
         });
 
@@ -5697,6 +6290,317 @@ function closePromotionModal() {
     });
     // ==================== END PATCH 3 ====================
     </script>
-</body>
 
+<script>
+// ============================================================
+// BULK EMPLOYEE UPLOAD - FULL CODE (FIXED)
+// ============================================================
+
+// ── Open / Close / Reset ─────────────────────────────────────
+function openBulkEmployeeUpload() {
+    resetBulkEmployeeUpload();
+    const overlay = document.getElementById('bulkOverlay');
+    if (overlay) {
+        overlay.style.display = 'flex';
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+            overlay.style.transition = 'opacity 0.3s ease';
+            overlay.style.opacity = '1';
+        }, 10);
+    }
+}
+
+function closeBulkOverlay() {
+    const overlay = document.getElementById('bulkOverlay');
+    if (overlay) {
+        overlay.style.opacity = '0';
+        setTimeout(() => {
+            overlay.style.display = 'none';
+            resetBulkEmployeeUpload();
+        }, 300);
+    }
+}
+
+function resetBulkEmployeeUpload() {
+    setBulkState('form');
+    document.getElementById('excelInput').value = '';
+    resetUploadZone('excelZone', 'excelPlaceholder', 'excelFileInfo');
+    document.getElementById('excelError').classList.add('hidden');
+    setBulkProgress(0, 'Preparing upload…', 'Getting things ready', 'Uploading file');
+}
+
+function setBulkState(state) {
+    document.getElementById('bulkStateForm').classList.toggle('active', state === 'form');
+    document.getElementById('bulkStateLoading').classList.toggle('active', state === 'loading');
+    document.getElementById('bulkStateResult').classList.toggle('active', state === 'result');
+}
+
+// ── Progress Helpers ─────────────────────────────────────────
+let _progressInterval = null;
+let _phase2Timer = null;
+
+function setBulkProgress(pct, title, subtitle, label) {
+    document.getElementById('bulkProgressFill').style.width = pct + '%';
+    document.getElementById('bulkPercentLabel').textContent = Math.round(pct) + '%';
+    if (title) document.getElementById('bulkPhaseTitle').textContent = title;
+    if (subtitle) document.getElementById('bulkPhaseSubtitle').textContent = subtitle;
+    if (label) document.getElementById('bulkPhaseLabel').textContent = label;
+}
+
+function activateDot(step) {
+    [1,2,3].forEach(i => {
+        const el = document.getElementById('bulkDot' + i);
+        if (i <= step) {
+            el.style.opacity = '1';
+            el.querySelector('div').style.background = '#D89F34';
+            el.querySelector('span').style.color = 'var(--text-dark)';
+        } else {
+            el.style.opacity = '0.4';
+            el.querySelector('div').style.background = '#957A54';
+            el.querySelector('span').style.color = '#957A54';
+        }
+    });
+}
+
+function animateProgressTo(target, duration, onDone) {
+    clearInterval(_progressInterval);
+    const fill = document.getElementById('bulkProgressFill');
+    let current = parseFloat(fill.style.width) || 0;
+    const step = (target - current) / (duration / 60);
+    _progressInterval = setInterval(() => {
+        current += step;
+        if ((step > 0 && current >= target) || (step < 0 && current <= target)) {
+            current = target;
+            clearInterval(_progressInterval);
+            if (onDone) onDone();
+        }
+        setBulkProgress(current,
+            document.getElementById('bulkPhaseTitle').textContent,
+            document.getElementById('bulkPhaseSubtitle').textContent,
+            document.getElementById('bulkPhaseLabel').textContent);
+    }, 60);
+}
+
+// ── Main Upload Handler ──────────────────────────────────────
+async function handleBulkEmployeeUpload() {
+    const excelFile = document.getElementById('excelInput').files[0];
+    if (!excelFile) {
+        const e = document.getElementById('excelError');
+        e.querySelector('span').textContent = 'Please select an Excel file before uploading.';
+        e.classList.remove('hidden');
+        return;
+    }
+    document.getElementById('excelError').classList.add('hidden');
+
+    setBulkState('loading');
+    activateDot(1);
+    setBulkProgress(0, 'Uploading file…', 'Sending your data to the server', 'Uploading file');
+    animateProgressTo(35, 800);
+
+    try {
+        const formData = new FormData();
+        formData.append('file', excelFile);
+
+        _phase2Timer = setTimeout(() => {
+            setBulkProgress(35, 'Processing rows…', 'Server is parsing your Excel data', 'Processing');
+            activateDot(2);
+            animateProgressTo(75, 1200);
+        }, 820);
+
+        const res = await fetch('http://localhost:8086/api/employees/bulk-employee', {
+            method: 'POST',
+            body: formData
+        });
+
+        clearTimeout(_phase2Timer);
+        clearInterval(_progressInterval);
+        activateDot(2);
+
+        setBulkProgress(75, 'Finalising…', 'Almost done', 'Finalising');
+        animateProgressTo(100, 500, async () => {
+            activateDot(3);
+            setBulkProgress(100, 'Upload complete', 'Results ready', 'Complete');
+            await new Promise(r => setTimeout(r, 420));
+
+            let data;
+            try {
+                data = await res.json();
+            } catch (e) {
+                data = { message: "Invalid response from server" };
+            }
+
+            const resultType = data.uploadedCount > 0 && data.skippedCount === 0 ? 'success' :
+                             data.uploadedCount > 0 && data.skippedCount > 0 ? 'partial' : 'error';
+            
+            showBulkResult(resultType, data);
+        });
+
+    } catch (err) {
+        clearTimeout(_phase2Timer);
+        clearInterval(_progressInterval);
+        showBulkResult('error', {
+            message: 'Could not reach the server. Check your connection and try again.',
+            uploadedCount: 0, skippedCount: 0, skippedReasons: []
+        });
+    }
+}
+
+// ── Result Panel (FIXED - Better skipped reasons handling) ─────────────────────────────────────────────
+function showBulkResult(type, data) {
+    setBulkState('result');
+
+    const icons = { success: 'fa-circle-check', partial: 'fa-triangle-exclamation', error: 'fa-circle-xmark' };
+    const titles = {
+        success: 'All employees uploaded!',
+        partial: 'Upload completed with skips',
+        error: 'Upload failed'
+    };
+
+    let html = `
+        <div class="bulk-result-card ${type}">
+            <div class="bulk-result-icon">
+                <i class="fas ${icons[type]}"></i>
+            </div>
+            <div class="flex-1">
+                <p style="font-size:13.5px;font-weight:600;color:#1a1a14;margin-bottom:4px;">${titles[type]}</p>
+                <p style="font-size:12.5px;color:#2C2C24;line-height:1.5;">${data.message || '—'}</p>
+                ${(data.uploadedCount > 0 || data.skippedCount > 0) ? `
+                <div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;">
+                    ${data.uploadedCount > 0 ? `<span class="bulk-stat-chip uploaded"><i class="fas fa-circle-check" style="font-size:10px;"></i>${data.uploadedCount} uploaded</span>` : ''}
+                    ${data.skippedCount > 0 ? `<span class="bulk-stat-chip skipped"><i class="fas fa-circle-minus" style="font-size:10px;"></i>${data.skippedCount} skipped</span>` : ''}
+                </div>` : ''}
+            </div>
+        </div>`;
+
+    // FIXED: Show skipped reasons for ALL cases (especially error)
+    if (data.skippedReasons && data.skippedReasons.length > 0) {
+        html += `
+            <div>
+                <p style="font-size:12px;font-weight:600;color:#957A54;text-transform:uppercase;letter-spacing:0.07em;margin-bottom:6px;">
+                    <i class="fas fa-list-ul text-[10px] mr-1"></i>Skipped Reasons
+                </p>
+                <div class="bulk-skip-list">
+                    ${data.skippedReasons.map(r => `<div class="bulk-skip-list-item">${r}</div>`).join('')}
+                </div>
+            </div>`;
+    }
+
+    document.getElementById('bulkResultContent').innerHTML = html;
+
+    const btn = document.getElementById('bulkActionBtn');
+    if (type === 'error') {
+        btn.innerHTML = `<i class="fas fa-rotate-right text-[11px]"></i> Try Again`;
+        btn.onclick = () => resetBulkEmployeeUpload();
+    } else {
+        btn.innerHTML = `<i class="fas fa-rotate-left text-[11px]"></i> Upload More`;
+        btn.onclick = () => resetBulkEmployeeUpload();
+    }
+
+    // Show toast
+    if (type === 'success') {
+        showRichToast('success', `${data.uploadedCount} employee${data.uploadedCount !== 1 ? 's' : ''} uploaded`, data.message);
+    } else if (type === 'partial') {
+        showRichToast('partial', `${data.uploadedCount} uploaded, ${data.skippedCount} skipped`, data.message);
+    } else {
+        showRichToast('error', 'Upload Failed', data.message || 'Some records could not be uploaded');
+    }
+}
+
+// ── Rich Toast ───────────────────────────────────────────────
+function showRichToast(type, title, subtitle, duration = 5000) {
+    document.querySelectorAll('.rich-toast').forEach(t => t.remove());
+
+    const icons = {
+        success: 'fa-circle-check',
+        partial: 'fa-triangle-exclamation',
+        error: 'fa-circle-xmark'
+    };
+
+    const t = document.createElement('div');
+    t.className = `rich-toast toast-${type}`;
+    t.innerHTML = `
+        <div class="rich-toast-bar" style="animation-duration:${duration}ms;"></div>
+        <div class="rich-toast-body">
+            <div class="rich-toast-icon">
+                <i class="fas ${icons[type]} text-[15px]"></i>
+            </div>
+            <div class="flex-1">
+                <div class="rich-toast-title">${title}</div>
+                <div class="rich-toast-sub">${subtitle || ''}</div>
+            </div>
+            <button onclick="this.closest('.rich-toast').remove()" style="opacity:0.55;background:none;border:none;cursor:pointer;color:inherit;padding:2px;font-size:13px;flex-shrink:0;">
+                <i class="fas fa-xmark"></i>
+            </button>
+        </div>`;
+
+    document.body.appendChild(t);
+    requestAnimationFrame(() => t.classList.add('show'));
+
+    setTimeout(() => {
+        t.classList.remove('show');
+        setTimeout(() => t.remove(), 400);
+    }, duration);
+}
+
+// ── File Handlers (Fixed Double Click Issue) ────────────────────────────────────────────
+function handleDragOver(e, z) { 
+    e.preventDefault(); 
+    document.getElementById(z).classList.add('drag-over'); 
+}
+
+function handleDragLeave(z) { 
+    document.getElementById(z).classList.remove('drag-over'); 
+}
+
+function handleDrop(e, inputId, z, exts) {
+    e.preventDefault(); 
+    document.getElementById(z).classList.remove('drag-over');
+    const files = e.dataTransfer.files; 
+    if (!files.length) return;
+    const input = document.getElementById(inputId);
+    const dt = new DataTransfer();
+    for (const f of files) dt.items.add(f);
+    input.files = dt.files; 
+    input.dispatchEvent(new Event('change'));
+}
+
+function handleFileSelect(input, z, nameId, exts) {
+    const file = input.files[0]; 
+    if (!file) return;
+    
+    const ext = file.name.split('.').pop().toLowerCase();
+    const errEl = document.getElementById('excelError');
+    
+    if (!exts.includes(ext)) {
+        errEl.querySelector('span').textContent = `Invalid type. Accepted: ${exts.join(', ')}`;
+        errEl.classList.remove('hidden'); 
+        input.value = ''; 
+        return;
+    }
+    
+    errEl.classList.add('hidden');
+    document.getElementById('excelPlaceholder').classList.add('hidden');
+    
+    const info = document.getElementById('excelFileInfo');
+    info.classList.remove('hidden'); 
+    info.classList.add('flex');
+    document.getElementById(nameId).textContent = file.name;
+}
+
+function clearFile(e, inputId, z) {
+    e.stopPropagation(); 
+    document.getElementById(inputId).value = '';
+    resetUploadZone(z, 'excelPlaceholder', 'excelFileInfo');
+}
+
+function resetUploadZone(z, pid, iid) {
+    document.getElementById(pid).classList.remove('hidden');
+    const info = document.getElementById(iid);
+    if (info) { 
+        info.classList.add('hidden'); 
+        info.classList.remove('flex'); 
+    }
+}
+</script>
+</body>
 </html>

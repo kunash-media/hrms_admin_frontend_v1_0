@@ -12,29 +12,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
     <style>
-  
-    #header-container {
-      position: fixed;
-      top: 0;
-      left: 256px;
-      right: 0;
-      height: 56px;
-      background: #ffffff;
-      border-bottom: 1px solid #3098b5;
-      z-index: 40;
-    }
-    @keyframes shimmer {
-      0%   { background-position: -400px 0; }
-      100% { background-position:  400px 0; }
-    }
-    .skeleton-box {
-      background: linear-gradient(90deg, #c5d9e0 25%, #d8e8ed 50%, #c5d9e0 75%);
-      background-size: 800px 100%;
-      animation: shimmer 1.4s ease-in-out infinite;
-      border-radius: 4px;
-    }
-  </style>
-    <style>
         * { font-family: 'Inter', sans-serif; }
 
         :root {
@@ -401,11 +378,9 @@
                         <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
                             <h3 class="text-md font-bold" style="color: var(--primary);">Pending Leave Requests</h3>
                             <div class="flex gap-2 flex-wrap">
-                                <select id="filterDept" class="w-40 text-sm" onchange="renderPending()" style="padding: 6px 10px;">
+                              <select id="filterDept" class="w-40 text-sm" onchange="renderPending()" style="padding: 6px 10px;">
                                     <option value="all">All Departments</option>
-                                    <option>IT</option><option>HR</option><option>Sales</option>
-                                    <option>Finance</option><option>Operations</option><option>Marketing</option>
-                                </select>
+                             </select>
                                 <input type="text" id="searchPending" placeholder="Search employee..." class="w-48 text-sm" oninput="renderPending()" style="padding: 6px 10px;">
                             </div>
                         </div>
@@ -479,8 +454,6 @@
                             <div class="flex gap-2 flex-wrap">
                                 <select id="balanceDept" class="w-40 text-sm" onchange="renderBalance()">
                                     <option value="all">All Departments</option>
-                                    <option>IT</option><option>HR</option><option>Sales</option>
-                                    <option>Finance</option><option>Operations</option><option>Marketing</option>
                                 </select>
                                 <input type="text" id="balanceSearch" placeholder="Search employee..." class="w-48 text-sm" oninput="renderBalance()">
                                 <button onclick="exportBalance()" class="btn-outline text-sm"><i class="fas fa-download mr-1"></i>Export</button>
@@ -574,17 +547,16 @@
                     <label>Employee Type *</label>
                     <select id="rl-emptype">
                         <option value="Regular">Regular</option>
-                        <option value="Intern">Intern</option>
+                        <option value="Part-Time">Part-Time</option>
                         <option value="Contract">Contract</option>
+                        <option value="Intern">Intern</option>
                     </select>
                 </div>
                 <div>
-                    <label>Department (specific or All)</label>
+                    <label>Department</label>
                     <select id="rl-dept">
-                        <option value="All">All Departments</option>
-                        <option>IT</option><option>HR</option><option>Sales</option>
-                        <option>Finance</option><option>Operations</option><option>Marketing</option>
-                    </select>
+                    <option value="All">All Departments</option>
+                </select>
                 </div>
             </div>
             <div id="rl-leaveInputs" class="form-row"></div>
@@ -615,7 +587,6 @@
         </div>
     </div>
 
-    <script src="/assets/js/component-loader.js"></script>  <!-- ← ADD THIS LINE -->
     <script src="/assets/js/common.js"></script>
     <script src="/assets/js/sidebar.js"></script>
     <script src="/assets/js/header.js"></script>
@@ -1446,12 +1417,57 @@
         }
     }
 
+
+
+async function loadDepartments() {
+    try {
+        const res  = await fetch('http://localhost:8086/api/company/departments');
+        const json = await res.json();
+        console.log('DEPT API RESPONSE:', json);
+
+        let depts = [];
+
+        if (Array.isArray(json))                          depts = json;
+        else if (Array.isArray(json.data))                depts = json.data;
+        else if (json.data && Array.isArray(json.data.departments)) depts = json.data.departments;
+        else if (Array.isArray(json.departments))         depts = json.departments;
+
+        console.log('DEPTS FINAL:', depts);
+        if (depts.length > 0) populateDeptSelects(depts);
+
+    } catch (e) {
+        console.error('loadDepartments error:', e);
+    }
+}
+
+function populateDeptSelects(depts) {
+    console.log('populateDeptSelects called with:', depts);
+    [
+        { id: 'filterDept',  allValue: 'all' },
+        { id: 'balanceDept', allValue: 'all' },
+        { id: 'rl-dept',     allValue: 'All' },
+    ].forEach(({ id, allValue }) => {
+        const el = document.getElementById(id);
+        if (!el) { console.warn('Element not found:', id); return; }
+        el.innerHTML = `<option value="${allValue}">All Departments</option>`;
+        depts.forEach(d => {
+            if (!d) return;
+            const o = document.createElement('option');
+            o.value = d; o.textContent = d;
+            el.appendChild(o);
+        });
+        console.log(`#${id} filled with ${el.options.length} options`);
+    });
+}
+
+
     // =====================================================================
     //  INIT
     // =====================================================================
-    document.addEventListener('DOMContentLoaded', async function() {
+document.addEventListener('DOMContentLoaded', async function() {
         try { loadSidebar(); loadHeader(); setActiveMenu('leave'); } catch(e) {}
         initTabs();
+        await loadDepartments();
         await loadLeaveTypes();
         await Promise.all([loadStats(), renderPending()]);
     });
