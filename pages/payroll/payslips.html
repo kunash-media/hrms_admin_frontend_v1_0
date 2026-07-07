@@ -3,12 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Employee Pay-Slips</title>
+  <title>Admin | Pay-Slips</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script> -->
      <script src="https://cdn.jsdelivr.net/npm/xlsx-js-style@1.2.0/dist/xlsx.bundle.js"></script>
 
      <style>
@@ -47,7 +46,6 @@
     ::-webkit-scrollbar-track { background: #EBF4F6; }
     ::-webkit-scrollbar-thumb { background: #1B738C; border-radius: 10px; }
 
-    /* ── Sub-nav ── */
     .submodule-link {
       padding: 8px 20px; border-radius: 8px; font-size: 13.5px; font-weight: 500;
       transition: all .2s; background: #EBF4F6; color: #337388;
@@ -57,7 +55,6 @@
     .submodule-link:hover { background: rgba(27,115,140,.1); color: var(--primary); border-color: #b1e0f0; }
     .submodule-link.active { background: #1B738C; color: white; border-color: #1B738C; }
 
-    /* ── Buttons ── */
     .btn-primary  { background: #1B738C; color: white; padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 500; transition: all .2s; display: inline-flex; align-items: center; gap: 6px; }
     .btn-primary:hover  { background: #166278; transform: translateY(-1px); }
     .btn-outline  { border: 1px solid #62C9EA; color: #1B738C; padding: 8px 16px; border-radius: 8px; background: transparent; cursor: pointer; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; transition: all .2s; }
@@ -67,18 +64,14 @@
     .btn-danger   { background: #dc3545; color: white; padding: 8px 16px; border-radius: 8px; border: none; cursor: pointer; font-size: 13px; font-weight: 500; display: inline-flex; align-items: center; gap: 6px; transition: all .2s; }
     .btn-danger:hover   { background: #c82333; }
 
-    /* ── Toast ── */
     .toast { position: fixed; bottom: 20px; right: 20px; padding: 11px 18px; border-radius: 8px; color: white; z-index: 9999; animation: slideIn .28s ease; font-size: 13.5px; font-weight: 500; box-shadow: 0 4px 16px rgba(0,0,0,.12); }
     .toast.success { background: #1a8c42; }
     .toast.error   { background: #d43030; }
     .toast.info    { background: #0e6fa8; }
     @keyframes slideIn { from { transform: translateX(110%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
 
-    /* ── Section card ── */
     .section-card { background: white; border-radius: 12px; border: 1px solid #49abcb; padding: 20px; margin-bottom: 20px; }
 
-    /* ── Inputs — scoped to .filter-input to avoid Tailwind conflicts ── */
-    /* Checkboxes are explicitly excluded via input[type="checkbox"] rule below */
     .filter-input {
       border: 1px solid #62C9EA;
       border-radius: 8px;
@@ -98,7 +91,6 @@
     .filter-input::placeholder { color: #9bc9d8; }
     label { font-size: 12px; font-weight: 600; color: #1B738C; margin-bottom: 4px; display: block; letter-spacing: .01em; }
 
-    /* ── Table ── */
     .data-table { width: 100%; border-collapse: collapse; font-size: 13px; }
     .data-table thead tr { background: #1B738C; color: white; }
     .data-table thead th {
@@ -115,9 +107,8 @@
     .data-table tfoot td { padding: 10px 12px; white-space: nowrap; font-size: 12.5px; }
     .data-table tfoot td.text-right { text-align: right; }
 
-    /* ── Table wrapper — fixed scroll padding ── */
     .table-wrapper {
-      overflow-x: auto;
+      /* overflow-x: auto; */
       overflow-y: visible;
       border-radius: 0 0 12px 12px;
     }
@@ -125,7 +116,6 @@
     .table-wrapper::-webkit-scrollbar-track { background: #f0f8fb; border-radius: 10px; }
     .table-wrapper::-webkit-scrollbar-thumb { background: #62C9EA; border-radius: 10px; }
 
-    /* Status badge */
     .badge { padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; }
     .badge-processed { background: #d1fae5; color: #065f46; }
     .badge-paid      { background: #dbeafe; color: #1e40af; }
@@ -135,7 +125,6 @@
 
     input[type="checkbox"] { accent-color: #1B738C; width: 15px; height: 15px; cursor: pointer; }
 
-    /* ── Pagination ── */
     .page-btn {
       width: 32px; height: 32px; border-radius: 8px; border: 1px solid #c4e6f0;
       background: white; color: #1B738C; font-size: 12px; font-weight: 500;
@@ -145,7 +134,6 @@
     .page-btn.active { background: #1B738C; color: white; border-color: #1B738C; }
     .page-btn:disabled { opacity: .4; cursor: not-allowed; }
 
-    /* ── Payslip modal ── */
     .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 1000; justify-content: center; align-items: center; }
     .modal.active { display: flex; }
     .modal-content {
@@ -157,17 +145,12 @@
                     display: flex; justify-content: flex-end; gap: 12px;
                     border-radius: 0 0 16px 16px; flex-shrink: 0; }
 
-    /* ── Export overlay ── */
     .overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 2000; justify-content: center; align-items: center; }
     .overlay.active { display: flex; }
     .overlay-box { background: white; border-radius: 16px; padding: 32px; max-width: 460px; width: 90%; text-align: center; }
 
-    /* ══════════════════════════════════════════
-       PAYSLIP DOCUMENT STYLES
-    ══════════════════════════════════════════ */
     .payslip-container { max-width: 750px; margin: 0 auto; background: white; padding: 22px 26px; font-size: 12.5px; color: #111; }
 
-    /* Logo + header row */
     .ps-top-row { display: flex; align-items: center; gap: 16px; margin-bottom: 10px; }
     .ps-logo    { width: 56px; height: 56px; object-fit: contain; flex-shrink: 0; }
     .ps-logo-placeholder { width: 56px; height: 56px; background: #e9f6fb; border-radius: 8px; border: 1px solid #b8e4f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -190,7 +173,6 @@
     .ps-emp-label { color: #1B738C; font-weight: 600; min-width: 120px; font-size: 11px; flex-shrink: 0; }
     .ps-emp-value { color: #222; font-size: 11px; }
 
-    /* ── Attendance strip (NEW) ── */
     .ps-att-strip { display: grid; grid-template-columns: repeat(6,1fr); border: 1px solid #1B738C; border-radius: 6px; overflow: hidden; margin-bottom: 12px; }
     .ps-att-cell  { text-align: center; padding: 6px 4px; border-right: 1px solid #d4edf5; }
     .ps-att-cell:last-child { border-right: none; }
@@ -215,6 +197,11 @@
     .ps-net-label  { font-size: 13px; font-weight: 600; }
     .ps-net-words  { font-size: 10.5px; opacity: .85; margin-top: 3px; font-style: italic; }
     .ps-net-amount { font-size: 22px; font-weight: 800; }
+
+    /* .ps-ctc-row { display: flex; justify-content: space-between; align-items: center; background: #e9f6fb; border: 1px solid #62C9EA; border-radius: 6px; padding: 8px 16px; margin-bottom: 10px; } */
+    .ps-ctc-label { font-size: 11.5px; font-weight: 600; color: #1B738C; }
+    .ps-ctc-amount { font-size: 15px; font-weight: 800; color: #1B738C; }
+
     .ps-footer { text-align: center; font-size: 10px; color: #888; padding-top: 8px; border-top: 1px solid #e0f0f7; }
 
     .main-content { margin-top: 64px; }
@@ -250,19 +237,16 @@
 
     <main class="flex-1 overflow-y-auto p-5 main-content">
 
-      <!-- Page Header -->
       <div class="mb-5">
         <h1 class="text-xl font-bold text-[#1B738C]">Payroll Management</h1>
         <p class="text-sm text-[#1B738C] mt-1">Manage salary structures &amp; process employee payroll.</p>
       </div>
 
-      <!-- Sub Nav -->
       <div class="flex gap-2 pb-4 border-b border-[#62C9EA] mb-6 flex-wrap">
         <a href="employee_payroll.html" class="submodule-link px-6 py-2 rounded-lg text-sm font-medium">Salary Structure</a>
         <a href="#"                     class="submodule-link active px-6 py-2 rounded-lg text-sm font-medium">Payslips</a>
       </div>
 
-      <!-- Filters + Actions Bar -->
       <div class="section-card mb-5">
         <div class="flex flex-wrap gap-4 items-end justify-between">
 
@@ -322,7 +306,6 @@
         </div>
       </div>
 
-      <!-- Selection bar -->
       <div id="selectionBar"
            class="hidden mb-3 px-4 py-2.5 rounded-xl border border-[#62C9EA] bg-[#e9f6fb] text-sm text-[#1B738C] font-medium flex items-center justify-between gap-3">
         <span><i class="fas fa-check-circle mr-1.5"></i><span id="selectionCount">0</span> record(s) selected</span>
@@ -334,10 +317,9 @@
         </div>
       </div>
 
-      <!-- Table card — NO extra padding on wrapper -->
       <div class="section-card p-0 overflow-hidden">
         <div class="table-wrapper">
-          <table class="data-table" id="payrollTable">
+          <table class="data-table " id="payrollTable">
             <thead>
               <tr>
                 <th class="w-10 text-center pl-3">
@@ -352,18 +334,20 @@
                 <th>Status</th>
                 <th class="text-right">Basic (₹)</th>
                 <th class="text-right">HRA (₹)</th>
-                <th class="text-right">Allowances (₹)</th>
+                <th class="text-right">DA (₹)</th>
+                <th class="text-right">Spl. Allow. (₹)</th>
                 <th class="text-right">Gross (₹)</th>
                 <th class="text-right">Days</th>
                 <th class="text-right">LOP Days</th>
                 <th class="text-right">LOP Ded. (₹)</th>
                 <th class="text-right">Emp PF (₹)</th>
                 <th class="text-right">Empr PF (₹)</th>
-                <th class="text-right">ESI (₹)</th>
-                <th class="text-right">TDS (₹)</th>
+                <th class="text-right">ESIC (₹)</th>
+                <th class="text-right">PT (₹)</th>
                 <th class="text-right">Total Ded. (₹)</th>
                 <th class="text-right">Exp. Reimb. (₹)</th>
                 <th class="text-right">Net Pay (₹)</th>
+                <th class="text-right">CTC (₹)</th>
                 <th class="text-center">Actions</th>
               </tr>
             </thead>
@@ -372,7 +356,7 @@
           </table>
         </div>
 
-        <div id="tableEmpty" class="hidden text-center py-16 text-gray-400">
+        <div id="tableEmpty" class="hidden text-center h-[350px] overflow-auto py-16 text-gray-400">
           <i class="fas fa-file-invoice-dollar text-4xl mb-3 block opacity-30"></i>
           <p class="text-sm">No payroll records found.</p>
         </div>
@@ -391,7 +375,6 @@
   </div>
 </div>
 
-<!-- ═══════════ PAYSLIP MODAL ═══════════ -->
 <div id="payslipModal" class="modal">
   <div class="modal-content">
     <div class="modal-body">
@@ -412,7 +395,6 @@
   </div>
 </div>
 
-<!-- ═══════════ EXPORT CONFIRM ═══════════ -->
 <div id="exportOverlay" class="overlay">
   <div class="overlay-box">
     <div class="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
@@ -434,7 +416,7 @@
   </div>
 </div>
 
-<script src="/assets/js/component-loader.js"></script>  <!-- ← ADD THIS LINE -->
+<script src="/assets/js/component-loader.js"></script>
 <script src="/assets/js/common.js"></script>
 <script src="/assets/js/sidebar.js"></script>
 <script src="/assets/js/header.js"></script>
@@ -442,9 +424,6 @@
 <script>
 'use strict';
 
-/* ═══════════════════════════════════════════
-   CONFIG & STATE
-═══════════════════════════════════════════ */
 var BASE_URL  = 'http://localhost:8086';
 var PAGE_SIZE = 20;
 
@@ -454,9 +433,6 @@ var currentPage     = 1;
 var selectedIds     = new Set();
 var currentPayslipRec = null;
 
-/* ═══════════════════════════════════════════
-   BOOT
-═══════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', function () {
   loadSidebar();
   loadHeader();
@@ -466,9 +442,6 @@ document.addEventListener('DOMContentLoaded', function () {
   fetchAllRecords();
 });
 
-/* ═══════════════════════════════════════════
-   API FETCH — all pages
-═══════════════════════════════════════════ */
 function fetchAllRecords() {
   showLoading(true);
   fetch(BASE_URL + '/api/v1/payroll/get-all-payroll?page=0&size=100')
@@ -510,9 +483,6 @@ function onDataReady() {
   applyFilters();
 }
 
-/* ═══════════════════════════════════════════
-   DYNAMIC FILTERS
-═══════════════════════════════════════════ */
 function populateDynamicFilters() {
   var years = [], depts = [];
   allRecords.forEach(function(r) {
@@ -527,9 +497,6 @@ function populateDynamicFilters() {
   depts.forEach(function(d) { var o = document.createElement('option'); o.value = d; o.text = d; dSel.appendChild(o); });
 }
 
-/* ═══════════════════════════════════════════
-   FILTER LOGIC
-═══════════════════════════════════════════ */
 function bindFilterEvents() {
   ['filterMonth','filterYear','filterDept','filterStatus'].forEach(function(id) {
     document.getElementById(id).addEventListener('change', function() { currentPage=1; selectedIds.clear(); applyFilters(); });
@@ -567,9 +534,6 @@ function resetFilters() {
   currentPage=1; selectedIds.clear(); applyFilters();
 }
 
-/* ═══════════════════════════════════════════
-   TABLE RENDER — with new columns
-═══════════════════════════════════════════ */
 function renderTable() {
   var tbody = document.getElementById('tableBody');
   var empty = document.getElementById('tableEmpty');
@@ -583,20 +547,22 @@ function renderTable() {
   var end   = Math.min(start+PAGE_SIZE, filteredRecords.length);
   var page  = filteredRecords.slice(start, end);
 
-  var totBasic=0,totHra=0,totAllow=0,totGross=0,totEmpPf=0,totEmrPf=0,
-      totEsi=0,totTds=0,totDed=0,totExp=0,totLopDed=0,totNet=0;
+  var totBasic=0,totHra=0,totDa=0,totSpl=0,totGross=0,totEmpPf=0,totEmrPf=0,
+      totEsi=0,totPt=0,totDed=0,totExp=0,totLopDed=0,totNet=0,totCtc=0;
 
   var rows = page.map(function(r, idx) {
     var basic    = safe(r.basicSalary);
     var hra      = safe(r.hra);
-    var allow    = safe(r.allowances);
+    var da       = safe(r.da);
+    var spl      = safe(r.specialAllowance);
     var gross    = safe(r.grossSalary);
     var empPf    = safe(r.employeePf);
     var emplrPf  = safe(r.employerPf);
     var esi      = safe(r.esi);
-    var tds      = safe(r.tds);
+    var pt       = safe(r.pt);
     var totalDed = safe(r.totalDeductions);
     var net      = safe(r.netSalary);
+    var ctc      = safe(r.ctc);
     var lopDays  = safe(r.lopDays);
     var lopDed   = safe(r.lopDeduction);
     var expReimb = safe(r.expenseReimbursement);
@@ -607,9 +573,9 @@ function renderTable() {
     var checked  = selectedIds.has(rid) ? 'checked' : '';
     var rowCls   = selectedIds.has(rid) ? 'selected-row' : '';
 
-    totBasic+=basic; totHra+=hra; totAllow+=allow; totGross+=gross;
-    totEmpPf+=empPf; totEmrPf+=emplrPf; totEsi+=esi; totTds+=tds;
-    totDed+=totalDed; totExp+=expReimb; totLopDed+=lopDed; totNet+=net;
+    totBasic+=basic; totHra+=hra; totDa+=da; totSpl+=spl; totGross+=gross;
+    totEmpPf+=empPf; totEmrPf+=emplrPf; totEsi+=esi; totPt+=pt;
+    totDed+=totalDed; totExp+=expReimb; totLopDed+=lopDed; totNet+=net; totCtc+=ctc;
 
     var lopHtml  = lopDed  > 0 ? '<span class="text-orange-600 font-semibold">-'+fmt(lopDed)+'</span>' : '<span class="text-gray-400 text-xs">—</span>';
     var expHtml  = expReimb > 0 ? '<span class="text-blue-600 font-semibold">+'+fmt(expReimb)+'</span>' : '<span class="text-gray-400 text-xs">—</span>';
@@ -625,7 +591,8 @@ function renderTable() {
       +'<td><span class="badge '+badgeClass(r.status)+'">'+(r.status||'—')+'</span></td>'
       +'<td class="text-right font-mono">'+fmt(basic)+'</td>'
       +'<td class="text-right font-mono">'+fmt(hra)+'</td>'
-      +'<td class="text-right font-mono">'+fmt(allow)+'</td>'
+      +'<td class="text-right font-mono">'+fmt(da)+'</td>'
+      +'<td class="text-right font-mono">'+fmt(spl)+'</td>'
       +'<td class="text-right font-mono font-semibold text-gray-700">'+fmt(gross)+'</td>'
       +'<td class="text-right text-xs text-gray-500">'+daysWkd+'/'+wkDays+'</td>'
       +'<td class="text-right text-xs '+(lopDays>0?'text-orange-600 font-semibold':'text-gray-400')+'">'+lopDays+'</td>'
@@ -633,10 +600,11 @@ function renderTable() {
       +'<td class="text-right font-mono">'+fmt(empPf)+'</td>'
       +'<td class="text-right font-mono">'+fmt(emplrPf)+'</td>'
       +'<td class="text-right font-mono">'+fmt(esi)+'</td>'
-      +'<td class="text-right font-mono">'+fmt(tds)+'</td>'
+      +'<td class="text-right font-mono">'+fmt(pt)+'</td>'
       +'<td class="text-right font-mono text-red-600">'+fmt(totalDed)+'</td>'
       +'<td class="text-right">'+expHtml+'</td>'
       +'<td class="text-right font-mono font-bold text-green-700">'+fmt(net)+'</td>'
+      +'<td class="text-right font-mono font-semibold text-[#1B738C]">'+fmt(ctc)+'</td>'
       +'<td class="text-center">'
       +  '<button onclick="openPayslip(\''+rid+'\')" title="View Payslip"'
       +  ' class="text-[#1B738C] hover:text-white hover:bg-[#1B738C] border border-[#62C9EA] rounded-lg px-2.5 py-1.5 text-xs transition-all">'
@@ -653,16 +621,18 @@ function renderTable() {
     +'<td colspan="8" class="font-bold pl-3">Page Totals ('+page.length+' records)</td>'
     +'<td class="text-right">'+fmt(totBasic)+'</td>'
     +'<td class="text-right">'+fmt(totHra)+'</td>'
-    +'<td class="text-right">'+fmt(totAllow)+'</td>'
+    +'<td class="text-right">'+fmt(totDa)+'</td>'
+    +'<td class="text-right">'+fmt(totSpl)+'</td>'
     +'<td class="text-right font-bold">'+fmt(totGross)+'</td>'
     +'<td colspan="3"></td>'
     +'<td class="text-right">'+fmt(totEmpPf)+'</td>'
     +'<td class="text-right">'+fmt(totEmrPf)+'</td>'
     +'<td class="text-right">'+fmt(totEsi)+'</td>'
-    +'<td class="text-right">'+fmt(totTds)+'</td>'
+    +'<td class="text-right">'+fmt(totPt)+'</td>'
     +'<td class="text-right text-red-600 font-bold">'+fmt(totDed)+'</td>'
     +'<td class="text-right text-blue-600">'+fmt(totExp)+'</td>'
     +'<td class="text-right text-green-700 font-bold">'+fmt(totNet)+'</td>'
+    +'<td class="text-right text-[#1B738C] font-bold">'+fmt(totCtc)+'</td>'
     +'<td></td>'
     +'</tr>';
 
@@ -678,9 +648,6 @@ function renderTable() {
   syncSelectAll();
 }
 
-/* ═══════════════════════════════════════════
-   PAGINATION (unchanged)
-═══════════════════════════════════════════ */
 function renderPagination() {
   var total    = filteredRecords.length;
   var totalPgs = Math.max(1, Math.ceil(total/PAGE_SIZE));
@@ -708,9 +675,6 @@ function renderPagination() {
   ctrl.appendChild(mkBtn('<i class="fas fa-chevron-right text-xs"></i>', currentPage+1, currentPage===totalPgs));
 }
 
-/* ═══════════════════════════════════════════
-   CHECKBOX / SELECTION (unchanged)
-═══════════════════════════════════════════ */
 function bindSelectEvents() {
   document.getElementById('selectAllChk').addEventListener('change', function() {
     var start=(currentPage-1)*PAGE_SIZE, end=Math.min(start+PAGE_SIZE,filteredRecords.length);
@@ -747,9 +711,6 @@ function updateSelectionBar() {
   count>0?document.getElementById('selectionBar').classList.remove('hidden'):document.getElementById('selectionBar').classList.add('hidden');
 }
 
-/* ═══════════════════════════════════════════
-   EXPORT EVENTS
-═══════════════════════════════════════════ */
 function bindExportEvents() {
   document.getElementById('exportExcelBtn').addEventListener('click', function() {
     document.getElementById('exportTotalCount').textContent=filteredRecords.length;
@@ -767,25 +728,6 @@ function bindExportEvents() {
   });
 }
 
-/* ═══════════════════════════════════════════
-   EXCEL EXPORT — exact colors from reference
-   Color palette (from xlsx analysis):
-     Company row bg  : 1F4E79 (dark navy)   text: FFFFFF
-     Register title  : 1F4E79               text: FFFFFF   bg-light: EAF1FB
-     Group: EmpInfo  : 1F4E79
-     Group: Attend   : 2E5A88
-     Group: Earnings : 1A6B3C (dark green)
-     Group: Deduct   : 8B3A00 (dark brown)
-     Col header rows : same as group colors
-     NET PAY col hdr : 1F4E79
-     Gross cell      : D6F0E8 bg, bold
-     TotalDed cell   : FFE8D6 bg, bold
-     NET PAY cell    : E8F5E9 bg, 1A6B3C text, bold
-     Odd data rows   : FFFFFF
-     Even data rows  : F5F9FF
-     Total row       : 1F4E79, white text
-     Footer          : gray text
-═══════════════════════════════════════════ */
 function generateExcel(records, filenameBase) {
   if (!records || !records.length) { showToast('No records to export.', 'info'); return; }
 
@@ -796,63 +738,61 @@ function generateExcel(records, filenameBase) {
 
   var wb = XLSX.utils.book_new();
 
-  // ── Build data rows ──
   var wsData = [];
-  wsData.push(['Sustainable Integrated Environmental Consultant Private Ltd,   Pune, Maharashtra, INDIA 411057']);  // R1
-  wsData.push(['Salary Register \u2013 ' + period]);                                                               // R2
-  wsData.push(['']);                                                                                                // R3 spacer
-  wsData.push(['Employee Info','','','Attendance','','','','Earnings','','','','','','Deductions','','','','','','','']); // R4 group headers
-  wsData.push([                                                                                                     // R5 col headers
+  wsData.push(['Sustainable Integrated Environmental Consultant Private Ltd,   Pune, Maharashtra, INDIA 411057']);
+  wsData.push(['Salary Register \u2013 ' + period]);
+  wsData.push(['']);
+  wsData.push(['Employee Info','','','Attendance','','','','Earnings','','','','','','Deductions','','','','','NET PAY','CTC']);
+  wsData.push([
     'Sr.\nNo.','Employee\nName','Emp.\nCode','Date of\nJoining','Designation',
     'Working\nDays','LWP/\nAbsent','Days\nPaid',
-    'Basic','DA','HRA','Other\nAllowance','Reimburse-\nment','Gross\nEarnings',
-    'PF\nEmployee','PF\nEmployer','PT','ESIC','TDS/IT\nReturn','Total\nDeductions','NET PAY'
+    'Basic','DA','HRA','Special\nAllowance','Reimburse-\nment','Gross\nEarnings',
+    'PF\nEmployee','PF\nEmployer','PT','ESIC','Total\nDeductions','NET PAY','CTC'
   ]);
 
-  var totals={basic:0,da:0,hra:0,other:0,reimb:0,gross:0,empPf:0,emplrPf:0,pt:0,esi:0,tds:0,totalDed:0,net:0};
-  var dataStartRow = 6; // 1-based
+  var totals={basic:0,da:0,hra:0,spl:0,reimb:0,gross:0,empPf:0,emplrPf:0,pt:0,esi:0,totalDed:0,net:0,ctc:0};
+  var dataStartRow = 6;
 
   records.forEach(function(r,i) {
     var basic    = safe(r.basicSalary);
+    var da       = safe(r.da);
     var hra      = safe(r.hra);
-    var other    = safe(r.allowances);
-    var reimb    = safe(r.expenseReimbursement);  // NOW POPULATED from API
+    var spl      = safe(r.specialAllowance);
+    var reimb    = safe(r.expenseReimbursement);
     var gross    = safe(r.grossSalary);
     var empPf    = safe(r.employeePf);
     var emplrPf  = safe(r.employerPf);
+    var pt       = safe(r.pt);
     var esi      = safe(r.esi);
-    var tds      = safe(r.tds);
     var totalDed = safe(r.totalDeductions);
     var net      = safe(r.netSalary);
+    var ctc      = safe(r.ctc);
     var lopDays  = safe(r.lopDays);
     var wkDays   = r.workingDaysInMonth || 26;
     var daysPaid = r.daysWorked || (wkDays - lopDays);
 
-    totals.basic+=basic; totals.hra+=hra; totals.other+=other; totals.reimb+=reimb;
-    totals.gross+=gross; totals.empPf+=empPf; totals.emplrPf+=emplrPf;
-    totals.esi+=esi; totals.tds+=tds; totals.totalDed+=totalDed; totals.net+=net;
+    totals.basic+=basic; totals.da+=da; totals.hra+=hra; totals.spl+=spl; totals.reimb+=reimb;
+    totals.gross+=gross; totals.empPf+=empPf; totals.emplrPf+=emplrPf; totals.pt+=pt;
+    totals.esi+=esi; totals.totalDed+=totalDed; totals.net+=net; totals.ctc+=ctc;
 
     wsData.push([
       i+1, r.fullName||'', r.employeeId||'', '', r.designation||'',
       wkDays, lopDays>0?lopDays:'-', daysPaid,
-      basic, 0, hra, other, reimb, gross,
-      empPf, emplrPf, 0,
-      esi>0?esi:'NA', tds, totalDed, net
+      basic, da, hra, spl, reimb, gross,
+      empPf, emplrPf, pt,
+      esi>0?esi:'NA', totalDed, net, ctc
     ]);
   });
 
-  // Total row
   wsData.push(['TOTAL','','','','','','','',
-    totals.basic,0,totals.hra,totals.other,totals.reimb,totals.gross,
-    totals.empPf,totals.emplrPf,0,
-    totals.esi>0?totals.esi:'-',totals.tds,totals.totalDed,totals.net
+    totals.basic,totals.da,totals.hra,totals.spl,totals.reimb,totals.gross,
+    totals.empPf,totals.emplrPf,totals.pt,
+    totals.esi>0?totals.esi:'-',totals.totalDed,totals.net,totals.ctc
   ]);
-  // Footer
   wsData.push(['This is a Computer Generated Salary Register and does not require Signature']);
 
   var ws = XLSX.utils.aoa_to_sheet(wsData);
 
-  // ── Exact colors from reference xlsx ──
   var C = {
     navyBg    : 'FF1F4E79', navyText  : 'FFFFFFFF',
     attBg     : 'FF2E5A88',
@@ -862,71 +802,58 @@ function generateExcel(records, filenameBase) {
     grossCell : 'FFD6F0E8',
     dedCell   : 'FFFFE8D6',
     netCell   : 'FFE8F5E9',
+    ctcCell   : 'FFE9F6FB',
     oddRow    : 'FFFFFFFF',
     evenRow   : 'FFF5F9FF',
     black     : 'FF000000'
   };
 
-  function cellStyle(addr, bgColor, fontColor, bold, hAlign, vAlign, wrapText, numFmt) {
-    if (!ws[addr]) ws[addr] = {t:'z', v:''};
-    ws[addr].s = {
-      fill  : bgColor ? { patternType:'solid', fgColor:{rgb:bgColor} } : undefined,
-      font  : { name:'Arial', sz:10, bold:!!bold, color:{ rgb: fontColor||C.black } },
-      alignment : { horizontal: hAlign||'left', vertical: vAlign||'center', wrapText: !!wrapText },
-      numFmt: numFmt||''
-    };
-  }
-
   var numFmt = '#,##0.00';
   var totalRows = records.length;
-  var lastDataRow  = dataStartRow + totalRows - 1; // 1-based
-  var totalRowIdx  = lastDataRow + 1;              // 1-based
+  var lastDataRow  = dataStartRow + totalRows - 1;
+  var totalRowIdx  = lastDataRow + 1;
   var footerRowIdx = totalRowIdx + 1;
 
-  // ── Row 1: company header ──
   ws['A1'].s = { fill:{patternType:'solid',fgColor:{rgb:C.companyBg}}, font:{name:'Arial',sz:11,bold:true,color:{rgb:C.companyText}}, alignment:{horizontal:'center',vertical:'center'} };
 
-  // ── Row 2: register title ──
   ws['A2'].s = { fill:{patternType:'solid',fgColor:{rgb:C.navyBg}}, font:{name:'Arial',sz:12,bold:true,color:{rgb:C.navyText}}, alignment:{horizontal:'center',vertical:'center'} };
 
-  // ── Row 4: group headers ──
   var groupMap = {
-    A4:{bg:C.navyBg}, B4:{bg:C.navyBg}, C4:{bg:C.navyBg},       // Employee Info A-C
-    D4:{bg:C.attBg},  E4:{bg:C.attBg},  F4:{bg:C.attBg}, G4:{bg:C.attBg}, H4:{bg:C.attBg}, // Attendance D-H
-    I4:{bg:C.earnBg}, J4:{bg:C.earnBg}, K4:{bg:C.earnBg}, L4:{bg:C.earnBg}, M4:{bg:C.earnBg}, N4:{bg:C.earnBg}, // Earnings I-N
-    O4:{bg:C.dedBg},  P4:{bg:C.dedBg},  Q4:{bg:C.dedBg},  R4:{bg:C.dedBg},  S4:{bg:C.dedBg},  T4:{bg:C.dedBg},  U4:{bg:C.navyBg} // Deductions O-T, NET U
+    A4:{bg:C.navyBg}, B4:{bg:C.navyBg}, C4:{bg:C.navyBg},
+    D4:{bg:C.attBg},  E4:{bg:C.attBg},  F4:{bg:C.attBg}, G4:{bg:C.attBg}, H4:{bg:C.attBg},
+    I4:{bg:C.earnBg}, J4:{bg:C.earnBg}, K4:{bg:C.earnBg}, L4:{bg:C.earnBg}, M4:{bg:C.earnBg}, N4:{bg:C.earnBg},
+    O4:{bg:C.dedBg},  P4:{bg:C.dedBg},  Q4:{bg:C.dedBg},  R4:{bg:C.dedBg},  S4:{bg:C.dedBg},
+    T4:{bg:C.navyBg}, U4:{bg:C.navyBg}
   };
   Object.keys(groupMap).forEach(function(addr) {
     if (!ws[addr]) ws[addr]={t:'z',v:''};
     ws[addr].s = { fill:{patternType:'solid',fgColor:{rgb:groupMap[addr].bg}}, font:{name:'Arial',sz:10,bold:true,color:{rgb:C.navyText}}, alignment:{horizontal:'center',vertical:'center'} };
   });
 
-  // ── Row 5: column headers ──
   var hdrColBg = ['A','B','C'].map(function(c){return {col:c,bg:C.navyBg};})
     .concat(['D','E','F','G','H'].map(function(c){return {col:c,bg:C.attBg};}))
     .concat(['I','J','K','L','M','N'].map(function(c){return {col:c,bg:C.earnBg};}))
-    .concat(['O','P','Q','R','S','T'].map(function(c){return {col:c,bg:C.dedBg};}))
-    .concat([{col:'U',bg:C.navyBg}]);
+    .concat(['O','P','Q','R'].map(function(c){return {col:c,bg:C.dedBg};}))
+    .concat([{col:'S',bg:C.navyBg},{col:'T',bg:C.navyBg}]);
   hdrColBg.forEach(function(item) {
     var addr = item.col+'5';
     if (!ws[addr]) ws[addr]={t:'z',v:''};
     ws[addr].s = { fill:{patternType:'solid',fgColor:{rgb:item.bg}}, font:{name:'Arial',sz:9,bold:true,color:{rgb:C.navyText}}, alignment:{horizontal:'center',vertical:'center',wrapText:true} };
   });
 
-  // ── Data rows ──
   var cols = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U'];
-  var numericCols = new Set(['I','J','K','L','M','N','O','P','Q','S','T','U']);
+  var numericCols = new Set(['I','J','K','L','M','N','O','P','Q','R','S','T','U']);
   for (var ri=0; ri<records.length; ri++) {
-    var excelRow = dataStartRow + ri; // 1-based
+    var excelRow = dataStartRow + ri;
     var isEven   = ri % 2 === 1;
     var rowBg    = isEven ? C.evenRow : C.oddRow;
     cols.forEach(function(col) {
       var addr = col+excelRow;
       if (!ws[addr]) ws[addr]={t:'z',v:''};
-      var isBold   = (col==='B'||col==='N'||col==='T'||col==='U');
-      var cellBg   = col==='N' ? C.grossCell : col==='T' ? C.dedCell : col==='U' ? C.netCell : rowBg;
-      var fontClr  = col==='U' ? C.earnText : C.black;
-      var hAlign   = numericCols.has(col) ? 'right' : (col==='A'||col==='C'||col==='D'||col==='F'||col==='G'||col==='H'||col==='R') ? 'center' : 'left';
+      var isBold   = (col==='B'||col==='N'||col==='S'||col==='T'||col==='U');
+      var cellBg   = col==='N' ? C.grossCell : col==='S' ? C.dedCell : col==='T' ? C.netCell : col==='U' ? C.ctcCell : rowBg;
+      var fontClr  = col==='T' ? C.earnText : col==='U' ? C.companyText : C.black;
+      var hAlign   = numericCols.has(col) ? 'right' : (col==='A'||col==='C'||col==='D'||col==='F'||col==='G'||col==='H') ? 'center' : 'left';
       ws[addr].s = {
         fill : { patternType:'solid', fgColor:{rgb:cellBg} },
         font : { name:'Arial', sz:9, bold:isBold, color:{rgb:fontClr} },
@@ -936,7 +863,6 @@ function generateExcel(records, filenameBase) {
     });
   }
 
-  // ── Total row ──
   var totRow = String(totalRowIdx);
   cols.forEach(function(col) {
     var addr = col+totRow;
@@ -949,39 +875,35 @@ function generateExcel(records, filenameBase) {
     };
   });
 
-  // ── Footer ──
   var footAddr = 'A'+footerRowIdx;
   if (ws[footAddr]) ws[footAddr].s = { font:{name:'Arial',sz:9,bold:false,color:{rgb:'FF808080'}}, alignment:{horizontal:'center',vertical:'center'} };
 
-  // ── Merges ──
   ws['!merges'] = [
-    {s:{r:0,c:0}, e:{r:0,c:20}},  // Company header
-    {s:{r:1,c:0}, e:{r:1,c:20}},  // Register title
-    {s:{r:3,c:0}, e:{r:3,c:2}},   // Employee Info group
-    {s:{r:3,c:3}, e:{r:3,c:7}},   // Attendance group
-    {s:{r:3,c:8}, e:{r:3,c:13}},  // Earnings group
-    {s:{r:3,c:14},e:{r:3,c:19}},  // Deductions group
-    {s:{r:totalRowIdx-1,c:0}, e:{r:totalRowIdx-1,c:7}},   // Total label
-    {s:{r:footerRowIdx-1,c:0}, e:{r:footerRowIdx-1,c:20}} // Footer
+    {s:{r:0,c:0}, e:{r:0,c:20}},
+    {s:{r:1,c:0}, e:{r:1,c:20}},
+    {s:{r:3,c:0}, e:{r:3,c:2}},
+    {s:{r:3,c:3}, e:{r:3,c:7}},
+    {s:{r:3,c:8}, e:{r:3,c:13}},
+    {s:{r:3,c:14},e:{r:3,c:17}},
+    {s:{r:totalRowIdx-1,c:0}, e:{r:totalRowIdx-1,c:7}},
+    {s:{r:footerRowIdx-1,c:0}, e:{r:footerRowIdx-1,c:20}}
   ];
 
-  // ── Row heights ──
   ws['!rows'] = [];
-  ws['!rows'][0] = {hpx:32};  // Company
-  ws['!rows'][1] = {hpx:22};  // Title
-  ws['!rows'][2] = {hpx:8};   // Spacer
-  ws['!rows'][3] = {hpx:18};  // Group headers
-  ws['!rows'][4] = {hpx:30};  // Col headers (wrap text)
+  ws['!rows'][0] = {hpx:32};
+  ws['!rows'][1] = {hpx:22};
+  ws['!rows'][2] = {hpx:8};
+  ws['!rows'][3] = {hpx:18};
+  ws['!rows'][4] = {hpx:30};
   for (var di=0; di<records.length; di++) ws['!rows'][5+di] = {hpx:18};
-  ws['!rows'][5+records.length]   = {hpx:18}; // Total
-  ws['!rows'][5+records.length+1] = {hpx:14}; // Footer
+  ws['!rows'][5+records.length]   = {hpx:18};
+  ws['!rows'][5+records.length+1] = {hpx:14};
 
-  // ── Column widths ──
   ws['!cols'] = [
     {wch:5},{wch:22},{wch:14},{wch:12},{wch:18},
     {wch:9},{wch:9},{wch:9},
     {wch:13},{wch:10},{wch:13},{wch:14},{wch:14},{wch:14},
-    {wch:12},{wch:12},{wch:8},{wch:9},{wch:13},{wch:15},{wch:14}
+    {wch:12},{wch:12},{wch:8},{wch:9},{wch:15},{wch:14},{wch:14}
   ];
 
   XLSX.utils.book_append_sheet(wb, ws, 'Salary Register');
@@ -990,9 +912,6 @@ function generateExcel(records, filenameBase) {
   showToast('Excel exported: '+fname, 'success');
 }
 
-/* ═══════════════════════════════════════════
-   PAYSLIP MODAL — with logo + new fields
-═══════════════════════════════════════════ */
 function openPayslip(payrollId) {
   var r = allRecords.find(function(x){return String(x.payrollId)===String(payrollId);});
   if (!r) { showToast('Record not found.','error'); return; }
@@ -1001,14 +920,16 @@ function openPayslip(payrollId) {
   var ml       = monthLabel(r.payrollMonth)+' '+(r.payrollYear||'');
   var basic    = safe(r.basicSalary);
   var hra      = safe(r.hra);
-  var allow    = safe(r.allowances);
+  var da       = safe(r.da);
+  var spl      = safe(r.specialAllowance);
   var gross    = safe(r.grossSalary);
   var empPf    = safe(r.employeePf);
   var emplrPf  = safe(r.employerPf);
   var esi      = safe(r.esi);
-  var tds      = safe(r.tds);
+  var pt       = safe(r.pt);
   var totalDed = safe(r.totalDeductions);
   var net      = safe(r.netSalary);
+  var ctc      = safe(r.ctc);
   var lopDays  = safe(r.lopDays);
   var lopDed   = safe(r.lopDeduction);
   var expReimb = safe(r.expenseReimbursement);
@@ -1019,7 +940,6 @@ function openPayslip(payrollId) {
 
   var f = function(v){ return parseFloat(v||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}); };
 
-  // Logo — try to load; if fails the onerror replaces with initials
   var logoHtml = '<div class="ps-company-logo-wrap">'
     +'<img src="/assets/Images/logo.png" alt="Company Logo"'
     +' onerror="this.style.display=\'none\';this.nextSibling.style.display=\'flex\'"'
@@ -1030,7 +950,6 @@ function openPayslip(payrollId) {
   var html =
     '<div id="payslipToPrint" class="payslip-container">'
 
-    // ── Header with logo ──
     +'<div class="ps-header">'
     +  '<div class="ps-company-row">'
     +    logoHtml
@@ -1042,7 +961,6 @@ function openPayslip(payrollId) {
     +  '<div class="ps-month-row">PAYSLIP FOR THE MONTH OF '+ml.toUpperCase()+'</div>'
     +'</div>'
 
-    // ── Employee details grid ──
     +'<div class="ps-emp-grid">'
     +  cell('Name',          r.fullName    ||'—')
     +  cell('Emp. Code',     r.employeeId  ||'—')
@@ -1052,7 +970,6 @@ function openPayslip(payrollId) {
     +  cell('Status',        r.status      ||'—')
     +'</div>'
 
-    // ── Attendance strip (NEW) ──
     +'<div class="ps-att-strip">'
     +  '<div class="ps-att-head">Attendance Summary</div>'
     +  '<div class="ps-att-cell"><div class="ps-att-val">'+wkDays+'</div><div class="ps-att-lbl">Working Days</div></div>'
@@ -1063,17 +980,17 @@ function openPayslip(payrollId) {
     +  '<div class="ps-att-cell"><div class="ps-att-val" style="color:#0e6fa8">'+f(expReimb)+'</div><div class="ps-att-lbl">Exp. Reimb.</div></div>'
     +'</div>'
 
-    // ── Salary table ──
     +'<table class="ps-salary-table">'
     +'<thead><tr>'
     +'<th style="width:36%">Earnings</th><th class="amt-col" style="width:14%">Amount (₹)</th>'
     +'<th style="width:36%">Deductions</th><th class="amt-col" style="width:14%">Amount (₹)</th>'
     +'</tr></thead>'
     +'<tbody>'
-    +'<tr><td>Basic Salary</td><td class="amt-col">'+f(basic)+'</td><td>PF (Employee 12%)</td><td class="amt-col">'+f(empPf)+'</td></tr>'
-    +'<tr><td>HRA</td><td class="amt-col">'+f(hra)+'</td><td>PF (Employer 12%)</td><td class="amt-col">'+f(emplrPf)+'</td></tr>'
-    +'<tr><td>Other Allowances</td><td class="amt-col">'+f(allow)+'</td><td>ESI</td><td class="amt-col">'+(esi>0?f(esi):'NA')+'</td></tr>'
-    +(expReimb>0?'<tr class="exp-row"><td>Expense Reimbursement</td><td class="amt-col">+'+f(expReimb)+'</td><td>TDS / IT Return</td><td class="amt-col">'+f(tds)+'</td></tr>':'<tr><td></td><td></td><td>TDS / IT Return</td><td class="amt-col">'+f(tds)+'</td></tr>')
+    +'<tr><td>Basic</td><td class="amt-col">'+f(basic)+'</td><td>PF (Employee)</td><td class="amt-col">'+f(empPf)+'</td></tr>'
+    +'<tr><td>HRA</td><td class="amt-col">'+f(hra)+'</td><td>PF (Employer)</td><td class="amt-col">'+f(emplrPf)+'</td></tr>'
+    +'<tr><td>DA</td><td class="amt-col">'+f(da)+'</td><td>ESIC</td><td class="amt-col">'+(esi>0?f(esi):'NA')+'</td></tr>'
+    +'<tr><td>Special Allowance</td><td class="amt-col">'+f(spl)+'</td><td>Professional Tax (PT)</td><td class="amt-col">'+f(pt)+'</td></tr>'
+    +(expReimb>0?'<tr class="exp-row"><td>Expense Reimbursement</td><td class="amt-col">+'+f(expReimb)+'</td><td></td><td></td></tr>':'')
     +(lopDed>0?'<tr class="lop-row"><td></td><td></td><td>Loss of Pay ('+lopDays+' day'+(lopDays===1?'':'s')+')</td><td class="amt-col">-'+f(lopDed)+'</td></tr>':'')
     +'</tbody>'
     +'<tfoot><tr class="total-row">'
@@ -1082,7 +999,6 @@ function openPayslip(payrollId) {
     +'</tr></tfoot>'
     +'</table>'
 
-    // ── Net pay ──
     +'<div class="ps-net-row">'
     +'<div><div class="ps-net-label">NET PAY (Take Home)</div>'
     +'<div class="ps-net-words">'+words+'</div></div>'
@@ -1129,7 +1045,6 @@ function printPayslip() {
     if (!payslipDiv) return showToast('Payslip not found', 'error');
 
     var clone = payslipDiv.cloneNode(true);
-    // remove scripts if any
     clone.querySelectorAll('script').forEach(s => s.remove());
 
     var original = document.body.innerHTML;
@@ -1144,9 +1059,6 @@ function printPayslip() {
 }
 
 
-/* ═══════════════════════════════════════════
-   UTILITIES
-═══════════════════════════════════════════ */
 function safe(v)  { return (v===null||v===undefined||isNaN(v))?0:parseFloat(v); }
 function fmt(v)   { return safe(v).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2}); }
 function esc(s)   { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }

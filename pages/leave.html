@@ -113,6 +113,27 @@
             border-color: var(--primary);
         }
 
+        .btn-icon {
+            border: 1px solid var(--primary-soft);
+            color: var(--primary);
+            width: 30px;
+            height: 30px;
+            border-radius: 8px;
+            background: var(--primary-bg-light);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .btn-icon:hover {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
         input, select, textarea {
             border: 1px solid var(--primary-soft);
             border-radius: 10px;
@@ -295,6 +316,34 @@
             .tab-btn { padding: 6px 14px; font-size: 12px; }
             .pie-chart-container { max-width: 150px; }
         }
+
+        /* ADD to <style> block: */
+        .badge-full-time { background: var(--primary-bg-light); color: var(--primary); }
+        .badge-part-time { background: rgba(23,162,184,0.12); color: #0c5460; }
+
+        /* View details modal */
+        .detail-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 12px;
+            padding: 10px 0;
+            border-bottom: 1px solid #eef4f6;
+        }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-light);
+            white-space: nowrap;
+        }
+        .detail-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--primary);
+            text-align: right;
+        }
+
     </style>
 </head>
 
@@ -431,11 +480,11 @@
                                 <thead>
                                     <tr class="border-b" style="border-color: var(--primary-soft);">
                                         <th>Employee</th><th>Leave Type</th><th>Date</th>
-                                        <th>Days</th><th>Status</th><th>Approved By</th><th>Remarks</th>
+                                        <th>Days</th><th>Status</th><th>Approved By</th><th>Remarks</th><th>Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="historyTableBody">
-                                    <tr class="loading-row"><td colspan="7"><span class="spinner"></span> Loading...</td></tr>
+                                    <tr class="loading-row"><td colspan="8"><span class="spinner"></span> Loading...</td></tr>
                                 </tbody>
                             </table>
                             <div id="historyEmpty" style="display:none;text-align:center;padding:40px;color:var(--text-light);">
@@ -535,6 +584,20 @@
         </div>
     </div>
 
+    <!-- ==================== HISTORY VIEW DETAILS MODAL ==================== -->
+    <div id="historyViewModal" class="modal">
+        <div class="modal-content" style="max-width:440px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-circle-info mr-1"></i>Leave Details</h3>
+                <span onclick="closeModal('historyViewModal')" style="cursor:pointer;font-size:22px;color:var(--primary-light);">&times;</span>
+            </div>
+            <div id="historyViewBody"></div>
+            <div class="flex justify-end mt-4">
+                <button onclick="closeModal('historyViewModal')" class="btn-outline">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- ==================== RULE MODAL ==================== -->
     <div id="ruleModal" class="modal">
         <div class="modal-content">
@@ -546,7 +609,7 @@
                 <div>
                     <label>Employee Type *</label>
                     <select id="rl-emptype">
-                        <option value="Regular">Regular</option>
+                        <option value="Full-Time">Full-Time</option>
                         <option value="Part-Time">Part-Time</option>
                         <option value="Contract">Contract</option>
                         <option value="Intern">Intern</option>
@@ -600,36 +663,7 @@
     // =====================================================================
     //  MOCK / FALLBACK DATA  (used when backend is unreachable)
     // =====================================================================
-    const MOCK = {
-        leaveTypes: [
-            { id:1, name:'Casual Leave',   isActive:true },
-            { id:2, name:'Sick Leave',     isActive:true },
-            { id:3, name:'Paid Leave',     isActive:true },
-            { id:4, name:'Emergency Leave',isActive:true },
-        ],
-        rules: [
-            { empType:'Regular',  dept:'All', allotments:{'Casual Leave':12,'Sick Leave':10,'Paid Leave':20,'Emergency Leave':3} },
-            { empType:'Intern',   dept:'All', allotments:{'Casual Leave':5, 'Sick Leave':3, 'Paid Leave':0, 'Emergency Leave':1} },
-            { empType:'Contract', dept:'All', allotments:{'Casual Leave':8, 'Sick Leave':6, 'Paid Leave':10,'Emergency Leave':2} },
-        ],
-        employees: [
-            { id:'EMP001', name:'Rajesh Kumar',  dept:'IT',         empType:'Regular' },
-            { id:'EMP002', name:'Priya Sharma',  dept:'HR',         empType:'Regular' },
-            { id:'EMP003', name:'Amit Mehta',    dept:'Sales',      empType:'Regular' },
-            { id:'EMP004', name:'Neha Gupta',    dept:'Finance',    empType:'Regular' },
-            { id:'EMP005', name:'Sunita Verma',  dept:'Operations', empType:'Regular' },
-            { id:'EMP006', name:'Ravi Intern',   dept:'IT',         empType:'Intern'  },
-        ],
-        requests: [
-            { id:1, empId:'EMP002', empName:'Priya Sharma', dept:'HR',      empType:'Regular', leaveType:'Sick Leave',   from:'2025-04-15', days:3,  reason:'Fever and rest required', status:'pending',  addedOn:'2025-04-12', actionBy:'', actionDate:'', remarks:'' },
-            { id:2, empId:'EMP003', empName:'Amit Mehta',   dept:'Sales',   empType:'Regular', leaveType:'Casual Leave', from:'2025-04-20', days:3,  reason:'Family function',         status:'pending',  addedOn:'2025-04-13', actionBy:'', actionDate:'', remarks:'' },
-            { id:3, empId:'EMP004', empName:'Neha Gupta',   dept:'Finance', empType:'Regular', leaveType:'Paid Leave',   from:'2025-05-01', days:10, reason:'Vacation',                status:'pending',  addedOn:'2025-04-14', actionBy:'', actionDate:'', remarks:'' },
-            { id:4, empId:'EMP001', empName:'Rajesh Kumar', dept:'IT',      empType:'Regular', leaveType:'Paid Leave',   from:'2025-03-10', days:6,  reason:'Annual vacation',         status:'approved', addedOn:'2025-03-05', actionBy:'HR Admin', actionDate:'2025-03-06', remarks:'Approved' },
-            { id:5, empId:'EMP002', empName:'Priya Sharma', dept:'HR',      empType:'Regular', leaveType:'Sick Leave',   from:'2025-03-20', days:3,  reason:'Medical checkup',         status:'approved', addedOn:'2025-03-18', actionBy:'HR Admin', actionDate:'2025-03-19', remarks:'' },
-            { id:6, empId:'EMP003', empName:'Amit Mehta',   dept:'Sales',   empType:'Regular', leaveType:'Casual Leave', from:'2025-03-05', days:1,  reason:'Personal work',           status:'rejected', addedOn:'2025-03-03', actionBy:'HR Admin', actionDate:'2025-03-04', remarks:'Team shortage that day' },
-            { id:7, empId:'EMP006', empName:'Ravi Intern',  dept:'IT',      empType:'Intern',  leaveType:'Casual Leave', from:'2025-04-08', days:1,  reason:'Personal work',           status:'approved', addedOn:'2025-04-07', actionBy:'HR Admin', actionDate:'2025-04-07', remarks:'' },
-        ],
-    };
+    const MOCK = {};
 
     // =====================================================================
     //  STATE  — starts as mock; gets replaced by API data when online
@@ -769,7 +803,9 @@
             document.getElementById('statPending').textContent  = stats.pendingCount   ?? stats.pending   ?? 0;
             document.getElementById('statApproved').textContent = stats.approvedThisMonth ?? stats.approved ?? 0;
             document.getElementById('statRejected').textContent = stats.rejectedThisMonth ?? stats.rejected ?? 0;
-            document.getElementById('statDays').textContent     = stats.totalLeaveDaysThisMonth ?? stats.totalDays ?? 0;
+            // document.getElementById('statDays').textContent     = stats.totalLeaveDaysThisMonth ?? stats.totalDays ?? 0;
+            document.getElementById('statDays').textContent = stats.totalApprovedDaysThisMonth ?? stats.totalLeaveDaysThisMonth ?? stats.totalDays ?? 0;
+
         } catch (_) { updateMockStats(); }
     }
 
@@ -828,7 +864,7 @@
         document.getElementById('pendingTableBody').innerHTML = list.map(r => {
             const empName   = r.empName   || r.employeeName || '—';
             const empId     = r.empId     || r.employeeId   || '—';
-            const empType   = r.empType   || r.employeeType || 'Regular';
+            const empType   = r.empType   || r.employeeType || '';
             const deptName  = r.dept      || r.department   || '—';
             const from      = r.from      || r.fromDate     || r.startDate;
             const days      = r.days      || r.numberOfDays || 0;
@@ -847,7 +883,7 @@
             return `<tr class="border-b data-row" style="border-color:#e5e7eb;">
                 <td>
                     <p class="text-sm font-semibold" style="color:var(--primary);">${empName}</p>
-                    <p class="text-xs" style="color:var(--text-light);">${empId} <span class="badge badge-${empType.toLowerCase()}">${empType}</span></p>
+                    <p class="text-xs" style="color:var(--text-light);">${empId} <span class="badge badge-${empType.toLowerCase().replace(/\s+/g, '-')}">${empType}</span></p>
                 </td>
                 <td class="text-sm" style="color:var(--text-light);">${deptName}</td>
                 <td><span class="badge-custom">${leaveType}</span></td>
@@ -856,11 +892,55 @@
                 <td class="text-sm" style="color:var(--text-light);max-width:130px;">${reason}</td>
                 <td class="text-sm font-semibold" style="color:${low?'#dc3545':'#2b7a3e'};">${rem}${low?' ⚠️':''}</td>
                 <td>
+                    <button onclick="openPendingView(${r.id})" class="btn-icon mr-1" title="View details"><i class="fas fa-eye"></i></button>
                     <button onclick="openAction(${r.id},'approve')" class="btn-success mr-1"><i class="fas fa-check mr-1"></i>Approve</button>
                     <button onclick="openAction(${r.id},'reject')" class="btn-danger"><i class="fas fa-times mr-1"></i>Reject</button>
                 </td>
             </tr>`;
         }).join('');
+    }
+
+    // =====================================================================
+    //  2a. PENDING VIEW DETAILS MODAL
+    // =====================================================================
+    function openPendingView(id) {
+        const list = S._pendingList || [];
+        const r = list.find(x => x.id == id);
+        if (!r) { showToast('Details not found.', 'error'); return; }
+
+        const empName   = r.empName   || r.employeeName || '—';
+        const empId     = r.empId     || r.employeeId   || '—';
+        const empType   = r.empType   || r.employeeType || '';
+        const deptName  = r.department|| r.dept || '—';
+        const leaveType = r.leaveType || '—';
+        const from      = r.fromDate  || r.from  || r.startDate;
+        const to        = r.toDate    || r.to    || from;
+        const days      = r.numberOfDays || r.days || 0;
+        const reason    = r.reason    || '—';
+        const description = r.description || '';
+        const addedOn   = r.addedOn;
+        const allotted  = r.balanceAllotted;
+        const used      = r.balanceUsed;
+        const remaining = r.balanceRemaining;
+
+        document.getElementById('historyViewBody').innerHTML = `
+            <div style="background:var(--primary-bg-light);border-radius:10px;padding:14px;margin-bottom:14px;">
+                <p class="text-sm font-semibold" style="color:var(--primary);">${empName} (${empId}) ${empType ? `<span class="badge badge-${empType.toLowerCase().replace(/\s+/g,'-')}">${empType}</span>` : ''}</p>
+                <p class="text-xs mt-1" style="color:var(--text-light);">${deptName}</p>
+            </div>
+
+            <div class="detail-row"><span class="detail-label">Leave Type</span><span class="detail-value"><span class="badge-custom">${leaveType}</span></span></div>
+            <div class="detail-row"><span class="detail-label">Status</span><span class="detail-value"><span class="status-pending text-xs px-2 py-1 rounded-full font-medium">Pending</span></span></div>
+            <div class="detail-row"><span class="detail-label">From</span><span class="detail-value">${fmtDate(from)}</span></div>
+            <div class="detail-row"><span class="detail-label">To</span><span class="detail-value">${fmtDate(to)}</span></div>
+            <div class="detail-row"><span class="detail-label">Total Days</span><span class="detail-value">${days}</span></div>
+            <div class="detail-row"><span class="detail-label">Reason</span><span class="detail-value" style="text-align:right;max-width:60%;">${reason}</span></div>
+            ${description ? `<div class="detail-row"><span class="detail-label">Description</span><span class="detail-value" style="text-align:right;max-width:60%;">${description}</span></div>` : ''}
+            ${allotted != null ? `<div class="detail-row"><span class="detail-label">Balance (Allot / Used / Left)</span><span class="detail-value">${allotted} / ${used ?? 0} / ${remaining ?? '—'}</span></div>` : ''}
+            <div class="detail-row"><span class="detail-label">Applied On</span><span class="detail-value">${fmtDate(addedOn)}</span></div>
+        `;
+
+        document.getElementById('historyViewModal').classList.add('active');
     }
 
     // =====================================================================
@@ -937,7 +1017,7 @@
         const status = document.getElementById('historyStatus').value;
         const year   = document.getElementById('historyYear').value;
         const search = document.getElementById('searchHistory').value.toLowerCase();
-        document.getElementById('historyTableBody').innerHTML = loadingRow(7);
+        document.getElementById('historyTableBody').innerHTML = loadingRow(8);
         document.getElementById('historyEmpty').style.display = 'none';
 
         let list;
@@ -955,7 +1035,7 @@
                 list = await apiOrFallback(`/leave/requests/history?${params}`, null);
                 if (list === null) return renderHistory();
             } catch (_) {
-                document.getElementById('historyTableBody').innerHTML = emptyRow(7, 'Failed to load history.');
+                document.getElementById('historyTableBody').innerHTML = emptyRow(8, 'Failed to load history.');
                 return;
             }
         }
@@ -988,8 +1068,61 @@
                 <td><span class="status-${sts} text-xs px-2 py-1 rounded-full font-medium">${sts.charAt(0).toUpperCase()+sts.slice(1)}</span></td>
                 <td class="text-sm" style="color:var(--text-light);">${actionBy}</td>
                 <td class="text-sm" style="color:var(--text-light);max-width:140px;">${remarks}</td>
+                <td>
+                    <button onclick="openHistoryView(${r.id})" class="btn-icon" title="View details"><i class="fas fa-eye"></i></button>
+                </td>
             </tr>`;
         }).join('');
+    }
+
+    // =====================================================================
+    //  3b. HISTORY VIEW DETAILS MODAL
+    // =====================================================================
+    function openHistoryView(id) {
+        const list = S._historyList || [];
+        const r = list.find(x => x.id == id);
+        if (!r) { showToast('Details not found.', 'error'); return; }
+
+        const empName   = r.empName   || r.employeeName || '—';
+        const empId     = r.empId     || r.employeeId   || '—';
+        const empType   = r.empType   || r.employeeType || '';
+        const deptName  = r.department|| r.dept || '—';
+        const leaveType = r.leaveType || '—';
+        const from      = r.fromDate  || r.from  || r.startDate;
+        const to        = r.toDate    || r.to    || from;
+        const days      = r.numberOfDays || r.days || 0;
+        const sts       = r.status    || 'pending';
+        const reason    = r.reason    || '—';
+        const description = r.description || '';
+        const actionBy  = r.actionBy  || '—';
+        const actionDate= r.actionDate;
+        const remarks   = r.remarks   || '—';
+        const addedOn   = r.addedOn;
+        const allotted  = r.balanceAllotted;
+        const used      = r.balanceUsed;
+        const remaining = r.balanceRemaining;
+
+        document.getElementById('historyViewBody').innerHTML = `
+            <div style="background:var(--primary-bg-light);border-radius:10px;padding:14px;margin-bottom:14px;">
+                <p class="text-sm font-semibold" style="color:var(--primary);">${empName} (${empId}) ${empType ? `<span class="badge badge-${empType.toLowerCase().replace(/\s+/g,'-')}">${empType}</span>` : ''}</p>
+                <p class="text-xs mt-1" style="color:var(--text-light);">${deptName}</p>
+            </div>
+
+            <div class="detail-row"><span class="detail-label">Leave Type</span><span class="detail-value"><span class="badge-custom">${leaveType}</span></span></div>
+            <div class="detail-row"><span class="detail-label">Status</span><span class="detail-value"><span class="status-${sts} text-xs px-2 py-1 rounded-full font-medium">${sts.charAt(0).toUpperCase()+sts.slice(1)}</span></span></div>
+            <div class="detail-row"><span class="detail-label">From</span><span class="detail-value">${fmtDate(from)}</span></div>
+            <div class="detail-row"><span class="detail-label">To</span><span class="detail-value">${fmtDate(to)}</span></div>
+            <div class="detail-row"><span class="detail-label">Total Days</span><span class="detail-value">${days}</span></div>
+            <div class="detail-row"><span class="detail-label">Reason</span><span class="detail-value" style="text-align:right;max-width:60%;">${reason}</span></div>
+            ${description ? `<div class="detail-row"><span class="detail-label">Description</span><span class="detail-value" style="text-align:right;max-width:60%;">${description}</span></div>` : ''}
+            ${allotted != null ? `<div class="detail-row"><span class="detail-label">Balance (Allot / Used / Left)</span><span class="detail-value">${allotted} / ${used ?? 0} / ${remaining ?? '—'}</span></div>` : ''}
+            <div class="detail-row"><span class="detail-label">Applied On</span><span class="detail-value">${fmtDate(addedOn)}</span></div>
+            <div class="detail-row"><span class="detail-label">Action By</span><span class="detail-value">${actionBy}</span></div>
+            <div class="detail-row"><span class="detail-label">Action Date</span><span class="detail-value">${actionDate ? fmtDate(actionDate) : '—'}</span></div>
+            <div class="detail-row"><span class="detail-label">Remarks</span><span class="detail-value" style="text-align:right;max-width:60%;">${remarks}</span></div>
+        `;
+
+        document.getElementById('historyViewModal').classList.add('active');
     }
 
     function exportHistory() {
@@ -1050,7 +1183,10 @@
             return;
         }
 
-        const firstBalance  = list[0].balances || {};
+        // const firstBalance  = list[0].balances || {};
+        // const leaveTypeKeys = Object.keys(firstBalance).length ? Object.keys(firstBalance) : S.leaveTypes;
+
+        const firstBalance  = (list.find(e => e.balances && Object.keys(e.balances).length > 0) || {}).balances || {};
         const leaveTypeKeys = Object.keys(firstBalance).length ? Object.keys(firstBalance) : S.leaveTypes;
 
         document.getElementById('balanceThead').innerHTML = `<tr class="border-b" style="border-color:var(--primary-soft);">
@@ -1062,19 +1198,32 @@
         document.getElementById('balanceTableBody').innerHTML = list.map(e => {
             const empName = e.empName || e.employeeName || '—';
             const empId   = e.empId   || e.employeeId   || '—';
-            const deptN   = e.dept    || e.department   || '—';
-            const empType = e.empType || e.employeeType || 'Regular';
+            const deptN   =  e.department   || '—';
+            const empType = e.empType || e.employeeType || '';
             const bal     = e.balances || {};
-            const totalAllot = leaveTypeKeys.reduce((s,lt)=>s+(bal[lt]?.allot||0),0);
-            const totalUsed  = leaveTypeKeys.reduce((s,lt)=>s+(bal[lt]?.used||0),0);
-            const rem        = totalAllot - totalUsed;
+
+            // const totalAllot = leaveTypeKeys.reduce((s,lt)=>s+(bal[lt]?.allot||0),0);
+            // const totalUsed  = leaveTypeKeys.reduce((s,lt)=>s+(bal[lt]?.used||0),0);
+            // const rem        = totalAllot - totalUsed;
+
+            // WITH (use precomputed fields from DTO — more accurate):
+const totalAllot = e.totalAllotted  ?? leaveTypeKeys.reduce((s,lt)=>s+(bal[lt]?.allot||0),0);
+const totalUsed  = e.totalUsed      ?? leaveTypeKeys.reduce((s,lt)=>s+(bal[lt]?.used||0),0);
+const rem        = e.totalRemaining ?? (totalAllot - totalUsed);
+
+
             const pct        = totalAllot ? Math.round(totalUsed/totalAllot*100) : 0;
             const fc         = pct > 70 ? '#dc3545' : pct > 40 ? '#ffc107' : '#2b7a3e';
             return `<tr class="border-b data-row" style="border-color:#e5e7eb;">
                 <td><p class="text-sm font-semibold" style="color:var(--primary);">${empName}</p><p class="text-xs" style="color:var(--text-light);">${empId}</p></td>
                 <td class="text-sm" style="color:var(--text-light);">${deptN}</td>
                 <td><span class="badge badge-${empType.toLowerCase()}">${empType}</span></td>
-                ${leaveTypeKeys.map(lt=>{ const b=bal[lt]; return `<td class="text-sm" style="color:var(--text-light);">${b?b.remaining+'/'+b.allot:'—'}</td>`; }).join('')}
+
+                ${leaveTypeKeys.map(lt => {
+    const b = bal[lt];
+    return `<td class="text-sm" style="color:var(--text-light);">${b != null ? b.remaining + '/' + b.allot : '—'}</td>`;
+}).join('')}
+                
                 <td class="text-sm" style="color:var(--text-light);">${totalUsed}</td>
                 <td class="text-sm font-semibold" style="color:${rem<5?'#dc3545':'#2b7a3e'};">${rem}</td>
                 <td class="w-28">
@@ -1327,7 +1476,7 @@
                 <div><label>${lt} (days/yr)</label>
                 <input type="number" id="rl-lt-${lt.replace(/\s+/g,'_')}" value="${(r.allotments||{})[lt]??0}" min="0"></div>`).join('');
         } else {
-            document.getElementById('rl-emptype').value = 'Regular';
+            document.getElementById('rl-emptype').value = 'Full-Time';
             document.getElementById('rl-dept').value    = 'All';
             document.getElementById('rl-leaveInputs').innerHTML = S.leaveTypes.map(lt=>`
                 <div><label>${lt} (days/yr)</label>

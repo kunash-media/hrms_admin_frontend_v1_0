@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SIEC</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --primary:          #1B738C;
+      --primary-light:    #62C9EA;
+      --primary-soft:     #BDE4EE;
+      --primary-bg-light: #e9f2f4;
+      --button-hover:     #166278;
+      --border-color:     #1B738C;
+      --text-dark:        #1B738C;
+      --text-light:       #5a7c8a;
+      --error:            #d93025;
+      --success:          #1e8e3e;
+      --surface:          #ffffff;
+      --bg:               #f0f6f8;
+      --border:           #c8e3ec;
+    }
+
+    html, body {
+      height: 100%;
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: #1a2e35;
+    }
+
+    /* ── Layout ── */
+    .page-wrap {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+    }
+
+    /* ── Left panel ── */
+    .left-panel {
+      background: var(--primary);
+      padding: 56px 52px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .left-panel::before {
+      content: '';
+      position: absolute;
+      width: 340px; height: 340px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(98,201,234,0.18);
+      top: -80px; right: -80px;
+    }
+    .left-panel::after {
+      content: '';
+      position: absolute;
+      width: 220px; height: 220px;
+      border-radius: 50%;
+      border: 1.5px solid rgba(98,201,234,0.12);
+      bottom: 60px; left: -60px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      animation: fadeUp 0.5s ease both;
+    }
+
+    .brand-mark {
+      width: 100px; height: 40px;
+      background: rgba(255,255,255,0.15);
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'DM Mono', monospace;
+      font-size: 14px; font-weight: 500;
+      color: white;
+      letter-spacing: 0.5px;
+    }
+
+    .brand-name {
+      font-size: 15px;
+      font-weight: 600;
+      color: rgba(255,255,255,0.95);
+      letter-spacing: 0.2px;
+    }
+
+    .panel-body { position: relative; z-index: 1; animation: fadeUp 0.55s 0.1s ease both; }
+
+    .panel-eyebrow {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 1.2px;
+      text-transform: uppercase;
+      color: var(--primary-light);
+      margin-bottom: 14px;
+    }
+
+    .panel-heading {
+      font-size: 30px;
+      font-weight: 700;
+      color: white;
+      line-height: 1.25;
+      margin-bottom: 18px;
+    }
+
+    .panel-heading span {
+      color: var(--primary-light);
+    }
+
+    .panel-desc {
+      font-size: 14px;
+      color: rgba(255,255,255,0.72);
+      line-height: 1.7;
+      max-width: 360px;
+      margin-bottom: 36px;
+    }
+
+    /* Steps indicator */
+    .steps {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .step {
+      display: flex;
+      align-items: flex-start;
+      gap: 14px;
+      animation: fadeUp 0.5s ease both;
+    }
+    .step:nth-child(1) { animation-delay: 0.2s; }
+    .step:nth-child(2) { animation-delay: 0.3s; }
+    .step:nth-child(3) { animation-delay: 0.4s; }
+
+    .step-num {
+      width: 26px; height: 26px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.12);
+      border: 1.5px solid rgba(98,201,234,0.5);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 11px; font-weight: 600;
+      color: var(--primary-light);
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+
+    .step-text strong {
+      display: block;
+      font-size: 13px;
+      font-weight: 600;
+      color: white;
+      margin-bottom: 2px;
+    }
+    .step-text span {
+      font-size: 12px;
+      color: rgba(255,255,255,0.56);
+      line-height: 1.5;
+    }
+
+    .panel-note {
+      font-size: 11.5px;
+      color: rgba(255,255,255,0.45);
+      line-height: 1.6;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      padding-top: 20px;
+      position: relative; z-index: 1;
+    }
+
+    /* ── Right panel ── */
+    .right-panel {
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 56px 52px;
+      overflow-y: auto;
+    }
+
+    .form-head {
+      margin-bottom: 32px;
+      animation: fadeUp 0.5s 0.1s ease both;
+    }
+
+    .form-head h2 {
+      font-size: 22px;
+      font-weight: 700;
+      color: #0f2027;
+      margin-bottom: 6px;
+    }
+
+    .form-head p {
+      font-size: 13.5px;
+      color: var(--text-light);
+      line-height: 1.6;
+    }
+
+    /* Warning banner */
+    .one-time-banner {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      background: #fff8e6;
+      border: 1px solid #f0c060;
+      border-radius: 10px;
+      padding: 12px 14px;
+      margin-bottom: 28px;
+      font-size: 12.5px;
+      color: #7a4f00;
+      line-height: 1.55;
+      animation: fadeUp 0.5s 0.15s ease both;
+    }
+
+    .one-time-banner i {
+      color: #e6a817;
+      margin-top: 1px;
+      flex-shrink: 0;
+    }
+
+    /* Form groups */
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 16px;
+      animation: fadeUp 0.5s 0.2s ease both;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      animation: fadeUp 0.5s ease both;
+    }
+    .form-group:nth-child(3) { animation-delay: 0.25s; }
+    .form-group:nth-child(4) { animation-delay: 0.3s; }
+
+    .form-group.full { grid-column: 1 / -1; }
+
+    .form-group label {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 6px;
+      letter-spacing: 0.02em;
+    }
+
+    .form-group label .req { color: var(--error); margin-left: 2px; }
+
+    .input-wrap {
+      position: relative;
+    }
+
+    .input-wrap i.icon {
+      position: absolute;
+      left: 13px; top: 50%; transform: translateY(-50%);
+      font-size: 13px;
+      color: #9bbfcb;
+      pointer-events: none;
+      transition: color 0.2s;
+    }
+
+    .input-wrap input {
+      width: 100%;
+      padding: 10px 12px 10px 36px;
+      border: 1.5px solid var(--border);
+      border-radius: 9px;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13.5px;
+      color: #0f2027;
+      background: #fafdfe;
+      transition: border-color 0.18s, box-shadow 0.18s, background 0.18s;
+      outline: none;
+    }
+
+    .input-wrap input::placeholder { color: #a8c8d4; }
+
+    .input-wrap input:focus {
+      border-color: var(--primary);
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(27,115,140,0.09);
+    }
+
+    .input-wrap input:focus + .input-wrap i.icon,
+    .input-wrap:focus-within i.icon {
+      color: var(--primary);
+    }
+
+    .input-wrap input.error {
+      border-color: var(--error);
+      box-shadow: 0 0 0 3px rgba(217,48,37,0.08);
+    }
+
+    /* Password toggle */
+    .pw-toggle {
+      position: absolute;
+      right: 13px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; cursor: pointer;
+      color: #9bbfcb;
+      font-size: 13px;
+      transition: color 0.15s;
+      padding: 0;
+    }
+    .pw-toggle:hover { color: var(--primary); }
+
+    .input-wrap input.has-toggle { padding-right: 38px; }
+
+    /* Field hint / error */
+    .field-msg {
+      font-size: 11.5px;
+      margin-top: 5px;
+      min-height: 16px;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    .field-msg.hint  { color: #7a9fad; }
+    .field-msg.err   { color: var(--error); }
+
+    /* Bottom form row */
+    .form-bottom {
+      margin-top: 4px;
+      animation: fadeUp 0.5s 0.32s ease both;
+    }
+
+    /* Submit button */
+    .btn-submit {
+      width: 100%;
+      padding: 12px 20px;
+      background: var(--primary);
+      color: white;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.2s, transform 0.15s, box-shadow 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      letter-spacing: 0.01em;
+      margin-bottom: 16px;
+    }
+
+    .btn-submit:hover:not(:disabled) {
+      background: var(--button-hover);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(27,115,140,0.22);
+    }
+
+    .btn-submit:active:not(:disabled) { transform: translateY(0); }
+
+    .btn-submit:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    /* Spinner inside button */
+    .spin {
+      display: inline-block;
+      width: 16px; height: 16px;
+      border: 2.5px solid rgba(255,255,255,0.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.65s linear infinite;
+    }
+
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    .terms-note {
+      font-size: 11.5px;
+      color: #9ab5bd;
+      text-align: center;
+      line-height: 1.55;
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 24px; right: 24px;
+      padding: 13px 20px;
+      border-radius: 10px;
+      font-size: 13.5px;
+      font-weight: 500;
+      color: white;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+      animation: slideToast 0.3s ease;
+      max-width: 360px;
+    }
+    .toast.success { background: var(--success); }
+    .toast.error   { background: var(--error); }
+
+    @keyframes slideToast {
+      from { transform: translateX(110%); opacity: 0; }
+      to   { transform: translateX(0);    opacity: 1; }
+    }
+
+    /* ── Success state ── */
+    .success-card {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      padding: 16px 0;
+      animation: fadeUp 0.4s ease both;
+    }
+
+    .success-card.show { display: flex; }
+
+    .success-icon {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: #e8f5e9;
+      display: flex; align-items: center; justify-content: center;
+      margin-bottom: 20px;
+    }
+
+    .success-icon i { font-size: 28px; color: var(--success); }
+
+    .success-card h3 {
+      font-size: 20px; font-weight: 700;
+      color: #0f2027; margin-bottom: 8px;
+    }
+
+    .success-card p {
+      font-size: 13.5px; color: var(--text-light);
+      line-height: 1.65; max-width: 320px; margin-bottom: 24px;
+    }
+
+    .success-creds {
+      background: var(--primary-bg-light);
+      border: 1px solid var(--primary-soft);
+      border-radius: 10px;
+      padding: 14px 20px;
+      width: 100%;
+      max-width: 320px;
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .success-creds p {
+      font-size: 12.5px;
+      color: var(--text-light);
+      margin-bottom: 6px;
+    }
+
+    .cred-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .cred-row .cred-label { font-size: 12px; color: #7a9fad; }
+    .cred-row .cred-val   { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--primary); font-weight: 500; }
+
+    .btn-login {
+      padding: 11px 32px;
+      background: var(--primary);
+      color: white;
+      font-family: 'DM Sans', sans-serif;
+      font-size: 13.5px;
+      font-weight: 600;
+      border: none;
+      border-radius: 9px;
+      cursor: pointer;
+      transition: background 0.2s;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+    }
+    .btn-login:hover { background: var(--button-hover); }
+
+    /* ── Animations ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(14px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── Responsive ── */
+    @media (max-width: 820px) {
+      .page-wrap { grid-template-columns: 1fr; }
+      .left-panel {
+        padding: 36px 28px;
+        min-height: auto;
+      }
+      .panel-heading { font-size: 22px; }
+      .right-panel { padding: 36px 24px; }
+    }
+
+    @media (max-width: 480px) {
+      .form-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="page-wrap">
+
+  <!-- ── LEFT PANEL ── -->
+  <div class="left-panel">
+    <!-- <div class="brand">
+      <div class="brand-mark">
+      </div>
+    </div> -->
+
+    <div class="panel-body">
+      <p class="panel-eyebrow">Initial Setup</p>
+      <h1 class="panel-heading">Create your<br><span>Super Admin</span><br>account.</h1>
+      <p class="panel-desc">
+        This is a one-time setup step. The credentials you create here will have full administrative control over the entire platform.
+      </p>
+
+      <div class="steps">
+        <div class="step">
+          <div class="step-num">1</div>
+          <div class="step-text">
+            <strong>Fill in your details</strong>
+            <span>Enter your name, mobile number and a secure password.</span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">2</div>
+          <div class="step-text">
+            <strong>Submit to register</strong>
+            <span>Your Super Admin account will be created instantly.</span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-num">3</div>
+          <div class="step-text">
+            <strong>Log in and configure</strong>
+            <span>Use your mobile &amp; password to access the admin dashboard.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <p class="panel-note">
+      <i class="fas fa-lock" style="margin-right:5px;opacity:0.5;"></i>
+      This endpoint is disabled after the first successful registration. Keep your credentials safe.
+    </p>
+  </div>
+
+  <!-- ── RIGHT PANEL ── -->
+  <div class="right-panel">
+
+    <!-- Form view -->
+    <div id="formView">
+      <div class="form-head">
+        <h2>Super Admin Registration</h2>
+        <p>Complete the form below to bootstrap your platform's admin account.</p>
+      </div>
+
+      <div class="one-time-banner">
+        <i class="fas fa-triangle-exclamation"></i>
+        <div>
+          <strong style="display:block;margin-bottom:2px;">One-time action</strong>
+          This registration can only be performed once. If an admin already exists, this page will return an error.
+        </div>
+      </div>
+
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="firstName">First Name <span class="req">*</span></label>
+          <div class="input-wrap">
+            <i class="fas fa-user icon"></i>
+            <input type="text" id="firstName" placeholder="e.g. Super" autocomplete="given-name">
+          </div>
+          <div class="field-msg hint" id="msg-firstName"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="lastName">Last Name <span class="req">*</span></label>
+          <div class="input-wrap">
+            <i class="fas fa-user icon"></i>
+            <input type="text" id="lastName" placeholder="e.g. Admin" autocomplete="family-name">
+          </div>
+          <div class="field-msg hint" id="msg-lastName"></div>
+        </div>
+      </div>
+
+      <div class="form-group full" style="margin-bottom:16px;animation:fadeUp 0.5s 0.25s ease both;">
+        <label for="mobile">Mobile Number <span class="req">*</span></label>
+        <div class="input-wrap">
+          <i class="fas fa-mobile-screen-button icon"></i>
+          <input type="tel" id="mobile" placeholder="10-digit mobile number" maxlength="10" autocomplete="tel">
+        </div>
+        <div class="field-msg hint" id="msg-mobile">Used as your login ID — cannot be changed later.</div>
+      </div>
+
+      <div class="form-group full" style="margin-bottom:4px;animation:fadeUp 0.5s 0.3s ease both;">
+        <label for="password">Password <span class="req">*</span></label>
+        <div class="input-wrap">
+          <i class="fas fa-lock icon"></i>
+          <input type="password" id="password" placeholder="Minimum 6 characters" class="has-toggle" autocomplete="new-password">
+          <button class="pw-toggle" onclick="togglePw('password','eyePassword')" tabindex="-1" type="button">
+            <i class="fas fa-eye" id="eyePassword"></i>
+          </button>
+        </div>
+        <div class="field-msg hint" id="msg-password">Choose a strong password you'll remember.</div>
+      </div>
+
+      <!-- Password strength bar -->
+      <div style="margin-bottom:20px;animation:fadeUp 0.5s 0.32s ease both;">
+        <div style="height:3px;background:#e0ecf0;border-radius:4px;overflow:hidden;margin-top:8px;">
+          <div id="pwStrengthBar" style="height:100%;width:0;border-radius:4px;transition:width 0.3s,background 0.3s;"></div>
+        </div>
+        <p id="pwStrengthLabel" style="font-size:11px;color:#9ab5bd;margin-top:4px;"></p>
+      </div>
+
+      <div class="form-bottom">
+        <button class="btn-submit" id="submitBtn" onclick="handleSubmit()">
+          <i class="fas fa-shield-halved"></i>
+          Create Super Admin Account
+        </button>
+        <p class="terms-note">By registering, you confirm you are the authorised system administrator for this deployment.</p>
+      </div>
+    </div>
+
+    <!-- Success view -->
+    <div class="success-card" id="successView">
+      <div class="success-icon"><i class="fas fa-check"></i></div>
+      <h3>Account Created!</h3>
+      <p>Your Super Admin account has been successfully registered. You can now log in using your mobile number and password.</p>
+
+      <div class="success-creds">
+        <p style="font-weight:600;color:var(--primary);margin-bottom:10px;font-size:13px;">Your Login Credentials</p>
+        <div class="cred-row">
+          <span class="cred-label">Mobile</span>
+          <span class="cred-val" id="credMobile">—</span>
+        </div>
+        <div class="cred-row">
+          <span class="cred-label">Password</span>
+          <span class="cred-val">••••••••</span>
+        </div>
+        <div class="cred-row">
+          <span class="cred-label">Role</span>
+          <span class="cred-val">Super Admin</span>
+        </div>
+      </div>
+
+      <a href="/login.html" class="btn-login">
+        <i class="fas fa-arrow-right-to-bracket"></i>
+        Go to Login
+      </a>
+    </div>
+
+  </div><!-- /right-panel -->
+</div>
+
+<script>
+  const BASE_URL = 'https://siec-api.siecwater.com';
+
+  /* ── Password visibility toggle ── */
+  function togglePw(inputId, iconId) {
+    const input = document.getElementById(inputId);
+    const icon  = document.getElementById(iconId);
+    const show  = input.type === 'password';
+    input.type  = show ? 'text' : 'password';
+    icon.className = show ? 'fas fa-eye-slash' : 'fas fa-eye';
+  }
+
+  /* ── Password strength ── */
+  document.getElementById('password').addEventListener('input', function() {
+    const v   = this.value;
+    const bar = document.getElementById('pwStrengthBar');
+    const lbl = document.getElementById('pwStrengthLabel');
+    let score = 0, label = '', color = '';
+    if (v.length >= 6)  score++;
+    if (v.length >= 10) score++;
+    if (/[A-Z]/.test(v)) score++;
+    if (/[0-9]/.test(v)) score++;
+    if (/[^A-Za-z0-9]/.test(v)) score++;
+    if (!v) { bar.style.width='0'; lbl.textContent=''; return; }
+    if (score <= 1) { label='Weak';   color='#d93025'; }
+    else if (score === 2) { label='Fair';   color='#f29900'; }
+    else if (score === 3) { label='Good';   color='#1B738C'; }
+    else                  { label='Strong'; color='#1e8e3e'; }
+    bar.style.width      = (score/5*100)+'%';
+    bar.style.background = color;
+    lbl.textContent      = label;
+    lbl.style.color      = color;
+  });
+
+  /* ── Validation ── */
+  function setMsg(id, msg, type='hint') {
+    const el = document.getElementById('msg-'+id);
+    if (!el) return;
+    el.className = 'field-msg ' + type;
+    el.innerHTML = msg ? (type==='err'?'<i class="fas fa-circle-exclamation" style="font-size:10px;"></i> ':'')+msg : '';
+  }
+
+  function clearErrors() {
+    ['firstName','lastName','mobile','password'].forEach(id => {
+      const input = document.getElementById(id);
+      if (input) input.classList.remove('error');
+      const msgs = { firstName:'', lastName:'', mobile:'Used as your login ID — cannot be changed later.', password:'Choose a strong password you\'ll remember.' };
+      setMsg(id, msgs[id]||'', 'hint');
+    });
+  }
+
+  function validate() {
+    let ok = true;
+    const fn = document.getElementById('firstName').value.trim();
+    const ln = document.getElementById('lastName').value.trim();
+    const mo = document.getElementById('mobile').value.trim();
+    const pw = document.getElementById('password').value;
+
+    if (!fn) {
+      document.getElementById('firstName').classList.add('error');
+      setMsg('firstName','First name is required.','err');
+      ok = false;
+    }
+    if (!ln) {
+      document.getElementById('lastName').classList.add('error');
+      setMsg('lastName','Last name is required.','err');
+      ok = false;
+    }
+    if (!mo || !/^\d{10}$/.test(mo)) {
+      document.getElementById('mobile').classList.add('error');
+      setMsg('mobile','Enter a valid 10-digit mobile number.','err');
+      ok = false;
+    }
+    if (!pw || pw.length < 6) {
+      document.getElementById('password').classList.add('error');
+      setMsg('password','Password must be at least 6 characters.','err');
+      ok = false;
+    }
+    return ok;
+  }
+
+  /* ── Toast ── */
+  function showToast(msg, type='success') {
+    const t = document.createElement('div');
+    t.className = 'toast ' + type;
+    t.innerHTML = `<i class="fas fa-${type==='success'?'check-circle':'circle-xmark'}"></i> ${msg}`;
+    document.body.appendChild(t);
+    setTimeout(() => {
+      t.style.transition = 'opacity 0.3s';
+      t.style.opacity = '0';
+      setTimeout(() => t.remove(), 300);
+    }, 3500);
+  }
+
+  /* ── Submit ── */
+  async function handleSubmit() {
+    clearErrors();
+    if (!validate()) return;
+
+    const btn = document.getElementById('submitBtn');
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spin"></span> Creating account…';
+
+    const payload = {
+      mobile:    document.getElementById('mobile').value.trim(),
+      password:  document.getElementById('password').value,
+      firstName: document.getElementById('firstName').value.trim(),
+      lastName:  document.getElementById('lastName').value.trim(),
+    };
+
+    try {
+      const res  = await fetch(BASE_URL + '/api/admin/bootstrap', {
+        method:  'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body:    JSON.stringify(payload),
+      });
+      const json = await res.json();
+
+      if (res.ok && (json.success !== false)) {
+        // Show success view
+        document.getElementById('credMobile').textContent = payload.mobile;
+        document.getElementById('formView').style.display    = 'none';
+        document.getElementById('successView').classList.add('show');
+        showToast('Super Admin account created successfully!', 'success');
+      } else {
+        const msg = json.message || json.error || 'Registration failed. Please try again.';
+        showToast(msg, 'error');
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-shield-halved"></i> Create Super Admin Account';
+      }
+    } catch (err) {
+      showToast('Network error — check your connection and try again.', 'error');
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-shield-halved"></i> Create Super Admin Account';
+    }
+  }
+
+  /* ── Enter key support ── */
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter') handleSubmit();
+  });
+
+  /* ── Clear field errors on input ── */
+  ['firstName','lastName','mobile','password'].forEach(id => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.addEventListener('input', function() {
+      this.classList.remove('error');
+    });
+  });
+
+  /* ── Mobile: digits only ── */
+  document.getElementById('mobile').addEventListener('input', function() {
+    this.value = this.value.replace(/\D/g,'').slice(0,10);
+  });
+</script>
+</body>
+</html>

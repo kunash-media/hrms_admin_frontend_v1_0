@@ -238,7 +238,7 @@
         input[type="month"]::-webkit-calendar-picker-indicator { cursor: pointer; opacity: 0.6; filter: invert(30%) sepia(80%) saturate(400%) hue-rotate(160deg); }
         input[type="month"]::-webkit-calendar-picker-indicator:hover { opacity: 1; }
 
-        /* ── Attendance preview card (NEW) ── */
+        /* ── Attendance preview card ── */
         .attendance-preview {
             display: none;
             background: #f0f9fc;
@@ -267,7 +267,7 @@
         .att-pill.paid .att-val { color: #16a34a; }
         .att-pill.exp .att-val  { color: #0e6fa8; }
 
-        /* ── LOP warning banner (NEW) ── */
+        /* ── LOP warning banner ── */
         .lop-warning {
             display: none;
             background: #fff8e6;
@@ -281,6 +281,32 @@
             gap: 8px;
         }
         .lop-warning.show { display: flex; }
+
+        /* ── Derived breakdown fields (NEW) ── */
+        .derived-field input[readonly] {
+            background: #eef7fa;
+            color: #1B738C;
+            font-weight: 600;
+            border: 1px solid #aee0f0;
+        }
+        .derived-note {
+            font-size: 10.5px;
+            color: #8aa9b3;
+            font-weight: 400;
+        }
+
+        /* ── CTC / Net highlight bar (NEW) ── */
+        .highlight-stat {
+            background: white;
+            border: 1.5px solid #b8e4f0;
+            border-radius: 10px;
+            padding: 12px 16px;
+            text-align: center;
+        }
+        .highlight-stat .hs-label { font-size: 11px; color: #5a7c8a; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+        .highlight-stat .hs-value { font-size: 21px; font-weight: 800; margin-top: 4px; }
+        .highlight-stat.net .hs-value { color: #16a34a; }
+        .highlight-stat.ctc .hs-value { color: #1B738C; }
 
         @media (max-width: 768px) {
             .section-card { padding: 16px; }
@@ -379,7 +405,7 @@
                     </span>
                 </div>
 
-                <!-- ── ATTENDANCE PREVIEW (NEW) ── -->
+                <!-- ── ATTENDANCE PREVIEW ── -->
                 <div id="attendancePreview" class="attendance-preview">
                     <div class="flex items-center justify-between">
                         <p class="text-xs font-bold text-[var(--primary)] uppercase tracking-wider">
@@ -395,47 +421,89 @@
                     </div>
                 </div>
 
-                <!-- ── LOP WARNING (NEW) ── -->
+                <!-- ── LOP WARNING ── -->
                 <div id="lopWarning" class="lop-warning">
                     <i class="fas fa-exclamation-triangle text-yellow-600"></i>
                     <span id="lopWarningText"></span>
                 </div>
 
                 <!-- Earnings Section -->
+                <!-- Earnings Section -->
                 <div class="text-xs font-bold tracking-widest uppercase text-gray-400 mb-3 mt-2">Earnings</div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div class="form-group">
-                        <label class="text-xs font-semibold text-[var(--primary)]">Basic Salary (BASIC) <span class="text-red-600">*</span></label>
+                        <label class="text-xs font-semibold text-[var(--primary)]">Basic Pay <span class="text-red-600">*</span></label>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₹</span>
                             <input type="number" id="basicSalary" placeholder="0.00"
                                    class="pl-8 w-full px-4 py-2.5 border border-[#62C9EA] rounded-lg text-sm">
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="text-xs font-semibold text-[var(--primary)]">HRA – House Rent Allowance</label>
-                        <div class="relative">
-                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₹</span>
-                            <input type="number" id="hraAmount" placeholder="0.00"
-                                   class="pl-8 w-full px-4 py-2.5 border border-[#62C9EA] rounded-lg text-sm">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="text-xs font-semibold text-[var(--primary)]">Allowances</label>
-                        <div class="relative">
-                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₹</span>
-                            <input type="number" id="allowancesAmt" placeholder="0.00"
-                                   class="pl-8 w-full px-4 py-2.5 border border-[#62C9EA] rounded-lg text-sm">
-                        </div>
+                        <span class="derived-note mt-1">The anchor figure — all components below are auto-derived from this</span>
                     </div>
                     <div class="form-group">
                         <label class="text-xs font-semibold text-[var(--primary)]">Gross Salary
-                            <span class="font-normal text-gray-400">(Basic + HRA + Allowances)</span>
+                            <span class="font-normal text-gray-400">(reconciles to Basic Pay)</span>
                         </label>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₹</span>
-                            <input type="number" id="grossSalary" placeholder="0.00" readonly
+                            <input type="number" id="grossSalary" placeholder="0.00"
                                    class="pl-8 font-semibold w-full px-4 py-2.5 rounded-lg text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Expense Reimbursement (NEW) -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
+                    <div class="form-group">
+                        <label class="text-xs font-semibold text-[var(--primary)]">
+                            Expense Reimbursement
+                            <span id="expenseAutoBadge" class="hidden text-[10px] font-normal text-blue-500">
+                                <i class="fas fa-bolt"></i> auto-fetched, editable
+                            </span>
+                        </label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₹</span>
+                            <input type="number" id="expenseReimbursementAmt" placeholder="0.00"
+                                   class="pl-8 w-full px-4 py-2.5 border border-[#62C9EA] rounded-lg text-sm">
+                        </div>
+                        <span class="derived-note mt-1" id="expenseClaimsNote"></span>
+                    </div>
+                </div>
+
+
+                <!-- Derived breakdown (NEW) -->
+                <div class="text-xs font-bold tracking-widest uppercase text-gray-400 mb-3 mt-6">Auto-Calculated Breakdown</div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <div class="form-group derived-field">
+                        <label class="text-xs font-semibold text-[var(--primary)]">Basic <span class="derived-note">(60% of Basic Pay)</span></label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₹</span>
+                            <input type="number" id="basicComponent" placeholder="0.00" 
+                                   class="pl-8 w-full px-4 py-2.5 rounded-lg text-sm">
+                        </div>
+                    </div>
+                    <div class="form-group derived-field">
+                        <label class="text-xs font-semibold text-[var(--primary)]">HRA <span class="derived-note">(40% of Basic)</span></label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₹</span>
+                            <input type="number" id="hraAmount" placeholder="0.00" 
+                                   class="pl-8 w-full px-4 py-2.5 rounded-lg text-sm">
+                        </div>
+                    </div>
+                    <div class="form-group derived-field">
+                        <label class="text-xs font-semibold text-[var(--primary)]">DA <span class="derived-note">(15% of Basic)</span></label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₹</span>
+                            <input type="number" id="daAmount" placeholder="0.00" 
+                                   class="pl-8 w-full px-4 py-2.5 rounded-lg text-sm">
+                        </div>
+                    </div>
+                    <div class="form-group derived-field">
+                        <label class="text-xs font-semibold text-[var(--primary)]">Special Allowance <span class="derived-note">(balancing figure)</span></label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₹</span>
+                            <input type="number" id="specialAllowanceAmt" placeholder="0.00" 
+                                   class="pl-8 w-full px-4 py-2.5 rounded-lg text-sm">
                         </div>
                     </div>
                 </div>
@@ -445,7 +513,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
                     <div class="form-group">
                         <label class="text-xs font-semibold text-[var(--primary)]">
-                            Employee PF <span class="font-normal text-gray-400">(12% of Basic)</span>
+                            Employee PF
                         </label>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₹</span>
@@ -455,43 +523,50 @@
                     </div>
                     <div class="form-group">
                         <label class="text-xs font-semibold text-[var(--primary)]">
-                            Employer PF <span class="font-normal text-gray-400">(12% of Basic)</span>
+                            Employer PF
                         </label>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₹</span>
-                            <input type="number" id="employerPf" placeholder="0.00"
+                            <input type="number"  id="employerPf" placeholder="0.00"
                                    class="pl-8 w-full px-4 py-2.5 border border-[#62C9EA] rounded-lg text-sm">
                         </div>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-                    <div class="form-group">
-                        <label class="text-xs font-semibold text-[var(--primary)]">Employee State Insurance (ESI)</label>
+                    <div class="form-group derived-field">
+                        <label class="text-xs font-semibold text-[var(--primary)]">ESIC <span class="derived-note">(0.75% if Basic Pay &lt; ₹21,000)</span></label>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₹</span>
-                            <input type="number" id="esiAmount" placeholder="0.00"
-                                   class="pl-8 w-full px-4 py-2.5 border border-[#62C9EA] rounded-lg text-sm">
+                            <input type="number" id="esiAmount" placeholder="0.00" readonly
+                                   class="pl-8 w-full px-4 py-2.5 rounded-lg text-sm">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label class="text-xs font-semibold text-[var(--primary)]">Tax Deducted at Source (TDS)</label>
+                    <div class="form-group derived-field">
+                        <label class="text-xs font-semibold text-[var(--primary)]">Professional Tax (PT) <span class="derived-note">(fixed)</span></label>
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₹</span>
-                            <input type="number" id="tdsAmount" placeholder="0.00"
-                                   class="pl-8 w-full px-4 py-2.5 border border-[#62C9EA] rounded-lg text-sm">
+                            <input type="number" id="ptAmount" placeholder="0.00" readonly
+                                   class="pl-8 w-full px-4 py-2.5 rounded-lg text-sm">
                         </div>
                     </div>
                 </div>
 
-                <!-- ── ESTIMATED NET PREVIEW (NEW) ── -->
+                <!-- ── ESTIMATED NET / CTC PREVIEW ── -->
                 <div id="netPreviewBar" class="hidden mt-6 bg-[#EBF4F6] border border-[#b8e4f0] rounded-10px p-4 rounded-xl">
-                    <div class="flex flex-wrap items-center justify-between gap-4">
-                        <div class="text-xs text-gray-500 font-medium">Estimated Net Pay
-                            <span class="text-[10px] text-gray-400 ml-1">(after LOP deduction &amp; expense reimbursement — computed server-side)</span>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+                        <div class="highlight-stat net">
+                            <div class="hs-label">Estimated Net Pay</div>
+                            <div class="hs-value" id="netPreviewAmt">₹0</div>
                         </div>
-                        <div class="text-lg font-bold text-[var(--primary)]" id="netPreviewAmt">₹0</div>
+                        <div class="highlight-stat ctc">
+                            <div class="hs-label">Cost to Company (CTC)</div>
+                            <div class="hs-value" id="ctcPreviewAmt">₹0</div>
+                        </div>
                     </div>
-                    <div class="grid grid-cols-3 gap-3 mt-3 text-xs text-center">
+                    <div class="text-[10px] text-gray-400 text-center mb-3">
+                        Net Pay shown here is before LOP deduction &amp; expense reimbursement — those are computed server-side.
+                    </div>
+                    <div class="grid grid-cols-3 gap-3 text-xs text-center">
                         <div class="bg-white rounded-lg p-2 border border-[#d4edf5]">
                             <div class="font-bold text-[var(--primary)]" id="previewGross">₹0</div>
                             <div class="text-gray-400 mt-0.5">Gross (est.)</div>
@@ -566,12 +641,16 @@
                                 <th>Department</th>
                                 <th>Basic</th>
                                 <th>HRA</th>
-                                <th>Allowances</th>
+                                <th>DA</th>
+                                <th>Special Allow.</th>
                                 <th>Gross</th>
                                 <th class="text-orange-600">LOP Deduction</th>
+                                <th>ESIC</th>
+                                <th>PT</th>
                                 <th>Deductions</th>
                                 <th>Expense Reimb.</th>
                                 <th>Net Salary</th>
+                                <th>CTC</th>
                             </tr>
                         </thead>
                         <tbody id="salaryList"></tbody>
@@ -606,6 +685,14 @@ const MONTH_ENUM = {
     '1':'JANUARY','2':'FEBRUARY','3':'MARCH','4':'APRIL','5':'MAY','6':'JUNE',
     '7':'JULY','8':'AUGUST','9':'SEPTEMBER','10':'OCTOBER','11':'NOVEMBER','12':'DECEMBER'
 };
+
+// ── Indian payroll breakdown constants (mirrors backend PayrollServiceImpl) ──
+const BASIC_COMPONENT_RATE = 0.60;
+const HRA_RATE_OF_BASIC     = 0.40;
+const DA_RATE_OF_BASIC      = 0.15;
+const ESIC_RATE             = 0.0075;
+const ESIC_THRESHOLD        = 21000;
+const PT_FIXED_AMOUNT       = 200;
 
 let employeeCache = {};
 let formOpen      = false;
@@ -718,12 +805,16 @@ async function loadSalaryList(month, year, dept) {
                     <td><span class="badge">${r.department || '—'}</span></td>
                     <td>${formatINR(r.basicSalary)}</td>
                     <td>${formatINR(r.hra)}</td>
-                    <td>${formatINR(r.allowances)}</td>
+                    <td>${formatINR(r.da)}</td>
+                    <td>${formatINR(r.specialAllowance)}</td>
                     <td class="font-semibold">${formatINR(r.grossSalary)}</td>
                     <td>${lopHtml}</td>
+                    <td>${formatINR(r.esi)}</td>
+                    <td>${formatINR(r.pt)}</td>
                     <td class="text-red-600">${formatINR(r.totalDeductions)}</td>
                     <td>${expHtml}</td>
                     <td class="font-bold text-green-600">${formatINR(r.netSalary)}</td>
+                    <td class="font-semibold text-[var(--primary)]">${formatINR(r.ctc)}</td>
                 </tr>`;
             }).join('');
         } else {
@@ -783,17 +874,14 @@ function resetForm() {
     document.getElementById('attendancePreview').classList.remove('show');
     document.getElementById('lopWarning').classList.remove('show');
     document.getElementById('netPreviewBar').classList.add('hidden');
-    ['basicSalary','hraAmount','allowancesAmt','grossSalary',
-     'employeePf','employerPf','esiAmount','tdsAmount'].forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.value = '';
-    });
+
+    resetFieldsOnly();
     employeeCache   = {};
-    attSummaryCache = {};
+    // attSummaryCache = {};
 }
 
 // ─────────────────────────────────────────────────────────────────
-// ON EMPLOYEE SELECT — prefill + fetch attendance preview (NEW)
+// ON EMPLOYEE SELECT — prefill + fetch attendance preview
 // ─────────────────────────────────────────────────────────────────
 async function onEmployeeSelect() {
     const empId   = document.getElementById('initiateEmployee').value;
@@ -819,28 +907,61 @@ async function onEmployeeSelect() {
     metaRow.classList.remove('hidden');
     metaRow.classList.add('flex');
 
-    // Pre-fill salary fields
-    const basic      = emp.basicSalary || 0;
-    const hra        = Math.round(basic * 0.5);
-    const employeePf = Math.round(basic * 0.12);
-    const employerPf = Math.round(basic * 0.12);
+    // Pre-fill Basic Pay from employee record (HR can still override)
+    const basicPay = emp.basicSalary || 0;
+    document.getElementById('basicSalary').value = basicPay;
 
-    document.getElementById('basicSalary').value   = basic;
-    document.getElementById('hraAmount').value     = hra;
-    document.getElementById('allowancesAmt').value = '';
-    document.getElementById('grossSalary').value   = basic + hra;
-    document.getElementById('employeePf').value    = employeePf;
-    document.getElementById('employerPf').value    = employerPf;
-    document.getElementById('esiAmount').value     = '';
-    document.getElementById('tdsAmount').value     = '';
+    // employeePf / employerPf remain manual HR-entered fixed values — default empty
+    document.getElementById('employeePf').value = '';
+    document.getElementById('employerPf').value = '';
 
-    // Fetch attendance preview for selected month
-    await fetchAttendancePreview(emp);
+    recalcBreakdown();
+
+   // Fetch attendance + expense preview for selected month
+    await Promise.all([
+        fetchAttendancePreview(emp),
+        fetchExpensePreview(emp)
+    ]);
     updateNetPreview();
 }
 
 // ─────────────────────────────────────────────────────────────────
-// FETCH ATTENDANCE PREVIEW  (NEW)
+// DERIVED BREAKDOWN — mirrors backend applyEarningsAndDeductions()
+// basicComponent = basicPay * 60%
+// hra            = basicComponent * 40%
+// da             = basicComponent * 15%
+// specialAllowance = basicPay - (basicComponent + hra + da)
+// esic           = basicPay < 21000 ? basicPay * 0.75% : 0
+// pt             = fixed 200
+// ─────────────────────────────────────────────────────────────────
+function recalcBreakdown() {
+    const basicPay = parseFloat(document.getElementById('basicSalary').value) || 0;
+
+    const basicComponent   = basicPay * BASIC_COMPONENT_RATE;
+    const hra               = basicComponent * HRA_RATE_OF_BASIC;
+    const da                 = basicComponent * DA_RATE_OF_BASIC;
+    const specialAllowance   = basicPay - (basicComponent + hra + da);
+    const gross               = basicComponent + hra + da + specialAllowance;
+    const esic                 = basicPay > 0 && basicPay < ESIC_THRESHOLD ? basicPay * ESIC_RATE : 0;
+    const pt                    = basicPay > 0 ? PT_FIXED_AMOUNT : 0;
+
+    document.getElementById('basicComponent').value      = basicPay ? round2(basicComponent) : '';
+    document.getElementById('hraAmount').value             = basicPay ? round2(hra) : '';
+    document.getElementById('daAmount').value               = basicPay ? round2(da) : '';
+    document.getElementById('specialAllowanceAmt').value     = basicPay ? round2(specialAllowance) : '';
+    document.getElementById('grossSalary').value             = basicPay ? round2(gross) : '';
+    document.getElementById('esiAmount').value               = basicPay ? round2(esic) : '';
+    document.getElementById('ptAmount').value                 = basicPay ? pt : '';
+
+    // document.getElementById('expenseReimbursementAmt')?.addEventListener('input', updateNetPreview);
+}
+
+function round2(n) {
+    return Math.round(n * 100) / 100;
+}
+
+// ─────────────────────────────────────────────────────────────────
+// FETCH ATTENDANCE PREVIEW
 // Calls /api/attendance/summary/{employeePrimeId}?month=YYYY-MM
 // ─────────────────────────────────────────────────────────────────
 async function fetchAttendancePreview(emp) {
@@ -858,6 +979,8 @@ async function fetchAttendancePreview(emp) {
     attMonth.textContent = `— ${label}`;
     grid.innerHTML = '';
 
+    let present = 0, paidLeave = 0, absent = 0, late = 0, payable = 0, totalDays = 26;
+
     try {
         const res  = await fetch(
             `${BASE_ATT_URL}/attendance/summary/${emp.employeePrimeId}?month=${monthStr}`,
@@ -865,150 +988,213 @@ async function fetchAttendancePreview(emp) {
         );
         const data = await res.json();
 
-        spinner.classList.add('hidden');
-
-        const present    = (data.daysWorkedPresent   || 0);
-        const paidLeave  = (data.paidLeaveWeeklyOff  || 0);
-        const absent     = (data.unpaidLeave          || 0);
-        const late       = (data.lateDays             || 0);
-        const payable    = (data.payableDays          || 0);
-        const totalDays  = (data.totalWorkingDays     || 26);
-
-        // Cache for net preview estimate
-        attSummaryCache[emp.employeeId] = { absent, totalDays };
-
-        // Show LOP warning if absences exist
-        const lopWarn = document.getElementById('lopWarning');
-        if (absent > 0) {
-            document.getElementById('lopWarningText').textContent =
-                `${absent} absent day(s) detected — LOP deduction will be auto-computed server-side.`;
-            lopWarn.classList.add('show');
-        } else {
-            lopWarn.classList.remove('show');
-        }
-
-        grid.innerHTML = `
-            <div class="att-pill">
-                <div class="att-val">${present}</div>
-                <div class="att-lbl">Present</div>
-            </div>
-            <div class="att-pill">
-                <div class="att-val">${late}</div>
-                <div class="att-lbl">Late</div>
-            </div>
-            <div class="att-pill paid">
-                <div class="att-val">${paidLeave}</div>
-                <div class="att-lbl">Paid Leave</div>
-            </div>
-            <div class="att-pill lop">
-                <div class="att-val">${absent}</div>
-                <div class="att-lbl">Absent / LOP</div>
-            </div>
-            <div class="att-pill">
-                <div class="att-val">${payable}</div>
-                <div class="att-lbl">Payable Days</div>
-            </div>
-            <div class="att-pill">
-                <div class="att-val">${totalDays}</div>
-                <div class="att-lbl">Working Days</div>
-            </div>`;
-
+        present   = data.daysWorkedPresent  || 0;
+        paidLeave = data.paidLeaveWeeklyOff  || 0;
+        absent    = data.unpaidLeave         || 0;
+        late      = data.lateDays            || 0;
+        payable   = data.payableDays         || 0;
+        totalDays = data.totalWorkingDays    || 26;
     } catch (err) {
-        spinner.classList.add('hidden');
-        grid.innerHTML = `<p class="text-xs text-gray-400 col-span-full py-2">
-            <i class="fas fa-info-circle mr-1"></i>
-            Attendance data not available for this month — LOP will still be computed server-side.
-        </p>`;
         console.warn('Attendance preview failed:', err);
+        showToast('Attendance not found — defaults loaded, please adjust manually.', 'info');
+    }
+
+    spinner.classList.add('hidden');
+    renderAttendanceGrid({ present, late, paidLeave, absent, payable, totalDays });
+}
+
+// Renders editable attendance pills and wires up live recalculation
+function renderAttendanceGrid({ present, late, paidLeave, absent, payable, totalDays }) {
+    const grid = document.getElementById('attGrid');
+
+    const pill = (id, val, label, extraCls = '') => `
+        <div class="att-pill ${extraCls}">
+            <input type="number" id="${id}" value="${val}" min="0"
+                   class="att-val w-full text-center bg-transparent border-0 p-0 focus:ring-0"
+                   style="font-size:18px;font-weight:800;">
+            <div class="att-lbl">${label}</div>
+        </div>`;
+
+    grid.innerHTML =
+        pill('attPresent',   present,   'Present') +
+        pill('attLate',      late,      'Late') +
+        pill('attPaidLeave', paidLeave, 'Paid Leave', 'paid') +
+        pill('attAbsent',    absent,    'Absent / LOP', 'lop') +
+        pill('attPayable',   payable,   'Payable Days') +
+        pill('attTotalDays', totalDays, 'Working Days');
+
+    ['attPresent','attLate','attPaidLeave','attAbsent','attPayable','attTotalDays'].forEach(id => {
+        document.getElementById(id).addEventListener('input', onAttendanceFieldChange);
+    });
+
+    updateLopWarning();
+}
+
+// Re-validates + recalculates whenever HR manually edits any attendance number
+function onAttendanceFieldChange() {
+    updateLopWarning();
+    updateNetPreview();
+}
+
+function updateLopWarning() {
+    const absent = parseInt(document.getElementById('attAbsent')?.value, 10) || 0;
+    const lopWarn = document.getElementById('lopWarning');
+    if (absent > 0) {
+        document.getElementById('lopWarningText').textContent =
+            `${absent} absent day(s) — LOP deduction will be recalculated based on the working days you've set below.`;
+        lopWarn.classList.add('show');
+    } else {
+        lopWarn.classList.remove('show');
     }
 }
 
+function getAttendanceValues() {
+    return {
+        present:   parseInt(document.getElementById('attPresent')?.value, 10)   || 0,
+        late:      parseInt(document.getElementById('attLate')?.value, 10)      || 0,
+        paidLeave: parseInt(document.getElementById('attPaidLeave')?.value, 10) || 0,
+        absent:    parseInt(document.getElementById('attAbsent')?.value, 10)    || 0,
+        payable:   parseInt(document.getElementById('attPayable')?.value, 10)   || 0,
+        totalDays: parseInt(document.getElementById('attTotalDays')?.value, 10) || 26
+    };
+}
+
+
+
 // ─────────────────────────────────────────────────────────────────
-// NET PREVIEW (client-side estimate only — actual computed server-side)
+// NET / CTC PREVIEW (client-side estimate only — actual computed server-side)
 // ─────────────────────────────────────────────────────────────────
 function updateNetPreview() {
-    const basic      = parseFloat(document.getElementById('basicSalary').value)   || 0;
-    const hra        = parseFloat(document.getElementById('hraAmount').value)      || 0;
-    const allowances = parseFloat(document.getElementById('allowancesAmt').value)  || 0;
-    const empPf      = parseFloat(document.getElementById('employeePf').value)     || 0;
-    const esi        = parseFloat(document.getElementById('esiAmount').value)      || 0;
-    const tds        = parseFloat(document.getElementById('tdsAmount').value)      || 0;
+    const basicPay   = parseFloat(document.getElementById('basicSalary').value) || 0;
+    const gross      = parseFloat(document.getElementById('grossSalary').value) || 0;
+    const empPf      = parseFloat(document.getElementById('employeePf').value)  || 0;
+    const employerPf = parseFloat(document.getElementById('employerPf').value)  || 0;
+    const esic       = parseFloat(document.getElementById('esiAmount').value)   || 0;
+    const pt         = parseFloat(document.getElementById('ptAmount').value)    || 0;
+    const expenseReimb = parseFloat(document.getElementById('expenseReimbursementAmt').value) || 0;
 
-    if (basic === 0) return;
+    if (basicPay === 0) return;
 
-    const gross       = basic + hra + allowances;
-    const deductions  = empPf + esi + tds;
+    const deductions = empPf + pt + esic;
 
-    // Rough LOP estimate from cached attendance
-    const empId = document.getElementById('initiateEmployee').value;
-    const att   = attSummaryCache[empId] || { absent: 0, totalDays: 26 };
-    const estLop = att.totalDays > 0
-        ? Math.round((basic / att.totalDays) * att.absent * 100) / 100
+    // LOP from live (editable) attendance fields — totalDays must be > 0 to avoid div/0
+    const { absent, totalDays } = getAttendanceValues();
+    const estLop = totalDays > 0
+        ? round2((basicPay / totalDays) * absent)
         : 0;
 
-    const estNet = gross - deductions - estLop;
+    const estNet = round2(gross - deductions - estLop + expenseReimb);
+    const ctc    = round2(basicPay + employerPf + esic);
 
     document.getElementById('netPreviewBar').classList.remove('hidden');
     document.getElementById('previewGross').textContent = formatINR(gross);
     document.getElementById('previewDed').textContent   = formatINR(deductions);
     document.getElementById('previewLop').textContent   = estLop > 0 ? `-${formatINR(estLop)}` : '₹0';
     document.getElementById('netPreviewAmt').textContent = formatINR(Math.max(0, estNet));
+    document.getElementById('ctcPreviewAmt').textContent = formatINR(ctc);
 }
 
-// Auto-compute gross when earnings change
-['basicSalary','hraAmount','allowancesAmt'].forEach(id => {
-    document.getElementById(id)?.addEventListener('input', () => {
-        const basic      = parseFloat(document.getElementById('basicSalary').value)   || 0;
-        const hra        = parseFloat(document.getElementById('hraAmount').value)      || 0;
-        const allowances = parseFloat(document.getElementById('allowancesAmt').value)  || 0;
-        document.getElementById('grossSalary').value = basic + hra + allowances;
-        updateNetPreview();
-    });
+// Recompute derived breakdown + preview whenever Basic Pay changes
+document.getElementById('basicSalary')?.addEventListener('input', () => {
+    recalcBreakdown();
+    updateNetPreview();
 });
 
-['employeePf','esiAmount','tdsAmount'].forEach(id => {
+// Recompute preview whenever PF inputs change (CTC depends on employerPf, net depends on employeePf)
+['employeePf','employerPf'].forEach(id => {
     document.getElementById(id)?.addEventListener('input', updateNetPreview);
 });
 
-// Auto-recompute PF when basic changes
-document.getElementById('basicSalary')?.addEventListener('input', () => {
-    const basic = parseFloat(document.getElementById('basicSalary').value) || 0;
-    const currentEmpPf  = parseFloat(document.getElementById('employeePf').value) || 0;
-    const currentEmrPf  = parseFloat(document.getElementById('employerPf').value) || 0;
-    if (currentEmpPf  === 0) document.getElementById('employeePf').value  = Math.round(basic * 0.12);
-    if (currentEmrPf  === 0) document.getElementById('employerPf').value  = Math.round(basic * 0.12);
-});
+document.getElementById('expenseReimbursementAmt')?.addEventListener('input', updateNetPreview);
+
 
 function resetFieldsOnly() {
-    ['basicSalary','hraAmount','allowancesAmt','grossSalary',
-     'employeePf','employerPf','esiAmount','tdsAmount'].forEach(id => {
+    ['basicSalary','basicComponent','hraAmount','daAmount','specialAllowanceAmt','grossSalary',
+     'employeePf','employerPf','esiAmount','ptAmount','expenseReimbursementAmt'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = '';
     });
+    document.getElementById('expenseClaimsNote').textContent = '';
+    document.getElementById('expenseAutoBadge').classList.add('hidden');
+}
+
+
+async function fetchExpensePreview(emp) {
+    const field = document.getElementById('expenseReimbursementAmt');
+    const note  = document.getElementById('expenseClaimsNote');
+    const badge = document.getElementById('expenseAutoBadge');
+
+    field.value = '';
+    note.textContent = '';
+    badge.classList.add('hidden');
+
+    try {
+        const res  = await fetch(
+            `${BASE_ATT_URL}/expenses/get-approved-expense?employeePrimeId=${emp.employeePrimeId}`,
+            { headers: authHeaders() }
+        );
+        const data = await res.json();
+
+        const total = data.totalExpenseAmount || 0;
+        field.value = total ? round2(total) : '';
+        badge.classList.remove('hidden');
+
+        if (data.expenses && data.expenses.length > 0) {
+            note.textContent = `${data.expenses.length} approved claim(s): ` +
+                data.expenses.map(e => `${e.expenseType} ₹${e.amount}`).join(', ');
+        } else {
+            note.textContent = 'No approved expense claims this month.';
+        }
+    } catch (err) {
+        console.warn('Expense preview failed:', err);
+        note.textContent = 'Could not fetch expenses — enter manually if needed.';
+    }
 }
 
 // ─────────────────────────────────────────────────────────────────
-// SUBMIT  (unchanged logic — payload identical to original)
+// SUBMIT — payload trimmed to match new PayrollRequestDTO
+// (server derives hra/da/specialAllowance/esi/pt; only basicSalary,
+// employeePf, employerPf are real inputs now)
 // ─────────────────────────────────────────────────────────────────
 async function submitInitiatePay() {
     const empId = document.getElementById('initiateEmployee').value;
     const basic = document.getElementById('basicSalary').value;
     if (!empId) { showToast('Please select an employee.', 'error'); return; }
-    if (!basic) { showToast('Basic salary is required.',  'error'); return; }
+    if (!basic) { showToast('Basic Pay is required.',  'error'); return; }
 
     const { monthEnum, year } = getSelectedMonthYear();
+
+    const { absent, totalDays, payable } = getAttendanceValues();
+
+   // Client-side guard mirroring the backend's IllegalArgumentException check —
+    // catches the error before a round-trip, not a replacement for server validation.
+
+    if (totalDays <= 0) {
+        showToast('Working days in month must be greater than 0.', 'error');
+        return;
+    }
+    if (absent > totalDays) {
+        showToast(`LOP days (${absent}) cannot exceed working days (${totalDays}).`, 'error');
+        return;
+    }
+
+    const expenseReimbRaw = document.getElementById('expenseReimbursementAmt').value;
+    const expenseReimb    = expenseReimbRaw === '' ? null : parseFloat(expenseReimbRaw);
 
     const payload = {
         employeeId  : empId,
         payrollMonth: monthEnum,
         payrollYear : year,
-        basicSalary : parseFloat(document.getElementById('basicSalary').value)   || 0,
-        hra         : parseFloat(document.getElementById('hraAmount').value)      || 0,
-        allowances  : parseFloat(document.getElementById('allowancesAmt').value)  || 0,
-        employeePf  : parseFloat(document.getElementById('employeePf').value)     || 0,
-        employerPf  : parseFloat(document.getElementById('employerPf').value)     || 0,
-        esi         : parseFloat(document.getElementById('esiAmount').value)      || 0,
-        tds         : parseFloat(document.getElementById('tdsAmount').value)      || 0,
+        basicSalary : parseFloat(document.getElementById('basicSalary').value) || 0,
+        employeePf  : parseFloat(document.getElementById('employeePf').value)  || 0,
+        employerPf  : parseFloat(document.getElementById('employerPf').value)  || 0,
+        // Attendance overrides — always populated once an employee is selected
+        // (auto-fetched then user-editable), so backend always takes the override branch.
+        workingDaysInMonth   : totalDays,
+        daysWorked           : payable,
+        lopDays              : absent,
+        // Expense override — null only if field was cleared; backend falls back to auto-fetch
+        expenseReimbursement : (expenseReimb === null || isNaN(expenseReimb)) ? null : expenseReimb,
         remarks     : ''
     };
 

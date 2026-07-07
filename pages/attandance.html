@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Attendance Management | HRMS Admin</title>
+    <title>Attendance Management | SIEC</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -47,6 +47,10 @@
             --chart-absent:    #b6e6f4;
             --chart-late:      #186c83;
             --chart-leave:     #87d4ea;
+            --chart-wfh:       #f59e0b;   /* NEW */
+            
+             --status-wfh-bg:       #f59e0b;   /* NEW */
+             --status-wfh-fg:       #ffffff;   /* NEW */
 
             --status-present-bg:  #1e8e5c;
             --status-present-fg:  #eaf2ef;
@@ -58,9 +62,15 @@
             --status-halfday-fg:  #eaf2ef;
             --status-holiday-bg:  #910a88;
             --status-holiday-fg:  #eaf2ef;
-            --status-leave-bg:    #059281;
+            --status-leave-bg:    #D2042D;
+            
             --status-leave-fg:    #eaf2ef;
         }
+
+        .cal-cell.status-wfh      { background: var(--status-wfh-bg); }   /* NEW */
+        .cal-cell.status-wfh      { background: var(--status-wfh-bg); }   /* NEW */
+        .badge-wfh      { background: var(--status-wfh-bg);       color: var(--status-wfh-fg); }   /* NEW */
+
 
         * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
         body { background-color: var(--color-bg); margin: 0; }
@@ -555,12 +565,15 @@
                     </div>
 
                     <!-- Stat Cards Row — filled by API -->
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-5" id="summaryStatCards">
+                    <div class="grid grid-cols-2 md:grid-cols-5 gap-3 mb-5" id="summaryStatCards">
                         <!-- Skeleton placeholders -->
                         <div class="stat-card"><span class="stat-label">Present</span><span class="stat-value" id="stat-present">—</span><span class="stat-delta delta-up" id="stat-present-delta"></span></div>
                         <div class="stat-card"><span class="stat-label">Absent</span><span class="stat-value" id="stat-absent">—</span><span class="stat-delta delta-down" id="stat-absent-delta"></span></div>
                         <div class="stat-card"><span class="stat-label">Late</span><span class="stat-value" id="stat-late">—</span><span class="stat-delta delta-warn" id="stat-late-delta"></span></div>
+                        
                         <div class="stat-card"><span class="stat-label">On Leave</span><span class="stat-value" id="stat-leave">—</span><span class="stat-delta delta-info" id="stat-leave-delta"></span></div>
+                            <div class="stat-card"><span class="stat-label">WFH</span><span class="stat-value" id="stat-wfh">—</span><span class="stat-delta delta-info" id="stat-wfh-delta"></span></div>
+
                     </div>
 
                     <!-- Charts Row -->
@@ -575,6 +588,8 @@
                                 <div class="legend-item"><div class="legend-dot" style="background:var(--chart-absent);"></div><span id="legend-absent">Absent</span></div>
                                 <div class="legend-item"><div class="legend-dot" style="background:var(--chart-late);"></div><span id="legend-late">Late</span></div>
                                 <div class="legend-item"><div class="legend-dot" style="background:var(--chart-leave);"></div><span id="legend-leave">Leave</span></div>
+                                <div class="legend-item"><div class="legend-dot" style="background:var(--chart-wfh);"></div><span id="legend-wfh">WFH</span></div>  <!-- NEW -->
+
                             </div>
                         </div>
 
@@ -697,6 +712,7 @@
                     <option value="Late">Late</option>
                     <option value="Half_Day">Half Day</option>
                     <option value="Leave">Leave</option>
+                    <option value="WFH">WFH</option>   <!-- NEW -->
                     <option value="Not_Marked">Not Marked</option>
                 </select>
             </div>
@@ -802,11 +818,14 @@
             </div>
 
             <!-- Mini stats -->
-            <div class="grid grid-cols-4 gap-3 mb-4" id="summaryModalStats" >
+            <div class="grid grid-cols-5 gap-3 mb-4" id="summaryModalStats" >
                 <div class="mini-stat" style="background-color: #fcfafa;"><div class="mini-stat-val" id="ms-present">—</div><div class="mini-stat-lbl">Present</div></div>
                 <div class="mini-stat" style="background-color: #fcfafa;"><div class="mini-stat-val" id="ms-absent">—</div><div class="mini-stat-lbl">Absent</div></div>
                 <div class="mini-stat" style="background-color: #fcfafa;"><div class="mini-stat-val" id="ms-late">—</div><div class="mini-stat-lbl">Late</div></div>
                 <div class="mini-stat" style="background-color: #fcfafa;"><div class="mini-stat-val" id="ms-leave">—</div><div class="mini-stat-lbl">Leave</div></div>
+                
+                    <div class="mini-stat" style="background-color: #fcfafa;"><div class="mini-stat-val" id="ms-wfh">—</div><div class="mini-stat-lbl">WFH</div></div>  <!-- NEW -->
+
             </div>
 
             <!-- Calendar / Table toggle -->
@@ -831,6 +850,8 @@
                     <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--status-late-bg); border:1px solid var(--color-secondary);"></div>Late</div>
                     <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--status-halfday-bg); border:1px solid var(--color-secondary);"></div>Half Day</div>
                     <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--status-leave-bg); border:1px solid var(--color-border);"></div>Leave</div>
+                    
+                    <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--status-wfh-bg); border:1px solid var(--color-border);"></div>WFH</div>  <!-- NEW -->
                 </div>
             </div>
 
@@ -883,10 +904,7 @@
        FALLBACK DEPARTMENT LIST
        Replace with your own API call once you expose GET /api/employees/departments
        ======================================================================= */
-    const FALLBACK_DEPARTMENTS = [
-        'Human Resources', 'Information Technology', 'Sales', 'Finance',
-        'Operations', 'Marketing', 'Legal', 'Administration'
-    ];
+    const FALLBACK_DEPARTMENTS = ["L1(Executive Leadership)", "L2(Senior Leadership)", "L3(Management)", "L4(Lead Level)", "L5(Supervisory)", "L6(Staff/Execution)"];
 
     /* =======================================================================
        BRAND PALETTE (mirrors CSS vars)
@@ -963,6 +981,7 @@
             'half_day':   'badge-halfday',
             'halfday':    'badge-halfday',
             'leave':      'badge-leave',
+            'wfh':        'badge-wfh',    
             'not_marked': 'badge-notmarked',
             'notmarked':  'badge-notmarked',
         };
@@ -1391,7 +1410,7 @@
         submitBtn.textContent = 'Updating…';
 
         try {
-            await updateAttendance(empPrimeId, payload);
+            await updateAttendance(attendanceId, payload);
             showToast('Attendance updated successfully!', 'success');
             closeModal('editAttendanceModal');
             // Refresh data to reflect changes
@@ -1579,40 +1598,79 @@
         };
     }
 
+    // function renderSummaryModal() {
+    //     const { from, to } = getSummaryDateRange();
+    //     const records = state.summaryAllRecords.filter(r =>
+    //         r.attendanceDate >= from && r.attendanceDate <= to
+    //     );
+
+    //     // Update range label
+    //     document.getElementById('summaryModalRangeLabel').textContent =
+    //         `${formatDate(from)} – ${formatDate(to)} (${records.length} records)`;
+
+    //     // Mini stats
+    //     const stats = { present: 0, absent: 0, late: 0, leave: 0 };
+    //     records.forEach(r => {
+    //         const s = (r.status || '').toLowerCase();
+    //         if (s === 'present')        stats.present++;
+    //         else if (s === 'absent')    stats.absent++;
+    //         else if (s === 'late')      stats.late++;
+    //         else if (s === 'leave')     stats.leave++;
+    //     });
+    //     document.getElementById('ms-present').textContent = stats.present;
+    //     document.getElementById('ms-absent').textContent  = stats.absent;
+    //     document.getElementById('ms-late').textContent    = stats.late;
+    //     document.getElementById('ms-leave').textContent   = stats.leave;
+    //     document.getElementById('ms-wfh').textContent     = stats.wfh;   // NEW
+
+
+    //     // Build a date→record map for quick lookup
+    //     const recMap = {};
+    //     records.forEach(r => { recMap[r.attendanceDate] = r; });
+
+    //     if (state.summaryView === 'calendar') {
+    //         renderSummaryCalendar(from, to, recMap);
+    //     } else {
+    //         renderSummaryTable(records);
+    //     }
+    // }
+    
+    
     function renderSummaryModal() {
-        const { from, to } = getSummaryDateRange();
-        const records = state.summaryAllRecords.filter(r =>
-            r.attendanceDate >= from && r.attendanceDate <= to
-        );
+    const { from, to } = getSummaryDateRange();
+    const records = state.summaryAllRecords.filter(r =>
+        r.attendanceDate >= from && r.attendanceDate <= to
+    );
 
-        // Update range label
-        document.getElementById('summaryModalRangeLabel').textContent =
-            `${formatDate(from)} – ${formatDate(to)} (${records.length} records)`;
+    document.getElementById('summaryModalRangeLabel').textContent =
+        `${formatDate(from)} – ${formatDate(to)} (${records.length} records)`;
 
-        // Mini stats
-        const stats = { present: 0, absent: 0, late: 0, leave: 0 };
-        records.forEach(r => {
-            const s = (r.status || '').toLowerCase();
-            if (s === 'present')        stats.present++;
-            else if (s === 'absent')    stats.absent++;
-            else if (s === 'late')      stats.late++;
-            else if (s === 'leave')     stats.leave++;
-        });
-        document.getElementById('ms-present').textContent = stats.present;
-        document.getElementById('ms-absent').textContent  = stats.absent;
-        document.getElementById('ms-late').textContent    = stats.late;
-        document.getElementById('ms-leave').textContent   = stats.leave;
+    // Mini stats
+    const stats = { present: 0, absent: 0, late: 0, leave: 0, wfh: 0 };
+    records.forEach(r => {
+        const s = (r.status || '').toLowerCase();
+        if (s === 'present')        stats.present++;
+        else if (s === 'absent')    stats.absent++;
+        else if (s === 'late')      stats.late++;
+        else if (s === 'leave')     stats.leave++;
+        else if (s === 'wfh')       stats.wfh++;
+    });
+    document.getElementById('ms-present').textContent = stats.present;
+    document.getElementById('ms-absent').textContent  = stats.absent;
+    document.getElementById('ms-late').textContent    = stats.late;
+    document.getElementById('ms-leave').textContent   = stats.leave;
+    document.getElementById('ms-wfh').textContent     = stats.wfh;
 
-        // Build a date→record map for quick lookup
-        const recMap = {};
-        records.forEach(r => { recMap[r.attendanceDate] = r; });
+    // Build a date→record map for quick lookup
+    const recMap = {};
+    records.forEach(r => { recMap[r.attendanceDate] = r; });
 
-        if (state.summaryView === 'calendar') {
-            renderSummaryCalendar(from, to, recMap);
-        } else {
-            renderSummaryTable(records);
-        }
+    if (state.summaryView === 'calendar') {
+        renderSummaryCalendar(from, to, recMap);
+    } else {
+        renderSummaryTable(records);
     }
+}
 
     function renderSummaryCalendar(from, to, recMap) {
         const container = document.getElementById('summaryCalendar');
@@ -1659,7 +1717,7 @@
 
                 html += `<div class="cal-cell ${statusCls} ${hasRec} ${opaClass}" ${tooltip}>
                     <span class="cal-date">${d}</span>
-                    ${rec ? `<span class="cal-status-dot" style="background:${statusDotColor(rec.status)};"></span>` : ''}
+                    ${rec ? `<span class="cal-status-dot" style="background:white;"></span>` : ''}
                 </div>`;
             }
 
@@ -1742,55 +1800,53 @@
     async function loadDailySummaryStats(date) {
         try {
             // ── Try local data first (instant, no extra API call) ──────────────
-            if (state.allRecords.length > 0) {
-                let records = state.allRecords;
+           if (state.allRecords.length > 0) {
+                const records = state.allRecords.filter(r => r.attendanceDate === date);
 
-                // If a specific date is chosen and records exist for that date, filter to it.
-                // Otherwise fall back to showing aggregate of ALL records (so summary is never empty).
-                const forDate = records.filter(r => r.attendanceDate === date);
-                if (forDate.length > 0) records = forDate;
-                // else: use all records — better than showing zeros
-
-                const counts = { present: 0, absent: 0, late: 0, leave: 0, halfDay: 0, notMarked: 0 };
+                const counts = { present: 0, absent: 0, late: 0, leave: 0, halfDay: 0, notMarked: 0, wfh: 0 };
                 records.forEach(r => {
                     const s = (r.status || '').toLowerCase().replace(' ', '_');
                     if      (s === 'present')    counts.present++;
                     else if (s === 'absent')     counts.absent++;
                     else if (s === 'late')       counts.late++;
                     else if (s === 'leave')      counts.leave++;
+                    else if (s === 'wfh')        counts.wfh++;
                     else if (s === 'half_day')   counts.halfDay++;
                     else if (s === 'not_marked') counts.notMarked++;
                 });
 
                 const total = counts.present + counts.absent + counts.late +
-                              counts.leave + counts.halfDay + counts.notMarked;
-                const pct   = (n) => total > 0 ? (n * 100 / total).toFixed(1) : '0.0';
+                            counts.leave + counts.halfDay + counts.notMarked + counts.wfh;
 
                 document.getElementById('stat-present').textContent = counts.present;
                 document.getElementById('stat-absent').textContent  = counts.absent;
                 document.getElementById('stat-late').textContent    = counts.late;
                 document.getElementById('stat-leave').textContent   = counts.leave;
+                document.getElementById('stat-wfh').textContent     = counts.wfh;   // ✅ FIXED — was overwriting stat-leave
 
-                const scope = forDate.length > 0 ? `for ${formatDate(date)}` : 'across all records';
                 document.getElementById('stat-present-delta').innerHTML =
-                    `<i class="fas fa-percent" style="font-size:9px;"></i> ${pct(counts.present)}% rate ${scope}`;
+                    `<i class="fas fa-users" style="font-size:9px;"></i> ${counts.present} record(s) for Present`;
                 document.getElementById('stat-absent-delta').innerHTML  =
-                    `<i class="fas fa-users" style="font-size:9px;"></i> ${total} total records`;
+                    `<i class="fas fa-users" style="font-size:9px;"></i> ${counts.absent} record(s) for Absent`;   // ✅ FIXED — was showing total
                 document.getElementById('stat-late-delta').innerHTML    =
-                    `<i class="fas fa-adjust" style="font-size:9px;"></i> ${counts.halfDay} half days`;
+                    `<i class="fas fa-users" style="font-size:9px;"></i> ${counts.late} record(s) for Late`;   // ✅ FIXED — was showing halfDay
                 document.getElementById('stat-leave-delta').innerHTML   =
-                    `<i class="fas fa-question-circle" style="font-size:9px;"></i> ${counts.notMarked} not marked`;
+                    `<i class="fas fa-users" style="font-size:9px;"></i> ${counts.leave} record(s) for Leave`;   // ✅ FIXED — was showing notMarked
+                document.getElementById('stat-wfh-delta').innerHTML  =
+                    `<i class="fas fa-users" style="font-size:9px;"></i> ${counts.wfh} record(s) for WFH`;   // ✅ FIXED — was showing total
 
-                // Update legend
-                document.getElementById('legend-present').textContent = `Present (${pct(counts.present)}%)`;
-                document.getElementById('legend-absent').textContent  = `Absent (${pct(counts.absent)}%)`;
-                document.getElementById('legend-late').textContent    = `Late (${pct(counts.late)}%)`;
-                document.getElementById('legend-leave').textContent   = `Leave (${pct(counts.leave)}%)`;
+                // Update legend (no pct — just counts)
+                document.getElementById('legend-present').textContent = `Present (${counts.present})`;
+                document.getElementById('legend-absent').textContent  = `Absent (${counts.absent})`;
+                document.getElementById('legend-late').textContent    = `Late (${counts.late})`;
+                document.getElementById('legend-leave').textContent   = `Leave (${counts.leave})`;
+                document.getElementById('legend-wfh').textContent     = `WFH (${counts.wfh})`;   // ✅ ADDED — was missing
 
                 // Pass to pie chart
                 updatePieChart({
                     present: counts.present, absent: counts.absent,
-                    late: counts.late, onLeave: counts.leave
+                    late: counts.late, onLeave: counts.leave,
+                    wfh: counts.wfh   // ✅ ADDED — was missing
                 });
                 return; // ✅ done — no API call needed
             }
@@ -1801,30 +1857,34 @@
             document.getElementById('stat-absent').textContent  = data.absent    ?? '—';
             document.getElementById('stat-late').textContent    = data.late      ?? '—';
             document.getElementById('stat-leave').textContent   = data.onLeave   ?? '—';
-            document.getElementById('stat-present-delta').innerHTML =
-                `<i class="fas fa-percent" style="font-size:9px;"></i> ${data.presentPct?.toFixed(1) ?? '—'}% attendance rate`;
-            document.getElementById('stat-absent-delta').innerHTML  =
-                `<i class="fas fa-users" style="font-size:9px;"></i> ${data.totalEmployees ?? '—'} total employees`;
-            document.getElementById('stat-late-delta').innerHTML    =
-                `<i class="fas fa-adjust" style="font-size:9px;"></i> ${data.halfDay ?? 0} half days`;
-            document.getElementById('stat-leave-delta').innerHTML   =
-                `<i class="fas fa-question-circle" style="font-size:9px;"></i> ${data.notMarked ?? 0} not marked`;
+            document.getElementById('stat-wfh').textContent     = data.wfh       ?? '—';   // ✅ ADDED — was missing
 
-            document.getElementById('legend-present').textContent = `Present (${data.presentPct?.toFixed(0) ?? '—'}%)`;
-            document.getElementById('legend-absent').textContent  = `Absent (${data.absentPct?.toFixed(0)  ?? '—'}%)`;
-            document.getElementById('legend-late').textContent    = `Late (${data.latePct?.toFixed(0)      ?? '—'}%)`;
-            document.getElementById('legend-leave').textContent   = `Leave (${data.leavePct?.toFixed(0)    ?? '—'}%)`;
+            document.getElementById('stat-present-delta').innerHTML =
+                `<i class="fas fa-users" style="font-size:9px;"></i> ${data.present ?? 0} record(s) for Present`;
+            document.getElementById('stat-absent-delta').innerHTML  =
+                `<i class="fas fa-users" style="font-size:9px;"></i> ${data.absent ?? 0} record(s) for Absent`;
+            document.getElementById('stat-late-delta').innerHTML    =
+                `<i class="fas fa-users" style="font-size:9px;"></i> ${data.late ?? 0} record(s) for Late`;
+            document.getElementById('stat-leave-delta').innerHTML   =
+                `<i class="fas fa-users" style="font-size:9px;"></i> ${data.onLeave ?? 0} record(s) for Leave`;
+            document.getElementById('stat-wfh-delta').innerHTML =
+                `<i class="fas fa-users" style="font-size:9px;"></i> ${data.wfh ?? 0} record(s) for WFH`;   // ✅ FIXED — undefined pct/counts/scope removed
+
+            document.getElementById('legend-present').textContent = `Present (${data.present ?? 0})`;
+            document.getElementById('legend-absent').textContent  = `Absent (${data.absent ?? 0})`;
+            document.getElementById('legend-late').textContent    = `Late (${data.late ?? 0})`;
+            document.getElementById('legend-leave').textContent   = `Leave (${data.onLeave ?? 0})`;
+            document.getElementById('legend-wfh').textContent     = `WFH (${data.wfh ?? 0})`;   // ✅ FIXED — undefined pct/counts removed
+
             updatePieChart(data);
 
         } catch (err) {
             console.warn('[Summary Stats]', err.message);
-            // Show zeros rather than dashes so the UI isn't confusing
-            ['stat-present','stat-absent','stat-late','stat-leave'].forEach(id => {
+            ['stat-present','stat-absent','stat-late','stat-leave','stat-wfh'].forEach(id => {
                 document.getElementById(id).textContent = '0';
             });
         }
     }
-
     async function loadDeptSummary(date) {
         const tbody = document.getElementById('deptSummaryList');
         tbody.innerHTML = `<tr class="loading-row"><td colspan="7"><span class="spinner"></span> Loading…</td></tr>`;
@@ -1832,10 +1892,13 @@
         try {
             // ── Derive from already-loaded records first ────────────────────────
             if (state.allRecords.length > 0) {
-                let records = state.allRecords;
-                // If specific date selected and data exists for it, filter — else show all
-                const forDate = records.filter(r => r.attendanceDate === date);
-                if (forDate.length > 0) records = forDate;
+                // let records = state.allRecords;
+                // // If specific date selected and data exists for it, filter — else show all
+                // const forDate = records.filter(r => r.attendanceDate === date);
+                // if (forDate.length > 0) records = forDate;
+
+                 // Only records for the exact selected date — no silent fallback to all records
+                    const records = state.allRecords.filter(r => r.attendanceDate === date);
 
                 // Aggregate by department
                 const deptMap = {};
@@ -1897,7 +1960,7 @@
         if (attendancePieChart) { attendancePieChart.destroy(); attendancePieChart = null; }
 
         const values = data
-            ? [data.present || 0, data.absent || 0, data.late || 0, data.onLeave || 0]
+            ? [data.present || 0, data.absent || 0, data.late || 0, data.onLeave || 0, data.wfh || 0]
             : [0, 0, 0, 0];
 
         const total = values.reduce((s, v) => s + v, 0);
@@ -1905,10 +1968,10 @@
         attendancePieChart = new Chart(canvas.getContext('2d'), {
             type: 'pie',
             data: {
-                labels: ['Present', 'Absent', 'Late', 'On Leave'],
+                labels: ['Present', 'Absent', 'Late', 'On Leave', 'WFH'],
                 datasets: [{
                     data: values,
-                    backgroundColor: [BRAND.primary, BRAND.border, BRAND.secondary, BRAND.leave],
+                    backgroundColor: [BRAND.primary, BRAND.border, BRAND.secondary, BRAND.leave, '#f59e0b'],
                     borderWidth: 2, borderColor: '#fff', hoverOffset: 8,
                 }]
             },
