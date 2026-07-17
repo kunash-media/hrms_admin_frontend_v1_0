@@ -290,11 +290,91 @@
 
         .loading-row td { text-align: center; padding: 40px; color: var(--text-light); }
 
+        /* Apply-for-leave (admin) helpers */
+        .emp-info-bar {
+            background: var(--primary-bg-light);
+            border: 1px solid var(--primary-soft);
+            border-radius: 10px;
+            padding: 12px 16px;
+            display: flex; align-items: center; gap: 12px;
+            margin-bottom: 16px;
+        }
+        .emp-info-avatar {
+            width: 40px; height: 40px; border-radius: 50%;
+            background: var(--primary); color: #fff;
+            font-weight: 700; font-size: 14px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .balance-panel {
+            display: none;
+            border-radius: 8px;
+            padding: 10px 14px;
+            font-size: 12px;
+            margin-bottom: 14px;
+        }
+        .balance-panel.ok   { background: #e9f2f4; border: 1px solid var(--primary-soft); color: var(--primary); }
+        .balance-panel.warn { background: rgba(255,193,7,0.15); border: 1px solid #ffc107; color: #856404; }
+        .day-chip {
+            display: none;
+            align-items: center; gap: 6px;
+            background: var(--primary-bg-light);
+            border: 1px solid var(--primary-soft);
+            border-radius: 8px;
+            padding: 8px 14px;
+            font-size: 13px; font-weight: 600;
+            color: var(--primary); white-space: nowrap;
+        }
+        .toggle-row { display:flex; align-items:center; gap:8px; margin-bottom:14px; }
+        .toggle-row input[type=checkbox] { width:auto; }
+
         @media (max-width: 768px) {
             .section-card { padding: 14px; }
             .tab-btn { padding: 6px 14px; font-size: 12px; }
             .pie-chart-container { max-width: 150px; }
         }
+
+        /* View details modal */
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eef4f6;
+}
+.detail-row:last-child { border-bottom: none; }
+.detail-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-light);
+    white-space: nowrap;
+}
+.detail-value {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--primary);
+    text-align: right;
+}
+.btn-icon {
+    border: 1px solid var(--primary-soft);
+    color: var(--primary);
+    width: 30px;
+    height: 30px;
+    border-radius: 8px;
+    background: var(--primary-bg-light);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+.btn-icon:hover {
+    background-color: var(--primary);
+    color: white;
+    border-color: var(--primary);
+}
     </style>
 </head>
 
@@ -312,6 +392,9 @@
                     <div>
                         <h1 class="text-xl font-bold" style="color: var(--primary);">Leave Management</h1>
                         <p class="text-xs mt-0.5" style="color: var(--text-light);">Manage employee leave requests, balances, and rules</p>
+                    </div>
+                    <div>
+                        <button onclick="openAdminApplyModal()" class="btn-primary"><i class="fas fa-plus mr-1"></i>Apply for Leave</button>
                     </div>
                 </div>
 
@@ -430,12 +513,13 @@
                             <table>
                                 <thead>
                                     <tr class="border-b" style="border-color: var(--primary-soft);">
-                                        <th>Employee</th><th>Leave Type</th><th>Date</th>
-                                        <th>Days</th><th>Status</th><th>Approved By</th><th>Remarks</th>
+                                       <th>Employee</th><th>Leave Type</th><th>Date</th>
+                                    <th>Days</th>
+                                    <th>Status</th><th>Approved By</th><th>Remarks</th>
                                     </tr>
-                                </thead>
-                                <tbody id="historyTableBody">
-                                    <tr class="loading-row"><td colspan="7"><span class="spinner"></span> Loading...</td></tr>
+                                    </thead>
+                                    <tbody id="historyTableBody">
+                                        <tr class="loading-row"><td colspan="7"><span class="spinner"></span> Loading...</td></tr>
                                 </tbody>
                             </table>
                             <div id="historyEmpty" style="display:none;text-align:center;padding:40px;color:var(--text-light);">
@@ -531,6 +615,106 @@
             <div class="flex justify-end gap-2">
                 <button onclick="closeModal('actionModal')" class="btn-outline">Cancel</button>
                 <button id="actionConfirmBtn" onclick="confirmAction()" class="btn-primary"></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== HISTORY VIEW DETAILS MODAL ==================== -->
+    <div id="historyViewModal" class="modal">
+        <div class="modal-content" style="max-width:440px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-circle-info mr-1"></i>Leave Details</h3>
+                <span onclick="closeModal('historyViewModal')" style="cursor:pointer;font-size:22px;color:var(--primary-light);">&times;</span>
+            </div>
+            <div id="historyViewBody"></div>
+            <div class="flex justify-end mt-4">
+                <button onclick="closeModal('historyViewModal')" class="btn-outline">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== ADMIN APPLY-FOR-LEAVE MODAL ==================== -->
+    <div id="adminApplyModal" class="modal">
+        <div class="modal-content" style="max-width:560px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-calendar-plus mr-2"></i>Apply Leave for Employee</h3>
+                <span onclick="closeModal('adminApplyModal')" style="cursor:pointer;font-size:22px;color:var(--primary-light);">&times;</span>
+            </div>
+
+            <label>Select Department *</label>
+            <select id="aa-deptSelect" class="p-2" onchange="aaOnDepartmentChange()" style="margin-bottom:16px;">
+                <option value="">- Select department --</option>
+            </select>
+
+            <label>Select Employee *</label>
+            <select id="aa-empSelect" class="p-2" onchange="aaOnEmployeeChange()" style="margin-bottom:16px;" disabled>
+                <option value="">- Select a department first --</option>
+            </select>
+
+            <div id="aa-empInfoBar" class="emp-info-bar" style="display:none;">
+                <div class="emp-info-avatar" id="aa-avatar">--</div>
+                <div style="flex:1;">
+                    <div style="font-size:13px;font-weight:700;color:var(--primary);" id="aa-dispName">—</div>
+                    <div style="font-size:11px;color:var(--text-light);" id="aa-dispMeta">—</div>
+                </div>
+                <span class="badge badge-regular" id="aa-dispType">—</span>
+            </div>
+
+            <div class="form-row">
+                <div>
+                    <label>Leave Type *</label>
+                    <select id="aa-type" class="p-2" onchange="aaCheckBalance()">
+                        <option value="">Select leave type</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Leave Mode</label>
+                    <select id="aa-mode" class="p-2">
+                        <option value="Full Day">Full Day</option>
+                        <option value="Half Day - Morning">Half Day – Morning</option>
+                        <option value="Half Day - Afternoon">Half Day – Afternoon</option>
+                    </select>
+                </div>
+                <div>
+                    <label>From Date *</label>
+                    <input type="date" class="p-2" id="aa-from" oninput="aaCalcDays()">
+                </div>
+                <div>
+                    <label>To Date *</label>
+                    <input type="date" class="p-2" id="aa-to" oninput="aaCalcDays()">
+                </div>
+            </div>
+
+            <div style="margin-bottom:14px;">
+                <label>Number of Days *</label>
+                <div style="display:flex;align-items:center;gap:10px;">
+                    <input type="number" class="p-2" id="aa-days" min="1" placeholder="Auto-calculated or enter manually" oninput="aaCheckBalance()" style="flex:1;">
+                    <div class="day-chip" id="aa-dayChip">
+                        <i class="fas fa-sun" style="font-size:11px;"></i>
+                        <span id="aa-dayText">0 days</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="balance-panel" id="aa-balPanel"></div>
+
+            <div style="margin-bottom:14px;">
+                <label>Reason *</label>
+                <input type="text" class="p-2" id="aa-reason" placeholder="e.g. Family function, Medical appointment...">
+            </div>
+            <div style="margin-bottom:14px;">
+                <label>Remarks / Notes (optional)</label>
+                <textarea id="aa-desc" class="p-2" rows="2" placeholder="Any additional notes..."></textarea>
+            </div>
+
+            <div class="toggle-row">
+                <input type="checkbox" class="p-2" id="aa-autoApprove" checked>
+                <label style="margin:0;" for="aa-autoApprove">Mark this request as Approved immediately (applied by Admin)</label>
+            </div>
+
+            <div class="flex justify-end gap-2">
+                <button onclick="closeModal('adminApplyModal')" class="btn-outline">Cancel</button>
+                <button onclick="submitAdminLeave()" class="btn-primary" id="aa-submitBtn"><i class="fas fa-paper-plane mr-1"></i>Submit</button>
             </div>
         </div>
     </div>
@@ -650,9 +834,17 @@
         actionType: null,
         ruleEditIdx: null,
         _pendingList: [],
+
+        actionContext: null,   // 'pending' | 'history' — tells confirmAction() what to refresh
+
+
         _historyList: [],
         _balanceList: [],
         _nextMockId: 100,     // for offline id generation
+        // Admin "apply for leave" state
+        _employeeDirectory: [], // full employee list for admin apply modal: { id, name, dept, empType }
+        _aaSelectedEmp: null,
+        _aaBalance: null,
     };
 
     // =====================================================================
@@ -855,13 +1047,56 @@
                 <td class="text-sm font-semibold" style="color:var(--primary);">${days}</td>
                 <td class="text-sm" style="color:var(--text-light);max-width:130px;">${reason}</td>
                 <td class="text-sm font-semibold" style="color:${low?'#dc3545':'#2b7a3e'};">${rem}${low?' ⚠️':''}</td>
-                <td>
+                   <td class="flex w-[240px]">
+                    <button onclick="openPendingView(${r.id})" class="btn-icon mr-1" title="View details"><i class="fas fa-eye"></i></button>
                     <button onclick="openAction(${r.id},'approve')" class="btn-success mr-1"><i class="fas fa-check mr-1"></i>Approve</button>
                     <button onclick="openAction(${r.id},'reject')" class="btn-danger"><i class="fas fa-times mr-1"></i>Reject</button>
                 </td>
             </tr>`;
         }).join('');
     }
+
+
+     function openPendingView(id) {
+        const list = S._pendingList || [];
+        const r = list.find(x => x.id == id);
+        if (!r) { showToast('Details not found.', 'error'); return; }
+
+        const empName   = r.empName   || r.employeeName || '—';
+        const empId     = r.empId     || r.employeeId   || '—';
+        const empType   = r.empType   || r.employeeType || '';
+        const deptName  = r.department|| r.dept || '—';
+        const leaveType = r.leaveType || '—';
+        const from      = r.fromDate  || r.from  || r.startDate;
+        const to        = r.toDate    || r.to    || from;
+        const days      = r.numberOfDays || r.days || 0;
+        const reason    = r.reason    || '—';
+        const description = r.description || '';
+        const addedOn   = r.addedOn;
+        const allotted  = r.balanceAllotted;
+        const used      = r.balanceUsed;
+        const remaining = r.balanceRemaining;
+
+        document.getElementById('historyViewBody').innerHTML = `
+            <div style="background:var(--primary-bg-light);border-radius:10px;padding:14px;margin-bottom:14px;">
+                <p class="text-sm font-semibold" style="color:var(--primary);">${empName} (${empId}) ${empType ? `<span class="badge badge-${empType.toLowerCase().replace(/\s+/g,'-')}">${empType}</span>` : ''}</p>
+                <p class="text-xs mt-1" style="color:var(--text-light);">${deptName}</p>
+            </div>
+
+            <div class="detail-row"><span class="detail-label">Leave Type</span><span class="detail-value"><span class="badge-custom">${leaveType}</span></span></div>
+            <div class="detail-row"><span class="detail-label">Status</span><span class="detail-value"><span class="status-pending text-xs px-2 py-1 rounded-full font-medium">Pending</span></span></div>
+            <div class="detail-row"><span class="detail-label">From</span><span class="detail-value">${fmtDate(from)}</span></div>
+            <div class="detail-row"><span class="detail-label">To</span><span class="detail-value">${fmtDate(to)}</span></div>
+            <div class="detail-row"><span class="detail-label">Total Days</span><span class="detail-value">${days}</span></div>
+            <div class="detail-row"><span class="detail-label">Reason</span><span class="detail-value" style="text-align:right;max-width:60%;">${reason}</span></div>
+            ${description ? `<div class="detail-row"><span class="detail-label">Description</span><span class="detail-value" style="text-align:right;max-width:60%;">${description}</span></div>` : ''}
+            ${allotted != null ? `<div class="detail-row"><span class="detail-label">Balance (Allot / Used / Left)</span><span class="detail-value">${allotted} / ${used ?? 0} / ${remaining ?? '—'}</span></div>` : ''}
+            <div class="detail-row"><span class="detail-label">Applied On</span><span class="detail-value">${fmtDate(addedOn)}</span></div>
+        `;
+
+        document.getElementById('historyViewModal').classList.add('active');
+    }
+
 
     // =====================================================================
     //  2b. ACTION MODAL
@@ -893,12 +1128,21 @@
         document.getElementById('actionModal').classList.add('active');
     }
 
-    async function confirmAction() {
+ async function confirmAction() {
         const btn = document.getElementById('actionConfirmBtn');
         btn.disabled = true;
         btn.innerHTML = '<span class="spinner" style="width:14px;height:14px;border-width:2px;vertical-align:middle;"></span>';
 
-        const remarks = document.getElementById('actionRemarks').value;
+        const remarks     = document.getElementById('actionRemarks').value;
+        const fromHistory = S.actionContext === 'history';
+
+        const doRefresh = async () => {
+            if (fromHistory) {
+                await Promise.all([renderHistory(), loadStats()]);
+            } else {
+                await Promise.all([renderPending(), loadStats()]);
+            }
+        };
 
         if (isOffline) {
             // Mutate mock state locally
@@ -910,7 +1154,7 @@
                 r.remarks    = remarks;
             }
             closeModal('actionModal');
-            await Promise.all([renderPending(), loadStats()]);
+            await doRefresh();
             showToast(`Leave ${S.actionType === 'approve' ? 'approved' : 'rejected'} (demo mode).`,
                       S.actionType === 'approve' ? 'success' : 'error');
         } else {
@@ -920,14 +1164,326 @@
                     body: JSON.stringify({ action: S.actionType, remarks, actionBy: 'HR Admin' })
                 });
                 closeModal('actionModal');
-                await Promise.all([renderPending(), loadStats()]);
-                showToast(`Leave ${S.actionType === 'approve' ? 'approved' : 'rejected'} successfully!`,
-                          S.actionType === 'approve' ? 'success' : 'error');
+                await doRefresh();
+                showToast(
+                    fromHistory
+                        ? `Leave ${S.actionType === 'approve' ? 'approved' : 'cancelled'} successfully!`
+                        : `Leave ${S.actionType === 'approve' ? 'approved' : 'rejected'} successfully!`,
+                    S.actionType === 'approve' ? 'success' : 'error'
+                );
             } catch (_) {}
         }
 
+        S.actionContext = null;
         btn.disabled = false;
         btn.textContent = S.actionType === 'approve' ? 'Approve' : 'Reject';
+    }
+
+    // =====================================================================
+    //  2c. ADMIN "APPLY FOR LEAVE" MODAL
+    //      (HR/Admin picks an employee and submits a leave on their behalf)
+    // =====================================================================
+
+    // Try a couple of likely endpoints for the full employee directory.
+    // Falls back to S.employees (offline mock / whatever we already have) if none work.
+    async function loadEmployeeDirectory() {
+        if (S._employeeDirectory.length) return S._employeeDirectory;
+
+        if (!isOffline) {
+            // const candidates = ['/employees', '/company/employees', '/hr/employees'];
+            const candidates = ['/employees/all-employees'];
+            for (const path of candidates) {
+                try {
+                    const { data, fromApi } = await api(path);
+                    if (fromApi && Array.isArray(data) && data.length) {
+                        S._employeeDirectory = data.map(e => ({
+                            id:      e.id || e.empId || e.employeeId,
+                            name:    e.name || e.empName || e.employeeName || `${e.firstName||''} ${e.lastName||''}`.trim(),
+                            dept:    e.dept || e.department || e.designation || '—',
+                            empType: e.empType || e.employeeType || e.employmentType || 'Regular',
+                            joiningDate: e.joiningDate || e.dateOfJoining || e.doj || e.joinDate || e.dateOfJoin || e.employmentDate || null,
+                        })).filter(e => e.id);
+                        return S._employeeDirectory;
+                    }
+                } catch (_) { /* try next candidate */ }
+            }
+        }
+
+        // Offline / no endpoint matched — use whatever local employee data we have
+        S._employeeDirectory = (S.employees || []).map(e => ({
+            id: e.id, name: e.name, dept: e.dept, empType: e.empType,
+            joiningDate: e.joiningDate || e.dateOfJoining || e.doj || null,
+        }));
+        return S._employeeDirectory;
+    }
+
+    async function openAdminApplyModal() {
+        aaResetForm();
+        document.getElementById('adminApplyModal').classList.add('active');
+
+        const deptSel = document.getElementById('aa-deptSelect');
+        const empSel  = document.getElementById('aa-empSelect');
+        deptSel.innerHTML = `<option value="">Loading departments...</option>`;
+        empSel.innerHTML  = `<option value="">-- Select a department first --</option>`;
+        empSel.disabled = true;
+
+        await loadLeaveTypes();
+        const typeSel = document.getElementById('aa-type');
+        typeSel.innerHTML = '<option value="">Select leave type</option>' +
+            S.leaveTypes.map(lt => `<option value="${lt}">${lt}</option>`).join('');
+
+        const emps = await loadEmployeeDirectory();
+        if (!emps.length) {
+            deptSel.innerHTML = `<option value="">No employees found</option>`;
+            showToast('Could not load employee list.', 'error');
+            return;
+        }
+
+        // Build department list from the employee directory (falls back to
+        // whatever LOADED_DEPARTMENTS has, if the directory has no dept info)
+        let depts = [...new Set(emps.map(e => e.dept).filter(Boolean))].sort();
+        if (!depts.length && Array.isArray(LOADED_DEPARTMENTS) && LOADED_DEPARTMENTS.length) {
+            depts = LOADED_DEPARTMENTS;
+        }
+
+        deptSel.innerHTML = '<option value="">-- Select department --</option>' +
+            depts.map(d => `<option value="${d}">${d}</option>`).join('');
+    }
+
+    function aaOnDepartmentChange() {
+        const dept = document.getElementById('aa-deptSelect').value;
+        const empSel = document.getElementById('aa-empSelect');
+
+        // Reset employee-dependent state whenever department changes
+        S._aaSelectedEmp = null;
+        S._aaBalance = null;
+        document.getElementById('aa-empInfoBar').style.display = 'none';
+
+        if (!dept) {
+            empSel.innerHTML = `<option value="">-- Select a department first --</option>`;
+            empSel.disabled = true;
+            return;
+        }
+
+        const emps = (S._employeeDirectory || []).filter(e => e.dept === dept);
+        if (!emps.length) {
+            empSel.innerHTML = `<option value="">No employees in this department</option>`;
+            empSel.disabled = true;
+            return;
+        }
+
+        empSel.disabled = false;
+        empSel.innerHTML = '<option value="">-- Search / select employee --</option>' +
+            emps.map(e => `<option value="${e.id}">${e.name} (${e.id})</option>`).join('');
+    }
+
+    function aaResetForm() {
+        S._aaSelectedEmp = null;
+        S._aaBalance = null;
+        document.getElementById('aa-empInfoBar').style.display = 'none';
+        const deptSel = document.getElementById('aa-deptSelect');
+        if (deptSel) deptSel.selectedIndex = 0;
+        const empSel = document.getElementById('aa-empSelect');
+        if (empSel) { empSel.innerHTML = '<option value="">-- Select a department first --</option>'; empSel.disabled = true; }
+        ['aa-type','aa-mode','aa-from','aa-to','aa-reason','aa-desc'].forEach(id => {
+            const el = document.getElementById(id);
+            if (!el) return;
+            if (el.tagName === 'SELECT') el.selectedIndex = 0;
+            else el.value = '';
+        });
+        document.getElementById('aa-days').value = '';
+        document.getElementById('aa-autoApprove').checked = true;
+        const panel = document.getElementById('aa-balPanel');
+        if (panel) panel.style.display = 'none';
+        const chip = document.getElementById('aa-dayChip');
+        if (chip) chip.style.display = 'none';
+    }
+
+    async function aaOnEmployeeChange() {
+        const empId = document.getElementById('aa-empSelect').value;
+        const bar = document.getElementById('aa-empInfoBar');
+        if (!empId) { bar.style.display = 'none'; S._aaSelectedEmp = null; return; }
+
+        const emp = (S._employeeDirectory || []).find(e => String(e.id) === String(empId));
+        if (!emp) { bar.style.display = 'none'; return; }
+
+        // Clear any previously chosen dates — they belonged to the last employee
+        document.getElementById('aa-from').value = '';
+        document.getElementById('aa-to').value = '';
+        document.getElementById('aa-days').value = '';
+        const chip = document.getElementById('aa-dayChip');
+        if (chip) chip.style.display = 'none';
+
+        S._aaSelectedEmp = emp;
+        bar.style.display = 'flex';
+        const initials = (emp.name || '').split(' ').filter(Boolean).map(n => n[0]).join('').slice(0,2).toUpperCase() || '--';
+        document.getElementById('aa-avatar').textContent = initials;
+        document.getElementById('aa-dispName').textContent = emp.name || emp.id;
+        document.getElementById('aa-dispMeta').textContent = `${emp.id} · ${emp.dept}`;
+        document.getElementById('aa-dispType').textContent = emp.empType || 'Regular';
+        document.getElementById('aa-dispType').className = `badge badge-${(emp.empType||'regular').toLowerCase()}`;
+
+        // Fetch this employee's balance so we can validate the request
+        const year = String(new Date().getFullYear());
+        if (isOffline) {
+            S._aaBalance = { balances: getMockBalance(emp.id, emp.empType, emp.dept, year) || {} };
+        } else {
+            try {
+                const { data, fromApi } = await api(`/leave/balance?empId=${emp.id}&year=${year}`);
+                S._aaBalance = fromApi ? data : { balances: getMockBalance(emp.id, emp.empType, emp.dept, year) || {} };
+            } catch (_) {
+                S._aaBalance = { balances: {} };
+            }
+        }
+        aaCheckBalance();
+    }
+
+    // Returns true and lets the caller continue if the date is valid;
+    // returns false, clears the offending field, and alerts the admin otherwise.
+    function aaValidateAgainstJoiningDate(dateFieldId) {
+        const emp = S._aaSelectedEmp;
+        if (!emp || !emp.joiningDate) return true; // no joining date on file — can't validate, allow it
+
+        const val = document.getElementById(dateFieldId).value;
+        if (!val) return true;
+
+        const joinDate = new Date(emp.joiningDate + 'T00:00:00');
+        const picked   = new Date(val + 'T00:00:00');
+        if (isNaN(joinDate.getTime())) return true;
+
+        if (picked < joinDate) {
+            const joinDisp = joinDate.toLocaleDateString('en-GB'); // dd/mm/yyyy
+            alert(`This employee's joining date is ${joinDisp}. You cannot select a leave date before the joining date.`);
+            document.getElementById(dateFieldId).value = '';
+            return false;
+        }
+        return true;
+    }
+
+    function aaCalcDays() {
+        if (!aaValidateAgainstJoiningDate('aa-from')) { document.getElementById('aa-days').value=''; const c=document.getElementById('aa-dayChip'); if(c) c.style.display='none'; return; }
+        if (!aaValidateAgainstJoiningDate('aa-to'))   { document.getElementById('aa-days').value=''; const c=document.getElementById('aa-dayChip'); if(c) c.style.display='none'; return; }
+
+        const from = document.getElementById('aa-from').value;
+        const to   = document.getElementById('aa-to').value;
+        const chip = document.getElementById('aa-dayChip');
+        if (!from || !to) { if (chip) chip.style.display = 'none'; return; }
+
+        const fd = new Date(from + 'T00:00:00');
+        const td = new Date(to   + 'T00:00:00');
+        if (td < fd) { showToast('To Date cannot be before From Date!', 'error'); return; }
+
+        let count = 0;
+        const cur = new Date(fd);
+        while (cur <= td) {
+            const d = cur.getDay();
+            if (d !== 0 && d !== 6) count++;
+            cur.setDate(cur.getDate() + 1);
+        }
+
+        document.getElementById('aa-days').value = count;
+        if (chip) {
+            document.getElementById('aa-dayText').textContent = `${count} working day${count !== 1 ? 's' : ''}`;
+            chip.style.display = 'flex';
+        }
+        aaCheckBalance();
+    }
+
+    function aaCheckBalance() {
+        const leaveType = document.getElementById('aa-type').value;
+        const days      = parseInt(document.getElementById('aa-days').value) || 0;
+        const panel     = document.getElementById('aa-balPanel');
+        if (!panel) return;
+
+        const balances = (S._aaBalance && S._aaBalance.balances) || null;
+        if (!leaveType || !balances) { panel.style.display = 'none'; return; }
+
+        const bal = balances[leaveType];
+        if (!bal) { panel.style.display = 'none'; return; }
+
+        const ok = days === 0 || bal.remaining >= days;
+        panel.style.display = 'block';
+        panel.className = `balance-panel ${ok ? 'ok' : 'warn'}`;
+        panel.innerHTML = `<i class="fas fa-${ok ? 'info-circle' : 'exclamation-triangle'}" style="margin-right:5px;"></i>
+            <strong>${leaveType}:</strong> ${bal.remaining} day(s) remaining · ${bal.used} used of ${bal.allot} allotted
+            ${!ok && days > 0 ? `<br><i class="fas fa-exclamation-triangle" style="margin-right:3px;"></i>Requested ${days} day(s) exceeds remaining balance of ${bal.remaining}.` : ''}`;
+    }
+
+    async function submitAdminLeave() {
+        const emp = S._aaSelectedEmp;
+        const leaveType   = document.getElementById('aa-type').value;
+        const days        = parseInt(document.getElementById('aa-days').value) || 0;
+        const fromDate    = document.getElementById('aa-from').value;
+        const toDate      = document.getElementById('aa-to').value;
+        const reason      = document.getElementById('aa-reason').value.trim();
+        const description = document.getElementById('aa-desc').value.trim();
+        const autoApprove = document.getElementById('aa-autoApprove').checked;
+
+        if (!emp)       { showToast('Please select an employee!', 'error');       return; }
+        if (!leaveType) { showToast('Please select Leave Type!', 'error');        return; }
+        if (!fromDate)  { showToast('Please select From Date!', 'error');         return; }
+        if (!toDate)    { showToast('Please select To Date!', 'error');           return; }
+        if (days < 1)   { showToast('Number of days must be at least 1!', 'error'); return; }
+        if (!reason)    { showToast('Please enter a Reason!', 'error');           return; }
+
+        if (emp.joiningDate) {
+            const joinDate = new Date(emp.joiningDate + 'T00:00:00');
+            const fd = new Date(fromDate + 'T00:00:00');
+            if (!isNaN(joinDate.getTime()) && fd < joinDate) {
+                alert(`This employee's joining date is ${joinDate.toLocaleDateString('en-GB')}. You cannot select a leave date before the joining date.`);
+                return;
+            }
+        }
+
+        const btn = document.getElementById('aa-submitBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner" style="width:14px;height:14px;border-width:2px;vertical-align:middle;"></span> Submitting...';
+
+        const nowDate = new Date().toISOString().split('T')[0];
+        const status = autoApprove ? 'approved' : 'pending';
+
+        const payload = {
+            empId:       emp.id,
+            empName:     emp.name,
+            department:  emp.dept,
+            empType:     emp.empType,
+            leaveType,
+            fromDate,
+            toDate,
+            numberOfDays: days,
+            reason,
+            description,
+            status,
+            actionBy:   autoApprove ? 'HR Admin' : '',
+            actionDate: autoApprove ? nowDate : '',
+            remarks:    autoApprove ? (description || 'Applied & approved by Admin') : description,
+        };
+
+        if (isOffline) {
+            const newReq = {
+                id: ++S._nextMockId,
+                empId: emp.id, empName: emp.name, dept: emp.dept, empType: emp.empType,
+                leaveType, from: fromDate, days,
+                reason, status, addedOn: nowDate,
+                actionBy: payload.actionBy, actionDate: payload.actionDate, remarks: payload.remarks,
+            };
+            S.requests.unshift(newReq);
+            closeModal('adminApplyModal');
+            await Promise.all([renderPending(), loadStats()]);
+            showToast(`Leave ${autoApprove ? 'applied & approved' : 'submitted'} for ${emp.name} (demo mode).`, 'success');
+        } else {
+            try {
+                await api('/leave/requests', { method: 'POST', body: JSON.stringify(payload) });
+                closeModal('adminApplyModal');
+                await Promise.all([renderPending(), loadStats()]);
+                showToast(`Leave ${autoApprove ? 'applied & approved' : 'submitted'} for ${emp.name}!`, 'success');
+            } catch (_) {
+                // error already toasted by api()
+            }
+        }
+
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane mr-1"></i>Submit';
     }
 
     // =====================================================================
@@ -937,7 +1493,7 @@
         const status = document.getElementById('historyStatus').value;
         const year   = document.getElementById('historyYear').value;
         const search = document.getElementById('searchHistory').value.toLowerCase();
-        document.getElementById('historyTableBody').innerHTML = loadingRow(7);
+        document.getElementById('historyTableBody').innerHTML = emptyRow(7, 'Failed to load history.');
         document.getElementById('historyEmpty').style.display = 'none';
 
         let list;
@@ -968,7 +1524,7 @@
             return;
         }
 
-        document.getElementById('historyTableBody').innerHTML = list.map(r => {
+         document.getElementById('historyTableBody').innerHTML = list.map(r => {
             const empName   = r.empName   || r.employeeName || '—';
             const empId     = r.empId     || r.employeeId   || '—';
             const leaveType = r.leaveType || '—';
@@ -988,9 +1544,103 @@
                 <td><span class="status-${sts} text-xs px-2 py-1 rounded-full font-medium">${sts.charAt(0).toUpperCase()+sts.slice(1)}</span></td>
                 <td class="text-sm" style="color:var(--text-light);">${actionBy}</td>
                 <td class="text-sm" style="color:var(--text-light);max-width:140px;">${remarks}</td>
+                <td>
+                    <button onclick="openHistoryView(${r.id})" class="btn-icon mr-1" title="View details"><i class="fas fa-eye"></i></button>
+                    ${sts === 'approved'
+                        ? `<button onclick="openHistoryAction(${r.id},'cancel')" class="btn-danger" title="Cancel this leave"><i class="fas fa-ban mr-1"></i>Cancel</button>`
+                        : sts === 'rejected'
+                        ? `<button onclick="openHistoryAction(${r.id},'approve')" class="btn-success" title="Approve this leave"><i class="fas fa-check mr-1"></i>Approve</button>`
+                        : ''}
+                </td>
             </tr>`;
         }).join('');
     }
+
+     // =====================================================================
+    //  3b. HISTORY VIEW DETAILS MODAL
+    // =====================================================================
+    function openHistoryView(id) {
+        const list = S._historyList || [];
+        const r = list.find(x => x.id == id);
+        if (!r) { showToast('Details not found.', 'error'); return; }
+
+        const empName   = r.empName   || r.employeeName || '—';
+        const empId     = r.empId     || r.employeeId   || '—';
+        const empType   = r.empType   || r.employeeType || '';
+        const deptName  = r.department|| r.dept || '—';
+        const leaveType = r.leaveType || '—';
+        const from      = r.fromDate  || r.from  || r.startDate;
+        const to        = r.toDate    || r.to    || from;
+        const days      = r.numberOfDays || r.days || 0;
+        const sts       = r.status    || 'pending';
+        const reason    = r.reason    || '—';
+        const description = r.description || '';
+        const actionBy  = r.actionBy  || '—';
+        const actionDate= r.actionDate;
+        const remarks   = r.remarks   || '—';
+        const addedOn   = r.addedOn;
+        const allotted  = r.balanceAllotted;
+        const used      = r.balanceUsed;
+        const remaining = r.balanceRemaining;
+
+        document.getElementById('historyViewBody').innerHTML = `
+            <div style="background:var(--primary-bg-light);border-radius:10px;padding:14px;margin-bottom:14px;">
+                <p class="text-sm font-semibold" style="color:var(--primary);">${empName} (${empId}) ${empType ? `<span class="badge badge-${empType.toLowerCase().replace(/\s+/g,'-')}">${empType}</span>` : ''}</p>
+                <p class="text-xs mt-1" style="color:var(--text-light);">${deptName}</p>
+            </div>
+
+            <div class="detail-row"><span class="detail-label">Leave Type</span><span class="detail-value"><span class="badge-custom">${leaveType}</span></span></div>
+            <div class="detail-row"><span class="detail-label">Status</span><span class="detail-value"><span class="status-${sts} text-xs px-2 py-1 rounded-full font-medium">${sts.charAt(0).toUpperCase()+sts.slice(1)}</span></span></div>
+            <div class="detail-row"><span class="detail-label">From</span><span class="detail-value">${fmtDate(from)}</span></div>
+            <div class="detail-row"><span class="detail-label">To</span><span class="detail-value">${fmtDate(to)}</span></div>
+            <div class="detail-row"><span class="detail-label">Total Days</span><span class="detail-value">${days}</span></div>
+            <div class="detail-row"><span class="detail-label">Reason</span><span class="detail-value" style="text-align:right;max-width:60%;">${reason}</span></div>
+            ${description ? `<div class="detail-row"><span class="detail-label">Description</span><span class="detail-value" style="text-align:right;max-width:60%;">${description}</span></div>` : ''}
+            ${allotted != null ? `<div class="detail-row"><span class="detail-label">Balance (Allot / Used / Left)</span><span class="detail-value">${allotted} / ${used ?? 0} / ${remaining ?? '—'}</span></div>` : ''}
+            <div class="detail-row"><span class="detail-label">Applied On</span><span class="detail-value">${fmtDate(addedOn)}</span></div>
+            <div class="detail-row"><span class="detail-label">Action By</span><span class="detail-value">${actionBy}</span></div>
+            <div class="detail-row"><span class="detail-label">Action Date</span><span class="detail-value">${actionDate ? fmtDate(actionDate) : '—'}</span></div>
+            <div class="detail-row"><span class="detail-label">Remarks</span><span class="detail-value" style="text-align:right;max-width:60%;">${remarks}</span></div>
+        `;
+
+        document.getElementById('historyViewModal').classList.add('active');
+    }
+
+     // =====================================================================
+    //  3c. HISTORY ACTION (Cancel approved → rejected | Approve rejected → approved)
+    //      Reuses the same actionModal UI/endpoint as Pending Approve/Reject,
+    //      but sets S.actionContext so confirmAction() knows to refresh History too.
+    // =====================================================================
+    function openHistoryAction(id, type) {
+        S.actionId = id;
+        S.actionType = type === 'cancel' ? 'reject' : 'approve'; // maps to backend action values
+        S.actionContext = 'history';
+
+        const list = S._historyList || [];
+        const r = list.find(x => x.id == id);
+        const empName   = r ? (r.empName   || r.employeeName || '—') : '—';
+        const empId     = r ? (r.empId     || r.employeeId   || '—') : '—';
+        const empType   = r ? (r.empType   || r.employeeType || '')  : '';
+        const leaveType = r ? (r.leaveType || '—') : '—';
+        const from      = r ? (r.from      || r.fromDate || '') : '';
+        const days      = r ? (r.days      || r.numberOfDays || 0) : 0;
+        const reason    = r ? (r.reason    || '—') : '—';
+
+        document.getElementById('actionTitle').textContent = type === 'cancel' ? '🚫 Cancel Leave' : '✅ Approve Leave';
+        document.getElementById('actionBody').innerHTML = `
+            <div style="background:var(--primary-bg-light);border-radius:10px;padding:14px;margin-bottom:4px;">
+                <p class="text-sm font-semibold" style="color:var(--primary);">${empName} (${empId}) <span class="badge badge-${empType.toLowerCase()}">${empType}</span></p>
+                <p class="text-xs mt-1" style="color:var(--text-light);">${leaveType} • ${fmtDate(from)} • ${days} day(s)</p>
+                <p class="text-xs mt-1" style="color:var(--text-light);">Reason: ${reason}</p>
+                ${type === 'cancel' ? `<p class="text-xs mt-2" style="color:#dc3545;"><i class="fas fa-exclamation-triangle mr-1"></i>This will revert the leave to Rejected and restore the balance.</p>` : ''}
+            </div>`;
+        const btn = document.getElementById('actionConfirmBtn');
+        btn.textContent = type === 'cancel' ? 'Confirm Cancel' : 'Approve';
+        btn.style.background = type === 'cancel' ? '#dc3545' : '#2b7a3e';
+        document.getElementById('actionRemarks').value = '';
+        document.getElementById('actionModal').classList.add('active');
+    }
+
 
     function exportHistory() {
         const list = S._historyList || [];
@@ -1419,6 +2069,8 @@
 
 
 
+let LOADED_DEPARTMENTS = [];
+
 async function loadDepartments() {
     try {
         const res  = await fetch('http://localhost:8086/api/company/departments');
@@ -1433,7 +2085,7 @@ async function loadDepartments() {
         else if (Array.isArray(json.departments))         depts = json.departments;
 
         console.log('DEPTS FINAL:', depts);
-        if (depts.length > 0) populateDeptSelects(depts);
+        if (depts.length > 0) { LOADED_DEPARTMENTS = depts; populateDeptSelects(depts); }
 
     } catch (e) {
         console.error('loadDepartments error:', e);

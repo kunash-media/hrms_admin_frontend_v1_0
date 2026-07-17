@@ -10,6 +10,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
 
+    <!-- Leaflet.js + OpenStreetMap — free, no API key required -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
     <style>
    
     #header-container {
@@ -879,7 +883,43 @@
         </div>
     </div>
 
-    <script src="/assets/js/component-loader.js"></script>  <!-- ← ADD THIS LINE -->
+<!-- ===== VIEW LOCATION MAP MODAL — NEW ===== -->
+<div id="locationMapModal" class="modal">
+    <div class="modal-content modal-lg" style="max-width:700px;">
+        <div class="modal-header" style="align-items:flex-start;">
+            <div>
+                <h3 id="locationModalTitle">Employee Location</h3>
+                <p style="font-size:11px; color:var(--color-secondary); margin-top:2px;" id="locationModalSubtitle"></p>
+            </div>
+            <div style="display:flex; align-items:flex-start; gap:10px;">
+                <div style="background:rgba(27,115,140,0.06); border:1px solid var(--color-border); border-radius:8px; padding:8px 12px; text-align:right; min-width:150px;">
+                    <div style="font-size:9px; font-weight:700; color:var(--color-secondary); text-transform:uppercase; letter-spacing:0.04em;">Checked-in at</div>
+                    <div style="font-size:12px; font-weight:600; color:var(--color-primary); margin-top:2px;" id="checkinLocationName">--</div>
+                </div>
+                <button class="modal-close" onclick="closeLocationModal()" aria-label="Close">&times;</button>
+            </div>
+        </div>
+
+        <div id="locationMapContainer" style="width:100%; height:360px; border-radius:10px; overflow:hidden; border:1px solid var(--color-border);"></div>
+
+        <div style="margin-top:14px; display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:8px;">
+            <div style="font-size:12px; color:var(--color-secondary);">
+                <i class="fas fa-map-marker-alt" style="color:var(--color-primary);"></i>
+                <span id="locationCoordsText">--</span>
+            </div>
+            <div style="font-size:11px; color:var(--color-secondary);">
+                <i class="fas fa-sync-alt"></i>
+                Last updated: <span id="locationLastUpdated">--</span>
+                <span style="margin-left:6px; color:var(--color-primary); font-weight:600;">(auto-refresh every 5 min)</span>
+                <button onclick="manualRefreshLocation()" class="btn-icon" title="Refresh now" style="margin-left:8px;">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script src="/assets/js/component-loader.js"></script> 
     <script src="/assets/js/common.js"></script>
     <script src="/assets/js/sidebar.js"></script>
     <script src="/assets/js/header.js"></script>
@@ -893,12 +933,31 @@
         ALL_EMPLOYEES:    '/api/employees/all-employees',
         ATTENDANCE_BY_EMP: (id) => `/api/attendance/all-attendance-employee/${id}`,
         UPDATE_ATTENDANCE: (id) => `/api/attendance/update/${id}`,
+         // Geofencing endpoints — NEW
+        GEO_BY_EMPLOYEE:   (id) => `/api/attendance-geo/by-employee/${id}`,
+        GEO_BY_ATTENDANCE: (id) => `/api/attendance-geo/by-attendance/${id}`,
         // Summary endpoints — wire these once your backend exposes them
         // (see provided Spring controller spec at the bottom of this file)
         SUMMARY_DAILY:    '/api/attendance/summary/daily',        // ?date=YYYY-MM-DD
         SUMMARY_MONTHLY:  '/api/attendance/summary/monthly',      // ?year=YYYY&month=MM
         SUMMARY_DEPT:     '/api/attendance/summary/department',   // ?date=YYYY-MM-DD
     };
+
+    // Location polling interval — NEW
+    // Set to 5 * 60 * 1000 for production. For quick testing, temporarily change
+    // to something like 15 * 1000 (15 sec) so you don't have to wait 5 min.
+    const LOCATION_POLL_INTERVAL_MS = 5 * 60 * 1000;
+
+    // Reverse-geocode cache — avoids duplicate Nominatim calls for same coordinates
+    const geoNameCache = new Map();
+
+    async function reverseGeocodeCached(lat, lng) {
+        const key = `${lat.toFixed(4)},${lng.toFixed(4)}`;
+        if (geoNameCache.has(key)) return geoNameCache.get(key);
+        const name = await reverseGeocode(lat, lng);
+        geoNameCache.set(key, name);
+        return name;
+    }
 
     /* =======================================================================
        FALLBACK DEPARTMENT LIST
@@ -938,6 +997,12 @@
         summaryMonthYear: null, // { month: 1-12, year: YYYY }
         summaryCustomRange: null, // { from, to } or null
     };
+
+        // ===== Location Tracking state — NEW =====
+        let locationMap            = null;
+        let locationMarker         = null;
+        let locationPollInterval   = null;
+        let locationModalEmpId     = null;
 
     /* =======================================================================
        UTILITY HELPERS
@@ -1007,6 +1072,225 @@
     /** Generic modal close */
     function closeModal(id) {
         document.getElementById(id)?.classList.remove('active');
+    }
+
+    /* =======================================================================
+       LOCATION TRACKING MODAL — Leaflet.js + OpenStreetMap (free, no API key)
+       ======================================================================= */
+
+   
+      /** Called from "View Location" button in Daily Attendance table */
+    async function openLocationModal(btn) {
+        const row         = btn.closest('tr');
+        const empPrimeId  = parseInt(row.dataset.primeId, 10);
+        const empName     = row.dataset.empName || 'Employee';
+        const attDate     = row.dataset.attDate || '';
+
+        if (!empPrimeId) { showToast('Employee not found', 'error'); return; }
+
+        locationModalEmpId = empPrimeId;
+
+        document.getElementById('locationModalTitle').textContent    = `${empName} — Location Tracking`;
+        document.getElementById('locationModalSubtitle').textContent = 'Loading area...';
+        document.getElementById('locationCoordsText').textContent    = 'Loading...';
+        document.getElementById('locationLastUpdated').textContent   = '--';
+        document.getElementById('checkinLocationName').textContent   = '--';
+
+        document.getElementById('locationMapModal').classList.add('active');
+
+        if (locationMap) {
+            locationMap.remove();
+            locationMap    = null;
+            locationMarker = null;
+        }
+
+        console.log(`[LocationTracking] Modal opened for employeePrimeId: ${empPrimeId} at ${new Date().toLocaleTimeString('en-IN')}`);
+
+        await loadAndRenderLocation(empPrimeId, true);
+
+       locationPollInterval = setInterval(() => {
+            console.log(`[LocationTracking] Polling tick — refreshing location for employeePrimeId: ${empPrimeId} at ${new Date().toLocaleTimeString('en-IN')}`);
+            loadAndRenderLocation(empPrimeId, false);
+        }, LOCATION_POLL_INTERVAL_MS);
+
+        console.log(`[LocationTracking] Polling started — interval: ${LOCATION_POLL_INTERVAL_MS / 1000}s — will next fire at ${new Date(Date.now() + LOCATION_POLL_INTERVAL_MS).toLocaleTimeString('en-IN')}`);
+    }
+
+
+
+    /** Fetch latest geo log for employee and render on map */
+    // async function loadAndRenderLocation(empPrimeId, isInitialLoad) {
+    //     try {
+    //         const logs = await apiFetch(API.GEO_BY_EMPLOYEE(empPrimeId));
+
+    //         if (!logs || logs.length === 0) {
+    //             document.getElementById('locationCoordsText').textContent  = 'No location data available for this employee';
+    //             document.getElementById('locationLastUpdated').textContent = '--';
+    //             if (isInitialLoad) initEmptyMap();
+    //             return;
+    //         }
+
+    //         // Backend returns logs sorted by capturedAt desc — first entry is most recent
+    //         const latest = logs[0];
+    //         renderLocationOnMap(latest, isInitialLoad);
+    //     } catch (err) {
+    //         console.error('[Location Tracking]', err);
+    //         if (isInitialLoad) {
+    //             document.getElementById('locationCoordsText').textContent = 'Failed to load location data';
+    //             initEmptyMap();
+    //         }
+    //     }
+    // }
+
+
+     /** Fetch latest geo log for employee and render on map */
+    async function loadAndRenderLocation(empPrimeId, isInitialLoad) {
+        try {
+            const logs = await apiFetch(API.GEO_BY_EMPLOYEE(empPrimeId));
+            console.log(`[LocationTracking] Fetched ${logs ? logs.length : 0} geo log(s) for employeePrimeId: ${empPrimeId}`);
+
+            if (!logs || logs.length === 0) {
+                document.getElementById('locationCoordsText').textContent    = 'No location data available for this employee';
+                document.getElementById('locationLastUpdated').textContent   = '--';
+                document.getElementById('locationModalSubtitle').textContent = 'No area data';
+                document.getElementById('checkinLocationName').textContent   = '--';
+                if (isInitialLoad) initEmptyMap();
+                return;
+            }
+
+            const latest = logs[0];
+            console.log(`[LocationTracking] Most recent log — lat: ${latest.latitude}, lng: ${latest.longitude}, capturedAt: ${latest.capturedAt}`);
+            renderLocationOnMap(latest, isInitialLoad);
+        } catch (err) {
+            console.error('[LocationTracking] Fetch failed:', err);
+            if (isInitialLoad) {
+                document.getElementById('locationCoordsText').textContent = 'Failed to load location data';
+                initEmptyMap();
+            }
+        }
+    }
+
+     /** Reverse geocode lat/lng to a readable area name — free, no API key (Nominatim usage policy: max 1 req/sec) */
+    async function reverseGeocode(lat, lng) {
+        try {
+            const url = `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}&zoom=16&addressdetails=1`;
+            const res = await fetch(url, { headers: { 'Accept-Language': 'en' } });
+            if (!res.ok) throw new Error(`Reverse geocode failed (${res.status})`);
+            const data = await res.json();
+            console.log('[LocationTracking] Reverse geocode result:', data.display_name);
+
+            const addr = data.address || {};
+            const area = addr.suburb || addr.neighbourhood || addr.road || addr.village || addr.town || addr.city_district || '';
+            const city = addr.city || addr.town || addr.county || '';
+            const short = [area, city].filter(Boolean).join(', ');
+
+            return short || data.display_name || 'Unknown area';
+        } catch (err) {
+            console.warn('[LocationTracking] Reverse geocode failed:', err.message);
+            return 'Area lookup unavailable';
+        }
+    }
+
+    /** Fallback map view when no geo data exists yet */
+    function initEmptyMap() {
+        if (locationMap) return;
+        const defaultLat = 18.5204303;
+        const defaultLng = 73.8567437;
+        locationMap = L.map('locationMapContainer').setView([defaultLat, defaultLng], 5);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(locationMap);
+    }
+
+    /** Plot / update marker with latest coordinate */
+    // function renderLocationOnMap(geoLog, isInitialLoad) {
+    //     const lat = geoLog.latitude;
+    //     const lng = geoLog.longitude;
+    //     const capturedAt = geoLog.capturedAt ? new Date(geoLog.capturedAt).toLocaleString('en-IN') : '--';
+
+    //     document.getElementById('locationCoordsText').textContent =
+    //         `Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)} (${geoLog.logType || 'CHECK_IN'})`;
+    //     document.getElementById('locationLastUpdated').textContent = capturedAt;
+
+    //     if (!locationMap) {
+    //         locationMap = L.map('locationMapContainer').setView([lat, lng], 16);
+    //         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    //             attribution: '&copy; OpenStreetMap contributors',
+    //             maxZoom: 19
+    //         }).addTo(locationMap);
+    //     }
+
+    //     if (locationMarker) {
+    //         locationMarker.setLatLng([lat, lng]);
+    //     } else {
+    //         locationMarker = L.marker([lat, lng]).addTo(locationMap);
+    //     }
+
+    //     locationMarker.bindPopup(
+    //         `<b>${geoLog.logType || 'Location'}</b><br>Accuracy: ${geoLog.accuracy ? geoLog.accuracy.toFixed(1) + ' m' : '--'}<br>${capturedAt}`
+    //     );
+
+    //     if (isInitialLoad) {
+    //         locationMap.setView([lat, lng], 16);
+    //         locationMarker.openPopup();
+    //     }
+    // }
+
+    /** Plot / update marker with latest coordinate */
+    async function renderLocationOnMap(geoLog, isInitialLoad) {
+        const lat = geoLog.latitude;
+        const lng = geoLog.longitude;
+        const capturedAt = geoLog.capturedAt ? new Date(geoLog.capturedAt).toLocaleString('en-IN') : '--';
+
+        document.getElementById('locationCoordsText').textContent =
+            `Lat: ${lat.toFixed(6)}, Lng: ${lng.toFixed(6)} (${geoLog.logType || 'CHECK_IN'})`;
+        document.getElementById('locationLastUpdated').textContent = capturedAt;
+
+        if (!locationMap) {
+            locationMap = L.map('locationMapContainer').setView([lat, lng], 16);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; OpenStreetMap contributors',
+                maxZoom: 19
+            }).addTo(locationMap);
+        }
+
+        if (locationMarker) {
+            locationMarker.setLatLng([lat, lng]);
+        } else {
+            locationMarker = L.marker([lat, lng]).addTo(locationMap);
+        }
+
+        locationMarker.bindPopup(
+            `<b>${geoLog.logType || 'Location'}</b><br>Accuracy: ${geoLog.accuracy ? geoLog.accuracy.toFixed(1) + ' m' : '--'}<br>${capturedAt}`
+        );
+
+        if (isInitialLoad) {
+            locationMap.setView([lat, lng], 16);
+            locationMarker.openPopup();
+        }
+
+        // Reverse geocode — updates heading subtitle + top-right check-in box
+        const areaName = await reverseGeocode(lat, lng);
+        document.getElementById('locationModalSubtitle').textContent = `📍 ${areaName}`;
+        document.getElementById('checkinLocationName').textContent   = areaName;
+    }
+
+    /** Close modal and stop polling */
+    function closeLocationModal() {
+        document.getElementById('locationMapModal').classList.remove('active');
+        if (locationPollInterval) {
+            clearInterval(locationPollInterval);
+            locationPollInterval = null;
+        }
+        locationModalEmpId = null;
+    }
+
+    /** Manual refresh — for testing without waiting for the 5-min poll */
+    function manualRefreshLocation() {
+        if (!locationModalEmpId) return;
+        console.log(`[LocationTracking] Manual refresh triggered for employeePrimeId: ${locationModalEmpId} at ${new Date().toLocaleTimeString('en-IN')}`);
+        loadAndRenderLocation(locationModalEmpId, false);
     }
 
     /** Today as YYYY-MM-DD */
@@ -1321,6 +1605,9 @@
                     <button class="btn-view-summary" onclick="openAttendanceSummary(this)" title="View Summary">
                         <i class="fas fa-eye"></i> Summary
                     </button>
+                      <button class="btn-icon" onclick="openLocationModal(this)" title="View Location">
+                        <i class="fas fa-map-marker-alt"></i>
+                    </button>
                 </td>
             </tr>`;
         }).join('');
@@ -1598,43 +1885,6 @@
         };
     }
 
-    // function renderSummaryModal() {
-    //     const { from, to } = getSummaryDateRange();
-    //     const records = state.summaryAllRecords.filter(r =>
-    //         r.attendanceDate >= from && r.attendanceDate <= to
-    //     );
-
-    //     // Update range label
-    //     document.getElementById('summaryModalRangeLabel').textContent =
-    //         `${formatDate(from)} – ${formatDate(to)} (${records.length} records)`;
-
-    //     // Mini stats
-    //     const stats = { present: 0, absent: 0, late: 0, leave: 0 };
-    //     records.forEach(r => {
-    //         const s = (r.status || '').toLowerCase();
-    //         if (s === 'present')        stats.present++;
-    //         else if (s === 'absent')    stats.absent++;
-    //         else if (s === 'late')      stats.late++;
-    //         else if (s === 'leave')     stats.leave++;
-    //     });
-    //     document.getElementById('ms-present').textContent = stats.present;
-    //     document.getElementById('ms-absent').textContent  = stats.absent;
-    //     document.getElementById('ms-late').textContent    = stats.late;
-    //     document.getElementById('ms-leave').textContent   = stats.leave;
-    //     document.getElementById('ms-wfh').textContent     = stats.wfh;   // NEW
-
-
-    //     // Build a date→record map for quick lookup
-    //     const recMap = {};
-    //     records.forEach(r => { recMap[r.attendanceDate] = r; });
-
-    //     if (state.summaryView === 'calendar') {
-    //         renderSummaryCalendar(from, to, recMap);
-    //     } else {
-    //         renderSummaryTable(records);
-    //     }
-    // }
-    
     
     function renderSummaryModal() {
     const { from, to } = getSummaryDateRange();
@@ -1739,23 +1989,93 @@
         return map[(status || '').toLowerCase().replace(' ', '_')] || '#ccc';
     }
 
+  
     function renderSummaryTable(records) {
         const tbody = document.getElementById('summaryTableBody');
         if (records.length === 0) {
             tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><i class="fas fa-calendar-times"></i><p>No records.</p></div></td></tr>`;
             return;
         }
-        // Sort ascending for table view
         const sorted = [...records].sort((a, b) => (a.attendanceDate || '').localeCompare(b.attendanceDate || ''));
+
         tbody.innerHTML = sorted.map(rec => `
-            <tr>
+            <tr data-att-id="${rec.attendanceId || ''}">
                 <td style="font-weight:600; color:var(--color-primary);">${formatDate(rec.attendanceDate)}</td>
-                <td>${formatTime(rec.checkInTime)}</td>
-                <td>${formatTime(rec.checkOutTime)}</td>
+                <td class="checkin-time-cell">
+                    ${formatTime(rec.checkInTime)}
+                    <div class="geo-checkin-inline" style="font-size:10.5px; color:var(--color-secondary); margin-top:2px;">
+                        <i class="fas fa-circle-notch fa-spin"></i>
+                    </div>
+                </td>
+                <td class="checkout-time-cell">
+                    ${formatTime(rec.checkOutTime)}
+                    <div class="geo-checkout-inline" style="font-size:10.5px; color:var(--color-secondary); margin-top:2px;">
+                        <i class="fas fa-circle-notch fa-spin"></i>
+                    </div>
+                </td>
                 <td>${formatHours(rec.totalHours)}</td>
                 <td>${statusBadge(rec.status)}</td>
                 <td style="color:#666; font-size:12px;">${escapeHtml(rec.notes || '—')}</td>
             </tr>`).join('');
+
+        loadHistoryLocations(sorted);
+    }
+
+    /** Lazily fetch check-in/check-out location and inject beside the time in the same cell */
+    async function loadHistoryLocations(records) {
+        for (const rec of records) {
+            const row = document.querySelector(`#summaryTableBody tr[data-att-id="${rec.attendanceId}"]`);
+            if (!row) continue;
+
+            const checkInInline  = row.querySelector('.geo-checkin-inline');
+            const checkOutInline = row.querySelector('.geo-checkout-inline');
+
+            if (!rec.attendanceId) {
+                if (checkInInline)  checkInInline.textContent  = '';
+                if (checkOutInline) checkOutInline.textContent = '';
+                continue;
+            }
+
+            try {
+                const logs = await apiFetch(API.GEO_BY_ATTENDANCE(rec.attendanceId));
+
+                // Sort ascending by capturedAt — earliest log is our best guess for check-in location
+                const sortedLogs = [...(logs || [])].sort((a, b) =>
+                    new Date(a.capturedAt) - new Date(b.capturedAt));
+
+                const checkOutLog = logs?.find(l => l.logType === 'CHECK_OUT');
+
+                // Prefer exact CHECK_IN log; fall back to the earliest log of any type
+                // (e.g. LIVE) if the check-in capture was missed — better than showing nothing
+                let checkInLog = logs?.find(l => l.logType === 'CHECK_IN');
+                let checkInIsApprox = false;
+                if (!checkInLog && sortedLogs.length > 0) {
+                    checkInLog = sortedLogs[0];
+                    checkInIsApprox = true;
+                }
+
+                if (checkInLog) {
+                    const name = await reverseGeocodeCached(checkInLog.latitude, checkInLog.longitude);
+                    const prefix = checkInIsApprox ? '~' : '';
+                    if (checkInInline) checkInInline.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${prefix}${escapeHtml(name)}`;
+                } else if (checkInInline) {
+                    checkInInline.textContent = '';
+                }
+
+                if (checkOutLog) {
+                    const name = await reverseGeocodeCached(checkOutLog.latitude, checkOutLog.longitude);
+                    if (checkOutInline) checkOutInline.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${escapeHtml(name)}`;
+                } else if (checkOutInline) {
+                    checkOutInline.textContent = '';
+                }
+            } catch (err) {
+                console.warn(`[History Location] Failed for attendanceId ${rec.attendanceId}:`, err.message);
+                if (checkInInline)  checkInInline.textContent  = '';
+                if (checkOutInline) checkOutInline.textContent = '';
+            }
+
+            await new Promise(r => setTimeout(r, 1100)); // Nominatim free-tier: max 1 req/sec
+        }
     }
 
     function switchSummaryView(view) {
@@ -2159,11 +2479,16 @@
 
     /* =======================================================================
        CLOSE MODALS ON BACKDROP CLICK
-       ======================================================================= */
+       ====================================================================== */
     document.querySelectorAll('.modal').forEach(modal => {
         modal.addEventListener('click', function(e) {
             if (e.target === this) this.classList.remove('active');
         });
+    });
+
+    // Backdrop click on location modal must also stop polling — NEW
+    document.getElementById('locationMapModal')?.addEventListener('click', function(e) {
+        if (e.target === this) closeLocationModal();
     });
 
     /* =======================================================================
