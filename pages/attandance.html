@@ -386,6 +386,33 @@
             box-shadow: 0 0 0 3px var(--color-secondary)/25% !important;
             outline: none !important;
         }
+
+        /* ── History tab — clickable "Show location" link ── */
+.geo-reveal-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--color-primary, #1B738C);
+  text-decoration: none;
+  font-weight: 500;
+  cursor: pointer;
+  padding: 2px 6px;
+  margin-top: 2px;
+  border-radius: 5px;
+  border: 1px dashed var(--color-border, #BDE4EE);
+  background: rgba(27, 115, 140, 0.04);
+  transition: all 0.15s ease;
+}
+
+.geo-reveal-link:hover {
+  background: rgba(27, 115, 140, 0.1);
+  border-color: var(--color-primary, #1B738C);
+  text-decoration: underline;
+}
+
+.geo-reveal-link i {
+  font-size: 10px;
+}
     </style>
 </head>
 <body>
@@ -1761,6 +1788,8 @@
 
         state.summaryEmp          = emp;
         state.summaryCustomRange  = null;
+        historyGeoLogsByAttendance = null; // reset batch cache for new employee — NEW
+        historyGeoFetchPromise     = null; // NEW
 
         // Pre-select current month
         const now = new Date();
@@ -1990,7 +2019,7 @@
     }
 
   
-    function renderSummaryTable(records) {
+function renderSummaryTable(records) {
         const tbody = document.getElementById('summaryTableBody');
         if (records.length === 0) {
             tbody.innerHTML = `<tr><td colspan="6"><div class="empty-state"><i class="fas fa-calendar-times"></i><p>No records.</p></div></td></tr>`;
@@ -2000,82 +2029,111 @@
 
         tbody.innerHTML = sorted.map(rec => `
             <tr data-att-id="${rec.attendanceId || ''}">
-                <td style="font-weight:600; color:var(--color-primary);">${formatDate(rec.attendanceDate)}</td>
+               <td style="font-weight:600; color:var(--color-primary);">
+                    <div style="display:flex; align-items:center; gap:8px; flex-wrap:wrap;">
+                        <span>${formatDate(rec.attendanceDate)}</span>
+                        ${rec.attendanceId ? `<a href="#" class="geo-reveal-link" data-att-id="${rec.attendanceId}" title="Show check-in and check-out location">
+                            <i class="fas fa-map-marker-alt"></i> Show location</a>` : ''}
+                    </div>
+                </td>
                 <td class="checkin-time-cell">
                     ${formatTime(rec.checkInTime)}
-                    <div class="geo-checkin-inline" style="font-size:10.5px; color:var(--color-secondary); margin-top:2px;">
-                        <i class="fas fa-circle-notch fa-spin"></i>
-                    </div>
+                    <div class="geo-checkin-inline" style="font-size:10.5px; color:var(--color-secondary); margin-top:2px;"></div>
                 </td>
                 <td class="checkout-time-cell">
                     ${formatTime(rec.checkOutTime)}
-                    <div class="geo-checkout-inline" style="font-size:10.5px; color:var(--color-secondary); margin-top:2px;">
-                        <i class="fas fa-circle-notch fa-spin"></i>
-                    </div>
+                    <div class="geo-checkout-inline" style="font-size:10.5px; color:var(--color-secondary); margin-top:2px;"></div>
                 </td>
                 <td>${formatHours(rec.totalHours)}</td>
                 <td>${statusBadge(rec.status)}</td>
                 <td style="color:#666; font-size:12px;">${escapeHtml(rec.notes || '—')}</td>
             </tr>`).join('');
 
-        loadHistoryLocations(sorted);
+        // Single batch fetch — ALL geo logs for this employee in ONE API call
+        primeHistoryGeoCache();
+
+        tbody.querySelectorAll('.geo-reveal-link').forEach(link => {
+            link.addEventListener('click', onGeoRevealClick);
+        });
+    
     }
 
-    /** Lazily fetch check-in/check-out location and inject beside the time in the same cell */
-    async function loadHistoryLocations(records) {
-        for (const rec of records) {
-            const row = document.querySelector(`#summaryTableBody tr[data-att-id="${rec.attendanceId}"]`);
-            if (!row) continue;
+    let historyGeoLogsByAttendance = null;
+    let historyGeoFetchPromise     = null;
 
-            const checkInInline  = row.querySelector('.geo-checkin-inline');
-            const checkOutInline = row.querySelector('.geo-checkout-inline');
+    async function primeHistoryGeoCache() {
+        if (!state.summaryEmp) return;
+        if (historyGeoFetchPromise) return historyGeoFetchPromise;
 
-            if (!rec.attendanceId) {
-                if (checkInInline)  checkInInline.textContent  = '';
-                if (checkOutInline) checkOutInline.textContent = '';
-                continue;
-            }
+        historyGeoFetchPromise = apiFetch(API.GEO_BY_EMPLOYEE(state.summaryEmp.employeePrimeId))
+            .then(logs => {
+                historyGeoLogsByAttendance = {};
+                (logs || []).forEach(log => {
+                    if (!historyGeoLogsByAttendance[log.attendanceId]) {
+                        historyGeoLogsByAttendance[log.attendanceId] = [];
+                    }
+                    historyGeoLogsByAttendance[log.attendanceId].push(log);
+                });
+                console.log(`[History Location] Batch-fetched ${logs.length} geo log(s) in 1 API call`);
+            })
+            .catch(err => {
+                console.warn('[History Location] Batch fetch failed:', err.message);
+                historyGeoLogsByAttendance = {};
+            });
 
-            try {
-                const logs = await apiFetch(API.GEO_BY_ATTENDANCE(rec.attendanceId));
+        return historyGeoFetchPromise;
+    }
 
-                // Sort ascending by capturedAt — earliest log is our best guess for check-in location
-                const sortedLogs = [...(logs || [])].sort((a, b) =>
-                    new Date(a.capturedAt) - new Date(b.capturedAt));
+    /** Single click — reveals BOTH check-in and check-out location for that row */
+    /** Single click on Date-cell button — reveals BOTH check-in and check-out location in their own columns */
+    async function onGeoRevealClick(e) {
+        e.preventDefault();
+        const link  = e.currentTarget;
+        const attId = link.dataset.attId;
+        const row   = link.closest('tr');
 
-                const checkOutLog = logs?.find(l => l.logType === 'CHECK_OUT');
+        // Grab the target cells FIRST — before touching the link itself
+        const checkInCell  = row.querySelector('.geo-checkin-inline');
+        const checkOutCell = row.querySelector('.geo-checkout-inline');
 
-                // Prefer exact CHECK_IN log; fall back to the earliest log of any type
-                // (e.g. LIVE) if the check-in capture was missed — better than showing nothing
-                let checkInLog = logs?.find(l => l.logType === 'CHECK_IN');
-                let checkInIsApprox = false;
-                if (!checkInLog && sortedLogs.length > 0) {
-                    checkInLog = sortedLogs[0];
-                    checkInIsApprox = true;
-                }
+        link.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> Loading...';
+        if (checkInCell)  checkInCell.innerHTML  = '<i class="fas fa-circle-notch fa-spin"></i>';
+        if (checkOutCell) checkOutCell.innerHTML = '<i class="fas fa-circle-notch fa-spin"></i>';
 
-                if (checkInLog) {
-                    const name = await reverseGeocodeCached(checkInLog.latitude, checkInLog.longitude);
-                    const prefix = checkInIsApprox ? '~' : '';
-                    if (checkInInline) checkInInline.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${prefix}${escapeHtml(name)}`;
-                } else if (checkInInline) {
-                    checkInInline.textContent = '';
-                }
+        await primeHistoryGeoCache();
 
-                if (checkOutLog) {
-                    const name = await reverseGeocodeCached(checkOutLog.latitude, checkOutLog.longitude);
-                    if (checkOutInline) checkOutInline.innerHTML = `<i class="fas fa-map-marker-alt"></i> ${escapeHtml(name)}`;
-                } else if (checkOutInline) {
-                    checkOutInline.textContent = '';
-                }
-            } catch (err) {
-                console.warn(`[History Location] Failed for attendanceId ${rec.attendanceId}:`, err.message);
-                if (checkInInline)  checkInInline.textContent  = '';
-                if (checkOutInline) checkOutInline.textContent = '';
-            }
+        const logsForAtt = historyGeoLogsByAttendance?.[attId] || [];
+        let checkInLog  = logsForAtt.find(l => l.logType === 'CHECK_IN');
+        const checkOutLog = logsForAtt.find(l => l.logType === 'CHECK_OUT');
+        let checkInIsApprox = false;
 
-            await new Promise(r => setTimeout(r, 1100)); // Nominatim free-tier: max 1 req/sec
+        if (!checkInLog && logsForAtt.length > 0) {
+            const sorted = [...logsForAtt].sort((a, b) => new Date(a.capturedAt) - new Date(b.capturedAt));
+            checkInLog = sorted[0];
+            checkInIsApprox = true;
         }
+
+        const [checkInName, checkOutName] = await Promise.all([
+            checkInLog  ? reverseGeocodeCached(checkInLog.latitude, checkInLog.longitude)   : Promise.resolve(null),
+            checkOutLog ? reverseGeocodeCached(checkOutLog.latitude, checkOutLog.longitude) : Promise.resolve(null),
+        ]);
+
+        // Fill Check-in column — separate from Date cell
+        if (checkInCell) {
+            checkInCell.innerHTML = checkInName
+                ? `<i class="fas fa-map-marker-alt"></i> ${checkInIsApprox ? '~' : ''}${escapeHtml(checkInName)}`
+                : '<span style="color:#999;">No data</span>';
+        }
+
+        // Fill Check-out column — separate from Date cell
+        if (checkOutCell) {
+            checkOutCell.innerHTML = checkOutName
+                ? `<i class="fas fa-map-marker-alt"></i> ${escapeHtml(checkOutName)}`
+                : '<span style="color:#999;">No data</span>';
+        }
+
+        // Only the Date-cell button itself turns into a checkmark — it does NOT show location text
+        link.outerHTML = '<span style="color:var(--color-secondary); font-size:11px;"><i class="fas fa-check"></i> Shown</span>';
     }
 
     function switchSummaryView(view) {

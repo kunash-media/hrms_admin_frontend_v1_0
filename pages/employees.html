@@ -37,9 +37,9 @@
   </style>
 
     <style>
-        * {
-            font-family: 'Inter', sans-serif;
-        }
+        /** {*/
+        /*    font-family: 'Inter', sans-serif;*/
+        /*}*/
 
         /* ===== COMPANY MANAGEMENT THEME (matching company.html exactly) ===== */
         :root {
@@ -707,7 +707,7 @@
         }
 
         ::-webkit-scrollbar {
-            width: 5px;
+            /*width: 4px;*/
         }
 
         ::-webkit-scrollbar-track {
@@ -1377,10 +1377,10 @@ input.valid:focus, select.valid:focus, textarea.valid:focus {
                         </button>
 
                         <!-- PATCH : Upload Bulk btn -->
-                        <button class="btn-primary" onclick="openBulkEmployeeUpload()">
-                            <i class="fas fa-layer-group text-[12px]"></i>
-                            Bulk Upload
-                        </button>
+                        <!--<button class="btn-primary" onclick="openBulkEmployeeUpload()">-->
+                        <!--    <i class="fas fa-layer-group text-[12px]"></i>-->
+                        <!--    Bulk Upload-->
+                        <!--</button>-->
                      </div>
                    
                 </div>
@@ -1550,7 +1550,7 @@ input.valid:focus, select.valid:focus, textarea.valid:focus {
                                     <div class="form-group"><label>LinkedIn Profile</label><input id="fLI"
                                             placeholder="linkedin.com/in/username"></div>
                                     <div class="form-group"><label>Father's / Spouse Name</label><input id="fFatherName"
-                                            placeholder="Ramesh Sharma"></div>
+                                            placeholder="Enter Name"></div>
                                 </div>
 
                                 <!-- PwD Block -->
@@ -1670,8 +1670,8 @@ input.valid:focus, select.valid:focus, textarea.valid:focus {
                                     <div class="form-group"><label>HR Business Partner</label><input id="fHRBP"
                                             placeholder="e.g. Priya Sharma"></div>
                                     <div class="form-group"><label>Work Location</label><select id="fWL">
-                                            <option>Mumbai HQ</option>
-                                            <option>Delhi Branch</option>
+                                            <option>Mumbai</option>
+                                            <option>Pune</option>
                                             <option>Remote</option>
                                             <option>Hybrid</option>
                                         </select></div>
@@ -2997,16 +2997,16 @@ function validateEditFormBeforeSubmit() {
     const ecName = document.getElementById('efECName')?.value.trim();
     const ecPhone = document.getElementById('efECPhone')?.value.trim();
     
-    if (!ecName && ecPhone) {
-        showEditFieldError('efECName', 'Emergency contact name is required when phone is provided');
-        isValid = false;
-        errors.push('Emergency name required');
-    }
-    if (ecName && !ecPhone) {
-        showEditFieldError('efECPhone', 'Emergency contact phone is required when name is provided');
-        isValid = false;
-        errors.push('Emergency phone required');
-    }
+    // if (!ecName && ecPhone) {
+    //     showEditFieldError('efECName', 'Emergency contact name is required when phone is provided');
+    //     isValid = false;
+    //     errors.push('Emergency name required');
+    // }
+    // if (ecName && !ecPhone) {
+    //     showEditFieldError('efECPhone', 'Emergency contact phone is required when name is provided');
+    //     isValid = false;
+    //     errors.push('Emergency phone required');
+    // }
     if (ecPhone && !/^[6-9][0-9]{9}$/.test(ecPhone)) {
         showEditFieldError('efECPhone', 'Enter a valid 10-digit emergency phone number');
         isValid = false;
@@ -3322,13 +3322,13 @@ const VALIDATION_RULES = {
     
     // Emergency Contact
     fECName: {
-        required: true,
+        required: false,
         pattern: VALIDATION.name.pattern,
         message: VALIDATION.name.message,
         requiredMessage: 'Emergency contact name is required'
     },
     fECPhone: {
-        required: true,
+        required: false,
         pattern: VALIDATION.phoneWithCode.pattern,
         message: VALIDATION.phoneWithCode.message,
         requiredMessage: 'Emergency contact phone is required'
@@ -3601,8 +3601,8 @@ function validateEditEmployeeForm() {
         { id: 'efDesig', required: true, name: 'Designation' },
         { id: 'efJD', required: true, name: 'Joining Date' },
         { id: 'efBasic', required: true, name: 'Basic Salary', type: 'number', min: 0 },
-        { id: 'efECName', required: true, name: 'Emergency Contact Name', pattern: VALIDATION.name.pattern },
-        { id: 'efECPhone', required: true, name: 'Emergency Contact Phone', pattern: VALIDATION.phoneWithCode.pattern }
+        // { id: 'efECName', required: true, name: 'Emergency Contact Name', pattern: VALIDATION.name.pattern },
+        // { id: 'efECPhone', required: true, name: 'Emergency Contact Phone', pattern: VALIDATION.phoneWithCode.pattern }
     ];
     
     for (const field of editValidations) {
@@ -3722,7 +3722,7 @@ function initializeValidations() {
                 if (firstError) {
                     firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
                 }
-                showToast('Please fix the validation errors before saving', 'error');
+                showToast('Please fill blank fields', 'error');
                 return;
             }
             
@@ -4472,7 +4472,10 @@ document.addEventListener('DOMContentLoaded', function() {
                     </div>
                     <div style="display:flex;border-bottom:2px solid #1B738C;background:var(--primary-bg-light);padding:0 24px;overflow-x:auto;">
                         ${['Personal', 'Job Details', 'Contact & Address', 'Education & Family', 'Documents'].map((tab, i) =>
-                        `<button onclick="switchEditTab(${i})" id="editTab${i}" style="padding:12px 16px;border:none;background:none;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;margin-bottom:-2px;color:${i === 0 ? 'var(--primary)' : 'var(--text-light)'};border-bottom-color:${i === 0 ? 'var(--primary)' : 'transparent'};">${tab}</button>`
+                        `<button onclick="switchEditTab(${i})" id="editTab${i}" style="padding:12px 16px;border:none;background:none;
+                         font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap; border-bottom:2px solid transparent; margin-bottom:-2px;
+                         color:${i === 0 ? '#069ac4' : 'var(--text-light)'};
+                         border-bottom-color:${i === 0 ? 'var(--primary)' : 'transparent'};">${tab}</button>`
                     ).join('')}
                     </div>
                     <form id="editEmployeeForm" onsubmit="submitEditEmployee(event, ${employeePrimeId})">
@@ -4490,12 +4493,9 @@ document.addEventListener('DOMContentLoaded', function() {
                                 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
                                     ${editSelectField('Blood Group', 'efBlood', ['A+', 'A-', 'B+', 'B-', 'O+', 'O-', 'AB+', 'AB-'], emp.bloodGroup)}${editField('PAN Number', 'efPAN', emp.panNumber)}${editField('Aadhaar Number', 'efAAD', emp.aadhaarNumber)}
                                 </div>
-                                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
-                                    ${editField('Nationality', 'efNat', emp.nationality || 'Indian')}${editField('Religion', 'efRel', emp.religion)}${editField("Father's / Spouse Name", 'efFatherName', emp.fatherSpouseName)}
-                                </div>
                                 <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:12px;">
-                                ${editField('LinkedIn Profile', 'efLI', emp.linkedinProfile)}<div class="form-group"><label>Employee Status</label><div style="padding:8px 12px; background:var(--primary-bg-light); border-radius:8px; font-size:12px; color:${emp.status === 'Active' ? '#2b7a3e' : '#dc3545'}; font-weight:600;">${emp.status || 'Active'}</div>
-                                </div>
+                                    ${editField('LinkedIn Profile', 'efLI', emp.linkedinProfile)}
+                                    ${editSelectField('Employee Status', 'efStatus', ['ACTIVE', 'INACTIVE'], (emp.status || 'ACTIVE').toUpperCase())}
                                 </div>
                             </div>
 
@@ -4506,13 +4506,13 @@ document.addEventListener('DOMContentLoaded', function() {
                                     ${editSelectField('Department ', 'efDept', ['Information Technology', 'Human Resources', 'Sales & Marketing', 'Finance & Accounts', 'Operations'], emp.department, true)}${editField('Sub-Department', 'efSubDept', emp.subDepartment)}  ${editDesigField(emp.designation)}
                                 </div>
                                 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
-                                    ${editSelectField('Employee Grade', 'efGrade', ['L1', 'L2', 'L3', 'L4', 'L5', 'M1', 'M2'], emp.employeeGrade)}${editSelectField('Employment Type', 'efEmpType', ['Regular', 'Part-Time', 'Contract', 'Intern'], emp.employmentType)}${editField('Joining Date', 'efJD', emp.joiningDate, 'date', true)}
+                                    ${editSelectField('Employee Grade', 'efGrade', ['L1', 'L2', 'L3', 'L4', 'L5', 'M1', 'M2'], emp.employeeGrade)}${editSelectField('Employment Type', 'efEmpType', ['Full-Time', 'Part-Time', 'Contract', 'Intern'], emp.employmentType)}${editField('Joining Date', 'efJD', emp.joiningDate, 'date', true)}
                                 </div>
                                 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
                                     ${editField('Probation End Date', 'efProbEnd', emp.probationEndDate, 'date')}${editField('Reporting Manager', 'efMgr', emp.reportingManager)}${editField('HR Business Partner', 'efHRBP', emp.hrBusinessPartner)}
                                 </div>
                                 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:12px;">
-                                    ${editSelectField('Work Location', 'efWL', ['Mumbai HQ', 'Delhi Branch', 'Remote', 'Hybrid'], emp.workLocation)}${editField('Basic Salary (₹)', 'efBasic', emp.basicSalary, 'number', true)}${editSelectField('Shift', 'efShift', ['General (9AM-6PM)', 'Morning (7AM-4PM)', 'Evening (2PM-11PM)', 'Night (10PM-7AM)'], emp.shift)}
+                                    ${editSelectField('Work Location', 'efWL', ['Pune','Mumbai', 'Remote', 'Hybrid'], emp.workLocation)}${editField('Basic Salary (₹)', 'efBasic', emp.basicSalary, 'number', true)}${editSelectField('Shift', 'efShift', ['General (9AM-6PM)', 'Morning (7AM-4PM)', 'Evening (2PM-11PM)', 'Night (10PM-7AM)'], emp.shift)}
                                 </div>
                                 <div style="display:grid;grid-template-columns:1fr;gap:12px;margin-bottom:12px;">${editField('Cost Centre', 'efCC', emp.costCentre)}</div>
                                 <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;margin-top:16px;"><i class="fas fa-building mr-2"></i>Bank Details</div>
@@ -4520,6 +4520,8 @@ document.addEventListener('DOMContentLoaded', function() {
                                     ${editField('Bank Name', 'efBank', emp.bankName)}${editField('Account Number', 'efAccNo', emp.accountNumber)}${editField('IFSC Code', 'efIFSC', emp.ifscCode)}
                                 </div>
                                 <div style="font-size:13px;font-weight:700;color:var(--primary);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid #1B738C;margin-top:16px;"><i class="fas fa-lock mr-2"></i>Login Credentials</div>
+                                
+                                
                                 <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;">
                                     <div>
                                         <label style="font-size:11px;font-weight:600;color:var(--primary);display:block;margin-bottom:4px;">New Password</label>
@@ -4531,6 +4533,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                         <input type="password" id="efConfirmPassword" placeholder="Re-enter new password" style="border:1px solid #166278; border-radius:8px; padding:7px 10px; width:100%; font-size:12px;box-sizing:border-box;">
                                     </div>
                                 </div>
+                                
                             </div>
 
                             <!-- TAB 2: Contact & Address -->
@@ -4554,9 +4557,11 @@ document.addEventListener('DOMContentLoaded', function() {
                                     </div>
                                 </div>
                                 <div style="font-size:12px;font-weight:700;color:var(--text-light);margin-bottom:10px;">Emergency Contact</div>
-                                <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
-                                    ${editField('Name ', 'efECName', emp.emergencyName, 'text', true)}${editSelectField('Relationship', 'efECRel', ['Spouse', 'Father', 'Mother', 'Sibling'], emp.emergencyRelationship)}${editField('Phone ', 'efECPhone', emp.emergencyPhone, 'text', true)}
-                                </div>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+    ${editField('Name', 'efECName', emp.emergencyName, 'text', false)}
+    ${editSelectField('Relationship', 'efECRel', ['Spouse', 'Father', 'Mother', 'Sibling'], emp.emergencyRelationship)}
+    ${editField('Phone', 'efECPhone', emp.emergencyPhone, 'text', false)}
+</div>
                             </div>
 
                             <!-- TAB 3: Education & Family -->
@@ -5099,7 +5104,7 @@ async function openAddPromotionModal() {
             if (!email || !mobile) { showToast('Please enter Email and Mobile number', 'error'); switchEditTab(2); return; }
             if (!dept || !desig) { showToast('Please select Department and Designation', 'error'); switchEditTab(1); return; }
             if (!joiningDate || !basicSalary) { showToast('Please enter Joining Date and Basic Salary', 'error'); switchEditTab(1); return; }
-            if (!ecName || !ecPhone) { showToast('Please enter Emergency Contact details', 'error'); switchEditTab(2); return; }
+            // if (!ecName || !ecPhone) { showToast('Please enter Emergency Contact details', 'error'); switchEditTab(2); return; }
 
             // Get password values (optional)
             const password = document.getElementById('efPassword')?.value.trim();
@@ -5160,12 +5165,13 @@ async function openAddPromotionModal() {
                 permanentState: document.getElementById('efPState')?.value.trim() || null,
                 permanentPincode: document.getElementById('efPPIN')?.value.trim() || null,
                 permanentCountry: document.getElementById('efPCountry')?.value.trim() || 'India',
-                emergencyName: ecName,
+                emergencyName: ecName || null,
                 emergencyRelationship: document.getElementById('efECRel')?.value,
-                emergencyPhone: ecPhone,
+                emergencyPhone: ecPhone || null,
                 education: collectEditEducation(),
                 family: collectEditFamily(),
-                workExperience: collectEditExperience()
+                workExperience: collectEditExperience(),
+                status: document.getElementById('efStatus')?.value || 'ACTIVE'
             };
 
             // Add password only if provided
@@ -5478,18 +5484,7 @@ async function openAddPromotionModal() {
         // ==================== FORM SUBMIT ====================
         document.getElementById('addEmployeeForm')?.addEventListener('submit', async function (e) {
             e.preventDefault();
-            
-            // const firstName = document.getElementById('fFN').value.trim(), 
-            //                 lastName = document.getElementById('fLN').value.trim(), 
-            //                 email = document.getElementById('fPEmail').value.trim(), 
-            //                 mobile = document.getElementById('fMob').value.trim(), 
-            //                 dept = document.getElementById('fDept').value, 
-            //                 desig = document.getElementById('fDesig').value.trim(), 
-            //                 joiningDate = document.getElementById('fJD').value, 
-            //                 basicSalary = document.getElementById('fBasic').value, 
-            //                 ecName = document.getElementById('fECName').value.trim(), 
-            //                 ecPhone = document.getElementById('fECPhone').value.trim();
-
+        
             const firstName = document.getElementById('fFN').value.trim(), lastName = document.getElementById('fLN').value.trim(), email = document.getElementById('fPEmail').value.trim(), mobile = document.getElementById('fMob').value.trim(), dept = document.getElementById('fDept').value, joiningDate = document.getElementById('fJD').value, basicSalary = document.getElementById('fBasic').value, ecName = document.getElementById('fECName').value.trim(), ecPhone = document.getElementById('fECPhone').value.trim();
             const fDesigSel = document.getElementById('fDesig').value;
             const desig = fDesigSel === '__other__'
@@ -5517,7 +5512,7 @@ async function openAddPromotionModal() {
             if (!email || !mobile) { showToast('Please enter Email and Mobile number', 'error'); return; }
             if (!dept || !desig) { showToast('Please select Department and Designation', 'error'); return; }
             if (!joiningDate || !basicSalary) { showToast('Please enter Joining Date and Basic Salary', 'error'); return; }
-            if (!ecName || !ecPhone) { showToast('Please enter Emergency Contact details', 'error'); return; }
+            // if (!ecName || !ecPhone) { showToast('Please enter Emergency Contact details', 'error'); return; }
 
             const pwdToggle = document.getElementById('fPWDToggle').checked;
             const employeePayload = { firstName, middleName: document.getElementById('fMN').value.trim(), lastName, password: password, dateOfBirth: document.getElementById('fDOB').value || null, gender: document.getElementById('fGender').value, maritalStatus: document.getElementById('fMarital').value, bloodGroup: document.getElementById('fBlood').value, panNumber: document.getElementById('fPAN').value.trim().toUpperCase(), aadhaarNumber: document.getElementById('fAAD').value.trim(), nationality: document.getElementById('fNat').value.trim(), religion: document.getElementById('fRel').value.trim(), linkedinProfile: document.getElementById('fLI').value.trim(), fatherSpouseName: document.getElementById('fFatherName').value.trim(), isPhysicallyChallenged: pwdToggle, disabilityType: pwdToggle ? document.getElementById('fPWDType').value : null, disabilityPercentage: pwdToggle ? (parseInt(document.getElementById('fPWDPct').value) || null) : null, certificateNumber: pwdToggle ? document.getElementById('fPWDCert').value.trim() : null, department: dept, subDepartment: document.getElementById('fSubDept').value.trim(), designation: desig, employeeGrade: document.getElementById('fGrade').value, employmentType: document.getElementById('fEmpType').value, joiningDate, probationEndDate: document.getElementById('fProbEnd').value || null, reportingManager: document.getElementById('fMgr').value.trim(), hrBusinessPartner: document.getElementById('fHRBP').value.trim(), workLocation: document.getElementById('fWL').value, basicSalary: parseFloat(basicSalary) || null, shift: document.getElementById('fShift').value, costCentre: document.getElementById('fCC').value.trim(), bankName: document.getElementById('fBank').value.trim(), accountNumber: document.getElementById('fAccNo').value.trim(), ifscCode: document.getElementById('fIFSC').value.trim().toUpperCase(), personalEmail: email, workEmail: document.getElementById('fWEmail').value.trim(), mobileNumber: mobile, alternateNumber: document.getElementById('fAlt').value.trim(), currentStreet: document.getElementById('fCAddr').value.trim(), currentCity: document.getElementById('fCity').value.trim(), currentState: document.getElementById('fState').value.trim(), currentPincode: document.getElementById('fPIN').value.trim(), currentCountry: document.getElementById('fCountry').value.trim(), permanentStreet: document.getElementById('fPAddr').value.trim(), permanentCity: document.getElementById('fPCity').value.trim(), permanentState: document.getElementById('fPState').value.trim(), permanentPincode: document.getElementById('fPPIN').value.trim(), permanentCountry: document.getElementById('fPCountry').value.trim(), emergencyName: ecName, emergencyRelationship: document.getElementById('fECRel').value, emergencyPhone: ecPhone, education: collectEducation(), family: collectFamily(), workExperience: collectExperience() };
@@ -5539,7 +5534,7 @@ async function openAddPromotionModal() {
                 resetAddForm.call(this);
                 document.querySelector('.tab-btn[data-tab="all"]').click();
                 await fetchAndRenderEmployees();
-            } else { showToast(resData.message || 'Failed to save employee.', 'error'); }
+            } else { showToast('Failed to save employee.', 'please try again!!'); }
         });
 
         function resetAddForm() {
