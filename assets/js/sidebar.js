@@ -271,6 +271,11 @@ function initSidebar() {
             if (link) link.classList.add('active');
         }
 
+        if (currentPage === 'career.html') {
+            const link = document.querySelector('.nav-link[data-module="career"]');
+            if (link) link.classList.add('active');
+        }
+
         // Fallback: Check for any matching href
         document.querySelectorAll('.submenu a').forEach(link => {
             const href = link.getAttribute('href');

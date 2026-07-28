@@ -838,13 +838,11 @@
 
     function renderUpcomingList() {
         const today = todayISO();
-        const currentYearEntries = getCalendarEntriesForYear(spotlightState.year);
-        const nextYearEntries    = getCalendarEntriesForYear(spotlightState.year + 1);
-
-        const upcoming = [...currentYearEntries, ...nextYearEntries]
-            .filter(e => e.date >= today)
+        const yearEndDate = `${spotlightState.year}-12-31`;
+        const upcoming = getCalendarEntriesForYear(spotlightState.year)
+            .filter(e => e.date >= today && e.date <= yearEndDate)
             .sort((a, b) => a.date.localeCompare(b.date))
-            .slice(0, 8);
+            .slice(0, 20);
 
         const listEl = document.getElementById('currentMonthList');
         if (upcoming.length === 0) {
