@@ -1594,7 +1594,6 @@ function buildDocGridWithEmployeeId(m, employeeId) {
             if (typeof loadSidebar === 'function') loadSidebar();
             if (typeof loadHeader  === 'function') loadHeader();
             await loadOnboardingList();
-            setInterval(syncOnboardingWithEmployees, 60000);
         });
     </script>
 </body>

@@ -1,0 +1,1096 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendar Management | SIEC</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+    #header-container {
+      position: fixed;
+      top: 0;
+      left: 256px;
+      right: 0;
+      height: 56px;
+      background: #ffffff;
+      border-bottom: 1px solid #3098b5;
+      z-index: 40;
+    }
+    @keyframes shimmer {
+      0%   { background-position: -400px 0; }
+      100% { background-position:  400px 0; }
+    }
+    .skeleton-box {
+      background: linear-gradient(90deg, #c5d9e0 25%, #d8e8ed 50%, #c5d9e0 75%);
+      background-size: 800px 100%;
+      animation: shimmer 1.4s ease-in-out infinite;
+      border-radius: 4px;
+    }
+    </style>
+
+    <style>
+        /* ===== DESIGN TOKENS (same as Attendance module / Employee Calendar module) ===== */
+        :root {
+            --color-primary:   #1B738C;
+            --color-secondary: #1a6a80;
+            --color-border:    #62C9EA;
+            --color-bg:        #EBF4F6;
+            --color-white:     #ffffff;
+
+            --status-wfh-bg:       #0891b2;
+            --status-wfh-fg:       #ffffff;
+
+            --status-present-bg:  #1e8e5c;
+            --status-present-fg:  #eaf2ef;
+            --status-absent-bg:   #941010;
+            --status-absent-fg:   #eaf2ef;
+            --status-late-bg:     #0d7d9c;
+            --status-late-fg:     #eaf2ef;
+            --status-halfday-bg:  #ca8a04;
+            --status-halfday-fg:  #ffffff;
+            --status-holiday-bg:  #ef4444;
+            --status-holiday-fg:  #ffffff;
+            --status-festival-bg: #f97316;
+            --status-festival-fg: #ffffff;
+            --status-leave-bg:    #D2042D;
+            --status-leave-fg:    #eaf2ef;
+        }
+
+        * { font-family: 'Inter', sans-serif; box-sizing: border-box; }
+        body { background-color: var(--color-bg); margin: 0; }
+
+        /* ===== CARDS ===== */
+        .section-card {
+            background: var(--color-white);
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .stat-card {
+            background: var(--color-white);
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            padding: 16px 20px;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            display: flex; flex-direction: column; gap: 4px;
+        }
+        .stat-card:hover { transform: translateY(-2px); box-shadow: 0 6px 16px #d0ebf3; }
+        .stat-card .stat-label  { font-size: 11px; font-weight: 500; color: var(--color-secondary); text-transform: uppercase; letter-spacing: 0.04em; }
+        .stat-card .stat-value  { font-size: 24px; font-weight: 700; color: var(--color-primary); line-height: 1.1; }
+
+        /* ===== BUTTONS ===== */
+        .btn-primary {
+            background-color: var(--color-primary);
+            color: white; padding: 8px 16px; border-radius: 8px;
+            cursor: pointer; border: none; font-size: 13px; font-weight: 500;
+            transition: background-color 0.2s ease, transform 0.15s ease; white-space: nowrap;
+        }
+        .btn-primary:hover { background-color: var(--color-secondary); transform: translateY(-1px); }
+
+        .btn-outline {
+            border: 1px solid var(--color-border); color: var(--color-primary);
+            padding: 8px 14px; border-radius: 8px; background: transparent;
+            cursor: pointer; font-size: 13px; font-weight: 500;
+            transition: background-color 0.2s ease, color 0.2s ease; white-space: nowrap;
+        }
+        .btn-outline:hover { background-color: var(--color-primary); color: white; }
+
+        .btn-reset {
+            border: 1px solid var(--color-border);
+            color: var(--color-secondary);
+            padding: 8px 14px; border-radius: 8px; background: transparent;
+            cursor: pointer; font-size: 12px; font-weight: 500;
+            transition: all 0.2s ease; white-space: nowrap; display: flex;
+            align-items: center; gap: 5px;
+        }
+        .btn-reset:hover { background-color: #135a6e; color: #ffffff; border-color: var(--color-secondary); }
+
+        .btn-icon {
+            background: none; border: none; cursor: pointer; padding: 4px 6px;
+            border-radius: 6px; transition: background-color 0.2s; color: var(--color-secondary); font-size: 13px;
+        }
+        .btn-icon:hover { background-color: #135a6e; color: var(--color-primary); }
+        .btn-icon.danger:hover { color: #b5305e; }
+
+        /* ===== FORM ELEMENTS ===== */
+        input, select, textarea {
+            border: 1px solid var(--color-border); border-radius: 8px;
+            padding: 8px 12px; width: 100%; font-size: 13px; color: #333;
+            background: white; transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none !important; border-color: var(--color-secondary) !important;
+            box-shadow: 0 0 0 3px rgba(27, 115, 140, 0.08) !important;
+        }
+        label { font-size: 12px; font-weight: 600; color: var(--color-primary); margin-bottom: 5px; display: block; }
+        .form-group { display: flex; flex-direction: column; }
+        .form-actions { display: flex; justify-content: flex-end; gap: 8px; margin-top: 4px; }
+
+        /* ===== TAB NAVIGATION (view switch inside this module) ===== */
+        .tab-nav {
+            display: flex; gap: 6px; margin-bottom: 20px;
+            padding-bottom: 12px; border-bottom: 1px solid var(--color-border); flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 7px 18px; border-radius: 8px; font-size: 13px; font-weight: 500;
+            transition: background-color 0.2s ease, color 0.2s ease;
+            background: transparent; color: var(--color-secondary);
+            cursor: pointer; border: none; display: flex; align-items: center; gap: 6px;
+        }
+        .tab-btn:hover { background-color: #83dbf439; color: var(--color-primary); }
+        .tab-btn.active { background-color: var(--color-primary); color: white; }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        /* ===== BADGES ===== */
+        .badge {
+            display: inline-flex; align-items: center; padding: 3px 10px;
+            border-radius: 99px; font-size: 11px; font-weight: 600; letter-spacing: 0.02em;
+        }
+        .badge-holiday  { background: var(--status-holiday-bg);  color: var(--status-holiday-fg); }
+        .badge-halfday  { background: var(--status-halfday-bg);  color: var(--status-halfday-fg); }
+        .badge-wfh      { background: var(--status-wfh-bg);      color: var(--status-wfh-fg); }
+        .badge-festival { background: var(--status-festival-bg); color: var(--status-festival-fg); }
+
+        /* ===== MODALS ===== */
+        .modal {
+            display: none; position: fixed; inset: 0;
+            background: rgba(122, 113, 123, 0.25); backdrop-filter: blur(2px);
+            z-index: 1000; justify-content: center; align-items: center;
+        }
+        .modal.active { display: flex; }
+        .modal-content {
+            background: var(--color-white); border-radius: 16px;
+            width: 90%; max-width: 480px; max-height: 90vh;
+            overflow-y: auto; padding: 24px;
+            box-shadow: 0 20px 60px #b7d0d8;
+        }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+        .modal-header h3 { font-size: 16px; font-weight: 700; color: var(--color-primary); }
+        .modal-close {
+            background: none; border: none; font-size: 20px;
+            color: var(--color-secondary); cursor: pointer; padding: 0; line-height: 1; transition: color 0.2s;
+        }
+        .modal-close:hover { color: var(--color-primary); }
+
+        /* ===== TOAST ===== */
+        .toast {
+            position: fixed; bottom: 24px; right: 24px; padding: 12px 18px;
+            border-radius: 10px; color: white; font-size: 13px; font-weight: 500;
+            z-index: 1100; animation: toastIn 0.3s ease; max-width: 280px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+        }
+        .toast.success { background-color: var(--color-primary); }
+        .toast.error   { background-color: #b5305e; }
+        .toast.info    { background-color: var(--color-secondary); }
+        .toast.warning { background-color: #92487A; }
+        @keyframes toastIn { from { transform: translateX(110%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+        /* ===== MAIN LAYOUT ===== */
+        .main-content { margin-top: 64px; }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: var(--color-bg); }
+        ::-webkit-scrollbar-thumb { background: var(--color-secondary); border-radius: 10px; }
+
+        .section-title { font-size: 14px; font-weight: 700; color: var(--color-primary); }
+        .section-title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; }
+
+        .empty-state { text-align: center; padding: 40px 20px; color: var(--color-secondary); }
+        .empty-state i { font-size: 36px; opacity: 0.4; display: block; margin-bottom: 10px; }
+        .empty-state p { font-size: 13px; }
+
+        table { width: 100%; border-collapse: collapse; }
+        thead tr { border-bottom: 2px solid var(--color-border); }
+        tbody tr { border-bottom: 1px solid #eef4f6; }
+        tbody tr:last-child { border-bottom: none; }
+        th { font-size: 11px; font-weight: 700; color: var(--color-primary); text-transform: uppercase; letter-spacing: 0.04em; padding: 10px 8px; text-align: left; }
+        td { padding: 10px 8px; font-size: 13px; color: #444; }
+        tbody tr:hover { background-color: #f0f6f8; }
+
+        /* ===== YEAR CALENDAR ===== */
+        .year-cal-toolbar { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 18px; }
+        .year-switcher { display: flex; align-items: center; gap: 10px; }
+        .year-switcher .year-label { font-size: 18px; font-weight: 700; color: var(--color-primary); min-width: 64px; text-align: center; }
+        .year-nav-btn {
+            width: 32px; height: 32px; border-radius: 8px; border: 1px solid var(--color-border);
+            background: white; color: var(--color-primary); cursor: pointer; font-size: 13px;
+            display: flex; align-items: center; justify-content: center; transition: all 0.2s;
+        }
+        .year-nav-btn:hover { background: var(--color-primary); color: white; }
+
+        .year-cal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: 14px; }
+        .mini-month-card { background: var(--color-white); border: 1px solid var(--color-border); border-radius: 12px; padding: 12px; }
+        .mini-month-title { font-size: 12.5px; font-weight: 700; color: var(--color-primary); text-align: center; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.03em; }
+        .mini-cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px; border: 1px solid #eef4f6; border-radius: 6px; padding: 3px; background: #eef4f6; }
+        .mini-cal-dayname { text-align: center; font-size: 9px; font-weight: 700; color: var(--color-secondary); padding: 2px 0; background: var(--color-white); }
+        .mini-cal-cell {
+            aspect-ratio: 1; display: flex; align-items: center; justify-content: center;
+            font-size: 10.5px; cursor: pointer; color: #333; background: var(--color-white);
+            border: 1px solid transparent; position: relative; transition: all 0.15s;
+        }
+        .mini-cal-cell.empty { cursor: default; }
+        .mini-cal-cell:not(.empty):hover { border-color: var(--color-secondary); transform: scale(1.08); }
+        .mini-cal-cell.is-weekend { color: #c0293e; background: #fdecee; }
+        .mini-cal-cell.is-today { box-shadow: inset 0 0 0 2px var(--color-primary); font-weight: 700; }
+        .mini-cal-cell.mk-holiday  { background: var(--status-holiday-bg); color: #fff; }
+        .mini-cal-cell.mk-half_day { background: var(--status-halfday-bg); color: #fff; }
+        .mini-cal-cell.mk-wfh      { background: var(--status-wfh-bg); color: #fff; }
+        .mini-cal-cell.mk-festival { background: var(--status-festival-bg); color: #fff; }
+
+        .holiday-legend { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+        .cal-legend-item { display: flex; align-items: center; gap: 4px; font-size: 11.5px; color: #555; }
+        .cal-legend-dot { width: 10px; height: 10px; border-radius: 4px; }
+
+        .holiday-list-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 9px 4px; border-bottom: 1px solid #eef4f6; flex-wrap: wrap; }
+        .holiday-list-row:last-child { border-bottom: none; }
+        .holiday-list-date { font-size: 12px; font-weight: 700; color: var(--color-primary); min-width: 92px; }
+        .holiday-list-name { font-size: 13px; color: #333; flex: 1; min-width: 140px; }
+        .holiday-list-tag { font-size: 10px; color: var(--color-secondary); margin-left: 6px; }
+
+        .day-type-option {
+            display: flex; align-items: center; gap: 8px; border: 1px solid var(--color-border);
+            border-radius: 8px; padding: 9px 12px; cursor: pointer; font-size: 13px; font-weight: 500;
+            color: #444; transition: all 0.15s;
+        }
+        .day-type-option input { width: auto; }
+        .day-type-option.checked { border-color: var(--color-primary); background: rgba(27,115,140,0.06); }
+
+        .filter-bar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+        .filter-bar input, .filter-bar select { width: auto; }
+
+        /* ===== CURRENT MONTH SPOTLIGHT ===== */
+        .current-month-wrap {
+            display: flex; gap: 18px; flex-wrap: wrap; align-items: stretch; margin-bottom: 22px;
+        }
+        .current-month-cal-col { flex: 2 1 480px; }
+        .current-month-list-col { flex: 1 1 260px; max-width: 300px; }
+        .current-month-card {
+            background: var(--color-white); border: 1px solid var(--color-border);
+            border-radius: 14px; padding: 16px; height: 100%;
+        }
+        .current-month-header {
+            display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px;
+        }
+        .current-month-header h3 { font-size: 14px; font-weight: 700; color: var(--color-primary); margin: 0; }
+        .current-month-badge {
+            font-size: 10.5px; font-weight: 700; color: white; background: var(--color-primary);
+            padding: 3px 10px; border-radius: 99px; text-transform: uppercase; letter-spacing: 0.04em;
+        }
+        .cm-grid {
+            display: grid; grid-template-columns: repeat(7, 1fr); gap: 9px;
+        }
+        .cm-dayname {
+            text-align: left; font-size: 12px; font-weight: 600; color: var(--color-secondary);
+            padding: 2px 4px 8px;
+        }
+        .cm-dayname.is-weekend-name { color: #c0293e; }
+        .cm-cell {
+            min-height: 84px; display: flex; flex-direction: column; justify-content: space-between;
+            align-items: stretch; padding: 10px; font-size: 12px; color: #234; cursor: pointer;
+            border-radius: 14px; background: #e4f1f5; border: 1px solid #d6ecf1;
+            transition: transform 0.15s, box-shadow 0.15s; position: relative;
+        }
+        .cm-cell:not(.empty):hover { transform: translateY(-2px); box-shadow: 0 6px 14px rgba(27,115,140,0.18); }
+        .cm-cell.empty {
+            cursor: default; border-color: transparent;
+            background: repeating-linear-gradient(45deg, #eef6f8, #eef6f8 6px, #dcedf1 6px, #dcedf1 12px);
+        }
+        .cm-cell.is-weekend:not(.has-entry) {
+            background: #fdecee;
+            border-color: #f6cdd3;
+        }
+        .cm-cell.is-today { box-shadow: inset 0 0 0 2px var(--color-primary); }
+        .cm-cell:not(.empty):hover.is-today { box-shadow: inset 0 0 0 2px var(--color-primary), 0 6px 14px rgba(27,115,140,0.18); }
+        .cm-cell-top { display: flex; align-items: center; justify-content: space-between; width: 100%; }
+        .cm-cell .cm-daynum { font-weight: 600; font-size: 13px; color: var(--color-primary); }
+        .cm-cell.is-weekend .cm-daynum { color: #b5305e; }
+        .cm-cell.has-entry .cm-daynum { color: inherit; }
+        .cm-badge-icon {
+            width: 20px; height: 20px; border-radius: 50%; background: rgba(255,255,255,0.45);
+            display: flex; align-items: center; justify-content: center; font-size: 9.5px; flex-shrink: 0;
+        }
+        .cm-cell .cm-pill {
+            font-size: 10.5px; font-weight: 700; line-height: 1.25; margin-top: 8px;
+            overflow: hidden; text-overflow: ellipsis; display: -webkit-box;
+            -webkit-line-clamp: 2; -webkit-box-orient: vertical;
+        }
+        .cm-cell.has-entry {
+            color: #fff;
+            background-image: linear-gradient(155deg, rgba(255,255,255,0.22) 0%, rgba(255,255,255,0) 55%);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.10);
+        }
+        .cm-cell.mk-holiday  { background-color: var(--status-holiday-bg); }
+        .cm-cell.mk-half_day { background-color: var(--status-halfday-bg); }
+        .cm-cell.mk-wfh      { background-color: var(--status-wfh-bg); }
+        .cm-cell.mk-festival { background-color: var(--status-festival-bg); }
+
+        .upcoming-list { display: flex; flex-direction: column; gap: 10px; max-height: 560px; overflow-y: auto; padding-right: 4px; }
+        .upcoming-card { border: 1px solid var(--color-border); border-radius: 10px; padding: 10px 12px; background: #f7fbfc; position: relative; }
+        .upcoming-card.is-today { background: #fff; border-color: var(--color-primary); box-shadow: 0 2px 10px rgba(27,115,140,.12); }
+        .upcoming-card-toptag { display: inline-block; font-size: 9px; font-weight: 800; letter-spacing: .06em; color: #fff; background: var(--color-primary); padding: 2px 7px; border-radius: 5px; margin-bottom: 6px; text-transform: uppercase; }
+        .upcoming-card-date { float: right; font-size: 10.5px; color: var(--color-secondary); font-weight: 600; }
+        .upcoming-card-name { font-size: 13px; font-weight: 700; color: #26424b; }
+        .upcoming-card-sub { font-size: 11px; color: var(--color-secondary); margin-top: 2px; }
+
+        @media (max-width: 768px) {
+            .section-card { padding: 14px; }
+            .tab-btn { padding: 6px 12px; font-size: 12px; }
+            .filter-bar { flex-direction: column; align-items: stretch; }
+            .filter-bar input, .filter-bar select { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="flex h-screen overflow-hidden">
+        <div id="sidebar-container"></div>
+
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <div id="header-container"></div>
+
+            <main class="flex-1 overflow-y-auto p-5 main-content">
+
+                <!-- PAGE HEADER -->
+                <div class="mb-5">
+                    <h1 class="text-xl font-bold" style="color: var(--color-primary);">Calendar Management</h1>
+                    <p class="text-xs mt-1" style="color: var(--color-secondary);">Manage yearly public holidays, Indian festivals, and mark custom Half Day / Work From Home dates for the organization</p>
+                </div>
+
+                <!-- TAB NAVIGATION -->
+                <div class="tab-nav">
+                    <button class="tab-btn" data-tab="year">
+                        <i class="fas fa-calendar-alt"></i> Year Calendar
+                    </button>
+                    <button class="tab-btn" data-tab="list">
+                        <i class="fas fa-list"></i> Holiday List
+                    </button>
+                </div>
+
+                <!-- ==================== TAB: YEAR CALENDAR ==================== -->
+                <div id="tab-year" class="tab-content">
+
+                    <!-- Toolbar: year switcher, add/reset actions, description, festival notice, legend -->
+                    <div class="section-card">
+                        <div class="year-cal-toolbar">
+                            <div class="year-switcher">
+                                <button class="year-nav-btn" onclick="changeCalendarYear(-1)" title="Previous year"><i class="fas fa-chevron-left"></i></button>
+                                <span class="year-label" id="calYearLabel">2026</span>
+                                <button class="year-nav-btn" onclick="changeCalendarYear(1)" title="Next year"><i class="fas fa-chevron-right"></i></button>
+                                <button class="btn-outline" onclick="goToCurrentCalendarYear()" style="margin-left:6px;">Today</button>
+                            </div>
+                            <div style="display:flex; gap:8px; flex-wrap:wrap;">
+                                <button class="btn-reset" onclick="resetCustomCalendarEntries()">
+                                    <i class="fas fa-undo-alt"></i> Reset customizations
+                                </button>
+                                <button class="btn-primary" onclick="openAddCalendarEntryModal()">
+                                    <i class="fas fa-plus"></i> Add Holiday / Half Day / WFH
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="festivalDataNotice" style="display:none; font-size:11.5px; color:#92487A; background:#f6ecf3; border:1px solid #e3c7db; border-radius:8px; padding:8px 12px; margin-bottom:14px;">
+                            <i class="fas fa-info-circle"></i> Exact festival dates aren't pre-loaded for this year yet — please verify/add them manually via "Add Holiday / Half Day / WFH".
+                        </div>
+
+                        <div class="holiday-legend section-card" style="padding:10px 16px; margin-bottom:0;">
+                            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--status-holiday-bg);"></div>Public Holiday</div>
+                            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--status-festival-bg);"></div>Indian Festival</div>
+                            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--status-halfday-bg);"></div>Half Day</div>
+                            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:var(--status-wfh-bg);"></div>Work From Home</div>
+                            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#fff; border:1px solid var(--color-border);"></div>Weekend</div>
+                            <div class="cal-legend-item"><div class="cal-legend-dot" style="background:#fff; box-shadow:inset 0 0 0 2px var(--color-primary);"></div>Today</div>
+                        </div>
+                    </div>
+
+                    <!-- CURRENT MONTH SPOTLIGHT: big calendar + Upcoming list (same style/logic as Employee Calendar), side by side -->
+                    <div class="current-month-wrap">
+                        <div class="current-month-cal-col">
+                            <div class="current-month-card">
+                                <div class="current-month-header">
+                                    <h3 id="cmTitle">This Month</h3>
+                                    <div style="display:flex; align-items:center; gap:8px;">
+                                        <button class="year-nav-btn" onclick="changeSpotlightMonth(-1)" title="Previous month"><i class="fas fa-chevron-left"></i></button>
+                                        <button class="year-nav-btn" onclick="changeSpotlightMonth(1)" title="Next month"><i class="fas fa-chevron-right"></i></button>
+                                        <button class="btn-outline" onclick="goToCurrentSpotlightMonth()">Today</button>
+                                    </div>
+                                </div>
+                                <div class="cm-grid" id="currentMonthGrid"></div>
+                            </div>
+                        </div>
+                        <div class="current-month-list-col">
+                            <div class="current-month-card">
+                                <div class="current-month-header">
+                                    <h3 id="cmListTitle">Upcoming</h3>
+                                </div>
+                                <div class="upcoming-list" id="currentMonthList"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section-card">
+                        <div class="section-title-row">
+                            <h3 class="section-title">Full Year — <span id="yearGridLabel">2026</span></h3>
+                        </div>
+                        <div class="year-cal-grid" id="yearCalendarGrid">
+                            <!-- 12 mini-month calendars rendered by JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== TAB: HOLIDAY LIST ==================== -->
+                <div id="tab-list" class="tab-content">
+                    <div class="section-card">
+                        <div class="section-title-row">
+                            <h3 class="section-title">Holidays &amp; Custom Days — <span id="holidayListYearLabel">2026</span></h3>
+                            <button class="btn-primary" onclick="openAddCalendarEntryModal()">
+                                <i class="fas fa-plus"></i> Add Entry
+                            </button>
+                        </div>
+
+                        <div class="filter-bar mb-4">
+                            <label style="margin-bottom:0; font-size:11px;">Type</label>
+                            <select id="listTypeFilter" onchange="renderHolidayList()">
+                                <option value="">All Types</option>
+                                <option value="Holiday">Public Holiday</option>
+                                <option value="Festival">Indian Festival</option>
+                                <option value="Half_Day">Half Day</option>
+                                <option value="WFH">Work From Home</option>
+                            </select>
+                            <button class="btn-reset" onclick="document.getElementById('listTypeFilter').value=''; renderHolidayList();">
+                                <i class="fas fa-undo-alt"></i> Reset
+                            </button>
+                        </div>
+
+                        <div id="holidayListContainer">
+                            <!-- Populated by JS -->
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- ===== ADD / EDIT HOLIDAY / HALF-DAY / WFH MODAL ===== -->
+    <div id="calendarEntryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="calendarEntryModalTitle">Add Custom Day</h3>
+                <button class="modal-close" onclick="closeModal('calendarEntryModal')" aria-label="Close">&times;</button>
+            </div>
+
+            <form id="calendarEntryForm">
+                <input type="hidden" id="ce_id">
+
+                <div class="form-group mb-4">
+                    <label>Date</label>
+                    <input type="date" id="ce_date" required>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label>Type</label>
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <label class="day-type-option" id="ce_opt_holiday">
+                            <input type="radio" name="ce_type" value="Holiday" onchange="onCalendarEntryTypeChange()"> Public Holiday
+                        </label>
+                        <label class="day-type-option" id="ce_opt_festival">
+                            <input type="radio" name="ce_type" value="Festival" onchange="onCalendarEntryTypeChange()"> Indian Festival
+                        </label>
+                        <label class="day-type-option" id="ce_opt_half_day">
+                            <input type="radio" name="ce_type" value="Half_Day" onchange="onCalendarEntryTypeChange()"> Half Day
+                        </label>
+                        <label class="day-type-option" id="ce_opt_wfh">
+                            <input type="radio" name="ce_type" value="WFH" onchange="onCalendarEntryTypeChange()"> Work From Home
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group mb-4" id="ce_dayoff_wrap" style="display:none;">
+                    <label>Office status this day</label>
+                    <div style="display:flex; flex-direction:column; gap:8px;">
+                        <label class="day-type-option" id="ce_opt_working">
+                            <input type="radio" name="ce_dayoff" value="Working"> Working Day (office open, as usual)
+                        </label>
+                        <label class="day-type-option" id="ce_opt_half_day_dayoff">
+                            <input type="radio" name="ce_dayoff" value="Half_Day"> Half Day
+                        </label>
+                        <label class="day-type-option" id="ce_opt_wfh_dayoff">
+                            <input type="radio" name="ce_dayoff" value="WFH"> Work From Home
+                        </label>
+                        <label class="day-type-option" id="ce_opt_holiday_dayoff">
+                            <input type="radio" name="ce_dayoff" value="Holiday"> Holiday (office closed)
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-group mb-4">
+                    <label>Title / Reason</label>
+                    <input type="text" id="ce_name" placeholder="e.g. Diwali, Half Day for team outing…" required>
+                </div>
+
+                <div class="form-group mb-5">
+                    <label style="display:flex; align-items:center; gap:8px; font-weight:500; color:#444;">
+                        <input type="checkbox" id="ce_recurring" style="width:auto;">
+                        Repeat every year on this date
+                    </label>
+                </div>
+
+                <div class="form-actions flex justify-end gap-3">
+                    <button type="button" class="btn-outline px-6 py-2 text-sm font-medium rounded-md" onclick="closeModal('calendarEntryModal')">Cancel</button>
+                    <button type="button" class="btn-outline px-6 py-2 text-sm font-medium rounded-md" style="display:none; color:#b5305e; border-color:#b5305e;" id="ce_delete_btn" onclick="deleteCalendarEntry()">Delete</button>
+                    <button type="submit" class="btn-primary px-6 py-2 text-sm font-medium rounded-md">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="/assets/js/component-loader.js"></script>
+    <script src="/assets/js/common.js"></script>
+    <script src="/assets/js/sidebar.js"></script>
+    <script src="/assets/js/header.js"></script>
+
+    <script>
+    /* =======================================================================
+       CONFIG — update BASE_URL if your proxy / env var differs
+       ======================================================================= */
+    const API = {
+        BASE: 'http://localhost:8086',
+        CALENDAR_LIST:    '/api/calendar',              // GET  ?year=YYYY  -> full merged calendar for that year
+        CALENDAR_SAVE:    '/api/calendar',               // POST             -> create/update one custom entry
+        CALENDAR_DELETE:  (id) => `/api/calendar/${id}`, // DELETE           -> remove one custom entry
+    };
+
+    const TYPE_LABEL  = { Holiday:'Public Holiday', Festival:'Indian Festival', Half_Day:'Half Day', WFH:'Work From Home' };
+    const BADGE_CLASS = { Holiday:'badge-holiday', Festival:'badge-festival', Half_Day:'badge-halfday', WFH:'badge-wfh' };
+
+    /* =======================================================================
+       UTILITY HELPERS
+       ======================================================================= */
+    function formatDate(d) {
+        if (!d) return '—';
+        const dt = new Date(d + 'T00:00:00');
+        return dt.toLocaleDateString('en-IN', { day: '2-digit', month: 'short', year: 'numeric' });
+    }
+    function todayISO() { return new Date().toISOString().split('T')[0]; }
+
+    function showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `toast ${type}`;
+        toast.textContent = message;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.transition = 'opacity 0.3s ease';
+            toast.style.opacity    = '0';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    function closeModal(id) { document.getElementById(id)?.classList.remove('active'); }
+
+    /** For Festival entries, appends whether that day is a working day or an office holiday. */
+    function dayStatusSuffix(entry) {
+        if (!entry || entry.type !== 'Festival') return '';
+        const STATUS_LABEL = { Working: 'Working Day', Half_Day: 'Half Day', WFH: 'Work From Home', Holiday: 'Holiday' };
+        return ' — ' + (STATUS_LABEL[entry.dayStatus] || 'Working Day');
+    }
+
+    /** A Festival marked as an actual office Holiday should be color-coded the same as Public Holiday. */
+    function cellColorKey(entry) {
+        if (!entry) return '';
+        if (entry.type === 'Festival' && entry.dayStatus === 'Holiday') return 'holiday';
+        return entry.type.toLowerCase();
+    }
+
+    function escapeHtml(str) {
+        return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    }
+    function escapeAttr(str) { return String(str).replace(/"/g, '&quot;').replace(/'/g, '&#39;'); }
+
+    async function apiFetch(url, options = {}) {
+        const res = await fetch(API.BASE + url, {
+            headers: { 'Content-Type': 'application/json', ...(options.headers || {}) },
+            ...options,
+        });
+        if (!res.ok) {
+            const text = await res.text().catch(() => '');
+            throw new Error(`HTTP ${res.status}: ${text || res.statusText}`);
+        }
+        return res.json();
+    }
+
+    /* =======================================================================
+       HOLIDAY / CUSTOM CALENDAR — CORE MODULE (backend-driven)
+       ---------------------------------------------------------------------
+       The backend (GET /api/calendar?year=YYYY) is now the single source of
+       truth: it already merges fixed public holidays + auto-fetched Indian
+       festivals + any custom Half Day/WFH/extra entries into one sorted list.
+       This file no longer computes or hardcodes any of that — it just fetches
+       per year and caches the result in memory. No offline fallback table
+       here anymore; if the backend call fails, the UI shows an error state
+       for that year instead of guessing at data.
+       ======================================================================= */
+
+    const calendarState = {
+        year: new Date().getFullYear(),
+        entriesCache: {}, // year -> array of entries returned by the backend, or null if that fetch failed
+    };
+
+    const spotlightState = {
+        year: new Date().getFullYear(),
+        month: new Date().getMonth(), // 0-indexed
+    };
+
+    /** Fetches (or returns cached) merged calendar entries for a given year from the backend. */
+    async function loadCalendarForYear(year) {
+        if (calendarState.entriesCache[year] !== undefined) return calendarState.entriesCache[year];
+        try {
+            const data = await apiFetch(`${API.CALENDAR_LIST}?year=${year}`);
+            calendarState.entriesCache[year] = Array.isArray(data) ? data : [];
+        } catch (err) {
+            console.error(`[Calendar] Failed to load calendar for year=${year}:`, err.message);
+            calendarState.entriesCache[year] = null; // null = "tried, failed"
+        }
+        return calendarState.entriesCache[year];
+    }
+
+    /** Force a re-fetch for a year (used after save/delete so the UI reflects the backend's new state). */
+    function invalidateYear(year) {
+        delete calendarState.entriesCache[year];
+    }
+
+    function getCalendarEntriesForYear(year) {
+        return calendarState.entriesCache[year] || [];
+    }
+
+    async function refreshCalendarModule() {
+        document.getElementById('calYearLabel').textContent = calendarState.year;
+
+        const realCurrentYear = new Date().getFullYear();
+        const [yearEntries] = await Promise.all([
+            loadCalendarForYear(calendarState.year),
+            loadCalendarForYear(realCurrentYear),      // needed for the "Upcoming" list
+            loadCalendarForYear(realCurrentYear + 1),  // needed for the "Upcoming" list near year-end
+            loadCalendarForYear(spotlightState.year),  // needed for the month spotlight grid
+            loadCalendarForYear(spotlightState.year + 1), // needed for Upcoming list near year-end
+        ]);
+
+        const notice = document.getElementById('festivalDataNotice');
+        if (notice) {
+            if (yearEntries === null) {
+                notice.style.display = 'block';
+                notice.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Couldn't reach the calendar server. Check that the backend is running at <code>${API.BASE}</code>.`;
+            } else if (!yearEntries.some(e => e.type === 'Festival')) {
+                notice.style.display = 'block';
+                notice.innerHTML = `<i class="fas fa-info-circle"></i> No festival data available for this year yet — please verify/add dates manually via "Add Holiday / Half Day / WFH".`;
+            } else {
+                notice.style.display = 'none';
+            }
+        }
+
+        renderYearCalendar();
+        renderCurrentMonth();
+        renderUpcomingList();
+    }
+
+    function changeCalendarYear(delta) {
+        calendarState.year += delta;
+        refreshCalendarModule();
+    }
+
+    function goToCurrentCalendarYear() {
+        calendarState.year = new Date().getFullYear();
+        refreshCalendarModule();
+    }
+
+    async function changeSpotlightMonth(delta) {
+        spotlightState.month += delta;
+        if (spotlightState.month < 0) { spotlightState.month = 11; spotlightState.year -= 1; }
+        if (spotlightState.month > 11) { spotlightState.month = 0; spotlightState.year += 1; }
+        await Promise.all([ loadCalendarForYear(spotlightState.year), loadCalendarForYear(spotlightState.year + 1) ]);
+        renderCurrentMonth();
+        renderUpcomingList();
+    }
+
+    async function goToCurrentSpotlightMonth() {
+        spotlightState.year  = new Date().getFullYear();
+        spotlightState.month = new Date().getMonth();
+        await Promise.all([ loadCalendarForYear(spotlightState.year), loadCalendarForYear(spotlightState.year + 1) ]);
+        renderCurrentMonth();
+        renderUpcomingList();
+    }
+
+    function resetCustomCalendarEntries() {
+        const entries = getCalendarEntriesForYear(calendarState.year);
+        const customEntries = entries.filter(e => !e.default);
+
+        if (customEntries.length === 0) {
+            showToast('No customizations to reset', 'info');
+            return;
+        }
+
+        if (!confirm(`This will permanently delete ${customEntries.length} custom entr${customEntries.length === 1 ? 'y' : 'ies'} from the server. Continue?`)) return;
+
+        Promise.all(customEntries.map(e => apiFetch(API.CALENDAR_DELETE(e.id), { method: 'DELETE' })))
+            .then(() => {
+                showToast('Custom Half Day / WFH / extra entries cleared — default holidays & festivals remain', 'success');
+                invalidateYear(calendarState.year);
+                refreshCalendarModule();
+            })
+            .catch(err => showToast('Failed to reset some entries: ' + err.message, 'error'));
+    }
+
+    function renderYearCalendar() {
+        const year     = calendarState.year;
+        const entries  = getCalendarEntriesForYear(year);
+        const entryMap = {};
+        entries.forEach(e => { entryMap[e.date] = e; });
+
+        const grid  = document.getElementById('yearCalendarGrid');
+        const today = todayISO();
+        const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        const DAYNAMES = ['S','M','T','W','T','F','S'];
+
+        let html = '';
+        for (let m = 0; m < 12; m++) {
+            const daysInMonth  = new Date(year, m + 1, 0).getDate();
+            const firstWeekDay = new Date(year, m, 1).getDay();
+
+            html += `<div class="mini-month-card">
+                <div class="mini-month-title">${MONTHS[m]} ${year}</div>
+                <div class="mini-cal-grid">`;
+            DAYNAMES.forEach(d => html += `<div class="mini-cal-dayname">${d}</div>`);
+            for (let i = 0; i < firstWeekDay; i++) html += `<div class="mini-cal-cell empty"></div>`;
+
+            for (let d = 1; d <= daysInMonth; d++) {
+                const dateStr = `${year}-${String(m+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+                const dow     = new Date(year, m, d).getDay();
+                const entry   = entryMap[dateStr];
+                const cls = [
+                    'mini-cal-cell',
+                    (dow === 0 || dow === 6) ? 'is-weekend' : '',
+                    dateStr === today ? 'is-today' : '',
+                    entry ? `mk-${cellColorKey(entry)}` : '',
+                ].filter(Boolean).join(' ');
+                const title = entry ? `${entry.name} (${entry.type.replace('_',' ')}${dayStatusSuffix(entry)})` : '';
+                html += `<div class="${cls}" title="${escapeAttr(title)}" onclick="onYearCalendarDayClick('${dateStr}')">${d}</div>`;
+            }
+            html += `</div></div>`;
+        }
+        grid.innerHTML = html;
+
+        const yearGridLabelEl = document.getElementById('yearGridLabel');
+        if (yearGridLabelEl) yearGridLabelEl.textContent = year;
+
+        document.getElementById('holidayListYearLabel').textContent = year;
+        renderHolidayList();
+    }
+
+    /* ------------------------- Current month spotlight ------------------------- */
+
+    function renderCurrentMonth() {
+        const year  = spotlightState.year;
+        const month = spotlightState.month; // 0-indexed
+        const today = todayISO();
+
+        const entries  = getCalendarEntriesForYear(year);
+        const entryMap = {};
+        entries.forEach(e => { entryMap[e.date] = e; });
+
+        const MONTHS = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+        const DAYNAMES = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+        document.getElementById('cmTitle').textContent = `${MONTHS[month]} ${year}`;
+
+        const daysInMonth  = new Date(year, month + 1, 0).getDate();
+        const firstWeekDay = new Date(year, month, 1).getDay();
+
+        const ICON_MAP = { Holiday: 'fa-flag', Festival: 'fa-star', Half_Day: 'fa-user-clock', WFH: 'fa-house' };
+
+        let html = '';
+        DAYNAMES.forEach((d, i) => html += `<div class="cm-dayname${(i===0||i===6)?' is-weekend-name':''}">${d}</div>`);
+        for (let i = 0; i < firstWeekDay; i++) html += `<div class="cm-cell empty"></div>`;
+
+        for (let d = 1; d <= daysInMonth; d++) {
+            const dateStr = `${year}-${String(month+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
+            const dow     = new Date(year, month, d).getDay();
+            const entry   = entryMap[dateStr];
+            const cls = [
+                'cm-cell',
+                (dow === 0 || dow === 6) ? 'is-weekend' : '',
+                dateStr === today ? 'is-today' : '',
+                entry ? `has-entry mk-${cellColorKey(entry)}` : '',
+            ].filter(Boolean).join(' ');
+            const title = entry ? `${entry.name} (${entry.type.replace('_',' ')}${dayStatusSuffix(entry)})` : '';
+            const badge = entry ? `<span class="cm-badge-icon"><i class="fas ${ICON_MAP[entry.type] || 'fa-circle'}"></i></span>` : '';
+            const pill  = entry ? `<span class="cm-pill">${escapeHtml(entry.name)}</span>` : '';
+            html += `<div class="${cls}" title="${escapeAttr(title)}" onclick="onYearCalendarDayClick('${dateStr}')"><div class="cm-cell-top"><span class="cm-daynum">${d}</span>${badge}</div>${pill}</div>`;
+        }
+        document.getElementById('currentMonthGrid').innerHTML = html;
+    }
+
+    /* ------------------------- Upcoming list (same as Employee Calendar) ------------------------- */
+
+    function renderUpcomingList() {
+        const today = todayISO();
+        const currentYearEntries = getCalendarEntriesForYear(spotlightState.year);
+        const nextYearEntries    = getCalendarEntriesForYear(spotlightState.year + 1);
+
+        const upcoming = [...currentYearEntries, ...nextYearEntries]
+            .filter(e => e.date >= today)
+            .sort((a, b) => a.date.localeCompare(b.date))
+            .slice(0, 8);
+
+        const listEl = document.getElementById('currentMonthList');
+        if (upcoming.length === 0) {
+            listEl.innerHTML = `<div class="empty-state" style="padding:20px 10px;"><i class="fas fa-calendar-check"></i><p>No upcoming holidays or custom days.</p></div>`;
+            return;
+        }
+        listEl.innerHTML = upcoming.map(e => {
+            const isToday = e.date === today;
+            return `
+            <div class="upcoming-card ${isToday ? 'is-today' : ''}">
+                ${isToday ? '<span class="upcoming-card-toptag">Today</span>' : ''}
+                <span class="upcoming-card-date">${formatDate(e.date)}</span>
+                <div style="clear:both;"></div>
+                <div class="upcoming-card-name">${escapeHtml(e.name)}</div>
+                <div class="upcoming-card-sub"${(e.type === 'Holiday' || (e.type === 'Festival' && e.dayStatus === 'Holiday')) ? ' style="color:var(--status-holiday-bg); font-weight:600;"' : ''}>${TYPE_LABEL[e.type] || e.type}${dayStatusSuffix(e)}</div>
+            </div>`;
+        }).join('');
+    }
+
+    function onYearCalendarDayClick(dateStr) {
+        const yr = parseInt(dateStr.slice(0,4), 10);
+        const entries  = getCalendarEntriesForYear(yr);
+        const existing = entries.find(e => e.date === dateStr);
+        openCalendarEntryModal(dateStr, existing);
+    }
+
+    function renderHolidayList() {
+        const entries    = getCalendarEntriesForYear(calendarState.year);
+        const typeFilter = document.getElementById('listTypeFilter')?.value || '';
+        const filtered   = typeFilter ? entries.filter(e => e.type === typeFilter) : entries;
+
+        const container = document.getElementById('holidayListContainer');
+        if (filtered.length === 0) {
+            container.innerHTML = `<div class="empty-state"><i class="fas fa-calendar-times"></i><p>No holidays or custom days found.</p></div>`;
+            return;
+        }
+        container.innerHTML = filtered.map(e => {
+            const typeLabel = e.type === 'Holiday' ? 'Public Holiday' : e.type.replace('_',' ');
+            const badgeCls  = e.type === 'Holiday' ? 'badge-holiday'
+                            : (e.type === 'Festival' && e.dayStatus === 'Holiday') ? 'badge-holiday'
+                            : e.type === 'Festival' ? 'badge-festival'
+                            : (e.type === 'WFH' ? 'badge-wfh' : 'badge-halfday');
+            const STATUS_META = {
+                Working:  { label: 'Working Day',      color: '#1e8e5c', icon: 'fa-door-open' },
+                Half_Day: { label: 'Half Day',          color: '#916405', icon: 'fa-user-clock' },
+                WFH:      { label: 'Work From Home',    color: '#0891b2', icon: 'fa-house' },
+                Holiday:  { label: 'Holiday',           color: '#941010', icon: 'fa-door-closed' },
+            };
+            const statusTag = (e.type === 'Festival' && STATUS_META[e.dayStatus])
+                ? `<span class="holiday-list-tag" style="color:${STATUS_META[e.dayStatus].color};"><i class="fas ${STATUS_META[e.dayStatus].icon}"></i> ${STATUS_META[e.dayStatus].label}</span>`
+                : '';
+            return `
+            <div class="holiday-list-row">
+                <div class="holiday-list-date">${formatDate(e.date)}</div>
+                <div class="holiday-list-name">${escapeHtml(e.name)}${e.recurring ? ' <span class="holiday-list-tag"><i class="fas fa-sync-alt"></i> yearly</span>' : ''}${statusTag}</div>
+                <span class="badge ${badgeCls}">${typeLabel}</span>
+                <button class="btn-icon" title="Edit" onclick='openCalendarEntryModal(${JSON.stringify(e.date)}, ${JSON.stringify(e).replace(/'/g, "&#39;")})'><i class="fas fa-edit"></i></button>
+            </div>`;
+        }).join('');
+    }
+
+    /* ------------------------- Add / Edit modal ------------------------- */
+
+    function openAddCalendarEntryModal() { openCalendarEntryModal(todayISO(), null); }
+
+    function openCalendarEntryModal(dateStr, existing) {
+        document.getElementById('calendarEntryForm').reset();
+        document.querySelectorAll('.day-type-option').forEach(el => el.classList.remove('checked'));
+        document.getElementById('ce_delete_btn').style.display = 'none';
+
+        document.getElementById('ce_id').value   = '';
+        document.getElementById('ce_date').value = dateStr || todayISO();
+
+        if (existing) {
+            document.getElementById('calendarEntryModalTitle').textContent =
+                existing.default ? `Edit ${existing.type === 'Festival' ? 'Festival' : 'Public Holiday'}` : 'Edit Custom Day';
+            document.getElementById('ce_id').value           = existing.id || '';
+            document.getElementById('ce_name').value         = existing.name || '';
+            document.getElementById('ce_recurring').checked  = !!existing.recurring;
+            const radio = document.querySelector(`input[name="ce_type"][value="${existing.type}"]`);
+            if (radio) { radio.checked = true; onCalendarEntryTypeChange(); }
+            if (existing.type === 'Festival') {
+                const dayoffRadio = document.querySelector(`input[name="ce_dayoff"][value="${existing.dayStatus || 'Working'}"]`);
+                if (dayoffRadio) { dayoffRadio.checked = true; dayoffRadio.dispatchEvent(new Event('change')); }
+            }
+            if (!existing.default) document.getElementById('ce_delete_btn').style.display = '';
+        } else {
+            document.getElementById('calendarEntryModalTitle').textContent = 'Add Holiday / Half Day / WFH';
+            const wfhRadio = document.querySelector('input[name="ce_type"][value="WFH"]');
+            if (wfhRadio) { wfhRadio.checked = true; onCalendarEntryTypeChange(); }
+        }
+
+        document.getElementById('calendarEntryModal').classList.add('active');
+    }
+
+    function onCalendarEntryTypeChange() {
+        document.querySelectorAll('.day-type-option').forEach(el => el.classList.remove('checked'));
+        const checked = document.querySelector('input[name="ce_type"]:checked');
+        if (checked) checked.closest('.day-type-option').classList.add('checked');
+
+        const dayoffWrap = document.getElementById('ce_dayoff_wrap');
+        dayoffWrap.style.display = (checked && checked.value === 'Festival') ? '' : 'none';
+    }
+
+    document.querySelectorAll('input[name="ce_dayoff"]').forEach(r => {
+        r.addEventListener('change', () => {
+            ['ce_opt_working','ce_opt_half_day_dayoff','ce_opt_wfh_dayoff','ce_opt_holiday_dayoff'].forEach(id =>
+                document.getElementById(id).classList.remove('checked'));
+            const checked = document.querySelector('input[name="ce_dayoff"]:checked');
+            if (checked) checked.closest('.day-type-option').classList.add('checked');
+        });
+    });
+
+    document.getElementById('calendarEntryForm')?.addEventListener('submit', async function(e) {
+        e.preventDefault();
+
+        const typeInput = document.querySelector('input[name="ce_type"]:checked');
+        if (!typeInput) { showToast('Please choose a type', 'warning'); return; }
+
+        let rawId = document.getElementById('ce_id').value;
+        const date  = document.getElementById('ce_date').value;
+        const name  = document.getElementById('ce_name').value.trim();
+
+        if (!date || !name) { showToast('Please fill date and title', 'warning'); return; }
+
+        // Non-numeric ids like "default-1-1" or "apifestival-2026-4" belong to backend-computed
+        // (default) entries. Those can't be edited directly — EXCEPT a Festival's working-day /
+        // holiday status, which we allow by saving a same-date custom override entry instead
+        // (custom entries win over auto-fetched ones on a date clash — see backend merge logic).
+        if (rawId && isNaN(Number(rawId))) {
+            if (typeInput.value !== 'Festival') {
+                showToast('Default holidays cannot be edited directly. Add a separate custom entry instead.', 'warning');
+                return;
+            }
+            rawId = ''; // drop the default id → this save becomes a new custom override entry
+        }
+
+        if (typeInput.value === 'Festival' && !document.querySelector('input[name="ce_dayoff"]:checked')) {
+            showToast('Please choose the office status for that day', 'warning');
+            return;
+        }
+
+        const payload = {
+            date,
+            name,
+            type:      typeInput.value, // Holiday | Festival | Half_Day | WFH
+            recurring: document.getElementById('ce_recurring').checked,
+            dayStatus: typeInput.value === 'Holiday' ? 'Holiday'
+                     : typeInput.value === 'Half_Day' ? 'Half_Day'
+                     : typeInput.value === 'WFH' ? 'WFH'
+                     : document.querySelector('input[name="ce_dayoff"]:checked').value, // Festival — admin's choice
+        };
+        if (rawId) payload.id = Number(rawId); // include only when editing an existing custom entry
+
+        try {
+            const result = await apiFetch(API.CALENDAR_SAVE, { method: 'POST', body: JSON.stringify(payload) });
+            if (result.success === false) throw new Error(result.message || 'Save failed');
+
+            showToast(`${payload.type.replace('_',' ')} saved for ${formatDate(payload.date)}`, 'success');
+            closeModal('calendarEntryModal');
+
+            // Refetch this entry's year (and the year currently switched to, if different)
+            const savedYear = parseInt(payload.date.slice(0, 4), 10);
+            invalidateYear(savedYear);
+            if (savedYear !== calendarState.year) invalidateYear(calendarState.year);
+            invalidateYear(new Date().getFullYear());
+            invalidateYear(new Date().getFullYear() + 1);
+
+            await refreshCalendarModule();
+        } catch (err) {
+            showToast('Failed to save: ' + err.message, 'error');
+        }
+    });
+
+    async function deleteCalendarEntry() {
+        const id = document.getElementById('ce_id').value;
+        if (!id) return;
+
+        try {
+            const result = await apiFetch(API.CALENDAR_DELETE(id), { method: 'DELETE' });
+            if (result.success === false) throw new Error(result.message || 'Delete failed');
+
+            showToast('Removed from calendar', 'success');
+            closeModal('calendarEntryModal');
+
+            invalidateYear(calendarState.year);
+            invalidateYear(new Date().getFullYear());
+            invalidateYear(new Date().getFullYear() + 1);
+            await refreshCalendarModule();
+        } catch (err) {
+            showToast('Failed to delete: ' + err.message, 'error');
+        }
+    }
+
+    /* =======================================================================
+       TAB NAVIGATION (Year Calendar / Holiday List)
+       ======================================================================= */
+    function initTabs() {
+        const tabs     = document.querySelectorAll('.tab-btn');
+        const contents = document.querySelectorAll('.tab-content');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', function () {
+                const tabId = this.getAttribute('data-tab');
+                tabs.forEach(t     => t.classList.remove('active'));
+                contents.forEach(c => c.classList.remove('active'));
+                this.classList.add('active');
+                document.getElementById(`tab-${tabId}`)?.classList.add('active');
+                if (tabId === 'list') renderHolidayList();
+            });
+        });
+
+        tabs[0]?.click();
+    }
+
+    /* =======================================================================
+       SIDEBAR ACTIVE MENU HELPER
+       ======================================================================= */
+    function setActiveMenu(module) {
+        setTimeout(() => {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.toggle('active', link.getAttribute('data-module') === module);
+            });
+        }, 500);
+    }
+
+    /* =======================================================================
+       CLOSE MODALS ON BACKDROP CLICK
+       ======================================================================= */
+    document.querySelectorAll('.modal').forEach(modal => {
+        modal.addEventListener('click', function(e) {
+            if (e.target === this) this.classList.remove('active');
+        });
+    });
+
+    /* =======================================================================
+       INIT
+       ======================================================================= */
+    document.addEventListener('DOMContentLoaded', async function () {
+        if (typeof loadSidebar === 'function') loadSidebar();
+        if (typeof loadHeader  === 'function') loadHeader();
+        setActiveMenu('calendar');
+
+        initTabs();
+        await refreshCalendarModule();
+    });
+    </script>
+</body>
+</html>

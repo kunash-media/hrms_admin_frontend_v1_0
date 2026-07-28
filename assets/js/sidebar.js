@@ -266,6 +266,11 @@ function initSidebar() {
             if (link) link.classList.add('active');
         }
 
+        if (currentPage === 'calendar.html') {
+            const link = document.querySelector('.nav-link[data-module="calendar"]');
+            if (link) link.classList.add('active');
+        }
+
         // Fallback: Check for any matching href
         document.querySelectorAll('.submenu a').forEach(link => {
             const href = link.getAttribute('href');
