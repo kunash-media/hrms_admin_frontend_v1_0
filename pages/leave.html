@@ -251,6 +251,8 @@
 
         .badge { padding: 3px 10px; border-radius: 20px; font-size: 10px; font-weight: 600; }
         .badge-regular  { background: var(--primary-bg-light); color: var(--primary); }
+        .badge-full-time { background: var(--primary-bg-light); color: var(--primary); }
+        .badge-part-time { background: rgba(111,66,193,0.12); color: #6f42c1; }
         .badge-intern   { background: rgba(23,162,184,0.12); color: #0c5460; }
         .badge-contract { background: rgba(253,126,20,0.12); color: #7d3f00; }
 
@@ -410,6 +412,7 @@
                     <button class="tab-btn" data-tab="history">Leave History</button>
                     <button class="tab-btn" data-tab="balance">Leave Balance</button>
                     <button class="tab-btn" data-tab="rules">Leave Rules</button>
+                    <button class="tab-btn" data-tab="policy">Policy Settings</button>
                 </div>
 
                 <!-- ==================== PENDING ==================== -->
@@ -536,6 +539,8 @@
                         <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
                             <h3 class="text-md font-bold" style="color: var(--primary);">Employee Leave Balance</h3>
                             <div class="flex gap-2 flex-wrap">
+                                <select id="balanceYear" class="w-28 text-sm" onchange="renderBalance()">
+                                </select>
                                 <select id="balanceDept" class="w-40 text-sm" onchange="renderBalance()">
                                     <option value="all">All Departments</option>
                                 </select>
@@ -543,6 +548,10 @@
                                 <button onclick="exportBalance()" class="btn-outline text-sm"><i class="fas fa-download mr-1"></i>Export</button>
                             </div>
                         </div>
+                        <p class="text-xs mb-3" style="color: var(--text-light);">
+                            <i class="fas fa-info-circle mr-1"></i>Carry-forward days only become usable/visible in the
+                            year AFTER they're processed (e.g. carry-forward run for 2026 shows up when viewing 2027).
+                        </p>
                         <div class="overflow-x-auto">
                             <table id="balanceTable">
                                 <thead id="balanceThead"></thead>
@@ -592,6 +601,115 @@
                                     <tr class="loading-row"><td colspan="6"><span class="spinner"></span> Loading...</td></tr>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ==================== POLICY SETTINGS ==================== -->
+                <div id="tab-policy" class="tab-content">
+
+                    <!-- Scheduler status / manual trigger controls -->
+                    <div class="section-card">
+                        <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
+                            <div>
+                                <h3 class="text-md font-bold" style="color: var(--primary);">Automatic Jobs</h3>
+                                <p class="text-xs mt-0.5" style="color: var(--text-light);">
+                                    Runs automatically on schedule. Use "Run Now" only if you need it immediately —
+                                    e.g. the scheduled job was missed because the server was down.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div class="stat-card" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background: var(--primary-soft);">
+                                    <i class="fas fa-forward" style="color: var(--primary);"></i>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold" style="color: var(--primary);">Year-End Carry-Forward</p>
+                                    <p class="text-[11px] mt-0.5" style="color: var(--text-light);">
+                                        Runs automatically 1 Jan, 1:00 AM &nbsp;•&nbsp;
+                                        Carry-forward lapsing &amp; Comp-Off expiry are checked automatically too — no manual trigger needed for those.
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="flex gap-2 items-center">
+                                <input type="number" id="cf-fromYear" class="text-sm" style="padding:8px 10px;width:120px;"
+                                       placeholder="From year" value="">
+                                <button onclick="runCarryForwardNow()" class="btn-primary text-sm" style="white-space:nowrap;"
+                                        id="cf-runBtn">
+                                    <i class="fas fa-play mr-1"></i>Run Now
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Credit Comp Off — per-employee action -->
+                    <div class="section-card" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background: var(--primary-soft);">
+                                <i class="fas fa-calendar-check" style="color: var(--primary);"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold" style="color: var(--primary);">Credit Comp Off</p>
+                                <p class="text-[11px] mt-0.5" style="color: var(--text-light);">
+                                    Comp Off is earned per employee — credit a specific employee for working a weekly-off / holiday.
+                                </p>
+                            </div>
+                        </div>
+                        <button onclick="openCreditCompOffModal()" class="btn-primary text-sm">
+                            <i class="fas fa-plus mr-1"></i>Credit Comp Off
+                        </button>
+                    </div>
+
+                    <!-- Manual Carry-Forward Entry — one-time migration, per-employee -->
+                    <div class="section-card" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background: var(--primary-soft);">
+                                <i class="fas fa-file-import" style="color: var(--primary);"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-bold" style="color: var(--primary);">Manual Carry-Forward Entry</p>
+                                <p class="text-[11px] mt-0.5" style="color: var(--text-light);">
+                                    One-time migration only — enter each employee's carried-forward balance from
+                                    pre-system records. From next year onward, this happens automatically.
+                                </p>
+                            </div>
+                        </div>
+                        <button onclick="openManualCarryForwardModal()" class="btn-primary text-sm">
+                            <i class="fas fa-plus mr-1"></i>Add Entry
+                        </button>
+                    </div>
+
+                    <!-- Policy config table -->
+                    <div class="section-card">
+                        <div class="flex justify-between items-center mb-4 flex-wrap gap-3">
+                            <div>
+                                <h3 class="text-md font-bold" style="color: var(--primary);">Leave Policy Configuration</h3>
+                                <p class="text-xs mt-0.5" style="color: var(--text-light);">
+                                    Carry-forward %, Comp-Off credit days, and LWP manager-approval rules — per leave type.
+                                </p>
+                            </div>
+                            <button onclick="openPolicyModal()" class="btn-primary text-sm"><i class="fas fa-plus mr-1"></i>Add Policy</button>
+                        </div>
+                        <div class="overflow-x-auto">
+                            <table>
+                                <thead>
+                                    <tr class="border-b" style="border-color: var(--primary-soft);">
+                                        <th>Leave Type</th><th>Emp Type</th><th>Dept</th>
+                                        <th>Carry Fwd</th><th>Max Days</th><th>CF Expiry (mo)</th>
+                                        <th>Comp-Off Credit</th><th>Comp-Off Expiry (mo)</th>
+                                        <th>Manager Approval</th><th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="policyTableBody">
+                                    <tr class="loading-row"><td colspan="10"><span class="spinner"></span> Loading...</td></tr>
+                                </tbody>
+                            </table>
+                            <div id="policyEmpty" style="display:none;text-align:center;padding:40px;color:var(--text-light);">
+                                <i class="fas fa-sliders-h text-3xl mb-2" style="display:block;"></i>
+                                <p>No policy configured yet. Click "Add Policy" to set carry-forward / comp-off / LWP rules.</p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -730,7 +848,7 @@
                 <div>
                     <label>Employee Type *</label>
                     <select id="rl-emptype">
-                        <option value="Regular">Regular</option>
+                        <option value="Full-Time">Full-Time</option>
                         <option value="Part-Time">Part-Time</option>
                         <option value="Contract">Contract</option>
                         <option value="Intern">Intern</option>
@@ -767,6 +885,221 @@
             </div>
             <div class="flex justify-end">
                 <button onclick="closeModal('leaveTypeModal')" class="btn-primary">Done</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== POLICY CONFIG MODAL ==================== -->
+    <div id="policyModal" class="modal">
+        <div class="modal-content" style="max-width:560px;">
+            <div class="modal-header">
+                <h3 id="policyModalTitle"><i class="fas fa-sliders-h mr-2"></i>Add Leave Policy</h3>
+                <span onclick="closeModal('policyModal')" style="cursor:pointer;font-size:22px;color:var(--primary-light);">&times;</span>
+            </div>
+
+            <div id="pc-previewBar" class="emp-info-bar" style="display:none;">
+                <div class="emp-info-avatar" id="pc-previewIcon"><i class="fas fa-tag"></i></div>
+                <div style="flex:1;">
+                    <div style="font-size:13px;font-weight:700;color:var(--primary);" id="pc-previewTitle">—</div>
+                    <div style="font-size:11px;color:var(--text-light);" id="pc-previewMeta">—</div>
+                </div>
+                <span class="badge badge-regular" id="pc-previewBadge">—</span>
+            </div>
+
+            <label>Select Leave Type *</label>
+            <select id="pc-leaveType" class="p-2" onchange="pcUpdatePreview()" style="margin-bottom:16px;">
+                <option value="">Select leave type</option>
+            </select>
+
+            <div class="form-row">
+                <div>
+                    <label>Employee Type</label>
+                    <select id="pc-empType" class="p-2" onchange="pcUpdatePreview()">
+                        <option value="All">All</option>
+                        <option value="Full-Time">Full-Time</option>
+                        <option value="Part-Time">Part-Time</option>
+                        <option value="Contract">Contract</option>
+                        <option value="Intern">Intern</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Department</label>
+                    <select id="pc-dept" class="p-2" onchange="pcUpdatePreview()">
+                        <option value="All">All Departments</option>
+                    </select>
+                </div>
+            </div>
+
+            <p class="text-xs mb-3 mt-3" style="color: var(--text-light);"><i class="fas fa-info-circle mr-1"></i>Applies to the selected Employee Type + Department combination. Leave a field as "All" to apply broadly.</p>
+
+            <div class="toggle-row" style="margin-top:6px;">
+                <input type="checkbox" id="pc-carryForwardEnabled" onchange="pcToggleCarryForwardFields()">
+                <label style="margin:0;" for="pc-carryForwardEnabled">Enable Carry-Forward for this leave type</label>
+            </div>
+            <div id="pc-carryForwardFields" class="form-row" style="display:none;">
+                <div>
+                    <label>% of Annual Entitlement</label>
+                    <input type="number" class="p-2" id="pc-cfPercent" min="0" max="100" value="0">
+                </div>
+                <div>
+                    <label>Max Carry-Forward Days</label>
+                    <input type="number" class="p-2" id="pc-cfMaxDays" min="0" value="0">
+                </div>
+                <div>
+                    <label>Expiry (months into new year)</label>
+                    <input type="number" class="p-2" id="pc-cfExpiryMonths" min="0" value="0">
+                </div>
+            </div>
+
+            <div class="toggle-row">
+                <input type="checkbox" id="pc-encashmentAllowed">
+                <label style="margin:0;" for="pc-encashmentAllowed">Allow Encashment</label>
+            </div>
+
+            <div class="form-row" style="margin-top:6px;">
+                <div>
+                    <label>Comp-Off Credit Days (per worked holiday)</label>
+                    <input type="number" class="p-2" id="pc-compOffCredit" min="0" step="0.5" value="0">
+                </div>
+                <div>
+                    <label>Comp-Off Expiry (months, optional)</label>
+                    <input type="number" class="p-2" id="pc-compOffExpiryMonths" min="0" value="12" placeholder="Leave blank = never expires">
+                </div>
+            </div>
+
+            <div class="toggle-row">
+                <input type="checkbox" id="pc-requiresManagerApproval">
+                <label style="margin:0;" for="pc-requiresManagerApproval">
+                    Requires Reporting Manager approval before HR (e.g. for LWP)
+                </label>
+            </div>
+
+            <div class="flex justify-end gap-2" style="margin-top:16px;">
+                <button onclick="closeModal('policyModal')" class="btn-outline">Cancel</button>
+                <button onclick="savePolicyConfig()" class="btn-primary" id="pc-saveBtn"><i class="fas fa-paper-plane mr-1"></i>Save Policy</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== CREDIT COMP OFF MODAL ==================== -->
+    <div id="creditCompOffModal" class="modal">
+        <div class="modal-content" style="max-width:520px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-calendar-check mr-2"></i>Credit Comp Off</h3>
+                <span onclick="closeModal('creditCompOffModal')" style="cursor:pointer;font-size:22px;color:var(--primary-light);">&times;</span>
+            </div>
+
+            <p class="text-xs mb-4" style="color: var(--text-light);">
+                Select the employee who worked an approved weekly-off / public holiday. Credited days are pulled
+                from the leave policy automatically.
+            </p>
+
+            <label>Select Department *</label>
+            <select id="co-deptSelect" class="p-2" onchange="coOnDepartmentChange()" style="margin-bottom:16px;">
+                <option value="">-- Select department --</option>
+            </select>
+
+            <label>Select Employee *</label>
+            <select id="co-empSelect" class="p-2" onchange="coOnEmployeeChange()" style="margin-bottom:16px;" disabled>
+                <option value="">-- Select a department first --</option>
+            </select>
+
+            <div id="co-empInfoBar" class="emp-info-bar" style="display:none;">
+                <div class="emp-info-avatar" id="co-avatar">--</div>
+                <div style="flex:1;">
+                    <div style="font-size:13px;font-weight:700;color:var(--primary);" id="co-dispName">—</div>
+                    <div style="font-size:11px;color:var(--text-light);" id="co-dispMeta">—</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div>
+                    <label>Leave Type (Comp Off) *</label>
+                    <select id="co-leaveType" class="p-2">
+                        <option value="">Select leave type</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Date Worked *</label>
+                    <input type="date" class="p-2" id="co-workedDate">
+                </div>
+            </div>
+
+            <div style="margin-bottom:16px;">
+                <label>Reason / Notes</label>
+                <input type="text" class="p-2" id="co-reason" placeholder="e.g. Diwali coverage, Sunday on-call...">
+            </div>
+
+            <div class="flex justify-end gap-2">
+                <button onclick="closeModal('creditCompOffModal')" class="btn-outline">Cancel</button>
+                <button onclick="submitCreditCompOff()" class="btn-primary" id="co-creditBtn">
+                    <i class="fas fa-plus mr-1"></i>Credit Comp Off
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== MANUAL CARRY-FORWARD ENTRY MODAL ==================== -->
+    <div id="manualCarryForwardModal" class="modal">
+        <div class="modal-content" style="max-width:520px;">
+            <div class="modal-header">
+                <h3><i class="fas fa-file-import mr-2"></i>Manual Carry-Forward Entry</h3>
+                <span onclick="closeModal('manualCarryForwardModal')" style="cursor:pointer;font-size:22px;color:var(--primary-light);">&times;</span>
+            </div>
+
+            <p class="text-xs mb-4" style="color: var(--text-light);">
+                One-time migration only. Enter what this employee's carried-forward balance actually is,
+                from your pre-system records — every employee's value will be different. From next year
+                onward, "Year-End Carry-Forward" calculates this automatically, so you won't need this form again.
+            </p>
+
+            <label>Select Department *</label>
+            <select id="mcf-deptSelect" class="p-2" onchange="mcfOnDepartmentChange()" style="margin-bottom:16px;">
+                <option value="">-- Select department --</option>
+            </select>
+
+            <label>Select Employee *</label>
+            <select id="mcf-empSelect" class="p-2" onchange="mcfOnEmployeeChange()" style="margin-bottom:16px;" disabled>
+                <option value="">-- Select a department first --</option>
+            </select>
+
+            <div id="mcf-empInfoBar" class="emp-info-bar" style="display:none;">
+                <div class="emp-info-avatar" id="mcf-avatar">--</div>
+                <div style="flex:1;">
+                    <div style="font-size:13px;font-weight:700;color:var(--primary);" id="mcf-dispName">—</div>
+                    <div style="font-size:11px;color:var(--text-light);" id="mcf-dispMeta">—</div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div>
+                    <label>Leave Type *</label>
+                    <select id="mcf-leaveType" class="p-2">
+                        <option value="">Select leave type</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Carry Forward Days *</label>
+                    <input type="number" class="p-2" id="mcf-carriedDays" min="0.5" step="0.5" placeholder="e.g. 6">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div>
+                    <label>Usable In Year *</label>
+                    <input type="number" class="p-2" id="mcf-toYear" placeholder="e.g. 2026">
+                </div>
+                <div>
+                    <label>Expiry Date (optional)</label>
+                    <input type="date" class="p-2" id="mcf-expiryDate" placeholder="Auto-computed from policy if blank">
+                </div>
+            </div>
+
+            <div class="flex justify-end gap-2">
+                <button onclick="closeModal('manualCarryForwardModal')" class="btn-outline">Cancel</button>
+                <button onclick="submitManualCarryForward()" class="btn-primary" id="mcf-submitBtn">
+                    <i class="fas fa-plus mr-1"></i>Save Entry
+                </button>
             </div>
         </div>
     </div>
@@ -813,6 +1146,7 @@
             // { id:6, empId:'EMP003', empName:'Amit Mehta',   dept:'Sales',   empType:'Regular', leaveType:'Casual Leave', from:'2025-03-05', days:1,  reason:'Personal work',           status:'rejected', addedOn:'2025-03-03', actionBy:'HR Admin', actionDate:'2025-03-04', remarks:'Team shortage that day' },
             // { id:7, empId:'EMP006', empName:'Ravi Intern',  dept:'IT',      empType:'Intern',  leaveType:'Casual Leave', from:'2025-04-08', days:1,  reason:'Personal work',           status:'approved', addedOn:'2025-04-07', actionBy:'HR Admin', actionDate:'2025-04-07', remarks:'' },
         ],
+        policyConfigs: [],
     };
 
     // =====================================================================
@@ -829,6 +1163,8 @@
         rules: [],            // { empType, dept, allotments }[]
         requests: [],         // full request list (used in offline mode)
         employees: [],        // used in offline balance calc
+        policyConfigs: [],    // { id, leaveTypeName, employeeType, department, ... }[]
+        _policyEditId: null,  // id of the policy being edited, or null for "add new"
         // Action state
         actionId: null,
         actionType: null,
@@ -860,6 +1196,7 @@
             S._leaveTypeObjects = JSON.parse(JSON.stringify(MOCK.leaveTypes));
             S.leaveTypes    = S._leaveTypeObjects.map(t => t.name);
             S.rules         = JSON.parse(JSON.stringify(MOCK.rules));
+            S.policyConfigs = JSON.parse(JSON.stringify(MOCK.policyConfigs));
         }
     }
 
@@ -867,6 +1204,13 @@
     function getMockRule(empType, dept) {
         return S.rules.find(r => r.empType === empType && r.dept === dept)
             || S.rules.find(r => r.empType === empType && r.dept === 'All')
+            || null;
+    }
+
+    function getMockPolicyConfig(leaveTypeName, empType, dept) {
+        return S.policyConfigs.find(p => p.leaveTypeName === leaveTypeName && p.employeeType === empType && p.department === dept)
+            || S.policyConfigs.find(p => p.leaveTypeName === leaveTypeName && p.employeeType === empType && p.department === 'All')
+            || S.policyConfigs.find(p => p.leaveTypeName === leaveTypeName && p.employeeType === 'All' && p.department === 'All')
             || null;
     }
 
@@ -1661,16 +2005,27 @@
     // =====================================================================
     //  4. BALANCE
     // =====================================================================
+    function populateBalanceYearSelect() {
+        const sel = document.getElementById('balanceYear');
+        if (!sel || sel.options.length) return; // populate once
+        const current = new Date().getFullYear();
+        // Show last year, this year, and next year — carry-forward
+        // processed for "this year" only becomes visible in "next year".
+        const years = [current - 1, current, current + 1];
+        sel.innerHTML = years.map(y => `<option value="${y}" ${y === current ? 'selected' : ''}>${y}</option>`).join('');
+    }
+
     async function renderBalance() {
+        populateBalanceYearSelect();
         const dept   = document.getElementById('balanceDept').value;
         const search = document.getElementById('balanceSearch').value.toLowerCase();
         document.getElementById('balanceTableBody').innerHTML = loadingRow(8);
 
         let list;
+        const year = parseInt(document.getElementById('balanceYear').value) || new Date().getFullYear();
 
         if (isOffline) {
             // Build balance from mock employees
-            const year = String(new Date().getFullYear());
             list = S.employees
                 .filter(e => {
                     if (dept !== 'all' && e.dept !== dept) return false;
@@ -1678,17 +2033,49 @@
                     return true;
                 })
                 .map(e => {
-                    const bal = getMockBalance(e.id, e.empType, e.dept, year) || {};
+                    const bal = getMockBalance(e.id, e.empType, e.dept, String(year)) || {};
                     return { empId: e.id, empName: e.name, dept: e.dept, empType: e.empType, balances: bal };
                 });
         } else {
             try {
-                const params = new URLSearchParams({ dept, search, year: new Date().getFullYear() });
+                const params = new URLSearchParams({ dept, search, year });
                 list = await apiOrFallback(`/leave/balance/all?${params}`, null);
                 if (list === null) return renderBalance();
             } catch (_) {
                 document.getElementById('balanceTableBody').innerHTML = emptyRow(8, 'Failed to load balance data.');
                 return;
+            }
+        }
+
+        // Populate the "Carry-Forward" column (if you've added it as a
+        // leave type via Manage Types) with the REAL remaining carry-forward
+        // total for each employee — summed across every leave type that has
+        // an active carry-forward bucket. Does NOT touch the original leave
+        // type's own number (e.g. Casual Leave stays exactly at its fresh
+        // allotment) — Carry-Forward gets its own column value instead.
+        if (!isOffline && list.length) {
+            let anyEmployeeHasCarryForward = list.some(e => !!e.balances['Carry-Forward']);
+
+            const cfTotals = await Promise.all(list.map(async (e) => {
+                const empId = e.empId || e.employeeId;
+                if (!empId) return 0;
+                try {
+                    const cfList = await apiOrFallback(`/leave/carry-forward/balance/all?empId=${empId}&year=${year}`, []);
+                    return (cfList || [])
+                        .filter(cf => cf.status === 'ACTIVE')
+                        .reduce((sum, cf) => sum + (cf.remainingCarry || 0), 0);
+                } catch (_) {
+                    return 0; // best-effort — one employee's failure doesn't break the rest
+                }
+            }));
+
+            if (cfTotals.some(v => v > 0)) anyEmployeeHasCarryForward = true;
+
+            if (anyEmployeeHasCarryForward) {
+                list.forEach((e, i) => {
+                    const total = cfTotals[i] || 0;
+                    e.balances['Carry-Forward'] = { allot: total, used: 0, remaining: total };
+                });
             }
         }
 
@@ -1958,7 +2345,7 @@
         }).join('');
     }
 
-    function openRuleModal(editIdx=null) {
+    async function openRuleModal(editIdx=null) {
         const isEdit = editIdx !== null && editIdx >= 0;
         document.getElementById('ruleModalTitle').textContent = isEdit ? 'Edit Leave Rule' : 'Add Leave Rule';
 
@@ -1977,7 +2364,7 @@
                 <div><label>${lt} (days/yr)</label>
                 <input type="number" id="rl-lt-${lt.replace(/\s+/g,'_')}" value="${(r.allotments||{})[lt]??0}" min="0"></div>`).join('');
         } else {
-            document.getElementById('rl-emptype').value = 'Regular';
+            document.getElementById('rl-emptype').value = 'Full-Time';
             document.getElementById('rl-dept').value    = 'All';
             document.getElementById('rl-leaveInputs').innerHTML = S.leaveTypes.map(lt=>`
                 <div><label>${lt} (days/yr)</label>
@@ -2044,6 +2431,443 @@
     }
 
     // =====================================================================
+    //  7. POLICY CONFIG  (Carry-Forward / Comp-Off / LWP Manager-Approval)
+    // =====================================================================
+
+    async function loadPolicyConfigs() {
+        if (isOffline) return; // already seeded in markOffline()
+        try {
+            const configs = await apiOrFallback('/leave/policy-config', null);
+            if (configs !== null) S.policyConfigs = configs;
+        } catch (_) {}
+    }
+
+    async function renderPolicyTable() {
+        document.getElementById('policyTableBody').innerHTML = loadingRow(10);
+        document.getElementById('policyEmpty').style.display = 'none';
+
+        await loadPolicyConfigs();
+        const list = S.policyConfigs || [];
+
+        if (!list.length) {
+            document.getElementById('policyTableBody').innerHTML = '';
+            document.getElementById('policyEmpty').style.display = 'block';
+            return;
+        }
+
+        document.getElementById('policyTableBody').innerHTML = list.map(p => `
+            <tr class="border-b data-row" style="border-color:#e5e7eb;">
+                <td><span class="badge-custom">${p.leaveTypeName}</span></td>
+                <td class="text-sm" style="color:var(--text-light);">${p.employeeType}</td>
+                <td class="text-sm" style="color:var(--text-light);">${p.department}</td>
+                <td class="text-sm" style="color:var(--text-light);">${p.carryForwardEnabled ? `✅ ${p.carryForwardPercentOfAnnual}%` : '—'}</td>
+                <td class="text-sm" style="color:var(--text-light);">${p.carryForwardEnabled ? p.carryForwardMaxDays : '—'}</td>
+                <td class="text-sm" style="color:var(--text-light);">${p.carryForwardEnabled ? p.carryForwardExpiryMonths : '—'}</td>
+                <td class="text-sm" style="color:var(--text-light);">${p.compOffCreditDaysPerOccurrence > 0 ? p.compOffCreditDaysPerOccurrence : '—'}</td>
+                <td class="text-sm" style="color:var(--text-light);">${p.compOffExpiryMonths != null ? p.compOffExpiryMonths : '—'}</td>
+                <td class="text-sm" style="color:var(--text-light);">${p.requiresManagerApprovalBeforeHr ? '✅ Required' : '—'}</td>
+                <td>
+                    <button onclick="openPolicyModal(${p.id})" style="background:none;border:none;cursor:pointer;color:var(--primary);margin-right:8px;"><i class="fas fa-edit"></i></button>
+                    <button onclick="deletePolicyConfig(${p.id})" style="background:none;border:none;cursor:pointer;color:#dc3545;"><i class="fas fa-trash"></i></button>
+                </td>
+            </tr>`).join('');
+    }
+
+    function pcToggleCarryForwardFields() {
+        const enabled = document.getElementById('pc-carryForwardEnabled').checked;
+        document.getElementById('pc-carryForwardFields').style.display = enabled ? 'grid' : 'none';
+    }
+
+    // Mirrors aaOnEmployeeChange()'s preview-bar pattern from the Apply
+    // Leave modal — shows a live summary of what this policy row applies to.
+    function pcUpdatePreview() {
+        const leaveType = document.getElementById('pc-leaveType').value;
+        const empType   = document.getElementById('pc-empType').value;
+        const dept      = document.getElementById('pc-dept').value;
+        const bar = document.getElementById('pc-previewBar');
+        if (!bar) return;
+
+        if (!leaveType) { bar.style.display = 'none'; return; }
+
+        bar.style.display = 'flex';
+        document.getElementById('pc-previewTitle').textContent = leaveType;
+        document.getElementById('pc-previewMeta').textContent = `Employee Type: ${empType} · Department: ${dept}`;
+        document.getElementById('pc-previewBadge').textContent = empType;
+        document.getElementById('pc-previewBadge').className = `badge badge-${(empType || 'regular').toLowerCase()}`;
+    }
+
+    function openPolicyModal(editId = null) {
+        const isEdit = editId !== null;
+        document.getElementById('policyModalTitle').innerHTML = isEdit
+            ? '<i class="fas fa-sliders-h mr-2"></i>Edit Leave Policy'
+            : '<i class="fas fa-sliders-h mr-2"></i>Add Leave Policy';
+        document.getElementById('pc-saveBtn').innerHTML = isEdit
+            ? '<i class="fas fa-paper-plane mr-1"></i>Update Policy'
+            : '<i class="fas fa-paper-plane mr-1"></i>Save Policy';
+        S._policyEditId = editId;
+
+        const typeSel = document.getElementById('pc-leaveType');
+        typeSel.innerHTML = '<option value="">Select leave type</option>' +
+            S.leaveTypes.map(lt => `<option value="${lt}">${lt}</option>`).join('');
+
+        if (isEdit) {
+            const p = (S.policyConfigs || []).find(x => x.id === editId);
+            if (!p) { showToast('Policy not found.', 'error'); return; }
+            document.getElementById('pc-leaveType').value = p.leaveTypeName;
+            document.getElementById('pc-empType').value = p.employeeType;
+            document.getElementById('pc-dept').value = p.department;
+            document.getElementById('pc-carryForwardEnabled').checked = !!p.carryForwardEnabled;
+            document.getElementById('pc-cfPercent').value = p.carryForwardPercentOfAnnual || 0;
+            document.getElementById('pc-cfMaxDays').value = p.carryForwardMaxDays || 0;
+            document.getElementById('pc-cfExpiryMonths').value = p.carryForwardExpiryMonths || 0;
+            document.getElementById('pc-encashmentAllowed').checked = !!p.encashmentAllowed;
+            document.getElementById('pc-compOffCredit').value = p.compOffCreditDaysPerOccurrence || 0;
+            document.getElementById('pc-compOffExpiryMonths').value = p.compOffExpiryMonths ?? '';
+            document.getElementById('pc-requiresManagerApproval').checked = !!p.requiresManagerApprovalBeforeHr;
+        } else {
+            document.getElementById('pc-leaveType').selectedIndex = 0;
+            document.getElementById('pc-empType').value = 'All';
+            document.getElementById('pc-dept').value = 'All';
+            document.getElementById('pc-carryForwardEnabled').checked = false;
+            document.getElementById('pc-cfPercent').value = 0;
+            document.getElementById('pc-cfMaxDays').value = 0;
+            document.getElementById('pc-cfExpiryMonths').value = 0;
+            document.getElementById('pc-encashmentAllowed').checked = false;
+            document.getElementById('pc-compOffCredit').value = 0;
+            document.getElementById('pc-compOffExpiryMonths').value = 12; // default: Comp Off stays valid for 1 year
+            document.getElementById('pc-requiresManagerApproval').checked = false;
+        }
+        pcToggleCarryForwardFields();
+        pcUpdatePreview();
+        document.getElementById('policyModal').classList.add('active');
+    }
+
+    async function savePolicyConfig() {
+        const leaveTypeName = document.getElementById('pc-leaveType').value;
+        const employeeType  = document.getElementById('pc-empType').value;
+        const department     = document.getElementById('pc-dept').value;
+
+        if (!leaveTypeName) { showToast('Please select a Leave Type!', 'error'); return; }
+
+        const compOffExpiryRaw = document.getElementById('pc-compOffExpiryMonths').value;
+
+        const payload = {
+            leaveTypeName,
+            employeeType,
+            department,
+            carryForwardEnabled: document.getElementById('pc-carryForwardEnabled').checked,
+            carryForwardPercentOfAnnual: parseInt(document.getElementById('pc-cfPercent').value) || 0,
+            carryForwardMaxDays: parseInt(document.getElementById('pc-cfMaxDays').value) || 0,
+            carryForwardExpiryMonths: parseInt(document.getElementById('pc-cfExpiryMonths').value) || 0,
+            encashmentAllowed: document.getElementById('pc-encashmentAllowed').checked,
+            compOffCreditDaysPerOccurrence: parseFloat(document.getElementById('pc-compOffCredit').value) || 0,
+            compOffExpiryMonths: compOffExpiryRaw === '' ? null : parseInt(compOffExpiryRaw),
+            requiresManagerApprovalBeforeHr: document.getElementById('pc-requiresManagerApproval').checked,
+        };
+
+        if (isOffline) {
+            if (S._policyEditId !== null) {
+                const idx = S.policyConfigs.findIndex(p => p.id === S._policyEditId);
+                if (idx >= 0) S.policyConfigs[idx] = { ...S.policyConfigs[idx], ...payload };
+            } else {
+                payload.id = ++S._nextMockId;
+                S.policyConfigs.push(payload);
+            }
+            closeModal('policyModal');
+            await renderPolicyTable();
+            showToast('Policy saved (demo mode)!', 'success');
+            return;
+        }
+
+        try {
+            await api('/leave/policy-config', { method: 'POST', body: JSON.stringify(payload) });
+            closeModal('policyModal');
+            await renderPolicyTable();
+            showToast('Policy saved!', 'success');
+        } catch (_) {}
+    }
+
+    async function deletePolicyConfig(id) {
+        if (!confirm('Delete this policy configuration?')) return;
+
+        if (isOffline) {
+            S.policyConfigs = S.policyConfigs.filter(p => p.id !== id);
+            await renderPolicyTable();
+            showToast('Policy deleted (demo mode)!', 'success');
+            return;
+        }
+
+        try {
+            await api(`/leave/policy-config/${id}`, { method: 'DELETE' });
+            await renderPolicyTable();
+            showToast('Policy deleted!', 'success');
+        } catch (_) {}
+    }
+
+    // ───── Manual scheduler trigger buttons ─────
+
+    async function runCarryForwardNow() {
+        const btn = document.getElementById('cf-runBtn');
+        const yearInput = document.getElementById('cf-fromYear').value;
+        const fromYear = yearInput ? parseInt(yearInput) : (new Date().getFullYear() - 1);
+
+        if (isOffline) { showToast('Cannot run this in offline/demo mode — backend required.', 'error'); return; }
+
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner" style="width:12px;height:12px;border-width:2px;"></span>';
+        try {
+            const { data } = await api(`/leave/carry-forward/process?fromYear=${fromYear}`, { method: 'POST' });
+            showToast(`Carry-forward processed for ${fromYear}: ${data.processedCount} employee(s) updated.`, 'success');
+        } catch (_) {
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-play mr-1"></i>Run Now';
+        }
+    }
+
+    // ───── Credit Comp Off to a specific employee ─────
+    // Comp Off is per-employee (someone worked a specific weekly-off/holiday),
+    // so this form always requires selecting exactly one employee — unlike
+    // carry-forward (which processes everyone at once for a given year).
+    // Opens as a modal (triggered on click) rather than an always-visible
+    // inline form, matching the Add Rule / Add Policy / Apply Leave pattern
+    // already used elsewhere in this page.
+
+    function populateCompOffLeaveTypeDropdown() {
+        const sel = document.getElementById('co-leaveType');
+        if (!sel) return;
+        sel.innerHTML = '<option value="">Select leave type</option>' +
+            S.leaveTypes.map(lt => `<option value="${lt}">${lt}</option>`).join('');
+    }
+
+    async function openCreditCompOffModal() {
+        // Open the modal FIRST, unconditionally — everything else below is
+        // best-effort form reset/population and must never block the modal
+        // from showing, even if an element is missing or a fetch fails.
+        const modalEl = document.getElementById('creditCompOffModal');
+        if (!modalEl) {
+            console.error('creditCompOffModal element not found in DOM!');
+            showToast('Could not open Credit Comp Off form (modal element missing).', 'error');
+            return;
+        }
+        modalEl.classList.add('active');
+
+        try {
+            const empInfoBar = document.getElementById('co-empInfoBar');
+            if (empInfoBar) empInfoBar.style.display = 'none';
+
+            const workedDateEl = document.getElementById('co-workedDate');
+            if (workedDateEl) workedDateEl.value = '';
+
+            const reasonEl = document.getElementById('co-reason');
+            if (reasonEl) reasonEl.value = '';
+
+            const empSel = document.getElementById('co-empSelect');
+            if (empSel) {
+                empSel.innerHTML = '<option value="">-- Select a department first --</option>';
+                empSel.disabled = true;
+            }
+
+            const deptSel = document.getElementById('co-deptSelect');
+            if (deptSel) deptSel.innerHTML = '<option value="">Loading departments...</option>';
+
+            await loadLeaveTypes();
+            populateCompOffLeaveTypeDropdown();
+            await coPopulateDepartments();
+        } catch (err) {
+            console.error('Error while preparing Credit Comp Off form:', err);
+            showToast('Form loaded, but some dropdowns may need a manual refresh.', 'info');
+        }
+    }
+
+    async function coPopulateDepartments() {
+        const deptSel = document.getElementById('co-deptSelect');
+        if (!deptSel) return;
+
+        const emps = await loadEmployeeDirectory();
+        let depts = [...new Set(emps.map(e => e.dept).filter(Boolean))].sort();
+        if (!depts.length && Array.isArray(LOADED_DEPARTMENTS) && LOADED_DEPARTMENTS.length) {
+            depts = LOADED_DEPARTMENTS;
+        }
+        deptSel.innerHTML = '<option value="">-- Select department --</option>' +
+            depts.map(d => `<option value="${d}">${d}</option>`).join('');
+    }
+
+    function coOnDepartmentChange() {
+        const dept = document.getElementById('co-deptSelect').value;
+        const empSel = document.getElementById('co-empSelect');
+        document.getElementById('co-empInfoBar').style.display = 'none';
+
+        if (!dept) {
+            empSel.innerHTML = `<option value="">-- Select a department first --</option>`;
+            empSel.disabled = true;
+            return;
+        }
+
+        const emps = (S._employeeDirectory || []).filter(e => e.dept === dept);
+        if (!emps.length) {
+            empSel.innerHTML = `<option value="">No employees in this department</option>`;
+            empSel.disabled = true;
+            return;
+        }
+
+        empSel.disabled = false;
+        empSel.innerHTML = '<option value="">-- Select employee --</option>' +
+            emps.map(e => `<option value="${e.id}">${e.name} (${e.id})</option>`).join('');
+    }
+
+    function coOnEmployeeChange() {
+        const empId = document.getElementById('co-empSelect').value;
+        const bar = document.getElementById('co-empInfoBar');
+        if (!empId) { bar.style.display = 'none'; return; }
+
+        const emp = (S._employeeDirectory || []).find(e => String(e.id) === String(empId));
+        if (!emp) { bar.style.display = 'none'; return; }
+
+        bar.style.display = 'flex';
+        const initials = (emp.name || '').split(' ').filter(Boolean).map(n => n[0]).join('').slice(0,2).toUpperCase() || '--';
+        document.getElementById('co-avatar').textContent = initials;
+        document.getElementById('co-dispName').textContent = emp.name || emp.id;
+        document.getElementById('co-dispMeta').textContent = `${emp.id} · ${emp.dept}`;
+    }
+
+    async function submitCreditCompOff() {
+        const empId = document.getElementById('co-empSelect').value;
+        const leaveTypeName = document.getElementById('co-leaveType').value;
+        const workedDate = document.getElementById('co-workedDate').value;
+        const reason = document.getElementById('co-reason').value.trim();
+
+        if (!empId)         { showToast('Please select an employee!', 'error'); return; }
+        if (!leaveTypeName) { showToast('Please select the Comp Off leave type!', 'error'); return; }
+        if (!workedDate)    { showToast('Please select the date worked!', 'error'); return; }
+
+        if (isOffline) { showToast('Cannot credit Comp Off in offline/demo mode — backend required.', 'error'); return; }
+
+        const btn = document.getElementById('co-creditBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner" style="width:12px;height:12px;border-width:2px;"></span> Crediting...';
+
+        try {
+            const { data } = await api('/leave/comp-off/credit', {
+                method: 'POST',
+                body: JSON.stringify({ empId, leaveTypeName, workedDate, reason, creditedBy: 'HR Admin' })
+            });
+            showToast(`Comp Off credited: +${data.creditedDays} day(s) for ${empId}.`, 'success');
+            closeModal('creditCompOffModal');
+        } catch (_) {
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-plus mr-1"></i>Credit Comp Off';
+        }
+    }
+
+    // ───── Manual Carry-Forward Entry (one-time migration) ─────
+    // Reuses the same department -> employee select pattern as Credit Comp Off.
+
+    async function openManualCarryForwardModal() {
+        document.getElementById('mcf-empInfoBar').style.display = 'none';
+        document.getElementById('mcf-carriedDays').value = '';
+        document.getElementById('mcf-expiryDate').value = '';
+        document.getElementById('mcf-toYear').value = new Date().getFullYear();
+        const empSel = document.getElementById('mcf-empSelect');
+        empSel.innerHTML = '<option value="">-- Select a department first --</option>';
+        empSel.disabled = true;
+        const deptSel = document.getElementById('mcf-deptSelect');
+        deptSel.innerHTML = '<option value="">Loading departments...</option>';
+
+        document.getElementById('manualCarryForwardModal').classList.add('active');
+
+        await loadLeaveTypes();
+        const typeSel = document.getElementById('mcf-leaveType');
+        typeSel.innerHTML = '<option value="">Select leave type</option>' +
+            S.leaveTypes.map(lt => `<option value="${lt}">${lt}</option>`).join('');
+
+        const emps = await loadEmployeeDirectory();
+        let depts = [...new Set(emps.map(e => e.dept).filter(Boolean))].sort();
+        if (!depts.length && Array.isArray(LOADED_DEPARTMENTS) && LOADED_DEPARTMENTS.length) {
+            depts = LOADED_DEPARTMENTS;
+        }
+        deptSel.innerHTML = '<option value="">-- Select department --</option>' +
+            depts.map(d => `<option value="${d}">${d}</option>`).join('');
+    }
+
+    function mcfOnDepartmentChange() {
+        const dept = document.getElementById('mcf-deptSelect').value;
+        const empSel = document.getElementById('mcf-empSelect');
+        document.getElementById('mcf-empInfoBar').style.display = 'none';
+
+        if (!dept) {
+            empSel.innerHTML = `<option value="">-- Select a department first --</option>`;
+            empSel.disabled = true;
+            return;
+        }
+
+        const emps = (S._employeeDirectory || []).filter(e => e.dept === dept);
+        if (!emps.length) {
+            empSel.innerHTML = `<option value="">No employees in this department</option>`;
+            empSel.disabled = true;
+            return;
+        }
+
+        empSel.disabled = false;
+        empSel.innerHTML = '<option value="">-- Select employee --</option>' +
+            emps.map(e => `<option value="${e.id}">${e.name} (${e.id})</option>`).join('');
+    }
+
+    function mcfOnEmployeeChange() {
+        const empId = document.getElementById('mcf-empSelect').value;
+        const bar = document.getElementById('mcf-empInfoBar');
+        if (!empId) { bar.style.display = 'none'; return; }
+
+        const emp = (S._employeeDirectory || []).find(e => String(e.id) === String(empId));
+        if (!emp) { bar.style.display = 'none'; return; }
+
+        bar.style.display = 'flex';
+        const initials = (emp.name || '').split(' ').filter(Boolean).map(n => n[0]).join('').slice(0,2).toUpperCase() || '--';
+        document.getElementById('mcf-avatar').textContent = initials;
+        document.getElementById('mcf-dispName').textContent = emp.name || emp.id;
+        document.getElementById('mcf-dispMeta').textContent = `${emp.id} · ${emp.dept}`;
+    }
+
+    async function submitManualCarryForward() {
+        const empId = document.getElementById('mcf-empSelect').value;
+        const leaveType = document.getElementById('mcf-leaveType').value;
+        const carriedDays = parseFloat(document.getElementById('mcf-carriedDays').value);
+        const toYear = parseInt(document.getElementById('mcf-toYear').value);
+        const expiryDate = document.getElementById('mcf-expiryDate').value || null;
+
+        if (!empId)      { showToast('Please select an employee!', 'error'); return; }
+        if (!leaveType)  { showToast('Please select a leave type!', 'error'); return; }
+        if (!carriedDays || carriedDays <= 0) { showToast('Please enter carry-forward days!', 'error'); return; }
+        if (!toYear)     { showToast('Please enter the usable-in year!', 'error'); return; }
+
+        if (isOffline) { showToast('Cannot save this in offline/demo mode — backend required.', 'error'); return; }
+
+        const btn = document.getElementById('mcf-submitBtn');
+        btn.disabled = true;
+        btn.innerHTML = '<span class="spinner" style="width:12px;height:12px;border-width:2px;"></span> Saving...';
+
+        try {
+            const payload = { empId, leaveType, toYear, carriedDays };
+            if (expiryDate) payload.expiryDate = expiryDate;
+
+            const { data } = await api('/leave/carry-forward/manual-entry', {
+                method: 'POST',
+                body: JSON.stringify(payload)
+            });
+
+            let msg = `Carry-forward saved: ${data.carriedDays} day(s) for ${empId}, usable in ${toYear}.`;
+            if (data.cappedByPolicy) msg += ' (Capped to policy max.)';
+            showToast(msg, 'success');
+            closeModal('manualCarryForwardModal');
+        } catch (_) {
+        } finally {
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fas fa-plus mr-1"></i>Save Entry';
+        }
+    }
+
+    // =====================================================================
     //  TABS
     // =====================================================================
     function initTabs() {
@@ -2058,6 +2882,10 @@
                 if (tab === 'balance') await renderBalance();
                 if (tab === 'history') await renderHistory();
                 if (tab === 'rules')   { await loadLeaveTypes(); await renderRules(); }
+                if (tab === 'policy')  {
+                    await loadLeaveTypes();
+                    await renderPolicyTable();
+                }
             });
         });
         const saved = localStorage.getItem('leaveActiveTab');
@@ -2098,6 +2926,7 @@ function populateDeptSelects(depts) {
         { id: 'filterDept',  allValue: 'all' },
         { id: 'balanceDept', allValue: 'all' },
         { id: 'rl-dept',     allValue: 'All' },
+        { id: 'pc-dept',     allValue: 'All' },
     ].forEach(({ id, allValue }) => {
         const el = document.getElementById(id);
         if (!el) { console.warn('Element not found:', id); return; }
