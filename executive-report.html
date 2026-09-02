@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Executive Report | SIEC</title>
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <style>
+        #header-container {
+            position: fixed; top: 0; left: 256px; right: 0;
+            height: 56px; background: #ffffff;
+            border-bottom: 1px solid #3098b5; z-index: 40;
+        }
+        @keyframes shimmer {
+            0%   { background-position: -400px 0; }
+            100% { background-position:  400px 0; }
+        }
+        .skeleton-box {
+            background: linear-gradient(90deg, #c5d9e0 25%, #d8e8ed 50%, #c5d9e0 75%);
+            background-size: 800px 100%;
+            animation: shimmer 1.4s ease-in-out infinite;
+            border-radius: 4px;
+        }
+    </style>
+
+    <style>
+        * { font-family: 'Inter', sans-serif; }
+        :root {
+            --primary: #1B738C;
+            --page-bg: #f4edee;
+            --border-color: #1B738C;
+            --button-bg: #1B738C;
+            --button-hover: #166278;
+        }
+        .stat-card {
+            background: white; border-radius: 12px;
+            border: 1px solid #3098b5; transition: all 0.3s ease; padding: 14px 18px;
+        }
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px -5px #a6dff1; border-color: #62C9EA;
+        }
+        .section-card {
+            background: white; border-radius: 12px;
+            border: 1px solid #3098b5; padding: 16px 20px;
+        }
+        .btn-primary {
+            background-color: #1B738C; transition: all 0.3s ease;
+            color: white; padding: 8px 16px; border-radius: 8px;
+        }
+        .btn-primary:hover { background-color: #166278; transform: translateY(-1px); }
+        .btn-outline {
+            border: 1px solid #62C9EA; color: #1B738C;
+            transition: all 0.3s ease; background: transparent;
+            padding: 8px 16px; border-radius: 8px;
+        }
+        .btn-outline:hover { background-color: #1B738C; color: white; }
+        .main-content { margin-top: 64px; }
+        .activity-item { transition: all 0.3s ease; cursor: pointer; }
+        .activity-item:hover { transform: translateX(3px); }
+        ::-webkit-scrollbar { width: 5px; height: 5px; }
+        ::-webkit-scrollbar-track { background: #f3eeef; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb { background: #BDE4EE; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #62C9EA; }
+        .data-row:hover { background-color: #62C9EA; }
+        .badge-primary { background-color: #edf4f5; color: #1B738C; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 500; }
+        .badge-secondary { background-color: #edf4f5; color: #1B738C; padding: 2px 8px; border-radius: 20px; font-size: 10px; font-weight: 500; }
+        input:focus, select:focus, textarea:focus {
+            outline: none; border-color: #62C9EA !important;
+            box-shadow: 0 0 0 2px #edf4f5 !important;
+        }
+        a { color: #1B738C; transition: all 0.3s ease; }
+        a:hover { color: #1B738C; }
+        h1, h2, h3, h4, h5, h6 { color: #1B738C; }
+        .border-theme { border-color: #62C9EA; }
+        .progress-bar { height: 6px; border-radius: 10px; background-color: #e5e7eb; overflow: hidden; }
+        .progress-fill { height: 100%; border-radius: 10px; background-color: #62C9EA; transition: width 0.5s ease; }
+        @media (max-width: 768px) {
+            .stat-card { padding: 10px 14px; }
+            .section-card { padding: 12px 16px; }
+            .main-content { padding: 12px; }
+        }
+        .kpi-icon {
+            width: 32px; height: 32px; border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            background-color: #BDE4EE;
+        }
+        .filter-input {
+            border: 1px solid #1B738C; color: #1B738C;
+            padding: 6px 10px; border-radius: 8px; font-size: 12px; background: white;
+        }
+    </style>
+</head>
+
+<body class="bg-[#EBF4F6]">
+    <div class="flex h-screen overflow-hidden">
+        <div id="sidebar-container"></div>
+        <div class="flex-1 flex flex-col overflow-hidden">
+            <div id="header-container"></div>
+            <main class="flex-1 overflow-y-auto p-5 main-content">
+
+                <!-- Header + Filters -->
+                <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 mb-5">
+                    <div>
+                        <h1 class="text-xl font-bold" style="color: #1B738C;">Executive Report</h1>
+                        <p class="text-xs mt-0.5" style="color: #1B738C;">Consolidated view across all HRMS modules</p>
+                    </div>
+                    <div class="flex flex-wrap items-center gap-2">
+                        <label class="text-[11px]" style="color:#1B738C;">From</label>
+                        <input type="date" id="filterFrom" class="filter-input">
+                        <label class="text-[11px]" style="color:#1B738C;">To</label>
+                        <input type="date" id="filterTo" class="filter-input">
+                        <select id="filterMonth" class="filter-input"></select>
+                        <select id="filterYear" class="filter-input"></select>
+                        <button id="btnRefresh" class="btn-primary text-xs">
+                            <i class="fas fa-rotate mr-1"></i>Apply
+                        </button>
+                        <button id="btnReset" class="btn-outline text-xs">
+                            <i class="fas fa-arrow-rotate-left mr-1"></i>Reset
+                        </button>
+                    </div>
+                </div>
+
+                <!-- KPI Row -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4 mb-6" id="kpiRow">
+                    <!-- Total Workforce -->
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="kpi-icon"><i class="fas fa-users text-sm" style="color:#1B738C;"></i></div>
+                            <span class="badge-secondary" id="kpiHeadcountDelta">--</span>
+                        </div>
+                        <p class="text-[11px] mb-0.5" style="color:#1B738C;">TOTAL ACTIVE WORKFORCE</p>
+                        <p class="text-2xl font-bold" style="color:#1B738C;" id="kpiHeadcount">
+                            <span class="skeleton-box inline-block w-16 h-7 align-middle"></span>
+                        </p>
+                    </div>
+                    <!-- Attendance % -->
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="kpi-icon"><i class="fas fa-chart-line text-sm" style="color:#1B738C;"></i></div>
+                        </div>
+                        <p class="text-[11px] mb-0.5" style="color:#1B738C;">ATTENDANCE % (RANGE)</p>
+                        <p class="text-2xl font-bold" style="color:#1B738C;" id="kpiAttendance">
+                            <span class="skeleton-box inline-block w-16 h-7 align-middle"></span>
+                        </p>
+                        <div class="mt-2 progress-bar"><div class="progress-fill" style="width:0%" id="kpiAttendanceBar"></div></div>
+                    </div>
+                    <!-- Net Payout -->
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="kpi-icon"><i class="fas fa-sack-dollar text-sm" style="color:#1B738C;"></i></div>
+                        </div>
+                        <p class="text-[11px] mb-0.5" style="color:#1B738C;">NET PAYROLL PAYOUT</p>
+                        <p class="text-2xl font-bold" style="color:#1B738C;" id="kpiPayroll">
+                            <span class="skeleton-box inline-block w-20 h-7 align-middle"></span>
+                        </p>
+                    </div>
+                    <!-- Attrition -->
+                    <div class="stat-card">
+                        <div class="flex items-center justify-between mb-2">
+                            <div class="kpi-icon"><i class="fas fa-door-open text-sm" style="color:#1B738C;"></i></div>
+                        </div>
+                        <p class="text-[11px] mb-0.5" style="color:#1B738C;">EXITS THIS YEAR</p>
+                        <p class="text-2xl font-bold" style="color:#1B738C;" id="kpiExits">
+                            <span class="skeleton-box inline-block w-12 h-7 align-middle"></span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4 mb-6">
+                    <div class="stat-card">
+                        <p class="text-[11px] mb-0.5" style="color:#1B738C;">ONBOARDING PENDING</p>
+                        <p class="text-xl font-bold" style="color:#1B738C;" id="kpiOnboardingPending">
+                            <span class="skeleton-box inline-block w-10 h-6 align-middle"></span>
+                        </p>
+                        <p class="text-[10px] mt-1" style="color:#1B738C;" id="kpiOnboardingAvg">avg completion: --</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="text-[11px] mb-0.5" style="color:#1B738C;">ON LEAVE TODAY</p>
+                        <p class="text-xl font-bold" style="color:#1B738C;" id="kpiOnLeave">
+                            <span class="skeleton-box inline-block w-10 h-6 align-middle"></span>
+                        </p>
+                        <p class="text-[10px] mt-1" style="color:#1B738C;" id="kpiLeavePending">pending: --</p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="text-[11px] mb-0.5" style="color:#1B738C;">ASSETS OVERDUE</p>
+                        <p class="text-xl font-bold" style="color:#1B738C;" id="kpiOverdueAssets">
+                            <span class="skeleton-box inline-block w-10 h-6 align-middle"></span>
+                        </p>
+                    </div>
+                    <div class="stat-card">
+                        <p class="text-[11px] mb-0.5" style="color:#1B738C;">PENDING EXPENSES</p>
+                        <p class="text-xl font-bold" style="color:#1B738C;" id="kpiPendingExpense">
+                            <span class="skeleton-box inline-block w-14 h-6 align-middle"></span>
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Charts Row 1 -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-6">
+                    <div class="section-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-sm font-semibold" style="color:#1B738C;">Department Headcount</h3>
+                                <p class="text-[10px] mt-0.5" style="color:#1B738C;">Active workforce by department</p>
+                            </div>
+                            <i class="fas fa-chart-pie text-sm" style="color:#1B738C;"></i>
+                        </div>
+                        <canvas id="deptHeadcountChart" height="200"></canvas>
+                        <div class="grid grid-cols-2 gap-2 mt-4 pt-3 border-t" style="border-color:#1B738C;" id="deptHeadcountLegend"></div>
+                    </div>
+                    <div class="section-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-sm font-semibold" style="color:#1B738C;">Department Payroll Cost</h3>
+                                <p class="text-[10px] mt-0.5" style="color:#1B738C;">Net salary vs CTC, selected month</p>
+                            </div>
+                            <i class="fas fa-chart-bar text-sm" style="color:#1B738C;"></i>
+                        </div>
+                        <canvas id="payrollDeptChart" height="200"></canvas>
+                    </div>
+                </div>
+
+                <!-- Charts Row 2 -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-4 mb-6">
+                    <div class="section-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-sm font-semibold" style="color:#1B738C;">Leave Type Breakdown</h3>
+                            <i class="fas fa-calendar-check text-sm" style="color:#1B738C;"></i>
+                        </div>
+                        <canvas id="leaveTypeChart" height="200"></canvas>
+                    </div>
+                    <div class="section-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-sm font-semibold" style="color:#1B738C;">Expense by Type</h3>
+                            <i class="fas fa-receipt text-sm" style="color:#1B738C;"></i>
+                        </div>
+                        <canvas id="expenseTypeChart" height="200"></canvas>
+                    </div>
+                    <div class="section-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <h3 class="text-sm font-semibold" style="color:#1B738C;">Asset Status</h3>
+                            <i class="fas fa-laptop text-sm" style="color:#1B738C;"></i>
+                        </div>
+                        <canvas id="assetStatusChart" height="200"></canvas>
+                    </div>
+                </div>
+
+                <!-- Exit Analytics -->
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+                    <div class="section-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-sm font-semibold" style="color:#1B738C;">Exit Reasons</h3>
+                                <p class="text-[10px] mt-0.5" style="color:#1B738C;">Attrition breakdown, selected year</p>
+                            </div>
+                            <i class="fas fa-right-from-bracket text-sm" style="color:#1B738C;"></i>
+                        </div>
+                        <div id="exitReasonList" class="space-y-2 max-h-[260px] overflow-auto">
+                            <div class="skeleton-box w-full h-6"></div>
+                        </div>
+                    </div>
+                    <div class="section-card">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-sm font-semibold" style="color:#1B738C;">Department-wise Exits</h3>
+                                <p class="text-[10px] mt-0.5" style="color:#1B738C;">Completed exits by department</p>
+                            </div>
+                            <i class="fas fa-building text-sm" style="color:#1B738C;"></i>
+                        </div>
+                        <div id="deptExitList" class="space-y-2 max-h-[260px] overflow-auto">
+                            <div class="skeleton-box w-full h-6"></div>
+                        </div>
+                    </div>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!-- Common JS Files -->
+    <script src="/assets/js/component-loader.js"></script>
+    <script src="/assets/js/common.js"></script>
+    <script src="/assets/js/sidebar.js"></script>
+    <script src="/assets/js/header.js"></script>
+
+    <script>
+    // ============================================================
+    //  EXECUTIVE REPORT — API INTEGRATION
+    // ============================================================
+    const API_BASE_EXEC = 'http://localhost:8086/api/executive-report';
+
+    // Distinct from dashboard.js's DEPT_COLORS on purpose — richer, more contrast between
+    // adjacent slices, but still anchored to the #1B738C theme (teal core + warm accents,
+    // no neon/funky tones).
+    const DEPT_COLORS = ['#0E7C86','#F4A261','#48CAE4','#E76F51','#2A9D8F','#F2C14E',
+                         '#177E89','#EF8354','#4C9F70','#8E6C88','#5FA8D3','#DB5461'];
+
+    const DEFAULT_MONTH_INDEX_TODAY = new Date().getMonth();
+
+    let deptHeadcountChartInstance = null;
+    let payrollDeptChartInstance   = null;
+    let leaveTypeChartInstance     = null;
+    let expenseTypeChartInstance   = null;
+    let assetStatusChartInstance   = null;
+
+    const PAYROLL_MONTHS = ['JANUARY','FEBRUARY','MARCH','APRIL','MAY','JUNE',
+                             'JULY','AUGUST','SEPTEMBER','OCTOBER','NOVEMBER','DECEMBER'];
+
+    (function () {
+        function onReady() {
+            document.body.classList.add('components-loaded');
+            initFilters();
+            loadExecutiveReport();
+            setActiveMenu('executive-report');
+        }
+        window.loadSidebar?.();
+        window.loadHeader?.();
+        setTimeout(onReady, 150);
+    })();
+
+    document.addEventListener('DOMContentLoaded', function () {
+        loadSidebar?.();
+        loadHeader?.();
+    });
+
+    // ── Filters ──────────────────────────────────────────────────
+    function initFilters() {
+        const today = new Date();
+
+        const monthSel = document.getElementById('filterMonth');
+        monthSel.innerHTML = PAYROLL_MONTHS.map(m =>
+            `<option value="${m}" ${m === PAYROLL_MONTHS[today.getMonth()] ? 'selected' : ''}>${m.charAt(0) + m.slice(1).toLowerCase()}</option>`
+        ).join('');
+
+        const yearSel = document.getElementById('filterYear');
+        const years = [today.getFullYear(), today.getFullYear() - 1, today.getFullYear() - 2];
+        yearSel.innerHTML = years.map(y => `<option value="${y}">${y}</option>`).join('');
+
+        // Initial date range = the default selected month/year
+        syncDatesToSelectedMonth();
+
+        // Changing month or year re-syncs From/To to that month's full range.
+        // A manual From/To edit AFTER that is left untouched — Apply always
+        // sends whatever is currently in the date fields, so a hand-picked
+        // range takes priority until month/year is changed again.
+        monthSel.addEventListener('change', syncDatesToSelectedMonth);
+        yearSel.addEventListener('change', syncDatesToSelectedMonth);
+
+        document.getElementById('btnRefresh').addEventListener('click', loadExecutiveReport);
+        document.getElementById('btnReset').addEventListener('click', resetFilters);
+    }
+
+    function syncDatesToSelectedMonth() {
+        const monthIdx = PAYROLL_MONTHS.indexOf(document.getElementById('filterMonth').value);
+        const year = parseInt(document.getElementById('filterYear').value, 10);
+        if (monthIdx < 0 || isNaN(year)) return;
+
+        const firstDay = new Date(year, monthIdx, 1);
+        const lastDay  = new Date(year, monthIdx + 1, 0);
+        const today    = new Date();
+        // If it's the current month, cap "To" at today instead of month-end
+        const effectiveLast = (year === today.getFullYear() && monthIdx === today.getMonth())
+            ? today : lastDay;
+
+        document.getElementById('filterFrom').value = toISODate(firstDay);
+        document.getElementById('filterTo').value   = toISODate(effectiveLast);
+    }
+
+    function resetFilters() {
+        const today = new Date();
+        document.getElementById('filterMonth').value = PAYROLL_MONTHS[today.getMonth()];
+        document.getElementById('filterYear').value  = today.getFullYear();
+        syncDatesToSelectedMonth();
+        loadExecutiveReport();
+    }
+
+    function toISODate(d) {
+        return d.toISOString().split('T')[0];
+    }
+
+    // ── Main loader ──────────────────────────────────────────────
+    async function loadExecutiveReport() {
+        const from  = document.getElementById('filterFrom').value;
+        const to    = document.getElementById('filterTo').value;
+        const month = document.getElementById('filterMonth').value;
+        const year  = document.getElementById('filterYear').value;
+
+        try {
+            const url = `${API_BASE_EXEC}/full?month=${month}&year=${year}&from=${from}&to=${to}`;
+            const res = await fetch(url);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            const data = await res.json();
+
+            renderHeadcount(data.headcount);
+            renderOnboarding(data.onboarding);
+            renderAttendance(data.attendance);
+            renderLeave(data.leave);
+            renderAsset(data.asset);
+            renderExit(data.exit);
+            renderExpense(data.expense);
+            renderPayroll(data.payroll);
+
+        } catch (err) {
+            console.error('Executive report load failed:', err);
+            showToast('Failed to load executive report.', 'error');
+        }
+    }
+
+    // ── Headcount ────────────────────────────────────────────────
+    function renderHeadcount(hc) {
+        if (!hc) return;
+        setText('kpiHeadcount', hc.totalActive?.toLocaleString() ?? '--');
+        const delta = hc.netHeadcountChange ?? 0;
+        const deltaEl = document.getElementById('kpiHeadcountDelta');
+        deltaEl.textContent = `${delta >= 0 ? '+' : ''}${delta} net`;
+
+        const depts = Object.entries(hc.departmentWise || {});
+        renderDoughnut('deptHeadcountChart', deptHeadcountChartInstance, depts,
+            (inst) => deptHeadcountChartInstance = inst, 'deptHeadcountLegend');
+    }
+
+    // ── Onboarding ───────────────────────────────────────────────
+    function renderOnboarding(ob) {
+        if (!ob) return;
+        setText('kpiOnboardingPending', ob.pendingCount ?? '--');
+        const avg = ob.avgCompletionDays;
+        setText('kpiOnboardingAvg', `avg completion: ${avg ? avg.toFixed(1) + ' days' : 'N/A'}`);
+    }
+
+    // ── Attendance ───────────────────────────────────────────────
+    function renderAttendance(att) {
+        if (!att) return;
+        const rate = att.attendancePercentage ?? 0;
+        setText('kpiAttendance', `${rate}%`);
+        const bar = document.getElementById('kpiAttendanceBar');
+        if (bar) bar.style.width = `${rate}%`;
+    }
+
+    // ── Leave ────────────────────────────────────────────────────
+    function renderLeave(lv) {
+        if (!lv) return;
+        setText('kpiOnLeave', lv.onLeaveToday ?? '--');
+        setText('kpiLeavePending', `pending: ${lv.pendingRequests ?? 0}`);
+
+        const types = Object.entries(lv.leaveTypeBreakdown || {});
+        renderDoughnut('leaveTypeChart', leaveTypeChartInstance, types,
+            (inst) => leaveTypeChartInstance = inst, null);
+    }
+
+    // ── Asset ────────────────────────────────────────────────────
+    function renderAsset(as) {
+        if (!as) return;
+        setText('kpiOverdueAssets', as.overdueReturns ?? '--');
+
+        const statuses = Object.entries(as.statusWise || {});
+        renderDoughnut('assetStatusChart', assetStatusChartInstance, statuses,
+            (inst) => assetStatusChartInstance = inst, null);
+    }
+
+    // ── Exit ─────────────────────────────────────────────────────
+    function renderExit(ex) {
+        if (!ex) return;
+        setText('kpiExits', ex.completedExitsThisYear ?? '--');
+
+        renderKeyValueList('exitReasonList', ex.reasonWiseExits, 'No exit reasons recorded.');
+        renderKeyValueList('deptExitList', ex.departmentWiseExits, 'No department-wise exit data.');
+    }
+
+    // ── Expense ──────────────────────────────────────────────────
+    function renderExpense(ex) {
+        if (!ex) return;
+        const pending = (ex.statusWiseTotal && ex.statusWiseTotal['Pending']) || 0;
+        setText('kpiPendingExpense', formatCurrency(pending));
+
+        const types = Object.entries(ex.typeWiseTotal || {});
+        renderDoughnut('expenseTypeChart', expenseTypeChartInstance, types,
+            (inst) => expenseTypeChartInstance = inst, null);
+    }
+
+    // ── Payroll ──────────────────────────────────────────────────
+    function renderPayroll(pr) {
+        if (!pr) return;
+        setText('kpiPayroll', formatCurrency(pr.totalNetPayable));
+
+        const ctx = document.getElementById('payrollDeptChart').getContext('2d');
+        const depts = Object.keys(pr.departmentWise || {});
+        const netVals = depts.map(d => pr.departmentWise[d][0]);
+        const ctcVals = depts.map(d => pr.departmentWise[d][1]);
+
+        if (payrollDeptChartInstance) {
+            payrollDeptChartInstance.data.labels = depts;
+            payrollDeptChartInstance.data.datasets[0].data = netVals;
+            payrollDeptChartInstance.data.datasets[1].data = ctcVals;
+            payrollDeptChartInstance.update();
+            return;
+        }
+
+        payrollDeptChartInstance = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: depts,
+                datasets: [
+                    { label: 'Net Salary', data: netVals, backgroundColor: '#0E7C86', hoverBackgroundColor: lighten('#0E7C86'), borderRadius: 5, barPercentage: 0.6 },
+                    { label: 'CTC', data: ctcVals, backgroundColor: '#F4A261', hoverBackgroundColor: lighten('#F4A261'), borderRadius: 5, barPercentage: 0.6 }
+                ]
+            },
+            options: {
+                responsive: true, maintainAspectRatio: true,
+                animation: { duration: 600, easing: 'easeOutQuart' },
+                plugins: {
+                    legend: { position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, font: { size: 10, family: 'Inter' }, color: '#1B738C' } },
+                    tooltip: { backgroundColor: '#1B738C', titleColor: 'white', bodyColor: '#e6f4f7', cornerRadius: 8, padding: 8 }
+                },
+                scales: {
+                    y: { beginAtZero: true, grid: { color: '#E6F4F7' }, ticks: { font: { size: 10 }, color: '#1B738C' } },
+                    x: { grid: { display: false }, ticks: { font: { size: 10 }, color: '#1B738C' } }
+                },
+                onHover: (evt, el) => { evt.native.target.style.cursor = el.length ? 'pointer' : 'default'; }
+            }
+        });
+    }
+
+    // ============================================================
+    //  SHARED CHART / LIST HELPERS
+    // ============================================================
+    function renderDoughnut(canvasId, existingInstance, entries, setInstance, legendId) {
+        const canvas = document.getElementById(canvasId);
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+
+        if (!entries || entries.length === 0) {
+            if (existingInstance) { existingInstance.destroy(); setInstance(null); }
+            return;
+        }
+
+        const labels = entries.map(e => e[0]);
+        const values = entries.map(e => e[1]);
+        const colors = entries.map((_, i) => DEPT_COLORS[i % DEPT_COLORS.length]);
+
+        if (existingInstance) {
+            existingInstance.data.labels = labels;
+            existingInstance.data.datasets[0].data = values;
+            existingInstance.data.datasets[0].backgroundColor = colors;
+            existingInstance.update();
+        } else {
+            const inst = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels,
+                    datasets: [{
+                        data: values,
+                        backgroundColor: colors,
+                        hoverBackgroundColor: colors.map(lighten),
+                        borderColor: 'white',
+                        borderWidth: 2,
+                        hoverOffset: 14,
+                        hoverBorderWidth: 3
+                    }]
+                },
+                options: {
+                    responsive: true, maintainAspectRatio: true,
+                    animation: { animateRotate: true, animateScale: true, duration: 700, easing: 'easeOutQuart' },
+                    plugins: {
+                        legend: { display: !legendId, position: 'bottom', labels: { usePointStyle: true, boxWidth: 8, font: { size: 10, family: 'Inter' }, color: '#1B738C' } },
+                        tooltip: {
+                            backgroundColor: '#1B738C', titleColor: 'white', bodyColor: '#e6f4f7', cornerRadius: 8, padding: 8,
+                            callbacks: {
+                                label: (c) => {
+                                    const total = c.dataset.data.reduce((a, b) => a + b, 0);
+                                    return `${c.label}: ${c.raw} (${total ? ((c.raw / total) * 100).toFixed(1) : 0}%)`;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '58%',
+                    onHover: (evt, el) => { evt.native.target.style.cursor = el.length ? 'pointer' : 'default'; }
+                }
+            });
+            setInstance(inst);
+        }
+
+        if (legendId) {
+            const legend = document.getElementById(legendId);
+            if (legend) {
+                legend.innerHTML = entries.map((e, i) => `
+                    <div class="flex items-center gap-1.5">
+                        <div class="w-2.5 h-2.5 rounded-full" style="background-color:${DEPT_COLORS[i % DEPT_COLORS.length]};"></div>
+                        <span class="text-[10px]" style="color:#1B738C;">${escapeHtml(e[0])} (${e[1]})</span>
+                    </div>
+                `).join('');
+            }
+        }
+    }
+
+    function renderKeyValueList(containerId, obj, emptyMsg) {
+        const container = document.getElementById(containerId);
+        if (!container) return;
+        const entries = Object.entries(obj || {});
+        if (entries.length === 0) {
+            container.innerHTML = `<p class="text-xs text-center py-4" style="color:#1B738C;">${emptyMsg}</p>`;
+            return;
+        }
+        const max = Math.max(...entries.map(e => e[1]));
+        container.innerHTML = entries.map(([label, count]) => `
+            <div class="flex items-center justify-between gap-3 p-2 rounded-lg" style="background-color:#e9f2f4">
+                <span class="text-xs font-medium flex-shrink-0" style="color:#1B738C;">${escapeHtml(label)}</span>
+                <div class="flex-1 progress-bar"><div class="progress-fill" style="width:${max ? (count / max) * 100 : 0}%"></div></div>
+                <span class="text-xs font-semibold flex-shrink-0" style="color:#1B738C;">${count}</span>
+            </div>
+        `).join('');
+    }
+
+    // Lighten a hex color for hover states — keeps the same hue family instead of
+    // jumping to an unrelated color, so hover reads as "active" not "random".
+    function lighten(hex, amt = 28) {
+        const num = parseInt(hex.replace('#', ''), 16);
+        let r = (num >> 16) + amt, g = ((num >> 8) & 0x00FF) + amt, b = (num & 0x0000FF) + amt;
+        r = Math.min(255, r); g = Math.min(255, g); b = Math.min(255, b);
+        return `#${(1 << 24 | r << 16 | g << 8 | b).toString(16).slice(1)}`;
+    }
+
+    function formatCurrency(val) {
+        if (val === null || val === undefined) return '--';
+        return '₹' + Number(val).toLocaleString('en-IN', { maximumFractionDigits: 0 });
+    }
+
+    // ============================================================
+    //  TOAST NOTIFICATION
+    // ============================================================
+    function showToast(message, type = 'success') {
+        const toast = document.createElement('div');
+        const bg = type === 'success' ? '#28a745' : '#dc3545';
+        toast.className = 'fixed bottom-4 right-4 text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-all duration-300 flex items-center gap-2 text-sm';
+        toast.style.backgroundColor = bg;
+        toast.innerHTML = `<i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}"></i><span>${message}</span>`;
+        document.body.appendChild(toast);
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateX(100px)';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+
+    // ============================================================
+    //  UTILITIES
+    // ============================================================
+    function setText(id, value) {
+        const el = document.getElementById(id);
+        if (el) el.textContent = value;
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return String(str)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function setActiveMenu(moduleName) {
+        setTimeout(() => {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-module') === moduleName) link.classList.add('active');
+            });
+        }, 500);
+    }
+    </script>
+
+    <script>
+    // Authentication Check
+    (function () {
+        const isLoggedIn = localStorage.getItem('hrms_logged_in');
+        if (isLoggedIn !== 'true') {
+            console.warn('Not logged in - redirecting to login');
+            window.location.href = 'index.html';
+        }
+    })();
+    </script>
+</body>
+</html>

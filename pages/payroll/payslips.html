@@ -108,7 +108,7 @@
     .data-table tfoot td.text-right { text-align: right; }
 
     .table-wrapper {
-      /* overflow-x: auto; */
+      overflow-x: auto;
       overflow-y: visible;
       border-radius: 0 0 12px 12px;
     }
@@ -395,6 +395,136 @@
   </div>
 </div>
 
+<div id="editPayrollModal" class="modal">
+  <div class="modal-content">
+    <div class="modal-body">
+      <div class="flex justify-between items-center mb-5">
+        <h3 class="text-xl font-semibold text-[#1B738C]">Edit Payroll Record</h3>
+        <button onclick="closeEditModal()" class="text-3xl leading-none text-gray-400 hover:text-[#1B738C] transition-colors">&times;</button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+        <div>
+          <label>Employee Name</label>
+          <input type="text" id="editEmpName" class="filter-input" disabled>
+        </div>
+        <div>
+          <label>Emp. ID</label>
+          <input type="text" id="editEmpId" class="filter-input" disabled>
+        </div>
+        <div>
+          <label>Designation</label>
+          <input type="text" id="editDesignation" class="filter-input" disabled>
+        </div>
+        <div>
+          <label>Department</label>
+          <input type="text" id="editDepartment" class="filter-input" disabled>
+        </div>
+        <div>
+          <label>Pay Period</label>
+          <input type="text" id="editPayPeriod" class="filter-input" disabled>
+        </div>
+        <div>
+          <label>Status</label>
+          <select id="editStatus" class="filter-input">
+            <option value="DRAFT">Draft</option>
+            <option value="PROCESSING">Processing</option>
+            <option value="PROCESSED">Processed</option>
+            <option value="PAID">Paid</option>
+            <option value="FAILED">Failed</option>
+            <option value="CANCELLED">Cancelled</option>
+          </select>
+        </div>
+        <div>
+          <label>Basic Pay (₹)</label>
+          <input type="number" id="editBasicSalary" class="filter-input" step="0.01">
+        </div>
+        <div>
+          <label>Employee PF (₹)</label>
+          <input type="number" id="editEmployeePf" class="filter-input" step="0.01">
+        </div>
+        <div>
+          <label>Employer PF (₹)</label>
+          <input type="number" id="editEmployerPf" class="filter-input" step="0.01">
+        </div>
+        <div>
+          <label>HRA (₹) — derived, read-only</label>
+          <input type="number" id="editHra" class="filter-input" step="0.01" disabled>
+        </div>
+        <div>
+          <label>DA (₹) — derived, read-only</label>
+          <input type="number" id="editDa" class="filter-input" step="0.01" disabled>
+        </div>
+        <div>
+          <label>Special Allowance (₹) — derived, read-only</label>
+          <input type="number" id="editSpecialAllowance" class="filter-input" step="0.01" disabled>
+        </div>
+        <div>
+          <label>Gross Salary (₹) — read-only</label>
+          <input type="number" id="editGrossSalary" class="filter-input" step="0.01" disabled>
+        </div>
+        <div>
+          <label>ESI (₹) — auto-computed, read-only</label>
+          <input type="number" id="editEsi" class="filter-input" step="0.01" disabled>
+        </div>
+        <div>
+          <label>PT (₹) — fixed, read-only</label>
+          <input type="number" id="editPt" class="filter-input" step="0.01" disabled>
+        </div>
+        <div>
+          <label>Total Deductions (₹) — read-only</label>
+          <input type="number" id="editTotalDeductions" class="filter-input" step="0.01" disabled>
+        </div>
+        <div>
+          <label>Net Salary (₹) — read-only</label>
+          <input type="number" id="editNetSalary" class="filter-input" step="0.01" disabled>
+        </div>
+        <div>
+          <label>CTC (₹) — read-only</label>
+          <input type="number" id="editCtc" class="filter-input" step="0.01" disabled>
+        </div>
+        <div>
+          <label>Working Days in Month</label>
+          <input type="number" id="editWorkingDaysInMonth" class="filter-input">
+        </div>
+        <div>
+          <label>Days Worked</label>
+          <input type="number" id="editDaysWorked" class="filter-input">
+        </div>
+        <div>
+          <label>LOP Days</label>
+          <input type="number" id="editLopDays" class="filter-input">
+        </div>
+        <div>
+          <label>LOP Deduction (₹)</label>
+          <input type="number" id="editLopDeduction" class="filter-input" step="0.01">
+        </div>
+        <div>
+          <label>Expense Reimbursement (₹)</label>
+          <input type="number" id="editExpenseReimbursement" class="filter-input" step="0.01">
+        </div>
+        <div>
+          <label>Initiated By — read-only</label>
+          <input type="text" id="editInitiatedBy" class="filter-input" disabled>
+        </div>
+      </div>
+
+      <div class="mb-4">
+        <label>Remarks</label>
+        <textarea id="editRemarks" class="filter-input" rows="3"></textarea>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button onclick="submitEditPayroll()" class="btn-primary px-5 py-2.5 text-sm font-medium">
+        <i class="fas fa-save"></i> Save Changes
+      </button>
+      <button onclick="closeEditModal()" class="btn-outline px-5 py-2.5 text-sm font-medium">
+        Cancel
+      </button>
+    </div>
+  </div>
+</div>
+
 <div id="exportOverlay" class="overlay">
   <div class="overlay-box">
     <div class="w-14 h-14 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
@@ -606,10 +736,16 @@ function renderTable() {
       +'<td class="text-right font-mono font-bold text-green-700">'+fmt(net)+'</td>'
       +'<td class="text-right font-mono font-semibold text-[#1B738C]">'+fmt(ctc)+'</td>'
       +'<td class="text-center">'
+      +  '<div class="flex items-center justify-center gap-1.5">'
       +  '<button onclick="openPayslip(\''+rid+'\')" title="View Payslip"'
       +  ' class="text-[#1B738C] hover:text-white hover:bg-[#1B738C] border border-[#62C9EA] rounded-lg px-2.5 py-1.5 text-xs transition-all">'
       +  '<i class="fas fa-eye"></i>'
       +'</button>'
+            +  '<button onclick="openEditPayroll(\''+rid+'\')" title="Edit Payroll"'
+      +  ' class="text-[#1B738C] hover:text-white hover:bg-[#1B738C] border border-[#62C9EA] rounded-lg px-2.5 py-1.5 text-xs transition-all">'
+      +  '<i class="fas fa-edit"></i>'
+      +'</button>'
+      +  '</div>'
       +'</td>'
       +'</tr>';
   }).join('');
@@ -1021,6 +1157,94 @@ function closePayslipModal() {
   document.getElementById('payslipModal').classList.remove('active');
 }
 
+var currentEditRecord = null;
+
+function openEditPayroll(payrollId) {
+  var r = allRecords.find(function(x){return String(x.payrollId)===String(payrollId);});
+  if (!r) { showToast('Record not found.','error'); return; }
+  currentEditRecord = r;
+
+  document.getElementById('editEmpName').value     = r.fullName || '—';
+  document.getElementById('editEmpId').value       = r.employeeId || '—';
+  document.getElementById('editDesignation').value = r.designation || '—';
+  document.getElementById('editDepartment').value  = r.department || '—';
+  document.getElementById('editPayPeriod').value   = monthLabel(r.payrollMonth) + ' ' + (r.payrollYear || '');
+  document.getElementById('editStatus').value      = r.status || null;
+  document.getElementById('editBasicSalary').value = reconstructBasicPay(r.basicSalary);
+  document.getElementById('editEmployeePf').value  = safe(r.employeePf);
+  document.getElementById('editEmployerPf').value  = safe(r.employerPf);
+  document.getElementById('editHra').value               = safe(r.hra);
+  document.getElementById('editDa').value                = safe(r.da);
+  document.getElementById('editSpecialAllowance').value  = safe(r.specialAllowance);
+  document.getElementById('editGrossSalary').value       = safe(r.grossSalary);
+  document.getElementById('editEsi').value               = safe(r.esi);
+  document.getElementById('editPt').value                = safe(r.pt);
+  document.getElementById('editTotalDeductions').value   = safe(r.totalDeductions);
+  document.getElementById('editNetSalary').value          = safe(r.netSalary);
+  document.getElementById('editCtc').value                = safe(r.ctc);
+  document.getElementById('editWorkingDaysInMonth').value = r.workingDaysInMonth != null ? r.workingDaysInMonth : '';
+  document.getElementById('editDaysWorked').value         = r.daysWorked != null ? r.daysWorked : '';
+  document.getElementById('editLopDays').value             = r.lopDays != null ? r.lopDays : '';
+  document.getElementById('editLopDeduction').value        = safe(r.lopDeduction);
+  document.getElementById('editExpenseReimbursement').value = safe(r.expenseReimbursement);
+  document.getElementById('editInitiatedBy').value          = r.initiatedBy || '—';
+  document.getElementById('editRemarks').value              = r.remarks || '';
+
+  document.getElementById('editPayrollModal').classList.add('active');
+}
+
+function reconstructBasicPay(storedBasicComponent) {
+  var component = safe(storedBasicComponent);
+  return (component / 0.60).toFixed(2);
+}
+
+function closeEditModal() {
+  document.getElementById('editPayrollModal').classList.remove('active');
+  currentEditRecord = null;
+}
+
+function submitEditPayroll() {
+  if (!currentEditRecord) { showToast('No record selected.','error'); return; }
+
+  var payrollId = currentEditRecord.payrollId;
+  var selectedStatus = document.getElementById('editStatus').value;
+
+  var patchBody = {
+    basicSalary: parseFloat(document.getElementById('editBasicSalary').value) || 0,
+    employeePf: parseFloat(document.getElementById('editEmployeePf').value) || 0,
+    employerPf: parseFloat(document.getElementById('editEmployerPf').value) || 0,
+    workingDaysInMonth: parseInt(document.getElementById('editWorkingDaysInMonth').value) || null,
+    daysWorked: parseInt(document.getElementById('editDaysWorked').value) || null,
+    lopDays: parseInt(document.getElementById('editLopDays').value) || null,
+    lopDeduction: parseFloat(document.getElementById('editLopDeduction').value) || null,
+    expenseReimbursement: parseFloat(document.getElementById('editExpenseReimbursement').value) || null,
+    remarks: document.getElementById('editRemarks').value
+  };
+
+  if (selectedStatus !== currentEditRecord.status) {
+    patchBody.status = selectedStatus;
+  }
+
+  fetch(BASE_URL + '/api/v1/payroll/patch-payroll/' + payrollId, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(patchBody)
+  })
+  .then(function(r) {
+    if (!r.ok) return r.json().then(function(err) { throw new Error(err.message || 'HTTP ' + r.status); });
+    return r.json();
+  })
+  .then(function(res) {
+    showToast('Payroll record updated successfully!', 'success');
+    closeEditModal();
+    fetchAllRecords();
+  })
+  .catch(function(err) {
+    console.error('[Edit Payroll] error:', err);
+    showToast(err.message || 'Failed to update payroll record.', 'error');
+  });
+}
+
 function downloadPayslipPDF() {
   var el = document.getElementById('payslipToPrint');
   if (!el) return;
@@ -1112,6 +1336,10 @@ function showToast(msg,type) {
 
 document.getElementById('payslipModal').addEventListener('click', function(e){
   if(e.target===this) closePayslipModal();
+});
+
+document.getElementById('editPayrollModal').addEventListener('click', function(e){
+  if(e.target===this) closeEditModal();
 });
 </script>
 </body>
