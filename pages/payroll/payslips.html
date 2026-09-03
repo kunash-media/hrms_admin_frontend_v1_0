@@ -344,6 +344,7 @@
                 <th class="text-right">Empr PF (₹)</th>
                 <th class="text-right">ESIC (₹)</th>
                 <th class="text-right">PT (₹)</th>
+                 <th class="text-right">Tax (₹)</th>
                 <th class="text-right">Total Ded. (₹)</th>
                 <th class="text-right">Exp. Reimb. (₹)</th>
                 <th class="text-right">Net Pay (₹)</th>
@@ -471,6 +472,16 @@
           <label>PT (₹) — fixed, read-only</label>
           <input type="number" id="editPt" class="filter-input" step="0.01" disabled>
         </div>
+
+        <div>
+          <label>Tax % (on Gross)</label>
+          <input type="number" id="editTaxPercent" class="filter-input" step="0.01" min="0" max="100">
+        </div>
+        <div>
+          <label>Tax Amount (₹) — auto-computed, read-only</label>
+          <input type="number" id="editTaxAmount" class="filter-input" step="0.01" disabled>
+        </div>
+
         <div>
           <label>Total Deductions (₹) — read-only</label>
           <input type="number" id="editTotalDeductions" class="filter-input" step="0.01" disabled>
@@ -677,8 +688,8 @@ function renderTable() {
   var end   = Math.min(start+PAGE_SIZE, filteredRecords.length);
   var page  = filteredRecords.slice(start, end);
 
-  var totBasic=0,totHra=0,totDa=0,totSpl=0,totGross=0,totEmpPf=0,totEmrPf=0,
-      totEsi=0,totPt=0,totDed=0,totExp=0,totLopDed=0,totNet=0,totCtc=0;
+    var totBasic=0,totHra=0,totDa=0,totSpl=0,totGross=0,totEmpPf=0,totEmrPf=0,
+      totEsi=0,totPt=0,totTax=0,totDed=0,totExp=0,totLopDed=0,totNet=0,totCtc=0;
 
   var rows = page.map(function(r, idx) {
     var basic    = safe(r.basicSalary);
@@ -690,6 +701,7 @@ function renderTable() {
     var emplrPf  = safe(r.employerPf);
     var esi      = safe(r.esi);
     var pt       = safe(r.pt);
+    var tax      = safe(r.taxAmount);
     var totalDed = safe(r.totalDeductions);
     var net      = safe(r.netSalary);
     var ctc      = safe(r.ctc);
@@ -704,7 +716,7 @@ function renderTable() {
     var rowCls   = selectedIds.has(rid) ? 'selected-row' : '';
 
     totBasic+=basic; totHra+=hra; totDa+=da; totSpl+=spl; totGross+=gross;
-    totEmpPf+=empPf; totEmrPf+=emplrPf; totEsi+=esi; totPt+=pt;
+    totEmpPf+=empPf; totEmrPf+=emplrPf; totEsi+=esi; totPt+=pt; totTax+=tax;
     totDed+=totalDed; totExp+=expReimb; totLopDed+=lopDed; totNet+=net; totCtc+=ctc;
 
     var lopHtml  = lopDed  > 0 ? '<span class="text-orange-600 font-semibold">-'+fmt(lopDed)+'</span>' : '<span class="text-gray-400 text-xs">—</span>';
@@ -731,6 +743,7 @@ function renderTable() {
       +'<td class="text-right font-mono">'+fmt(emplrPf)+'</td>'
       +'<td class="text-right font-mono">'+fmt(esi)+'</td>'
       +'<td class="text-right font-mono">'+fmt(pt)+'</td>'
+      +'<td class="text-right font-mono">'+fmt(tax)+'</td>'
       +'<td class="text-right font-mono text-red-600">'+fmt(totalDed)+'</td>'
       +'<td class="text-right">'+expHtml+'</td>'
       +'<td class="text-right font-mono font-bold text-green-700">'+fmt(net)+'</td>'
@@ -765,6 +778,7 @@ function renderTable() {
     +'<td class="text-right">'+fmt(totEmrPf)+'</td>'
     +'<td class="text-right">'+fmt(totEsi)+'</td>'
     +'<td class="text-right">'+fmt(totPt)+'</td>'
+     +'<td class="text-right">'+fmt(totTax)+'</td>'
     +'<td class="text-right text-red-600 font-bold">'+fmt(totDed)+'</td>'
     +'<td class="text-right text-blue-600">'+fmt(totExp)+'</td>'
     +'<td class="text-right text-green-700 font-bold">'+fmt(totNet)+'</td>'
@@ -878,15 +892,15 @@ function generateExcel(records, filenameBase) {
   wsData.push(['Sustainable Integrated Environmental Consultant Private Ltd,   Pune, Maharashtra, INDIA 411057']);
   wsData.push(['Salary Register \u2013 ' + period]);
   wsData.push(['']);
-  wsData.push(['Employee Info','','','Attendance','','','','Earnings','','','','','','Deductions','','','','','NET PAY','CTC']);
+  wsData.push(['Employee Info','','','Attendance','','','','Earnings','','','','','','Deductions','','','','','','NET PAY','CTC']);
   wsData.push([
     'Sr.\nNo.','Employee\nName','Emp.\nCode','Date of\nJoining','Designation',
     'Working\nDays','LWP/\nAbsent','Days\nPaid',
     'Basic','DA','HRA','Special\nAllowance','Reimburse-\nment','Gross\nEarnings',
-    'PF\nEmployee','PF\nEmployer','PT','ESIC','Total\nDeductions','NET PAY','CTC'
+    'PF\nEmployee','PF\nEmployer','PT','ESIC','Tax','Total\nDeductions','NET PAY','CTC'
   ]);
 
-  var totals={basic:0,da:0,hra:0,spl:0,reimb:0,gross:0,empPf:0,emplrPf:0,pt:0,esi:0,totalDed:0,net:0,ctc:0};
+  var totals={basic:0,da:0,hra:0,spl:0,reimb:0,gross:0,empPf:0,emplrPf:0,pt:0,esi:0,tax:0,totalDed:0,net:0,ctc:0};
   var dataStartRow = 6;
 
   records.forEach(function(r,i) {
@@ -900,6 +914,7 @@ function generateExcel(records, filenameBase) {
     var emplrPf  = safe(r.employerPf);
     var pt       = safe(r.pt);
     var esi      = safe(r.esi);
+    var tax      = safe(r.taxAmount);
     var totalDed = safe(r.totalDeductions);
     var net      = safe(r.netSalary);
     var ctc      = safe(r.ctc);
@@ -909,21 +924,21 @@ function generateExcel(records, filenameBase) {
 
     totals.basic+=basic; totals.da+=da; totals.hra+=hra; totals.spl+=spl; totals.reimb+=reimb;
     totals.gross+=gross; totals.empPf+=empPf; totals.emplrPf+=emplrPf; totals.pt+=pt;
-    totals.esi+=esi; totals.totalDed+=totalDed; totals.net+=net; totals.ctc+=ctc;
+    totals.esi+=esi; totals.tax+=tax; totals.totalDed+=totalDed; totals.net+=net; totals.ctc+=ctc;
 
     wsData.push([
       i+1, r.fullName||'', r.employeeId||'', '', r.designation||'',
       wkDays, lopDays>0?lopDays:'-', daysPaid,
       basic, da, hra, spl, reimb, gross,
       empPf, emplrPf, pt,
-      esi>0?esi:'NA', totalDed, net, ctc
+      esi>0?esi:'NA', tax>0?tax:'-', totalDed, net, ctc
     ]);
   });
 
   wsData.push(['TOTAL','','','','','','','',
     totals.basic,totals.da,totals.hra,totals.spl,totals.reimb,totals.gross,
     totals.empPf,totals.emplrPf,totals.pt,
-    totals.esi>0?totals.esi:'-',totals.totalDed,totals.net,totals.ctc
+    totals.esi>0?totals.esi:'-',totals.tax>0?totals.tax:'-',totals.totalDed,totals.net,totals.ctc
   ]);
   wsData.push(['This is a Computer Generated Salary Register and does not require Signature']);
 
@@ -958,8 +973,8 @@ function generateExcel(records, filenameBase) {
     A4:{bg:C.navyBg}, B4:{bg:C.navyBg}, C4:{bg:C.navyBg},
     D4:{bg:C.attBg},  E4:{bg:C.attBg},  F4:{bg:C.attBg}, G4:{bg:C.attBg}, H4:{bg:C.attBg},
     I4:{bg:C.earnBg}, J4:{bg:C.earnBg}, K4:{bg:C.earnBg}, L4:{bg:C.earnBg}, M4:{bg:C.earnBg}, N4:{bg:C.earnBg},
-    O4:{bg:C.dedBg},  P4:{bg:C.dedBg},  Q4:{bg:C.dedBg},  R4:{bg:C.dedBg},  S4:{bg:C.dedBg},
-    T4:{bg:C.navyBg}, U4:{bg:C.navyBg}
+    O4:{bg:C.dedBg},  P4:{bg:C.dedBg},  Q4:{bg:C.dedBg},  R4:{bg:C.dedBg},  S4:{bg:C.dedBg}, T4:{bg:C.dedBg},
+    U4:{bg:C.navyBg}, V4:{bg:C.navyBg}
   };
   Object.keys(groupMap).forEach(function(addr) {
     if (!ws[addr]) ws[addr]={t:'z',v:''};
@@ -969,16 +984,16 @@ function generateExcel(records, filenameBase) {
   var hdrColBg = ['A','B','C'].map(function(c){return {col:c,bg:C.navyBg};})
     .concat(['D','E','F','G','H'].map(function(c){return {col:c,bg:C.attBg};}))
     .concat(['I','J','K','L','M','N'].map(function(c){return {col:c,bg:C.earnBg};}))
-    .concat(['O','P','Q','R'].map(function(c){return {col:c,bg:C.dedBg};}))
-    .concat([{col:'S',bg:C.navyBg},{col:'T',bg:C.navyBg}]);
+    .concat(['O','P','Q','R','S','T'].map(function(c){return {col:c,bg:C.dedBg};}))
+    .concat([{col:'U',bg:C.navyBg},{col:'V',bg:C.navyBg}]);
   hdrColBg.forEach(function(item) {
     var addr = item.col+'5';
     if (!ws[addr]) ws[addr]={t:'z',v:''};
     ws[addr].s = { fill:{patternType:'solid',fgColor:{rgb:item.bg}}, font:{name:'Arial',sz:9,bold:true,color:{rgb:C.navyText}}, alignment:{horizontal:'center',vertical:'center',wrapText:true} };
   });
 
-  var cols = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U'];
-  var numericCols = new Set(['I','J','K','L','M','N','O','P','Q','R','S','T','U']);
+  var cols = ['A','B','C','D','E','F','G','H','I','J','K','L','M','N','O','P','Q','R','S','T','U','V'];
+  var numericCols = new Set(['I','J','K','L','M','N','O','P','Q','R','S','T','U','V']);
   for (var ri=0; ri<records.length; ri++) {
     var excelRow = dataStartRow + ri;
     var isEven   = ri % 2 === 1;
@@ -986,15 +1001,15 @@ function generateExcel(records, filenameBase) {
     cols.forEach(function(col) {
       var addr = col+excelRow;
       if (!ws[addr]) ws[addr]={t:'z',v:''};
-      var isBold   = (col==='B'||col==='N'||col==='S'||col==='T'||col==='U');
-      var cellBg   = col==='N' ? C.grossCell : col==='S' ? C.dedCell : col==='T' ? C.netCell : col==='U' ? C.ctcCell : rowBg;
-      var fontClr  = col==='T' ? C.earnText : col==='U' ? C.companyText : C.black;
+      var isBold   = (col==='B'||col==='N'||col==='T'||col==='U'||col==='V');
+      var cellBg   = col==='N' ? C.grossCell : col==='T' ? C.dedCell : col==='U' ? C.netCell : col==='V' ? C.ctcCell : rowBg;
+      var fontClr  = col==='U' ? C.earnText : col==='V' ? C.companyText : C.black;
       var hAlign   = numericCols.has(col) ? 'right' : (col==='A'||col==='C'||col==='D'||col==='F'||col==='G'||col==='H') ? 'center' : 'left';
       ws[addr].s = {
         fill : { patternType:'solid', fgColor:{rgb:cellBg} },
         font : { name:'Arial', sz:9, bold:isBold, color:{rgb:fontClr} },
         alignment : { horizontal:hAlign, vertical:'center' },
-        numFmt: numericCols.has(col) && col!=='R' ? numFmt : ''
+        numFmt: numericCols.has(col) && col!=='R' && col!=='S' ? numFmt : ''
       };
     });
   }
@@ -1007,7 +1022,7 @@ function generateExcel(records, filenameBase) {
       fill : { patternType:'solid', fgColor:{rgb:C.navyBg} },
       font : { name:'Arial', sz:10, bold:true, color:{rgb:C.navyText} },
       alignment : { horizontal: numericCols.has(col)?'right':'center', vertical:'center' },
-      numFmt: numericCols.has(col)&&col!=='R'?numFmt:''
+      numFmt: numericCols.has(col) && col!=='R' && col!=='S' ? numFmt : ''
     };
   });
 
@@ -1015,14 +1030,14 @@ function generateExcel(records, filenameBase) {
   if (ws[footAddr]) ws[footAddr].s = { font:{name:'Arial',sz:9,bold:false,color:{rgb:'FF808080'}}, alignment:{horizontal:'center',vertical:'center'} };
 
   ws['!merges'] = [
-    {s:{r:0,c:0}, e:{r:0,c:20}},
-    {s:{r:1,c:0}, e:{r:1,c:20}},
+    {s:{r:0,c:0}, e:{r:0,c:21}},
+    {s:{r:1,c:0}, e:{r:1,c:21}},
     {s:{r:3,c:0}, e:{r:3,c:2}},
     {s:{r:3,c:3}, e:{r:3,c:7}},
     {s:{r:3,c:8}, e:{r:3,c:13}},
     {s:{r:3,c:14},e:{r:3,c:17}},
     {s:{r:totalRowIdx-1,c:0}, e:{r:totalRowIdx-1,c:7}},
-    {s:{r:footerRowIdx-1,c:0}, e:{r:footerRowIdx-1,c:20}}
+    {s:{r:footerRowIdx-1,c:0}, e:{r:footerRowIdx-1,c:21}}
   ];
 
   ws['!rows'] = [];
@@ -1039,7 +1054,7 @@ function generateExcel(records, filenameBase) {
     {wch:5},{wch:22},{wch:14},{wch:12},{wch:18},
     {wch:9},{wch:9},{wch:9},
     {wch:13},{wch:10},{wch:13},{wch:14},{wch:14},{wch:14},
-    {wch:12},{wch:12},{wch:8},{wch:9},{wch:15},{wch:14},{wch:14}
+    {wch:12},{wch:12},{wch:8},{wch:9},{wch:10},{wch:15},{wch:14},{wch:14}
   ];
 
   XLSX.utils.book_append_sheet(wb, ws, 'Salary Register');
@@ -1063,6 +1078,7 @@ function openPayslip(payrollId) {
   var emplrPf  = safe(r.employerPf);
   var esi      = safe(r.esi);
   var pt       = safe(r.pt);
+  var tax      = safe(r.taxAmount);
   var totalDed = safe(r.totalDeductions);
   var net      = safe(r.netSalary);
   var ctc      = safe(r.ctc);
@@ -1126,6 +1142,7 @@ function openPayslip(payrollId) {
     +'<tr><td>HRA</td><td class="amt-col">'+f(hra)+'</td><td>PF (Employer)</td><td class="amt-col">'+f(emplrPf)+'</td></tr>'
     +'<tr><td>DA</td><td class="amt-col">'+f(da)+'</td><td>ESIC</td><td class="amt-col">'+(esi>0?f(esi):'NA')+'</td></tr>'
     +'<tr><td>Special Allowance</td><td class="amt-col">'+f(spl)+'</td><td>Professional Tax (PT)</td><td class="amt-col">'+f(pt)+'</td></tr>'
+    +(tax>0?'<tr><td></td><td></td><td>Tax</td><td class="amt-col">'+f(tax)+'</td></tr>':'')
     +(expReimb>0?'<tr class="exp-row"><td>Expense Reimbursement</td><td class="amt-col">+'+f(expReimb)+'</td><td></td><td></td></tr>':'')
     +(lopDed>0?'<tr class="lop-row"><td></td><td></td><td>Loss of Pay ('+lopDays+' day'+(lopDays===1?'':'s')+')</td><td class="amt-col">-'+f(lopDed)+'</td></tr>':'')
     +'</tbody>'
@@ -1179,6 +1196,8 @@ function openEditPayroll(payrollId) {
   document.getElementById('editGrossSalary').value       = safe(r.grossSalary);
   document.getElementById('editEsi').value               = safe(r.esi);
   document.getElementById('editPt').value                = safe(r.pt);
+  document.getElementById('editTaxPercent').value        = safe(r.taxPercent);
+  document.getElementById('editTaxAmount').value          = safe(r.taxAmount);
   document.getElementById('editTotalDeductions').value   = safe(r.totalDeductions);
   document.getElementById('editNetSalary').value          = safe(r.netSalary);
   document.getElementById('editCtc').value                = safe(r.ctc);
@@ -1213,6 +1232,7 @@ function submitEditPayroll() {
     basicSalary: parseFloat(document.getElementById('editBasicSalary').value) || 0,
     employeePf: parseFloat(document.getElementById('editEmployeePf').value) || 0,
     employerPf: parseFloat(document.getElementById('editEmployerPf').value) || 0,
+    taxPercent: parseFloat(document.getElementById('editTaxPercent').value) || 0,
     workingDaysInMonth: parseInt(document.getElementById('editWorkingDaysInMonth').value) || null,
     daysWorked: parseInt(document.getElementById('editDaysWorked').value) || null,
     lopDays: parseInt(document.getElementById('editLopDays').value) || null,

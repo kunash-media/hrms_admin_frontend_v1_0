@@ -49,9 +49,9 @@
 
         body { background-color: #EBF4F6; }
 
-        ::-webkit-scrollbar { width: 5px; }
-        ::-webkit-scrollbar-track { background: var(--bg); }
-        ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 10px; }
+         ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #EBF4F6; }
+    ::-webkit-scrollbar-thumb { background: #1B738C; border-radius: 10px; }
 
         .section-card {
             background: white;
@@ -532,7 +532,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                     <div class="form-group derived-field">
                         <label class="text-xs font-semibold text-[var(--primary)]">ESIC <span class="derived-note">(0.75% if Basic Pay &lt; ₹21,000)</span></label>
                         <div class="relative">
@@ -546,6 +546,25 @@
                         <div class="relative">
                             <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₹</span>
                             <input type="number" id="ptAmount" placeholder="0.00" readonly
+                                   class="pl-8 w-full px-4 py-2.5 rounded-lg text-sm">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
+                    <div class="form-group">
+                        <label class="text-xs font-semibold text-[var(--primary)]">Tax % <span class="derived-note">(applied on Gross Salary)</span></label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">%</span>
+                            <input type="number" id="taxPercent" placeholder="0.00" min="0" max="100" step="0.01"
+                                   class="pl-8 w-full px-4 py-2.5 border border-[#62C9EA] rounded-lg text-sm">
+                        </div>
+                    </div>
+                    <div class="form-group derived-field">
+                        <label class="text-xs font-semibold text-[var(--primary)]">Tax Amount <span class="derived-note">(auto-calculated)</span></label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">₹</span>
+                            <input type="number" id="taxAmount" placeholder="0.00" readonly
                                    class="pl-8 w-full px-4 py-2.5 rounded-lg text-sm">
                         </div>
                     </div>
@@ -633,7 +652,7 @@
                     </div>
                 </div>
 
-                <div class="overflow-x-auto">
+                <div class="overflow-auto h-[450px]">
                     <table class="data-table w-full">
                         <thead>
                             <tr>
@@ -647,6 +666,7 @@
                                 <th class="text-orange-600">LOP Deduction</th>
                                 <th>ESIC</th>
                                 <th>PT</th>
+                                <th>Tax</th>
                                 <th>Deductions</th>
                                 <th>Expense Reimb.</th>
                                 <th>Net Salary</th>
@@ -811,6 +831,7 @@ async function loadSalaryList(month, year, dept) {
                     <td>${lopHtml}</td>
                     <td>${formatINR(r.esi)}</td>
                     <td>${formatINR(r.pt)}</td>
+                    <td>${formatINR(r.taxAmount)}</td>
                     <td class="text-red-600">${formatINR(r.totalDeductions)}</td>
                     <td>${expHtml}</td>
                     <td class="font-bold text-green-600">${formatINR(r.netSalary)}</td>
@@ -945,7 +966,7 @@ function recalcBreakdown() {
     const esic                 = basicPay > 0 && basicPay < ESIC_THRESHOLD ? basicPay * ESIC_RATE : 0;
     const pt                    = basicPay > 0 ? PT_FIXED_AMOUNT : 0;
 
-    document.getElementById('basicComponent').value      = basicPay ? round2(basicComponent) : '';
+       document.getElementById('basicComponent').value      = basicPay ? round2(basicComponent) : '';
     document.getElementById('hraAmount').value             = basicPay ? round2(hra) : '';
     document.getElementById('daAmount').value               = basicPay ? round2(da) : '';
     document.getElementById('specialAllowanceAmt').value     = basicPay ? round2(specialAllowance) : '';
@@ -953,7 +974,18 @@ function recalcBreakdown() {
     document.getElementById('esiAmount').value               = basicPay ? round2(esic) : '';
     document.getElementById('ptAmount').value                 = basicPay ? pt : '';
 
+    recalcTaxAmount();
+
     // document.getElementById('expenseReimbursementAmt')?.addEventListener('input', updateNetPreview);
+}
+
+// Tax Amount = Gross Salary * taxPercent / 100 — mirrors backend applyEarningsAndDeductions()
+function recalcTaxAmount() {
+    const gross      = parseFloat(document.getElementById('grossSalary').value) || 0;
+    const taxPercent = parseFloat(document.getElementById('taxPercent').value)  || 0;
+    const taxAmt     = gross * (taxPercent / 100);
+    document.getElementById('taxAmount').value = gross ? round2(taxAmt) : '';
+
 }
 
 function round2(n) {
@@ -1071,11 +1103,12 @@ function updateNetPreview() {
     const employerPf = parseFloat(document.getElementById('employerPf').value)  || 0;
     const esic       = parseFloat(document.getElementById('esiAmount').value)   || 0;
     const pt         = parseFloat(document.getElementById('ptAmount').value)    || 0;
+    const taxAmt     = parseFloat(document.getElementById('taxAmount').value)   || 0;
     const expenseReimb = parseFloat(document.getElementById('expenseReimbursementAmt').value) || 0;
 
     if (basicPay === 0) return;
 
-    const deductions = empPf + pt + esic;
+    const deductions = empPf + pt + esic + taxAmt;
 
     // LOP from live (editable) attendance fields — totalDays must be > 0 to avoid div/0
     const { absent, totalDays } = getAttendanceValues();
@@ -1105,12 +1138,18 @@ document.getElementById('basicSalary')?.addEventListener('input', () => {
     document.getElementById(id)?.addEventListener('input', updateNetPreview);
 });
 
+// Tax % changes → recalc taxAmount first, then refresh net preview
+document.getElementById('taxPercent')?.addEventListener('input', () => {
+    recalcTaxAmount();
+    updateNetPreview();
+});
+
 document.getElementById('expenseReimbursementAmt')?.addEventListener('input', updateNetPreview);
 
 
 function resetFieldsOnly() {
     ['basicSalary','basicComponent','hraAmount','daAmount','specialAllowanceAmt','grossSalary',
-     'employeePf','employerPf','esiAmount','ptAmount','expenseReimbursementAmt'].forEach(id => {
+     'employeePf','employerPf','esiAmount','ptAmount','taxPercent','taxAmount','expenseReimbursementAmt'].forEach(id => {
         const el = document.getElementById(id);
         if (el) el.value = '';
     });
@@ -1188,6 +1227,8 @@ async function submitInitiatePay() {
         basicSalary : parseFloat(document.getElementById('basicSalary').value) || 0,
         employeePf  : parseFloat(document.getElementById('employeePf').value)  || 0,
         employerPf  : parseFloat(document.getElementById('employerPf').value)  || 0,
+        taxPercent  : parseFloat(document.getElementById('taxPercent').value)  || 0,
+
         // Attendance overrides — always populated once an employee is selected
         // (auto-fetched then user-editable), so backend always takes the override branch.
         workingDaysInMonth   : totalDays,
